@@ -1918,6 +1918,41 @@
         }
 
         // ================================================================
+        // NORMALIZAÇÃO DE TIPO E EQUIPES PERSONALIZADAS
+        // ================================================================
+        function normalizarTipo(tipoRaw, descRaw = '', modeloRaw = '') {
+            const text = `${tipoRaw || ''} ${descRaw || ''} ${modeloRaw || ''}`.toUpperCase();
+            if (text.includes('TRATOR')) return 'Trator';
+            if (text.includes('CAMINHÃO') || text.includes('CAMINHAO')) return 'Caminhão';
+            if (text.includes('UNIPORT')) return 'Uniport';
+            if (text.includes('MOTOBOMBA')) return 'Motobomba';
+            if (text.includes('CARREGADEIRA')) return 'Pá carregadeira';
+            if (text.includes('MOTONIVELADORA')) return 'Motoniveladora';
+            if (text.includes('COLHEDORA') || text.includes('COLHEITADEIRA')) return 'Colhedora';
+            if (text.includes('PULVERIZADOR')) return 'Pulverizador';
+            if (text.includes('ESCAVADEIRA')) return 'Escavadeira';
+            if (tipoRaw && tipoRaw.trim()) {
+                const clean = tipoRaw.trim();
+                if (clean.length <= 18) {
+                    return clean.charAt(0).toUpperCase() + clean.slice(1).toLowerCase();
+                }
+            }
+            return 'Outros';
+        }
+
+        function getCustomEquipGroups() {
+            try {
+                return JSON.parse(localStorage.getItem('sf_custom_equip_groups') || '{}');
+            } catch(e) { return {}; }
+        }
+
+        function setCustomEquipGroup(codigo, newGrupo) {
+            const custom = getCustomEquipGroups();
+            custom[codigo] = newGrupo;
+            localStorage.setItem('sf_custom_equip_groups', JSON.stringify(custom));
+        }
+
+        // ================================================================
         // CARREGAR DADOS (sem alterar aba ativa)
         // ================================================================
         async function carregarDados(isBackground = false) {
@@ -1942,17 +1977,26 @@
 
                 if (result && result.success && result.data) {
                     const d = result.data;
+                    const customGroups = getCustomEquipGroups();
 
-                    // Mapear equipamentos usando statusOS direto da API
-                    equipments = (d.equipamentos || []).map(eq => ({
-                        codigo:    String(eq.codigo || ''),
-                        descricao: eq.descricao || '',
-                        modelo:    eq.modelo    || '',
-                        tipo:      eq.tipo      || 'Outros',
-                        grupo:     eq.grupo     || 'OUTRAS',
-                        statusOS:  eq.statusOS  || 'OK',
-                        codOS:     eq.codOS     || ''
-                    }));
+                    // Mapear equipamentos com tipo limpo e suporte a mover equipes
+                    equipments = (d.equipamentos || []).map(eq => {
+                        const codStr = String(eq.codigo || '');
+                        const desc   = eq.descricao || '';
+                        const mod    = eq.modelo    || '';
+                        const rawT   = eq.tipo      || '';
+                        return {
+                            codigo:    codStr,
+                            descricao: desc,
+                            modelo:    mod,
+                            tipoRaw:   rawT,
+                            tipo:      normalizarTipo(rawT, desc, mod),
+                            grupo:     customGroups[codStr] || eq.grupo || 'OUTRAS',
+                            operacao:  eq.operacao  || 'PREPARO DE SOLO',
+                            statusOS:  eq.statusOS  || 'OK',
+                            codOS:     eq.codOS     || ''
+                        };
+                    });
 
                     operacoes    = d.operacoes    || [];
                     ordensServico = d.ordensServico || [];
@@ -2117,31 +2161,64 @@
             const filter = (document.getElementById('filterEquip')?.value || '').toLowerCase();
             const dados  = equipments.filter(eq => {
                 if (equipFiltroEquipe && equipFiltroEquipe !== 'TODAS' && eq.grupo !== equipFiltroEquipe) return false;
-                return `${eq.codigo} ${eq.descricao} ${eq.modelo} ${eq.grupo} ${eq.tipo}`.toLowerCase().includes(filter);
+                return `${eq.codigo} ${eq.descricao} ${eq.modelo} ${eq.grupo} ${eq.tipo} ${eq.operacao}`.toLowerCase().includes(filter);
             });
 
             if (countEl) countEl.textContent = dados.length;
 
             if (dados.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="empty-message">Nenhum equipamento encontrado.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-message">Nenhum equipamento encontrado.</td></tr>';
                 renderEquipTeamFilter();
                 return;
             }
 
+            const standardTeams = ['BIOMASSA', 'COLHEITA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PLANTIO', 'PREPARO', 'TRANSPORTE', 'TRATOS CULTURAIS'];
+            const allTeams = [...new Set([...standardTeams, ...getEquipesDisponiveis()])].sort();
+
             tbody.innerHTML = dados.map(eq => {
-                const hasOS      = equipamentosComOS.has(String(eq.codigo));
+                const hasOS       = equipamentosComOS.has(String(eq.codigo));
                 const statusLabel = hasOS ? 'Com OS' : 'OK';
                 const statusClass = hasOS ? 'os-aberta' : 'os-fechada';
-                const osBtn      = hasOS ? `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver OS">📋</button>` : '';
+                const osBtn       = hasOS ? `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver OS">📋</button>` : '';
+
+                const moverOptions = allTeams.map(t =>
+                    `<option value="${t}" ${t === eq.grupo ? 'selected' : ''}>${t}</option>`
+                ).join('');
+
                 return `<tr>
                     <td><strong>${eq.codigo || '-'}</strong></td>
                     <td>${eq.descricao || '-'}</td>
                     <td style="font-size:0.8rem;color:var(--color-gray-500);">${eq.modelo || '-'}</td>
-                    <td><span style="font-size:0.78rem;background:var(--color-gray-100);padding:0.15rem 0.5rem;border-radius:4px;">${eq.tipo || '-'}</span></td>
+                    <td><span class="badge-equip" style="background:#e0f2fe;color:#0369a1;font-weight:600;">${eq.tipo}</span></td>
+                    <td style="font-size:0.8rem;">${eq.operacao || 'PREPARO DE SOLO'}</td>
                     <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
                     <td><span class="badge-equip ${statusClass}">${statusLabel}</span> ${osBtn}</td>
+                    <td>
+                        <select class="mover-select" data-codigo="${eq.codigo}" style="padding:0.25rem 0.4rem;font-size:0.78rem;border-radius:6px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);cursor:pointer;">
+                            ${moverOptions}
+                        </select>
+                    </td>
                 </tr>`;
             }).join('');
+
+            // Adicionar evento para mover equipamento de equipe
+            tbody.querySelectorAll('.mover-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const cod = this.dataset.codigo;
+                    const newGroup = this.value;
+                    if (!cod || !newGroup) return;
+
+                    const eq = equipments.find(item => item.codigo === cod);
+                    if (eq) {
+                        eq.grupo = newGroup;
+                        setCustomEquipGroup(cod, newGroup);
+                        addLog(`🚚 Equipamento ${cod} movido para a equipe ${newGroup}`, 'success');
+                        renderEquipamentos();
+                        renderTeamTabs(false);
+                        atualizarStatusGeral();
+                    }
+                });
+            });
 
             renderEquipTeamFilter();
         }
