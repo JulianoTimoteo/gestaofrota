@@ -1953,12 +1953,11 @@
         async function checkAuth() {
             const token = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token');
             if (!token) { updateAuthUI(); return; }
-            // Confia no token armazenado imediatamente
             authToken = token;
             userRole  = localStorage.getItem('sf_auth_role') || 'visualizador';
             applyRBAC();
             updateAuthUI();
-            // Valida silenciosamente no servidor (timeout 4s)
+            // Valida silenciosamente no servidor sem derrubar a tela do usuário em caso de instabilidade
             try {
                 const ctrl = new AbortController();
                 const t    = setTimeout(() => ctrl.abort(), 4000);
@@ -1975,18 +1974,27 @@
                         applyRBAC();
                         updateAuthUI();
                     }
-                } else if (res.status === 401) {
-                    // Token realmente inválido — força logout
-                    ['sf_auth_token','sf_auth_user','sf_auth_role'].forEach(k => {
-                        localStorage.removeItem(k);
-                        sessionStorage.removeItem(k);
-                    });
-                    authToken = '';
-                    updateAuthUI();
                 }
             } catch (e) {
-                // Servidor inacessível — mantém sessão local
+                // Manter sessão local ativa em caso de falha de conexão
             }
+        }
+
+        function isUserInteracting() {
+            const active = document.activeElement;
+            if (active && (
+                active.tagName === 'INPUT' ||
+                active.tagName === 'SELECT' ||
+                active.tagName === 'TEXTAREA' ||
+                active.closest('#equipTableBody') ||
+                active.closest('#operTableBody')
+            )) {
+                return true;
+            }
+            if (document.querySelector('.sd-popover.active') || document.querySelector('#osReportModalOverlay.active')) {
+                return true;
+            }
+            return false;
         }
 
         // ================================================================
@@ -2195,11 +2203,16 @@
                     if (syncOs)    syncOs.textContent    = ordensServico.length;
                     if (syncOp)    syncOp.textContent    = operacoes.length;
 
-                    // Re-renderizar SEM mudar aba ativa
+                    // Atualizar métricas gerais
                     atualizarStatusGeral();
-                    renderEquipamentos();
-                    renderOperacoes();
-                    renderTeamTabs(false); // false = não muda aba
+
+                    // Se for atualização em background e o usuário estiver interagindo (digitando, selecionando menu),
+                    // adia a re-renderização do DOM para não fechar menus nem tirar o foco do usuário!
+                    if (!isBackground || !isUserInteracting()) {
+                        renderEquipamentos();
+                        renderOperacoes();
+                        renderTeamTabs(false);
+                    }
                     return;
                 }
             } catch (error) {
@@ -2211,7 +2224,7 @@
         }
 
         // ================================================================
-        // SYNC TIMER (10 MINUTOS — silencioso, não interrompe o usuário)
+        // SYNC TIMER (10 MINUTOS — totalmente silencioso e não intrusivo)
         // ================================================================
         function iniciarSyncTimer() {
             if (syncTimer) clearInterval(syncTimer);
@@ -2219,8 +2232,8 @@
             syncTimer = setInterval(async () => {
                 if (!authToken || isSyncing) return;
                 isSyncing = true;
-                addLog('🔄 Sincronização automática iniciada (ciclo 10 min)...', 'info');
-                await carregarDados(true); // background = true → não mostra spinner
+                addLog('🔄 Sincronização automática em segundo plano (ciclo 10 min)...', 'info');
+                await carregarDados(true); // background = true
                 isSyncing = false;
             }, DEZ_MINUTOS);
         }
@@ -2322,6 +2335,9 @@
             const tbody   = document.getElementById('equipTableBody');
             const countEl = document.getElementById('totalEquipCount');
             if (!tbody) return;
+
+            const tableWrap = tbody.closest('.table-wrap');
+            const savedScroll = tableWrap ? tableWrap.scrollTop : 0;
 
             const filter = (document.getElementById('filterEquip')?.value || '').toLowerCase();
             const dados  = equipments.filter(eq => {
@@ -2507,6 +2523,7 @@
             });
 
             renderEquipTeamFilter();
+            if (tableWrap && savedScroll > 0) tableWrap.scrollTop = savedScroll;
         }
 
         function renderOperacoes() {
