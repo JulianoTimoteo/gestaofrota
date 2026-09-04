@@ -1920,12 +1920,26 @@
         // ================================================================
         // NORMALIZAÇÃO DE TIPO E EQUIPES PERSONALIZADAS
         // ================================================================
+        const LISTA_TIPOS_PADRAO = [
+            'Trator',
+            'Caminhão',
+            'Motobomba',
+            'Uniport',
+            'Pá carregadeira',
+            'Motoniveladora',
+            'Colhedora',
+            'Pulverizador',
+            'Escavadeira',
+            'Veículo Utilitário',
+            'Outros'
+        ];
+
         function normalizarTipo(tipoRaw, descRaw = '', modeloRaw = '') {
             const text = `${tipoRaw || ''} ${descRaw || ''} ${modeloRaw || ''}`.toUpperCase();
+            if (text.includes('MOTOBOMBA') || text.includes('MOTO BOMBA') || text.includes('BOMBA')) return 'Motobomba';
             if (text.includes('TRATOR')) return 'Trator';
             if (text.includes('CAMINHÃO') || text.includes('CAMINHAO')) return 'Caminhão';
             if (text.includes('UNIPORT')) return 'Uniport';
-            if (text.includes('MOTOBOMBA')) return 'Motobomba';
             if (text.includes('CARREGADEIRA')) return 'Pá carregadeira';
             if (text.includes('MOTONIVELADORA')) return 'Motoniveladora';
             if (text.includes('COLHEDORA') || text.includes('COLHEITADEIRA')) return 'Colhedora';
@@ -1950,6 +1964,18 @@
             const custom = getCustomEquipGroups();
             custom[codigo] = newGrupo;
             localStorage.setItem('sf_custom_equip_groups', JSON.stringify(custom));
+        }
+
+        function getCustomEquipTypes() {
+            try {
+                return JSON.parse(localStorage.getItem('sf_custom_equip_types') || '{}');
+            } catch(e) { return {}; }
+        }
+
+        function setCustomEquipType(codigo, newTipo) {
+            const custom = getCustomEquipTypes();
+            custom[codigo] = newTipo;
+            localStorage.setItem('sf_custom_equip_types', JSON.stringify(custom));
         }
 
         // ================================================================
@@ -1978,19 +2004,21 @@
                 if (result && result.success && result.data) {
                     const d = result.data;
                     const customGroups = getCustomEquipGroups();
+                    const customTypes  = getCustomEquipTypes();
 
-                    // Mapear equipamentos com tipo limpo e suporte a mover equipes
+                    // Mapear equipamentos com tipo limpo, suporte a tipo customizado e mover equipes
                     equipments = (d.equipamentos || []).map(eq => {
-                        const codStr = String(eq.codigo || '');
-                        const desc   = eq.descricao || '';
-                        const mod    = eq.modelo    || '';
-                        const rawT   = eq.tipo      || '';
+                        const codStr   = String(eq.codigo || '');
+                        const desc     = eq.descricao || '';
+                        const mod      = eq.modelo    || '';
+                        const rawT     = eq.tipo      || '';
+                        const defaultT = normalizarTipo(rawT, desc, mod);
                         return {
                             codigo:    codStr,
                             descricao: desc,
                             modelo:    mod,
                             tipoRaw:   rawT,
-                            tipo:      normalizarTipo(rawT, desc, mod),
+                            tipo:      customTypes[codStr] || defaultT,
                             grupo:     customGroups[codStr] || eq.grupo || 'OUTRAS',
                             operacao:  eq.operacao  || 'PREPARO DE SOLO',
                             statusOS:  eq.statusOS  || 'OK',
@@ -2175,6 +2203,9 @@
             const standardTeams = ['BIOMASSA', 'COLHEITA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PLANTIO', 'PREPARO', 'TRANSPORTE', 'TRATOS CULTURAIS'];
             const allTeams = [...new Set([...standardTeams, ...getEquipesDisponiveis()])].sort();
 
+            // Tipos para a lista suspensa (inclui tipos customizados se houver)
+            const allTipos = [...new Set([...LISTA_TIPOS_PADRAO, ...equipments.map(e => e.tipo)])].sort();
+
             tbody.innerHTML = dados.map(eq => {
                 const hasOS       = equipamentosComOS.has(String(eq.codigo));
                 const statusLabel = hasOS ? 'Com OS' : 'OK';
@@ -2185,11 +2216,19 @@
                     `<option value="${t}" ${t === eq.grupo ? 'selected' : ''}>${t}</option>`
                 ).join('');
 
+                const tipoOptions = allTipos.map(t =>
+                    `<option value="${t}" ${t.toLowerCase() === (eq.tipo || '').toLowerCase() ? 'selected' : ''}>${t}</option>`
+                ).join('');
+
                 return `<tr>
                     <td><strong>${eq.codigo || '-'}</strong></td>
                     <td>${eq.descricao || '-'}</td>
                     <td style="font-size:0.8rem;color:var(--color-gray-500);">${eq.modelo || '-'}</td>
-                    <td><span class="badge-equip" style="background:#e0f2fe;color:#0369a1;font-weight:600;">${eq.tipo}</span></td>
+                    <td>
+                        <select class="tipo-select" data-codigo="${eq.codigo}" style="padding:0.25rem 0.4rem;font-size:0.78rem;font-weight:600;border-radius:6px;border:1px solid #93c5fd;background:#eff6ff;color:#1d4ed8;cursor:pointer;">
+                            ${tipoOptions}
+                        </select>
+                    </td>
                     <td style="font-size:0.8rem;">${eq.operacao || 'PREPARO DE SOLO'}</td>
                     <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
                     <td><span class="badge-equip ${statusClass}">${statusLabel}</span> ${osBtn}</td>
@@ -2200,6 +2239,25 @@
                     </td>
                 </tr>`;
             }).join('');
+
+            // Adicionar evento para alterar Tipo de equipamento
+            tbody.querySelectorAll('.tipo-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const cod = this.dataset.codigo;
+                    const newTipo = this.value;
+                    if (!cod || !newTipo) return;
+
+                    const eq = equipments.find(item => item.codigo === cod);
+                    if (eq) {
+                        eq.tipo = newTipo;
+                        setCustomEquipType(cod, newTipo);
+                        addLog(`🏷️ Tipo do equipamento ${cod} alterado para "${newTipo}"`, 'success');
+                        renderEquipamentos();
+                        renderTeamTabs(false);
+                        atualizarStatusGeral();
+                    }
+                });
+            });
 
             // Adicionar evento para mover equipamento de equipe
             tbody.querySelectorAll('.mover-select').forEach(select => {
