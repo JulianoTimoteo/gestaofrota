@@ -1,0 +1,2530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Frota - SimpleFarm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --color-primary: #2563eb;
+            --color-primary-hover: #1d4ed8;
+            --color-primary-light: #dbeafe;
+            --color-primary-dark: #1e4f8a;
+            --color-success: #10b981;
+            --color-success-bg: #dcfce7;
+            --color-success-text: #166534;
+            --color-warning: #f59e0b;
+            --color-warning-bg: #fef3c7;
+            --color-warning-text: #92400e;
+            --color-danger: #ef4444;
+            --color-danger-bg: #fef2f2;
+            --color-danger-text: #991b1b;
+            --color-gray-50: #f8fafc;
+            --color-gray-100: #f1f5f9;
+            --color-gray-200: #e2e8f0;
+            --color-gray-300: #cbd5e1;
+            --color-gray-400: #94a3b8;
+            --color-gray-500: #64748b;
+            --color-gray-600: #475569;
+            --color-gray-700: #334155;
+            --color-gray-800: #1e293b;
+            --color-gray-900: #0f172a;
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.06), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.12);
+            --radius-xs: 4px;
+            --radius-sm: 8px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-full: 8px;
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        html, body {
+            overflow-x: hidden;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--color-gray-800);
+            min-height: 100vh;
+            padding: 0.75rem;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ===== DARK THEME OVERRIDES ===== */
+        body.dark-theme {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+            color: #f8fafc !important;
+            --color-gray-50: #1e293b;
+            --color-gray-100: #334155;
+            --color-gray-200: #475569;
+            --color-gray-300: #64748b;
+            --color-gray-400: #94a3b8;
+            --color-gray-500: #cbd5e1;
+            --color-gray-600: #e2e8f0;
+            --color-gray-700: #f1f5f9;
+            --color-gray-800: #f8fafc;
+            --color-gray-900: #ffffff;
+        }
+
+        body.dark-theme .header,
+        body.dark-theme .card,
+        body.dark-theme .login-card,
+        body.dark-theme .action-modal,
+        body.dark-theme .donut-card,
+        body.dark-theme .fleet-dashboard-card,
+        body.dark-theme .footer-note {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        body.dark-theme h1, body.dark-theme h2, body.dark-theme h3,
+        body.dark-theme .fleet-total-value, body.dark-theme .donut-value,
+        body.dark-theme table td, body.dark-theme table th,
+        body.dark-theme .header-info .counter strong,
+        body.dark-theme .fleet-legend-val {
+            color: #f8fafc !important;
+        }
+
+        body.dark-theme table th {
+            background: #0f172a !important;
+            color: #94a3b8 !important;
+            border-bottom-color: #334155 !important;
+        }
+
+        body.dark-theme table td {
+            border-bottom-color: #334155 !important;
+        }
+
+        body.dark-theme table tr:hover td {
+            background: #334155 !important;
+        }
+
+        body.dark-theme input,
+        body.dark-theme select {
+            background: #0f172a !important;
+            color: #ffffff !important;
+            border-color: #475569 !important;
+        }
+
+        body.dark-theme .tabs {
+            background: #0f172a !important;
+        }
+
+        body.dark-theme .tab-btn {
+            color: #94a3b8 !important;
+        }
+
+        body.dark-theme .tab-btn.active {
+            background: #334155 !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme .team-filter-bar {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+        }
+
+        body.dark-theme .team-filter-btn {
+            color: #94a3b8 !important;
+        }
+
+        body.dark-theme .team-filter-btn.active {
+            background: var(--color-primary) !important;
+            color: white !important;
+        }
+
+        /* ===== THEME TOGGLE SWITCH (Uiverse.io) ===== */
+        .theme-toggle-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            vertical-align: middle;
+        }
+
+        .theme-toggle-wrapper .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 54px;
+            height: 28px;
+            transform: scale(0.9);
+            transition: transform 0.2s;
+        }
+
+        .theme-toggle-wrapper .toggle-switch:hover {
+            transform: scale(0.98);
+        }
+
+        .theme-toggle-wrapper .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .theme-toggle-wrapper .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(145deg, #f1c40f, #f39c12);
+            transition: 0.4s;
+            border-radius: 34px;
+            box-shadow: 0 0 10px rgba(241, 196, 15, 0.4);
+        }
+
+        .theme-toggle-wrapper .slider:before {
+            position: absolute;
+            content: "☀️";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            transition: 0.4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+            z-index: 2;
+        }
+
+        .theme-toggle-wrapper input:checked + .slider {
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            box-shadow: 0 0 10px rgba(44, 62, 80, 0.4);
+        }
+
+        .theme-toggle-wrapper input:checked + .slider:before {
+            transform: translateX(26px);
+            content: "🌙";
+        }
+
+        .theme-toggle-wrapper .clouds {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .theme-toggle-wrapper .cloud {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            fill: rgba(255, 255, 255, 0.8);
+            transition: all 0.4s ease;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
+        }
+
+        .theme-toggle-wrapper .cloud1 {
+            top: 5px;
+            left: 5px;
+            animation: floatCloud1 8s infinite linear;
+        }
+
+        .theme-toggle-wrapper .cloud2 {
+            top: 8px;
+            left: 26px;
+            transform: scale(0.8);
+            animation: floatCloud2 12s infinite linear;
+        }
+
+        @keyframes floatCloud1 {
+            0% { transform: translateX(-10px); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateX(45px); opacity: 0; }
+        }
+
+        @keyframes floatCloud2 {
+            0% { transform: translateX(-10px) scale(0.8); opacity: 0; }
+            20% { opacity: 0.7; }
+            80% { opacity: 0.7; }
+            100% { transform: translateX(45px) scale(0.8); opacity: 0; }
+        }
+
+        .theme-toggle-wrapper input:checked + .slider .cloud {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        /* Layout container */
+        .app {
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ===== TIPOGRAPHY ===== */
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.25;
+            color: var(--color-gray-900);
+            letter-spacing: -0.01em;
+        }
+
+        h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            line-height: 1.35;
+            color: var(--color-gray-900);
+        }
+
+        h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.35;
+            color: var(--color-gray-900);
+        }
+
+        p, span, div, td, th, label, button, input, select {
+            font-family: inherit;
+        }
+
+        .text-xs { font-size: 0.75rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-base { font-size: 1rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-2xl { font-size: 1.5rem; }
+
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+
+        .flex { display: flex; }
+        .flex-items-center { align-items: center; }
+        .flex-justify-between { justify-content: space-between; }
+        .flex-gap-2 { gap: 0.5rem; }
+        .flex-wrap { flex-wrap: wrap; }
+
+        /* ===== HEADER UNIFICADO (LIMPO E ESTÁVEL) ===== */
+        .header {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            background: white;
+            padding: 0.85rem 1.25rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: all var(--transition-normal);
+        }
+
+        body.dark-theme .header {
+            background: #172033 !important;
+            border-color: #2a364f !important;
+            box-shadow: var(--shadow-sm) !important;
+        }
+
+        .header:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .header h1 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-gray-900);
+            white-space: nowrap;
+        }
+
+        .header h1 i {
+            color: var(--color-primary);
+            font-size: 1.2em;
+        }
+
+        .badge-version {
+            background: var(--color-primary-light);
+            color: var(--color-primary-dark);
+            padding: 0.2rem 0.6rem;
+            border-radius: var(--radius-full);
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .header-info .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--color-gray-700);
+        }
+
+        .header-info .divider {
+            color: #94a3b8;
+            font-weight: 300;
+            user-select: none;
+            font-size: 0.85rem;
+        }
+
+        .header-info .datetime {
+            color: var(--color-gray-600);
+            font-variant-numeric: tabular-nums;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .header-info .counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-gray-600);
+            white-space: nowrap;
+        }
+
+        .header-info .counter strong {
+            font-weight: 700;
+            color: var(--color-gray-900);
+        }
+
+        .header-info .counter.ok strong { color: #22c55e; }
+        .header-info .counter.os strong { color: #ef4444; }
+
+        .header-info .user-menu {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-gray-800);
+            background: var(--color-gray-50);
+            padding: 0.3rem 0.75rem;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--color-gray-200);
+        }
+
+        .header-info .logout-btn {
+            background: transparent;
+            border: none;
+            color: var(--color-gray-500);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.2rem 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .header-info .logout-btn:hover {
+            color: var(--color-danger);
+            background: var(--color-danger-bg);
+        }
+
+        /* ===== DASHBOARD DONUT CHART ===== */
+        .fleet-dashboard-card {
+            margin-bottom: 1.25rem;
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-gray-200);
+            box-shadow: var(--shadow-sm);
+            padding: 1.25rem 1.5rem;
+            transition: box-shadow var(--transition-normal);
+        }
+
+        .fleet-dashboard-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .fleet-donut-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .fleet-chart-area {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            flex-shrink: 0;
+        }
+
+        .fleet-chart-area canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .fleet-chart-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+            width: 65%;
+        }
+
+        .fleet-total-value {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-gray-900);
+            line-height: 1.2;
+        }
+
+        .fleet-total-label {
+            display: block;
+            font-size: 0.65rem;
+            color: var(--color-gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.2rem;
+        }
+
+        .fleet-legend-area {
+            flex: 1;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .fleet-legend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition-fast);
+        }
+
+        .fleet-legend-item:hover {
+            background: var(--color-gray-50);
+        }
+
+        .fleet-legend-left {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 500;
+            color: var(--color-gray-700);
+        }
+
+        .fleet-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fleet-dot.green { background: #22c55e; box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2); }
+        .fleet-dot.red { background: #ef4444; box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2); }
+        .fleet-dot.warning { background: #f59e0b; box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2); }
+
+        .fleet-legend-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .fleet-legend-val {
+            font-weight: 700;
+            color: var(--color-gray-900);
+        }
+
+        .fleet-legend-pct {
+            font-size: 0.8rem;
+            color: var(--color-gray-500);
+            width: 36px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .fleet-legend-divider {
+            height: 1px;
+            background: var(--color-gray-200);
+            margin: 0.25rem 0;
+        }
+
+        .fleet-legend-total {
+            font-weight: 700;
+            color: var(--color-gray-900);
+        }
+
+        @media (max-width: 640px) {
+            .fleet-donut-wrapper {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            .fleet-legend-area {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* ===== BUTTONS (SQUARE ROUNDED) ===== */
+        .btn, .tab-btn, .sub-tab-btn, .team-filter-btn {
+            border-radius: 8px !important;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: 1px solid transparent;
+            font-weight: 500;
+            font-size: 0.875rem;
+            padding: 0.55rem 1.25rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            background: white;
+            color: var(--color-gray-800);
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-xs);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--color-primary-hover);
+            border-color: var(--color-primary-hover);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            border-color: var(--color-success);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--color-gray-300);
+            color: var(--color-gray-700);
+        }
+
+        .btn-outline:hover:not(:disabled) {
+            background: var(--color-gray-50);
+            border-color: var(--color-gray-400);
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.85rem;
+            font-size: 0.8rem;
+            gap: 0.35rem;
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: inline-flex;
+            gap: 0.25rem;
+            background: var(--color-gray-100);
+            padding: 0.25rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .tabs::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            padding: 0.6rem 1.5rem;
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: var(--color-gray-500);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--color-gray-800);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--color-gray-900);
+            box-shadow: var(--shadow-sm);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            box-shadow: var(--shadow-xs);
+            border: 1px solid var(--color-gray-200);
+            width: 100%;
+            box-sizing: border-box;
+            transition: all var(--transition-normal);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-gray-300);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--color-gray-100);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .card-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .card-header h2 i {
+            color: var(--color-primary);
+        }
+
+        .count-badge {
+            background: var(--color-gray-200);
+            padding: 0.15rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--color-gray-800);
+        }
+
+        .model-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .model-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+        }
+
+        /* ===== TABLES ===== */
+        .table-wrap {
+            border-radius: 8px;
+            border: 1px solid var(--color-gray-200);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: auto;
+        }
+
+        table th {
+            text-align: left;
+            padding: 0.65rem 1rem;
+            font-weight: 600;
+            color: var(--color-gray-600);
+            border-bottom: 2px solid var(--color-gray-200);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            background: #fafbfc;
+        }
+
+        table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--color-gray-100);
+            vertical-align: middle;
+            color: var(--color-gray-700);
+        }
+
+        table tr:hover td {
+            background: var(--color-gray-50);
+        }
+
+        /* ===== BADGES ===== */
+        .badge-equip {
+            padding: 0.2rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+
+        .badge-equip.team-badge {
+            background: var(--color-primary-light);
+            color: var(--color-primary-dark);
+            border-color: rgba(37, 99, 235, 0.15);
+        }
+
+        .badge-equip.os-aberta {
+            background: var(--color-danger-bg);
+            color: var(--color-danger);
+            font-weight: 600;
+            border-color: rgba(239, 68, 68, 0.15);
+        }
+
+        .badge-equip.os-fechada {
+            background: var(--color-success-bg);
+            color: var(--color-success-text);
+            font-weight: 600;
+            border-color: rgba(16, 185, 129, 0.15);
+        }
+
+        .os-info-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0 0.25rem;
+            vertical-align: middle;
+            transition: transform 0.15s ease;
+        }
+
+        .os-info-btn:hover {
+            transform: scale(1.25);
+        }
+
+        /* ===== FILTERS & INPUTS ===== */
+        .filter-input {
+            padding: 0.55rem 1rem;
+            border: 1px solid var(--color-gray-300);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            outline: none;
+            background: white;
+            min-width: 160px;
+            transition: all var(--transition-fast);
+            color: var(--color-gray-800);
+        }
+
+        .filter-input:focus {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-focus);
+        }
+
+        .select-team {
+            padding: 0.35rem 0.9rem;
+            border: 1px solid var(--color-gray-300);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            background: white;
+            outline: none;
+            cursor: pointer;
+            color: var(--color-gray-800);
+        }
+
+        .empty-message {
+            color: var(--color-gray-400);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ===== SUB TABS (Team filters) ===== */
+        .sub-tabs {
+            display: flex;
+            gap: 0.2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--color-gray-200);
+        }
+
+        .sub-tab-btn {
+            padding: 0.4rem 1rem;
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            font-size: 0.75rem;
+            color: var(--color-gray-500);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .sub-tab-btn:hover {
+            background: var(--color-gray-200);
+            color: var(--color-gray-800);
+        }
+
+        .sub-tab-btn.active {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .sub-tab-btn .count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.02rem 0.4rem;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            margin-left: 0.2rem;
+        }
+
+        .team-filter-bar {
+            display: flex;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background: var(--color-gray-50);
+            border-radius: 8px;
+            border: 1px solid var(--color-gray-200);
+        }
+
+        .team-filter-btn {
+            padding: 0.35rem 0.9rem;
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            font-size: 0.8rem;
+            color: var(--color-gray-500);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .team-filter-btn:hover {
+            background: white;
+            color: var(--color-gray-800);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .team-filter-btn.active {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .team-filter-btn .count {
+            background: rgba(0, 0, 0, 0.08);
+            padding: 0.05rem 0.4rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* ===== DONUT CHART GRID & CARD STYLING (MATCHING EXACT IMAGE DESIGN) ===== */
+        .donut-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+            align-items: stretch;
+        }
+
+        .donut-card {
+            width: 100%;
+            min-width: 0;
+            background: white;
+            border: 1px solid var(--color-gray-200);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.25rem;
+            transition: box-shadow var(--transition-normal), border-color var(--transition-normal), transform var(--transition-normal);
+        }
+
+        body.dark-theme .donut-card {
+            background: #172033 !important;
+            border-color: #2a374e !important;
+            color: #ffffff !important;
+        }
+
+        .donut-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .donut-chart-wrapper {
+            width: 130px;
+            height: 130px;
+            min-width: 130px;
+            min-height: 130px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .donut-chart-wrapper svg {
+            transform: rotate(-90deg);
+            width: 130px;
+            height: 130px;
+            display: block;
+        }
+
+        .donut-ring-track {
+            fill: none;
+            stroke: #f1f5f9;
+        }
+
+        body.dark-theme .donut-ring-track {
+            stroke: #334155;
+        }
+
+        .donut-seg {
+            fill: none;
+            transition: stroke-dasharray 0.8s cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+            width: 75%;
+        }
+
+        .donut-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--color-gray-900);
+            line-height: 1;
+            margin: 0;
+        }
+
+        body.dark-theme .donut-value {
+            color: #f8fafc;
+        }
+
+        .donut-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--color-gray-500);
+            text-transform: lowercase;
+            margin-top: 3px;
+        }
+
+        body.dark-theme .donut-label {
+            color: #94a3b8;
+        }
+
+        .donut-legend-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 0.5rem;
+            min-width: 160px;
+        }
+
+        .donut-header-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.35rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        body.dark-theme .donut-header-title {
+            color: #64748b;
+        }
+
+        .donut-legend-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .donut-legend-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .donut-legend-left {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .donut-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .donut-legend-name {
+            color: var(--color-gray-700);
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        body.dark-theme .donut-legend-name {
+            color: #cbd5e1;
+        }
+
+        .donut-legend-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-align: right;
+        }
+
+        .donut-val {
+            font-weight: 700;
+            font-size: 0.88rem;
+        }
+
+        .donut-pct {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            min-width: 32px;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        body.dark-theme .donut-pct {
+            color: #64748b;
+        }
+
+        .donut-total-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.4rem;
+            padding-top: 0.45rem;
+            border-top: 1px solid var(--color-gray-200);
+        }
+
+        body.dark-theme .donut-total-row {
+            border-top-color: #334155;
+        }
+
+        .donut-total-label {
+            color: #9ca3af;
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        body.dark-theme .donut-total-label {
+            color: #64748b;
+        }
+
+        .donut-total-val {
+            color: var(--color-gray-800);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        body.dark-theme .donut-total-val {
+            color: #f8fafc;
+        }
+
+        .donut-tooltip {
+            position: absolute;
+            pointer-events: none;
+            background: var(--color-gray-900, #111827);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+            opacity: 0;
+            transform: translate(-50%, -8px);
+            transition: opacity 0.15s ease;
+            z-index: 5;
+            white-space: nowrap;
+        }
+
+        .donut-tooltip.is-visible {
+            opacity: 1;
+            transform: translate(-50%, -12px);
+        }
+
+        /* ===== LOGIN OVERLAY ===== */
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .login-overlay.hidden { display: none; }
+
+        .login-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: var(--shadow-xl);
+            text-align: center;
+            border: 1px solid var(--color-gray-200);
+        }
+
+        .login-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--color-gray-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .login-card p {
+            font-size: 0.875rem;
+            color: var(--color-gray-500);
+            margin-bottom: 1.5rem;
+        }
+
+        .login-field {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .login-field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-gray-600);
+            margin-bottom: 0.35rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .login-field input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--color-gray-300);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            background: white;
+            color: var(--color-gray-800);
+        }
+
+        .login-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.25rem;
+        }
+
+        .login-status {
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            min-height: 1.3rem;
+            font-weight: 500;
+        }
+
+        .login-status.info { color: var(--color-primary); }
+        .login-status.success { color: var(--color-success-text); }
+        .login-status.error { color: var(--color-danger); }
+
+        /* ===== ACTION MODAL ===== */
+        .action-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 900;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+
+        .action-modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .action-modal {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: var(--shadow-xl);
+            margin: auto;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .action-modal h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--color-gray-900);
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--color-gray-100);
+        }
+
+        .action-modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-gray-100);
+        }
+
+        /* ===== OS REPORT MODAL STYLING ===== */
+        .os-report-card {
+            background: var(--color-gray-50);
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-gray-200);
+            transition: all var(--transition-fast);
+        }
+
+        body.dark-theme .os-report-card {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        .os-report-meta {
+            font-size: 0.82rem;
+            color: var(--color-gray-600);
+            margin-bottom: 0.3rem;
+        }
+
+        body.dark-theme .os-report-meta {
+            color: #94a3b8 !important;
+        }
+
+        .os-report-desc {
+            font-size: 0.82rem;
+            color: var(--color-gray-800);
+            background: white;
+            padding: 0.55rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--color-gray-200);
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+
+        body.dark-theme .os-report-desc {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+
+        body.dark-theme .action-modal {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        body.dark-theme .action-modal h3 {
+            color: #f8fafc !important;
+            border-bottom-color: #334155 !important;
+        }
+
+        body.dark-theme .action-modal-actions {
+            border-top-color: #334155 !important;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-note {
+            margin-top: 1.5rem;
+            padding: 0.85rem 1.25rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--color-gray-200);
+            font-size: 0.8rem;
+            color: var(--color-gray-500);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        /* ===== RESPONSIVE BREAKPOINTS ===== */
+        @media (max-width: 640px) {
+            body { padding: 0.5rem; font-size: 14px; }
+            .header { padding: 0.75rem 1rem; }
+            .header-info { width: 100%; justify-content: flex-start; font-size: 0.78rem; gap: 8px; }
+            .donut-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+            .donut-card { height: 290px; }
+            .donut-chart-wrapper { width: 160px; height: 160px; min-width: 160px; min-height: 160px; }
+            .donut-chart-wrapper svg { width: 160px; height: 160px; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN OVERLAY -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-card">
+            <h2><i class="fas fa-tractor" style="color:#2563eb;"></i> Gestão de Frota</h2>
+            <p>Sistema de gerenciamento de equipamentos agrícolas</p>
+            <form id="loginForm">
+                <div class="login-field">
+                    <label>Usuário</label>
+                    <input type="text" id="loginUser" placeholder="Digite seu usuário" autocomplete="username">
+                </div>
+                <div class="login-field">
+                    <label>Senha</label>
+                    <div style="position:relative;">
+                        <input type="password" id="loginPass" placeholder="Digite sua senha" autocomplete="current-password" style="padding-right:2.5rem;">
+                        <button type="button" id="togglePassBtn" style="position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#64748b; padding:0.2rem;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="login-field" style="display:flex; align-items:center; gap:0.5rem; text-align:left;">
+                    <input type="checkbox" id="keepLogged" style="width:auto;">
+                    <label for="keepLogged" style="margin:0; text-transform:none; letter-spacing:0; font-weight:500;">Manter conectado</label>
+                </div>
+                <div class="login-actions">
+                    <button type="submit" class="btn btn-primary" id="loginBtn" style="width:100%; justify-content:center;"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+                </div>
+                <div class="login-status" id="loginStatus"></div>
+                <div style="margin-top:0.8rem; padding:0.6rem 0.8rem; background:rgba(37,99,235,0.08); border-radius:0.5rem; border:1px solid rgba(37,99,235,0.2); font-size:0.78rem; color:#64748b; text-align:left;">
+                    <strong style="color:#2563eb;"><i class="fas fa-info-circle"></i> Acesso padrão:</strong><br>
+                    Usuário: <code style="background:#f1f5f9;padding:0 4px;border-radius:3px;">admin</code> &nbsp;|&nbsp; Senha: <code style="background:#f1f5f9;padding:0 4px;border-radius:3px;">farra@2026</code>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="app">
+        <!-- HEADER UNIFICADO (LIMPO E ESTÁVEL) -->
+        <div class="header" id="mainHeader">
+            <h1>
+                <i class="fas fa-tractor"></i> Gestão de Frota
+                <span class="badge-version">v14 - API</span>
+            </h1>
+            <div class="header-info">
+                <div class="theme-toggle-wrapper" title="Alternar Tema Claro / Escuro">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="themeToggleCheckbox" />
+                        <span class="slider">
+                            <div class="clouds">
+                                <svg viewBox="0 0 100 100" class="cloud cloud1">
+                                    <path d="M30,45 Q35,25 50,25 Q65,25 70,45 Q80,45 85,50 Q90,55 85,60 Q80,65 75,60 Q65,60 60,65 Q55,70 50,65 Q45,70 40,65 Q35,60 25,60 Q20,65 15,60 Q10,55 15,50 Q20,45 30,45"></path>
+                                </svg>
+                                <svg viewBox="0 0 100 100" class="cloud cloud2">
+                                    <path d="M30,45 Q35,25 50,25 Q65,25 70,45 Q80,45 85,50 Q90,55 85,60 Q80,65 75,60 Q65,60 60,65 Q55,70 50,65 Q45,70 40,65 Q35,60 25,60 Q20,65 15,60 Q10,55 15,50 Q20,45 30,45"></path>
+                                </svg>
+                            </div>
+                        </span>
+                    </label>
+                </div>
+                <span class="divider">|</span>
+                <span class="status connected" id="statusContainer">
+                    <span class="status-dot gray" id="statusDot"></span>
+                    <span id="connectionStatus">Conectado</span>
+                </span>
+                <span class="divider">|</span>
+                <span class="datetime" id="headerClock">--/--/----, --:--:--</span>
+                <span class="divider">|</span>
+                <span class="counter" title="OS Abertas"><strong id="osAbertasCount">0</strong> OS</span>
+                <span class="counter ok" title="Equipamentos OK"><strong id="equipOkCount">0</strong> OK</span>
+                <span class="counter os" title="Equipamentos com OS"><strong id="equipOsCount">0</strong> c/OS</span>
+                <span class="divider">|</span>
+                <div class="user-menu" id="userMenu">
+                    <div id="userBadge" style="display:inline-flex; align-items:center; gap:0.35rem;">
+                        <i class="fas fa-user-circle" style="color:var(--color-primary); font-size:1.05em;"></i>
+                        <span id="userRoleBadge">--</span>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn" style="display:none;"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS PRINCIPAIS (Ocultas para perfil Visualizador) -->
+        <div class="tabs" id="mainTabs">
+            <button class="tab-btn active" data-tab="tab-admin"><i class="fas fa-cog"></i> Admin</button>
+            <button class="tab-btn" data-tab="tab-equipe"><i class="fas fa-users"></i> Equipes</button>
+        </div>
+
+        <!-- TAB ADMIN -->
+        <div id="tab-admin" class="tab-content active">
+            <div class="tabs" id="adminSubTabs">
+                <button class="tab-btn active" data-subtab="tab-equipamentos"><i class="fas fa-list"></i> Equipamentos</button>
+                <button class="tab-btn" data-subtab="tab-operacoes"><i class="fas fa-tasks"></i> Operações</button>
+                <button class="tab-btn" data-subtab="tab-sync"><i class="fas fa-cloud-upload-alt"></i> Sincronização</button>
+            </div>
+            <div id="adminSubContents">
+                <!-- Equipamentos -->
+                <div id="tab-equipamentos" class="tab-content active">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-list"></i> Equipamentos</h2>
+                            <div class="flex gap-2">
+                                <input type="text" class="filter-input" id="filterEquip" placeholder="Filtrar equipamento...">
+                                <span class="count-badge" id="totalEquipCount">0</span>
+                            </div>
+                        </div>
+                        <div class="team-filter-bar" id="equipTeamFilter"></div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Frota</th>
+                                        <th>Descrição</th>
+                                        <th>Modelo</th>
+                                        <th>Tipo</th>
+                                        <th>Operação</th>
+                                        <th>Equipe</th>
+                                        <th>Status OS</th>
+                                        <th style="min-width:130px;">Mover</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="equipTableBody">
+                                    <tr><td colspan="8" class="empty-message">Aguardando sincronização...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Operações -->
+                <div id="tab-operacoes" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-tasks"></i> Operações Produtivas</h2>
+                            <div class="flex gap-2">
+                                <input type="text" class="filter-input" id="filterOperacao" placeholder="Filtrar operação...">
+                                <span class="count-badge" id="totalOperCount">0</span>
+                            </div>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Descrição</th>
+                                        <th>Tipo</th>
+                                        <th>Corporativo</th>
+                                        <th>Grupo</th>
+                                        <th>Status</th>
+                                        <th>Equipe</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="operTableBody">
+                                    <tr><td colspan="7" class="empty-message">Nenhuma operação carregada.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sincronização -->
+                <div id="tab-sync" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-sync-alt"></i> Sincronização</h2>
+                            <div style="display:flex;gap:0.5rem;align-items:center;">
+                                <span class="count-badge" id="syncStatus" style="background:#dcfce7;color:#166534;">● Ativa</span>
+                                <button class="btn btn-outline btn-sm" id="syncNowBtn">
+                                    <i class="fas fa-redo"></i> Sincronizar Agora
+                                </button>
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem;">
+                            <div style="background:var(--color-gray-50);padding:0.85rem 1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
+                                <div style="font-size:0.7rem;color:var(--color-gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.25rem;">Equipamentos</div>
+                                <div style="font-size:1.5rem;font-weight:800;color:var(--color-primary);" id="syncEquipCount">—</div>
+                            </div>
+                            <div style="background:var(--color-gray-50);padding:0.85rem 1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
+                                <div style="font-size:0.7rem;color:var(--color-gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.25rem;">Ordens de Serviço</div>
+                                <div style="font-size:1.5rem;font-weight:800;color:var(--color-danger);" id="syncOsCount">—</div>
+                            </div>
+                            <div style="background:var(--color-gray-50);padding:0.85rem 1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
+                                <div style="font-size:0.7rem;color:var(--color-gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.25rem;">Operações</div>
+                                <div style="font-size:1.5rem;font-weight:800;color:#22c55e;" id="syncOpCount">—</div>
+                            </div>
+                        </div>
+                        <div style="font-size:0.78rem;color:var(--color-gray-500);margin-bottom:0.75rem;">
+                            <i class="fas fa-clock"></i> Próxima atualização automática em <strong>5 minutos</strong> · Fonte: API SimpleFarm (porta 8000)
+                        </div>
+                        <div class="api-log" id="apiLog" style="background:#0f172a;padding:0.8rem;border-radius:8px;color:#94a3b8;font-family:monospace;font-size:0.75rem;max-height:280px;overflow-y:auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB EQUIPE -->
+        <div id="tab-equipe" class="tab-content">
+            <div class="tabs" id="equipeSubTabs"></div>
+            <div id="equipeSubContents"></div>
+        </div>
+
+        <div class="footer-note">
+            <i class="fas fa-database"></i> Dados buscados diretamente da API do SimpleFarm ·
+            <span id="footerStatus">Conectado</span>
+        </div>
+    </div>
+
+    <!-- MODAL RELATÓRIO DA OS (📋) -->
+    <div class="action-modal-overlay" id="osReportModalOverlay">
+        <div class="action-modal">
+            <h3 id="osReportModalTitle"><i class="fas fa-clipboard-list" style="color:var(--color-primary);"></i> Detalhes da Ordem de Serviço</h3>
+            <div id="osReportModalBody"></div>
+            <div class="action-modal-actions">
+                <button class="btn btn-primary" id="osReportModalClose">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // ESTADO GLOBAL — única fonte da verdade
+        // ================================================================
+        let authToken    = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token') || '';
+        let userRole     = localStorage.getItem('sf_auth_role') || 'visualizador';
+        let equipments   = [];
+        let operacoes    = [];
+        let ordensServico = [];
+        let equipamentosComOS = new Set();
+        let equipFiltroEquipe = 'TODAS';
+        let isSyncing    = false;
+        let syncTimer    = null;
+
+        // Aba ativa — gerenciada em memória (não força re-render ao recarregar dados)
+        let activeMainTab    = localStorage.getItem('sf_active_tab')           || 'tab-equipe';
+        let activeAdminSub   = localStorage.getItem('sf_active_admin_subtab')  || 'tab-equipamentos';
+        let activeTeam       = localStorage.getItem('sf_active_team')          || null;
+
+        const ADMIN_ROLES = ['admin', 'analista', 'supervisor', 'manager', 'leader'];
+
+        // ================================================================
+        // API BASE
+        // ================================================================
+        const API_BASE = (
+            window.location.port === '5500' ||
+            window.location.port === '5501' ||
+            window.location.protocol === 'file:'
+        ) ? 'http://localhost:3000' : window.location.origin;
+
+        // ================================================================
+        // TEMA
+        // ================================================================
+        function initThemeToggle() {
+            const checkbox  = document.getElementById('themeToggleCheckbox');
+            const saved     = localStorage.getItem('sf_theme') || 'light';
+            if (saved === 'dark') {
+                document.body.classList.add('dark-theme');
+                if (checkbox) checkbox.checked = true;
+            }
+            if (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    document.body.classList.toggle('dark-theme', this.checked);
+                    localStorage.setItem('sf_theme', this.checked ? 'dark' : 'light');
+                });
+            }
+        }
+
+        // ================================================================
+        // RELÓGIO
+        // ================================================================
+        function startRealtimeClock() {
+            const el = document.getElementById('headerClock');
+            if (!el) return;
+            const tick = () => {
+                const n = new Date();
+                el.textContent = `${n.toLocaleDateString('pt-BR')}, ${n.toLocaleTimeString('pt-BR')}`;
+            };
+            tick();
+            setInterval(tick, 1000);
+        }
+
+        // ================================================================
+        // AUTH UI
+        // ================================================================
+        function updateAuthUI() {
+            const overlay   = document.getElementById('loginOverlay');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const token     = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token');
+            if (overlay)   overlay.classList.toggle('hidden', !!token);
+            if (logoutBtn) logoutBtn.style.display = token ? 'inline-flex' : 'none';
+
+            // Atualiza badge do role
+            const roleBadge = document.getElementById('userRoleBadge');
+            if (roleBadge) {
+                const names = { admin:'Admin', analista:'Analista', supervisor:'Supervisor',
+                                manager:'Gerente', leader:'Líder', visualizador:'Visualizador' };
+                roleBadge.textContent = names[userRole] || userRole;
+            }
+        }
+
+        // ================================================================
+        // LOGIN
+        // ================================================================
+        async function doLogin() {
+            const user      = document.getElementById('loginUser').value.trim();
+            const pass      = document.getElementById('loginPass').value;
+            const keep      = document.getElementById('keepLogged')?.checked;
+            const statusEl  = document.getElementById('loginStatus');
+            const loginBtn  = document.getElementById('loginBtn');
+
+            if (!user || !pass) {
+                statusEl.textContent = 'Preencha usuário e senha';
+                statusEl.className   = 'login-status error';
+                return;
+            }
+            statusEl.textContent = 'Entrando...';
+            statusEl.className   = 'login-status info';
+            if (loginBtn) loginBtn.disabled = true;
+
+            try {
+                const res  = await fetch(`${API_BASE}/api/auth/login`, {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ usuario: user, senha: pass })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success && data.token) {
+                    const storage = keep ? localStorage : sessionStorage;
+                    storage.setItem('sf_auth_token', data.token);
+                    storage.setItem('sf_auth_user',  data.usuario);
+                    storage.setItem('sf_auth_role',  data.role || 'visualizador');
+                    authToken = data.token;
+                    userRole  = data.role || 'visualizador';
+                    statusEl.textContent = '✅ Login efetuado!';
+                    statusEl.className   = 'login-status success';
+                    applyRBAC();
+                    updateAuthUI();
+                    await carregarDados();
+                    iniciarSyncTimer();
+                } else {
+                    statusEl.textContent = data.error || 'Usuário ou senha inválidos';
+                    statusEl.className   = 'login-status error';
+                }
+            } catch (err) {
+                statusEl.textContent = 'Erro de conexão. Verifique se o servidor está rodando.';
+                statusEl.className   = 'login-status error';
+            } finally {
+                if (loginBtn) loginBtn.disabled = false;
+            }
+        }
+
+        async function doLogout() {
+            const token = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token');
+            try {
+                await fetch(`${API_BASE}/api/auth/logout`, {
+                    method: 'POST',
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+            } catch (e) {}
+            ['sf_auth_token','sf_auth_user','sf_auth_role'].forEach(k => {
+                localStorage.removeItem(k);
+                sessionStorage.removeItem(k);
+            });
+            authToken = '';
+            if (syncTimer) { clearInterval(syncTimer); syncTimer = null; }
+            updateAuthUI();
+        }
+
+        async function checkAuth() {
+            const token = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token');
+            if (!token) { updateAuthUI(); return; }
+            // Confia no token armazenado imediatamente
+            authToken = token;
+            userRole  = localStorage.getItem('sf_auth_role') || 'visualizador';
+            applyRBAC();
+            updateAuthUI();
+            // Valida silenciosamente no servidor (timeout 4s)
+            try {
+                const ctrl = new AbortController();
+                const t    = setTimeout(() => ctrl.abort(), 4000);
+                const res  = await fetch(`${API_BASE}/api/auth/me`, {
+                    headers: { Authorization: 'Bearer ' + token },
+                    signal:  ctrl.signal
+                });
+                clearTimeout(t);
+                if (res.ok) {
+                    const d = await res.json();
+                    if (d.success) {
+                        localStorage.setItem('sf_auth_role', d.role || 'visualizador');
+                        userRole = d.role || 'visualizador';
+                        applyRBAC();
+                        updateAuthUI();
+                    }
+                } else if (res.status === 401) {
+                    // Token realmente inválido — força logout
+                    ['sf_auth_token','sf_auth_user','sf_auth_role'].forEach(k => {
+                        localStorage.removeItem(k);
+                        sessionStorage.removeItem(k);
+                    });
+                    authToken = '';
+                    updateAuthUI();
+                }
+            } catch (e) {
+                // Servidor inacessível — mantém sessão local
+            }
+        }
+
+        // ================================================================
+        // STATUS / CONEXÃO
+        // ================================================================
+        function setConnectionStatus(type, message = '') {
+            const dot  = document.getElementById('statusDot');
+            const conn = document.getElementById('connectionStatus');
+            if (!dot || !conn) return;
+            const map = {
+                success: ['green',  'Conectado'],
+                error:   ['red',    'Offline'],
+                syncing: ['yellow', 'Atualizando...'],
+                gray:    ['gray',   message || 'Aguardando...']
+            };
+            const [color, label] = map[type] || map.gray;
+            dot.className    = `status-dot ${color}`;
+            conn.textContent = label;
+        }
+
+        function atualizarStatusGeral(teamFilter = null) {
+            const osAbertasEl = document.getElementById('osAbertasCount');
+            const equipOkEl   = document.getElementById('equipOkCount');
+            const equipOsEl   = document.getElementById('equipOsCount');
+
+            let filteredEqs = equipments;
+            let filteredOS  = ordensServico;
+            let teamComOS   = equipamentosComOS;
+
+            if (teamFilter) {
+                filteredEqs = equipments.filter(eq => (eq.grupo || '') === teamFilter);
+                const codes = new Set(filteredEqs.map(eq => String(eq.codigo)).filter(Boolean));
+                teamComOS   = new Set([...equipamentosComOS].filter(c => codes.has(c)));
+                filteredOS  = ordensServico.filter(os => {
+                    const cod = (os.codigoEquip || '').split(' - ')[0].trim();
+                    return codes.has(cod);
+                });
+            }
+
+            if (osAbertasEl) osAbertasEl.textContent = filteredOS.length;
+            if (equipOkEl)   equipOkEl.textContent   = Math.max(0, filteredEqs.length - teamComOS.size);
+            if (equipOsEl)   equipOsEl.textContent   = teamComOS.size;
+        }
+
+        // ================================================================
+        // CARREGAR DADOS (sem alterar aba ativa)
+        // ================================================================
+        async function carregarDados(isBackground = false) {
+            if (!authToken) return;
+            if (!isBackground) setConnectionStatus('syncing');
+
+            try {
+                const res    = await fetch(`${API_BASE}/api/dados`, {
+                    headers: {
+                        'Content-Type':  'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (res.status === 401) {
+                    setConnectionStatus('error');
+                    addLog('⚠️ Token expirado. Por favor, faça login novamente.', 'warning');
+                    return;
+                }
+
+                const result = await res.json();
+
+                if (result && result.success && result.data) {
+                    const d = result.data;
+
+                    // Mapear equipamentos usando statusOS direto da API
+                    equipments = (d.equipamentos || []).map(eq => ({
+                        codigo:    String(eq.codigo || ''),
+                        descricao: eq.descricao || '',
+                        modelo:    eq.modelo    || '',
+                        tipo:      eq.tipo      || 'Outros',
+                        grupo:     eq.grupo     || 'OUTRAS',
+                        statusOS:  eq.statusOS  || 'OK',
+                        codOS:     eq.codOS     || ''
+                    }));
+
+                    operacoes    = d.operacoes    || [];
+                    ordensServico = d.ordensServico || [];
+
+                    // Montar set de equipamentos com OS aberta
+                    equipamentosComOS = new Set();
+                    ordensServico.forEach(os => {
+                        const cod = (os.codigoEquip || '').split(' - ')[0].trim();
+                        if (cod && /^\d+$/.test(cod)) equipamentosComOS.add(cod);
+                    });
+                    // Também usar statusOS do próprio equipamento
+                    equipments.forEach(eq => {
+                        if ((eq.statusOS || '').toUpperCase() !== 'OK' && eq.codigo) {
+                            equipamentosComOS.add(String(eq.codigo));
+                        }
+                    });
+
+                    const syncTime = d.ultimaSincronizacao || new Date().toISOString();
+                    addLog(`✅ Dados atualizados — ${equipments.length} equip. · ${ordensServico.length} OS · Sync: ${syncTime}`, 'success');
+                    setConnectionStatus('success');
+
+                    // Atualizar footer
+                    const footerStatus = document.getElementById('footerStatus');
+                    if (footerStatus) footerStatus.textContent = `Conectado · Última sync: ${syncTime}`;
+
+                    // Atualizar contadores da aba Sync
+                    const syncEquip = document.getElementById('syncEquipCount');
+                    const syncOs    = document.getElementById('syncOsCount');
+                    const syncOp    = document.getElementById('syncOpCount');
+                    if (syncEquip) syncEquip.textContent = equipments.length;
+                    if (syncOs)    syncOs.textContent    = ordensServico.length;
+                    if (syncOp)    syncOp.textContent    = operacoes.length;
+
+                    // Re-renderizar SEM mudar aba ativa
+                    atualizarStatusGeral();
+                    renderEquipamentos();
+                    renderOperacoes();
+                    renderTeamTabs(false); // false = não muda aba
+                    return;
+                }
+            } catch (error) {
+                console.warn('Erro ao carregar dados:', error);
+            }
+
+            setConnectionStatus('error');
+            addLog('❌ Falha ao buscar dados da API', 'error');
+        }
+
+        // ================================================================
+        // SYNC TIMER (5 MINUTOS — silencioso, não interrompe o usuário)
+        // ================================================================
+        function iniciarSyncTimer() {
+            if (syncTimer) clearInterval(syncTimer);
+            const CINCO_MIN = 5 * 60 * 1000;
+            syncTimer = setInterval(async () => {
+                if (!authToken || isSyncing) return;
+                isSyncing = true;
+                addLog('🔄 Sincronização automática iniciada...', 'info');
+                await carregarDados(true); // background = true → não mostra spinner
+                isSyncing = false;
+            }, CINCO_MIN);
+        }
+
+        // ================================================================
+        // LOG
+        // ================================================================
+        function addLog(message, type = 'info') {
+            const logDiv = document.getElementById('apiLog');
+            if (!logDiv) return;
+            const time  = new Date().toLocaleTimeString('pt-BR');
+            const color = type === 'success' ? '#10b981' :
+                          type === 'error'   ? '#ef4444' :
+                          type === 'warning' ? '#f59e0b' : '#94a3b8';
+            const div = document.createElement('div');
+            div.style.color = color;
+            div.textContent = `[${time}] ${message}`;
+            logDiv.appendChild(div);
+            // Manter últimas 50 linhas
+            while (logDiv.children.length > 50) logDiv.removeChild(logDiv.firstChild);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // ================================================================
+        // TAB SWITCHING — estável, nunca volta para admin sozinho
+        // ================================================================
+        function switchMainTab(tabId, persist = true) {
+            if (!tabId) return;
+            activeMainTab = tabId;
+            if (persist) {
+                localStorage.setItem('sf_active_tab', tabId);
+                sessionStorage.setItem('sf_active_tab', tabId);
+            }
+            document.querySelectorAll('#mainTabs > .tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tabId);
+            });
+            document.querySelectorAll('#tab-admin, #tab-equipe').forEach(el => {
+                el.classList.toggle('active', el.id === tabId);
+            });
+        }
+
+        function switchAdminSubTab(subId, persist = true) {
+            if (!subId) return;
+            activeAdminSub = subId;
+            if (persist) {
+                localStorage.setItem('sf_active_admin_subtab', subId);
+                sessionStorage.setItem('sf_active_admin_subtab', subId);
+            }
+            document.querySelectorAll('#adminSubTabs > .tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.subtab === subId);
+            });
+            document.querySelectorAll('#adminSubContents > .tab-content').forEach(el => {
+                el.classList.toggle('active', el.id === subId);
+            });
+        }
+
+        // ================================================================
+        // RBAC (chamado apenas no login/init — não ao recarregar dados)
+        // ================================================================
+        function applyRBAC() {
+            const mainTabs       = document.getElementById('mainTabs');
+            const adminTabBtn    = document.querySelector('.tab-btn[data-tab="tab-admin"]');
+            const adminTabContent = document.getElementById('tab-admin');
+
+            if (ADMIN_ROLES.includes(userRole)) {
+                if (mainTabs)        mainTabs.style.display       = 'inline-flex';
+                if (adminTabBtn)     adminTabBtn.style.display    = '';
+                if (adminTabContent) adminTabContent.style.display = '';
+                switchMainTab(activeMainTab, false);
+                switchAdminSubTab(activeAdminSub, false);
+            } else {
+                // Visualizador: só vê equipes
+                if (mainTabs)        mainTabs.style.display        = 'none';
+                if (adminTabContent) adminTabContent.style.display = 'none';
+                switchMainTab('tab-equipe', false);
+            }
+        }
+
+        // ================================================================
+        // FILTROS E RENDER DE EQUIPAMENTOS
+        // ================================================================
+        function getEquipesDisponiveis() {
+            const teams = new Set(equipments.map(eq => eq.grupo).filter(Boolean));
+            return [...teams].sort();
+        }
+
+        function renderEquipTeamFilter() {
+            const container = document.getElementById('equipTeamFilter');
+            if (!container) return;
+            const teams = ['TODAS', ...getEquipesDisponiveis()];
+            container.innerHTML = teams.map(team => {
+                const count  = team === 'TODAS' ? equipments.length : equipments.filter(eq => eq.grupo === team).length;
+                const active = equipFiltroEquipe === team ? 'active' : '';
+                return `<button class="team-filter-btn ${active}" data-team="${team}">${team} <span class="count">${count}</span></button>`;
+            }).join('');
+        }
+
+        function renderEquipamentos() {
+            const tbody   = document.getElementById('equipTableBody');
+            const countEl = document.getElementById('totalEquipCount');
+            if (!tbody) return;
+
+            const filter = (document.getElementById('filterEquip')?.value || '').toLowerCase();
+            const dados  = equipments.filter(eq => {
+                if (equipFiltroEquipe && equipFiltroEquipe !== 'TODAS' && eq.grupo !== equipFiltroEquipe) return false;
+                return `${eq.codigo} ${eq.descricao} ${eq.modelo} ${eq.grupo} ${eq.tipo}`.toLowerCase().includes(filter);
+            });
+
+            if (countEl) countEl.textContent = dados.length;
+
+            if (dados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-message">Nenhum equipamento encontrado.</td></tr>';
+                renderEquipTeamFilter();
+                return;
+            }
+
+            tbody.innerHTML = dados.map(eq => {
+                const hasOS      = equipamentosComOS.has(String(eq.codigo));
+                const statusLabel = hasOS ? 'Com OS' : 'OK';
+                const statusClass = hasOS ? 'os-aberta' : 'os-fechada';
+                const osBtn      = hasOS ? `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver OS">📋</button>` : '';
+                return `<tr>
+                    <td><strong>${eq.codigo || '-'}</strong></td>
+                    <td>${eq.descricao || '-'}</td>
+                    <td style="font-size:0.8rem;color:var(--color-gray-500);">${eq.modelo || '-'}</td>
+                    <td><span style="font-size:0.78rem;background:var(--color-gray-100);padding:0.15rem 0.5rem;border-radius:4px;">${eq.tipo || '-'}</span></td>
+                    <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
+                    <td><span class="badge-equip ${statusClass}">${statusLabel}</span> ${osBtn}</td>
+                </tr>`;
+            }).join('');
+
+            renderEquipTeamFilter();
+        }
+
+        function renderOperacoes() {
+            const tbody   = document.getElementById('operTableBody');
+            const countEl = document.getElementById('totalOperCount');
+            const filter  = (document.getElementById('filterOperacao')?.value || '').toLowerCase();
+            if (!tbody) return;
+
+            const dados = operacoes.filter(op =>
+                `${op.codigo} ${op.descricao} ${op.tipoOperacao} ${op.grupoOperacao}`.toLowerCase().includes(filter)
+            );
+
+            if (countEl) countEl.textContent = dados.length;
+
+            if (dados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-message">Nenhuma operação carregada.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = dados.map(op => `<tr>
+                <td><strong>${op.codigo || '-'}</strong></td>
+                <td>${op.descricao || '-'}</td>
+                <td>${op.tipoOperacao || '-'}</td>
+                <td>${op.grupoOperacao || '-'}</td>
+                <td><span class="badge-equip os-fechada">${op.status || 'ATIVO'}</span></td>
+                <td>${op.equipe || '-'}</td>
+            </tr>`).join('');
+        }
+
+        // ================================================================
+        // DONUT CARDS
+        // ================================================================
+        function buildDonutCardHTML(cfg) {
+            const radius = 44;
+            const circ   = 2 * Math.PI * radius;
+            const segs   = cfg.segments || [];
+            let offset   = 0;
+
+            const rings = segs.map(seg => {
+                const pct = seg.percent || 0;
+                if (pct <= 0) return '';
+                const len  = (pct / 100) * circ;
+                const dash = `${len.toFixed(2)} ${(circ - len).toFixed(2)}`;
+                const off  = (-offset).toFixed(2);
+                offset += len;
+                return `<circle class="donut-seg" cx="60" cy="60" r="${radius}"
+                    stroke="${seg.color}" stroke-width="13" fill="none"
+                    stroke-dasharray="${dash}" stroke-dashoffset="${off}"></circle>`;
+            }).join('');
+
+            const legend = segs.map(seg => `
+                <div class="donut-legend-row">
+                    <div class="donut-legend-left">
+                        <span class="donut-dot" style="background:${seg.color};"></span>
+                        <span class="donut-legend-name">${seg.label}</span>
+                    </div>
+                    <div class="donut-legend-right">
+                        <span class="donut-val" style="color:${seg.color};">${seg.value}</span>
+                        <span class="donut-pct">${seg.pct}</span>
+                    </div>
+                </div>`).join('');
+
+            return `<div class="donut-card" data-donut-id="${cfg.id}">
+                <div class="donut-chart-wrapper">
+                    <svg viewBox="0 0 120 120">
+                        <circle class="donut-ring-track" cx="60" cy="60" r="${radius}" stroke-width="13" fill="none"></circle>
+                        ${rings}
+                    </svg>
+                    <div class="donut-center">
+                        <div class="donut-value">${cfg.centerValue}${cfg.centerSuffix || '%'}</div>
+                        <div class="donut-label">${cfg.centerLabel || 'disp.'}</div>
+                    </div>
+                </div>
+                <div class="donut-legend-area">
+                    <div class="donut-header-title">${cfg.title}</div>
+                    <div class="donut-legend-rows">${legend}</div>
+                    <div class="donut-total-row">
+                        <span class="donut-total-label">${cfg.totalLabel || 'Total registrado'}</span>
+                        <span class="donut-total-val">${cfg.totalValue || '—'}</span>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // ================================================================
+        // MODAL OS
+        // ================================================================
+        function openOsReportModal(frotaCod) {
+            const osList = ordensServico.filter(os =>
+                (os.codigoEquip || '').split(' - ')[0].trim() === String(frotaCod)
+            );
+            const modal = document.getElementById('osReportModalOverlay');
+            const title = document.getElementById('osReportModalTitle');
+            const body  = document.getElementById('osReportModalBody');
+            if (!modal || !body) return;
+
+            title.innerHTML = `<i class="fas fa-clipboard-list" style="color:var(--color-primary);"></i> OS · Frota ${frotaCod}`;
+
+            if (osList.length === 0) {
+                body.innerHTML = `<div style="padding:1.5rem;text-align:center;color:var(--color-gray-500);">
+                    <i class="fas fa-check-circle" style="font-size:2rem;color:#22c55e;margin-bottom:0.5rem;display:block;"></i>
+                    <p style="font-weight:600;">Equipamento sem OS abertas</p>
+                    <p style="font-size:0.85rem;margin-top:0.3rem;">Este equipamento está disponível para operação.</p>
+                </div>`;
+            } else {
+                body.innerHTML = `<div style="display:flex;flex-direction:column;gap:0.8rem;">` +
+                    osList.map(os => `
+                        <div class="os-report-card">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                                <strong style="font-size:0.95rem;">OS nº ${os.codOS || 'S/N'}</strong>
+                                <span class="badge-equip os-aberta">${os.statusOS || 'ABERTA'}</span>
+                            </div>
+                            <div class="os-report-meta"><i class="fas fa-calendar-alt" style="margin-right:4px;"></i> <strong>Entrada:</strong> ${os.dataEntrada || '—'}</div>
+                            <div class="os-report-meta"><i class="fas fa-clock" style="margin-right:4px;"></i> <strong>Dias:</strong> ${os.diasPermanencia || '—'}</div>
+                            <div class="os-report-meta"><i class="fas fa-tools" style="margin-right:4px;"></i> <strong>Tipo:</strong> ${os.tipoOficina || '—'} — ${os.oficina || '—'}</div>
+                            <div class="os-report-desc"><strong style="color:var(--color-primary);">Descrição:</strong> ${os.descricao || 'Manutenção registrada no sistema'}</div>
+                        </div>`).join('') +
+                `</div>`;
+            }
+            modal.classList.add('active');
+        }
+
+        // ================================================================
+        // ABA EQUIPES — re-renderiza conteúdo mas mantém aba selecionada
+        // ================================================================
+        function renderTeamTabs(resetTeam = false) {
+            const tabsEl   = document.getElementById('equipeSubTabs');
+            if (!tabsEl) return;
+
+            const teams = getEquipesDisponiveis();
+            if (teams.length === 0) {
+                tabsEl.innerHTML = '';
+                document.getElementById('equipeSubContents').innerHTML =
+                    '<div class="empty-message" style="padding:3rem;text-align:center;"><i class="fas fa-database" style="font-size:2rem;color:var(--color-gray-300);margin-bottom:0.5rem;display:block;"></i>Aguardando dados...</div>';
+                return;
+            }
+
+            // Manter equipe ativa se ainda existir, senão pega a primeira
+            if (resetTeam || !activeTeam || !teams.includes(activeTeam)) {
+                activeTeam = teams[0];
+            }
+
+            tabsEl.innerHTML = teams.map(team => {
+                const count = equipments.filter(eq => eq.grupo === team).length;
+                return `<button class="sub-tab-btn ${team === activeTeam ? 'active' : ''}" data-team="${team}">
+                    ${team} <span class="count">${count}</span>
+                </button>`;
+            }).join('');
+
+            // Event listeners nas tabs de equipe
+            tabsEl.querySelectorAll('.sub-tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activeTeam = btn.dataset.team;
+                    localStorage.setItem('sf_active_team', activeTeam);
+                    tabsEl.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderTeamTabContent(activeTeam);
+                    atualizarStatusGeral(activeTeam);
+                });
+            });
+
+            renderTeamTabContent(activeTeam);
+            atualizarStatusGeral(activeTeam);
+        }
+
+        function renderTeamTabContent(team) {
+            const content = document.getElementById('equipeSubContents');
+            if (!content) return;
+
+            const teamEqs   = equipments.filter(eq => eq.grupo === team);
+            const teamOps   = operacoes.filter(op => (op.equipe || '') === team);
+            const comOS     = teamEqs.filter(eq => equipamentosComOS.has(String(eq.codigo)));
+            const semOS     = teamEqs.length - comOS.length;
+            const pctDisp   = teamEqs.length > 0 ? Math.round((semOS / teamEqs.length) * 100) : 0;
+            const pctOS     = teamEqs.length > 0 ? Math.round((comOS.length / teamEqs.length) * 100) : 0;
+
+            let html = '<div class="donut-grid">';
+
+            // Donut geral da equipe
+            html += buildDonutCardHTML({
+                id:           `frota-${team}`,
+                title:        `GERAL · ${team} · ${teamEqs.length} EQUIP.`,
+                centerValue:  pctDisp,
+                centerSuffix: '%',
+                centerLabel:  'disp.',
+                totalLabel:   'Total registrado',
+                totalValue:   `${teamEqs.length} equip.`,
+                segments: [
+                    { color: '#22c55e', label: 'Disponível', value: `${semOS} equip.`,        pct: `${pctDisp}%`,  percent: pctDisp },
+                    { color: '#ef4444', label: 'Com OS',     value: `${comOS.length} equip.`,  pct: `${pctOS}%`,   percent: pctOS   },
+                    { color: '#2563eb', label: 'Operações',  value: `${teamOps.length} ativas`, pct: '',             percent: 0       }
+                ]
+            });
+
+            // Donuts por tipo
+            const byTipo = {};
+            teamEqs.forEach(eq => {
+                const t = eq.tipo || 'Outros';
+                if (!byTipo[t]) byTipo[t] = [];
+                byTipo[t].push(eq);
+            });
+
+            Object.keys(byTipo).sort().forEach(tipo => {
+                const eqs     = byTipo[tipo];
+                const cOS     = eqs.filter(eq => equipamentosComOS.has(String(eq.codigo))).length;
+                const sOS     = eqs.length - cOS;
+                const pd      = eqs.length > 0 ? Math.round((sOS / eqs.length) * 100) : 0;
+                const po      = eqs.length > 0 ? Math.round((cOS / eqs.length) * 100) : 0;
+                html += buildDonutCardHTML({
+                    id:           `donut-${team}-${tipo}`,
+                    title:        `TIPO: ${tipo.toUpperCase()} · ${eqs.length} EQUIP.`,
+                    centerValue:  pd,
+                    centerSuffix: '%',
+                    centerLabel:  'disp.',
+                    totalLabel:   'Total registrado',
+                    totalValue:   `${eqs.length} equip.`,
+                    segments: [
+                        { color: '#22c55e', label: 'Disponível', value: `${sOS} equip.`, pct: `${pd}%`, percent: pd },
+                        { color: '#ef4444', label: 'Com OS',     value: `${cOS} equip.`, pct: `${po}%`, percent: po }
+                    ]
+                });
+            });
+
+            html += '</div><div class="model-grid">';
+
+            // Tabelas por tipo (blocos de 5)
+            Object.keys(byTipo).sort().forEach(tipo => {
+                const eqs  = byTipo[tipo];
+                const SIZE = 5;
+                for (let i = 0; i < eqs.length; i += SIZE) {
+                    const chunk     = eqs.slice(i, i + SIZE);
+                    const chunkNum  = Math.floor(i / SIZE) + 1;
+                    const total     = Math.ceil(eqs.length / SIZE);
+                    const hasOSCnt  = chunk.filter(eq => equipamentosComOS.has(String(eq.codigo))).length;
+
+                    html += `<div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-cog"></i> ${tipo}${total > 1 ? ` (${chunkNum}/${total})` : ''}</h2>
+                            <div style="display:flex;gap:0.5rem;align-items:center;">
+                                <span class="count-badge ${hasOSCnt > 0 ? 'os-aberta' : 'os-fechada'}">${hasOSCnt} c/OS</span>
+                                <span class="count-badge">${chunk.length} eqs</span>
+                            </div>
+                        </div>
+                        <div class="table-wrap"><table><thead><tr>
+                            <th>Frota</th><th>Descrição</th><th>Status OS</th>
+                        </tr></thead><tbody>` +
+                        chunk.map(eq => {
+                            const hasOS = equipamentosComOS.has(String(eq.codigo));
+                            const osBtn = hasOS ? `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver OS">📋</button>` : '';
+                            return `<tr>
+                                <td><strong>${eq.codigo || '-'}</strong></td>
+                                <td>${eq.descricao || '-'}</td>
+                                <td><span class="badge-equip ${hasOS ? 'os-aberta' : 'os-fechada'}">${hasOS ? 'Com OS' : 'OK'}</span> ${osBtn}</td>
+                            </tr>`;
+                        }).join('') +
+                        `</tbody></table></div></div>`;
+                }
+            });
+
+            html += '</div>';
+            content.innerHTML = html;
+        }
+
+        // ================================================================
+        // EVENT LISTENERS (configurados 1x no init)
+        // ================================================================
+        function setupEventListeners() {
+            // Login
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn  = document.getElementById('loginBtn');
+            if (loginForm) loginForm.addEventListener('submit', e => { e.preventDefault(); doLogin(); });
+            if (loginBtn)  loginBtn.addEventListener('click', doLogin);
+
+            // Show/hide password
+            const togglePassBtn = document.getElementById('togglePassBtn');
+            if (togglePassBtn) {
+                togglePassBtn.addEventListener('click', function () {
+                    const input = document.getElementById('loginPass');
+                    const icon  = this.querySelector('i');
+                    if (input.type === 'password') { input.type = 'text';     icon.className = 'fas fa-eye-slash'; }
+                    else                           { input.type = 'password'; icon.className = 'fas fa-eye'; }
+                });
+            }
+
+            // Logout
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) logoutBtn.addEventListener('click', doLogout);
+
+            // Tabs principais
+            document.querySelectorAll('#mainTabs > .tab-btn[data-tab]').forEach(btn => {
+                btn.addEventListener('click', () => switchMainTab(btn.dataset.tab));
+            });
+
+            // Sub-tabs admin
+            document.querySelectorAll('#adminSubTabs > .tab-btn[data-subtab]').forEach(btn => {
+                btn.addEventListener('click', () => switchAdminSubTab(btn.dataset.subtab));
+            });
+
+            // Filtros
+            const filterEquip = document.getElementById('filterEquip');
+            if (filterEquip) filterEquip.addEventListener('input', renderEquipamentos);
+
+            const filterOperacao = document.getElementById('filterOperacao');
+            if (filterOperacao) filterOperacao.addEventListener('input', renderOperacoes);
+
+            // Filtro de equipe na aba Admin > Equipamentos
+            const equipTeamFilter = document.getElementById('equipTeamFilter');
+            if (equipTeamFilter) {
+                equipTeamFilter.addEventListener('click', e => {
+                    const btn = e.target.closest('.team-filter-btn');
+                    if (!btn) return;
+                    equipFiltroEquipe = btn.dataset.team;
+                    document.querySelectorAll('.team-filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderEquipamentos();
+                });
+            }
+
+            // Modal OS — fechar
+            const osClose = document.getElementById('osReportModalClose');
+            if (osClose) osClose.addEventListener('click', () => {
+                document.getElementById('osReportModalOverlay').classList.remove('active');
+            });
+            document.getElementById('osReportModalOverlay')?.addEventListener('click', e => {
+                if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
+            });
+
+            // Delegação para botão OS (qualquer lugar)
+            document.addEventListener('click', e => {
+                const btn = e.target.closest('.os-info-btn');
+                if (btn) openOsReportModal(btn.dataset.frota);
+            });
+
+            // Botão sync manual (se existir)
+            const syncBtn = document.getElementById('syncNowBtn');
+            if (syncBtn) {
+                syncBtn.addEventListener('click', async () => {
+                    if (isSyncing) return;
+                    isSyncing = true;
+                    syncBtn.disabled = true;
+                    addLog('🔄 Sincronização manual iniciada...', 'info');
+                    await carregarDados(false);
+                    isSyncing = false;
+                    syncBtn.disabled = false;
+                });
+            }
+        }
+
+        // ================================================================
+        // INIT APP
+        // ================================================================
+        async function initApp() {
+            // Desregistrar service workers antigos
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(regs => {
+                    regs.forEach(r => r.unregister());
+                });
+            }
+
+            initThemeToggle();
+            startRealtimeClock();
+
+            // Lê token antes de qualquer chamada para evitar flicker
+            authToken = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token') || '';
+            userRole  = localStorage.getItem('sf_auth_role')  || 'visualizador';
+            activeMainTab  = localStorage.getItem('sf_active_tab')          || (ADMIN_ROLES.includes(userRole) ? 'tab-admin' : 'tab-equipe');
+            activeAdminSub = localStorage.getItem('sf_active_admin_subtab') || 'tab-equipamentos';
+            activeTeam     = localStorage.getItem('sf_active_team')         || null;
+
+            setupEventListeners();
+            applyRBAC();
+            updateAuthUI();
+
+            if (authToken) {
+                await carregarDados(false);
+                iniciarSyncTimer();
+                checkAuth(); // valida token em background, sem bloquear
+            }
+        }
+
+        initApp();
+    </script>
+</body>
+</html>

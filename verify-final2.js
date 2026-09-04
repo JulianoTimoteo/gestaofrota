@@ -1,0 +1,10 @@
+const fs = require('fs');
+const html = fs.readFileSync('index.html', 'utf8');
+console.log('Has tab-equipes:', html.includes('id="tab-equipes"'));
+console.log('Has teamTabs:', html.includes('id="teamTabs"'));
+console.log('Has teamTabContents:', html.includes('id="teamTabContents"'));
+console.log('Has teamTotalCount:', html.includes('id="teamTotalCount"'));
+console.log('Has switchTeamTab:', html.includes('switchTeamTab'));
+console.log('Has renderTeamTabs:', html.includes('renderTeamTabs'));
+console.log('Has atualizarSecaoEquipes:', html.includes('atualizarSecaoEquipes'));
+console.log('Has getEquipesDisponiveis:', html.includes('getEquipesDisponiveis'));
