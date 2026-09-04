@@ -2211,18 +2211,18 @@
         }
 
         // ================================================================
-        // SYNC TIMER (5 MINUTOS — silencioso, não interrompe o usuário)
+        // SYNC TIMER (10 MINUTOS — silencioso, não interrompe o usuário)
         // ================================================================
         function iniciarSyncTimer() {
             if (syncTimer) clearInterval(syncTimer);
-            const CINCO_MIN = 5 * 60 * 1000;
+            const DEZ_MINUTOS = 10 * 60 * 1000; // 10 minutos (600.000 ms)
             syncTimer = setInterval(async () => {
                 if (!authToken || isSyncing) return;
                 isSyncing = true;
-                addLog('🔄 Sincronização automática iniciada...', 'info');
+                addLog('🔄 Sincronização automática iniciada (ciclo 10 min)...', 'info');
                 await carregarDados(true); // background = true → não mostra spinner
                 isSyncing = false;
-            }, CINCO_MIN);
+            }, DEZ_MINUTOS);
         }
 
         // ================================================================
