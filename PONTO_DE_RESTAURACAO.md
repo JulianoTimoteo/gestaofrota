@@ -1,77 +1,41 @@
-# Ponto de Restauração - Dashboard Atual
+# Ponto de Restauração — Gestão de Frota v14
 
-**Data:** 2026-09-02 18:03  
-**Status:** Dashboard atual funcionando perfeitamente
-
-## Backup
-- **Arquivo:** Backup interno do projeto
-- **Descrição:** Backup completo do projeto no estado atual e funcional
-
-## Estado do Sistema
-
-### Backend
-- **Flask rodando em:** `http://localhost:8000`
-- **Bind:** `0.0.0.0:8000`
-- **Health:** `/health` funcionando
-- **API System:** `/api/system` funcionando
-- **API Status:** `/api/status` funcionando
-- **ADB Reverse:** `tcp:8000 tcp:8000` ativo
-
-### Frontend
-- **Glass.html:** Dashboard restaurado com layout antigo
-  - Título: "Gerenciador de Banco"
-  - Cards funcionando com dados reais
-  - Botão atualizar funcional
-  - Status Online pulsando
-  - Layout responsivo mantido
-
-- **Monitor.html:** Original não modificado
-- **Tablet Dashboard:** Funcional
-- **Demais páginas:** Mantidas no estado original
-
-### Banco de Dados
-- **Arquivo:** `meus_banco.db`
-- **Tabelas:** 27 tabelas
-- **Status:** Funcional
-
-## Como Restaurar
-
-1. **Restaurar backup:**
-   ```powershell
-   Expand-Archive -Path "servidordetela_dashboard_atual.zip" -DestinationPath "C:\Users\julianotimoteo\Downloads\simple-farm-integration" -Force
-   ```
-
-2. **Iniciar backend:**
-   ```powershell
-   python backend\app.py
-   ```
-
-3. **Reativar ADB reverse:**
-   ```powershell
-   adb reverse tcp:8000 tcp:8000
-   ```
-
-4. **Acessar no tablet:**
-   ```
-   http://localhost:8000/glass
-   ```
-
-## Observações
-
-- Este ponto de restauração representa o estado **mais recente e funcional** do projeto
-- Não usar backups antigos (otimizado ou inicial)
-- O dashboard está com o layout restaurado e funcionando perfeitamente
-- Todos os cards carregam dados corretamente
-- Conexão tablet-backend estável
-
-## Arquivos Principais
-
-- `backend/app.py` - Backend Flask
-- `frontend/glass.html` - Dashboard atual (funcional)
-- `frontend/monitor.html` - Original
-- `meus_banco.db` - Banco de dados
-- Backup de restauração do projeto
+**Data de Criação:** 04/09/2026 12:52 (Horário Local)  
+**Tag Git:** `ponto-de-restauracao`  
+**Commit Hash:** Initial Commit (`68d1b76`)
 
 ---
-**Última atualização:** 2026-09-02 18:03  
-**Status:** ✅ Funcional
+
+## 📌 Estado Garantido Neste Ponto de Restauração
+
+1. **Estabilidade de Tela e Troca de Abas**:
+   - Troca de abas instantânea e sem re-renderização desnecessária.
+   - Navegação mantida mesmo durante atualizações em segundo plano.
+
+2. **Temporizador de Atualização Automática (5 Minutos)**:
+   - Temporizador de 300 segundos (5 minutos) com barra discreta de progresso no footer.
+   - Atualizações em segundo plano sem deslogar o usuário ou resetar o scroll da tela.
+
+3. **Correção de Autenticação / Biometria**:
+   - Login por biometria e formulário operando com armazenamento persistente em `localStorage` e suporte a `sessionStorage`.
+   - Token JWT / Admin devidamente preservado.
+
+4. **Integração com API Backend**:
+   - Carregamento de todos os 64 equipamentos e ordens de serviço.
+   - `statusOS` e badges calculados diretamente da API.
+
+---
+
+## ↺ Como Restaurar a Qualquer Momento
+
+Se precisar voltar exatamente a este estado limpo e estável, execute no terminal:
+
+```bash
+git checkout ponto-de-restauracao -f
+```
+
+Ou para resetar o branch atual diretamente para este ponto:
+
+```bash
+git reset --hard ponto-de-restauracao
+```
