@@ -37,7 +37,7 @@ const PORT = 3000;
 const HOST = '0.0.0.0';
 const PYTHON_API = 'http://127.0.0.1:8000';
 const REQUEST_TIMEOUT = 120000;
-const CACHE_TTL = 60000; // 60 segundos de cache para chamadas GET
+const CACHE_TTL = 600000; // 10 minutos de cache (600.000 ms) para chamadas GET
 
 // ================================================================
 // CACHE EM MEMÓRIA PARA REDUZIR CHAMADAS AO PYTHON BACKEND
