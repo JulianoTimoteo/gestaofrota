@@ -2533,6 +2533,27 @@
             return '-';
         }
 
+        function isOperacaoProdutiva(op) {
+            if (!op) return false;
+            const grupo = String(op.grupoOperacao || op.grupo || '').toUpperCase();
+            const tipo  = String(op.tipoOperacao || op.tipo || '').toUpperCase();
+            const corp  = String(op.corporativo || '').toUpperCase();
+
+            // Excluir explicitamente improdutivas, manutenção, clima e faltas
+            if (grupo.includes('IMPRODUTIVA') || tipo.includes('IMPRODUTIVA') ||
+                tipo.includes('MANUTENÇÃO') || tipo.includes('CLIMA') ||
+                tipo.includes('FALTA') || grupo.includes('MANUTENÇÃO')) {
+                return false;
+            }
+
+            // Se contiver a palavra PRODUTIVA ou Produtivas
+            if (grupo.includes('PRODUTIVA') || tipo.includes('PRODUTIVA') || corp.includes('PRODUTIVA')) {
+                return true;
+            }
+
+            return true;
+        }
+
         // ================================================================
         // CARREGAR DADOS (sem alterar aba ativa)
         // ================================================================
@@ -2949,7 +2970,10 @@
             const countEl = document.getElementById('totalOperCount');
             const filter  = (document.getElementById('filterOperacao')?.value || '').trim().toLowerCase();
 
-            const dados = operacoes.filter(op => {
+            // Filtrar estritamente apenas operações PRODUTIVAS
+            const apenasProdutivas = operacoes.filter(op => isOperacaoProdutiva(op));
+
+            const dados = apenasProdutivas.filter(op => {
                 if (!filter) return true;
                 const opTeam   = getOpTeam(op).toLowerCase();
                 const codStr   = String(op.codigo || '').toLowerCase();
@@ -2971,7 +2995,7 @@
             if (countEl) countEl.textContent = dados.length;
 
             if (dados.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="empty-message">Nenhuma operação carregada.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-message">Nenhuma operação produtiva encontrada.</td></tr>';
                 return;
             }
 
