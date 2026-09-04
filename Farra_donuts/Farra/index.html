@@ -155,6 +155,119 @@
             color: white !important;
         }
 
+        /* ===== SEARCHABLE DROPDOWN PARA OPERAÇÃO ===== */
+        .searchable-dropdown {
+            position: relative;
+            width: 100%;
+            max-width: 230px;
+        }
+        .sd-trigger {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.35rem 0.6rem;
+            font-size: 0.78rem;
+            border-radius: 6px;
+            border: 1px solid var(--color-gray-300);
+            background: var(--color-gray-50);
+            color: var(--color-gray-800);
+            cursor: pointer;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.2s ease;
+        }
+        .sd-trigger:hover {
+            border-color: var(--color-primary);
+        }
+        .sd-label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        .sd-popover {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            width: 280px;
+            max-height: 260px;
+            background: #ffffff;
+            border: 1px solid var(--color-gray-300);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            z-index: 99999;
+            flex-direction: column;
+            padding: 6px;
+        }
+        body.dark-theme .sd-popover {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+        }
+        .sd-popover.active {
+            display: flex;
+        }
+        .sd-search-box {
+            display: flex;
+            align-items: center;
+            background: var(--color-gray-100);
+            border: 1px solid var(--color-gray-300);
+            border-radius: 6px;
+            padding: 0.35rem 0.6rem;
+            margin-bottom: 6px;
+        }
+        body.dark-theme .sd-search-box {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+        }
+        .sd-search-input {
+            width: 100%;
+            background: transparent !important;
+            border: none !important;
+            outline: none !important;
+            color: inherit !important;
+            font-size: 0.8rem !important;
+            padding: 0 !important;
+        }
+        .sd-options-list {
+            overflow-y: auto;
+            max-height: 190px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .sd-option {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.78rem;
+            color: var(--color-gray-700);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        body.dark-theme .sd-option {
+            color: #cbd5e1;
+        }
+        .sd-option:hover {
+            background: var(--color-primary-light);
+            color: var(--color-primary-dark);
+        }
+        body.dark-theme .sd-option:hover {
+            background: #2563eb !important;
+            color: #ffffff !important;
+        }
+        .sd-option.selected {
+            font-weight: 700;
+            background: var(--color-primary);
+            color: #ffffff !important;
+        }
+        .sd-option.hidden {
+            display: none !important;
+        }
+
         /* ===== THEME TOGGLE SWITCH (Uiverse.io) ===== */
         .theme-toggle-wrapper {
             display: inline-flex;
@@ -2245,11 +2358,6 @@
             ];
             const allOperacoes = [...new Set([...apiOps, ...defaultOps, ...equipments.map(e => e.operacao).filter(Boolean)])].sort();
 
-            const datalistEl = document.getElementById('operacoesDatalist');
-            if (datalistEl) {
-                datalistEl.innerHTML = allOperacoes.map(op => `<option value="${op}"></option>`).join('');
-            }
-
             tbody.innerHTML = dados.map(eq => {
                 const hasOS       = equipamentosComOS.has(String(eq.codigo));
                 const statusLabel = hasOS ? 'Com OS' : 'OK';
@@ -2264,6 +2372,12 @@
                     `<option value="${t}" ${t.toLowerCase() === (eq.tipo || '').toLowerCase() ? 'selected' : ''}>${t}</option>`
                 ).join('');
 
+                const currentOp = eq.operacao || '101 - PREPARO DE SOLO';
+                const optionsHtml = allOperacoes.map(op => {
+                    const isSelected = op.toLowerCase() === currentOp.toLowerCase() ? 'selected' : '';
+                    return `<div class="sd-option ${isSelected}" data-value="${op}">${op}</div>`;
+                }).join('');
+
                 return `<tr>
                     <td><strong>${eq.codigo || '-'}</strong></td>
                     <td>${eq.descricao || '-'}</td>
@@ -2274,13 +2388,21 @@
                         </select>
                     </td>
                     <td>
-                        <input type="text"
-                               class="operacao-input"
-                               list="operacoesDatalist"
-                               data-codigo="${eq.codigo}"
-                               value="${eq.operacao || ''}"
-                               placeholder="Pesquisar operação..."
-                               style="width:100%;max-width:210px;padding:0.25rem 0.5rem;font-size:0.78rem;border-radius:6px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);">
+                        <div class="searchable-dropdown" data-codigo="${eq.codigo}">
+                            <button type="button" class="sd-trigger">
+                                <span class="sd-label">${currentOp}</span>
+                                <i class="fas fa-chevron-down" style="font-size:0.65rem;margin-left:4px;opacity:0.6;"></i>
+                            </button>
+                            <div class="sd-popover">
+                                <div class="sd-search-box">
+                                    <i class="fas fa-search" style="font-size:0.75rem;color:var(--color-gray-400);margin-right:6px;"></i>
+                                    <input type="text" class="sd-search-input" placeholder="Pesquisar operação..." autocomplete="off">
+                                </div>
+                                <div class="sd-options-list">
+                                    ${optionsHtml}
+                                </div>
+                            </div>
+                        </div>
                     </td>
                     <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
                     <td><span class="badge-equip ${statusClass}">${statusLabel}</span> ${osBtn}</td>
@@ -2311,24 +2433,58 @@
                 });
             });
 
-            // Adicionar evento para pesquisar / alterar Operação do equipamento
-            tbody.querySelectorAll('.operacao-input').forEach(input => {
-                const handleUpdate = function() {
-                    const cod = this.dataset.codigo;
-                    const newOp = this.value;
-                    if (!cod) return;
+            // Configurar interatividade do Searchable Dropdown de Operações
+            tbody.querySelectorAll('.searchable-dropdown').forEach(dropdown => {
+                const trigger = dropdown.querySelector('.sd-trigger');
+                const popover = dropdown.querySelector('.sd-popover');
+                const searchInput = dropdown.querySelector('.sd-search-input');
+                const options = dropdown.querySelectorAll('.sd-option');
+                const label = dropdown.querySelector('.sd-label');
+                const cod = dropdown.dataset.codigo;
 
-                    const eq = equipments.find(item => item.codigo === cod);
-                    if (eq && eq.operacao !== newOp) {
-                        eq.operacao = newOp;
-                        setCustomEquipOp(cod, newOp);
-                        addLog(`⚡ Operação do equipamento ${cod} alterada para "${newOp}"`, 'success');
-                        renderTeamTabs(false);
-                        atualizarStatusGeral();
+                trigger.addEventListener('click', e => {
+                    e.stopPropagation();
+                    const wasActive = popover.classList.contains('active');
+                    document.querySelectorAll('.sd-popover.active').forEach(p => p.classList.remove('active'));
+                    if (!wasActive) {
+                        popover.classList.add('active');
+                        searchInput.value = '';
+                        options.forEach(opt => opt.classList.remove('hidden'));
+                        setTimeout(() => searchInput.focus(), 50);
                     }
-                };
-                input.addEventListener('change', handleUpdate);
-                input.addEventListener('blur', handleUpdate);
+                });
+
+                searchInput.addEventListener('input', () => {
+                    const query = searchInput.value.toLowerCase().trim();
+                    options.forEach(opt => {
+                        const val = (opt.dataset.value || '').toLowerCase();
+                        if (val.includes(query)) {
+                            opt.classList.remove('hidden');
+                        } else {
+                            opt.classList.add('hidden');
+                        }
+                    });
+                });
+
+                options.forEach(opt => {
+                    opt.addEventListener('click', e => {
+                        e.stopPropagation();
+                        const newOp = opt.dataset.value;
+                        if (!cod || !newOp) return;
+
+                        const eq = equipments.find(item => item.codigo === cod);
+                        if (eq) {
+                            eq.operacao = newOp;
+                            setCustomEquipOp(cod, newOp);
+                            label.textContent = newOp;
+                            options.forEach(o => o.classList.toggle('selected', o === opt));
+                            popover.classList.remove('active');
+                            addLog(`⚡ Operação do equipamento ${cod} alterada para "${newOp}"`, 'success');
+                            renderTeamTabs(false);
+                            atualizarStatusGeral();
+                        }
+                    });
+                });
             });
 
             // Adicionar evento para mover equipamento de equipe
