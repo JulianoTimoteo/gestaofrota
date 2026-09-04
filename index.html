@@ -2312,6 +2312,34 @@
             localStorage.setItem('sf_custom_equip_ops', JSON.stringify(custom));
         }
 
+        function getCustomOpTeams() {
+            try {
+                return JSON.parse(localStorage.getItem('sf_custom_op_teams') || '{}');
+            } catch(e) { return {}; }
+        }
+
+        function setCustomOpTeam(codigo, team) {
+            const custom = getCustomOpTeams();
+            custom[String(codigo)] = team;
+            localStorage.setItem('sf_custom_op_teams', JSON.stringify(custom));
+        }
+
+        function getOpTeam(op) {
+            if (!op) return '-';
+            const codStr = String(op.codigo || '');
+            const custom = getCustomOpTeams();
+            if (custom[codStr]) return custom[codStr];
+            if (op.equipe && op.equipe !== '-') return op.equipe;
+
+            // Busca se algum equipamento usa esta operação e herda a equipe do equipamento
+            const formatted = formatarOp(op).toLowerCase();
+            const matchedEq = equipments.find(e => e.operacao && e.operacao.toLowerCase() === formatted);
+            if (matchedEq && matchedEq.grupo) {
+                return matchedEq.grupo;
+            }
+            return '-';
+        }
+
         // ================================================================
         // CARREGAR DADOS (sem alterar aba ativa)
         // ================================================================
@@ -2730,18 +2758,57 @@
             if (countEl) countEl.textContent = dados.length;
 
             if (dados.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="empty-message">Nenhuma operação carregada.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-message">Nenhuma operação carregada.</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = dados.map(op => `<tr>
-                <td><strong>${op.codigo || '-'}</strong></td>
-                <td>${op.descricao || '-'}</td>
-                <td>${op.tipoOperacao || '-'}</td>
-                <td>${op.grupoOperacao || '-'}</td>
-                <td><span class="badge-equip os-fechada">${op.status || 'ATIVO'}</span></td>
-                <td>${op.equipe || '-'}</td>
-            </tr>`).join('');
+            const allTeams = [...new Set(equipments.map(e => e.grupo).filter(Boolean))].sort();
+
+            tbody.innerHTML = dados.map(op => {
+                const currentTeam = getOpTeam(op);
+                const moverOptions = ['-', ...allTeams].map(t =>
+                    `<option value="${t}" ${t === currentTeam ? 'selected' : ''}>${t}</option>`
+                ).join('');
+                const teamBadge = currentTeam !== '-'
+                    ? `<span class="badge-equip team-badge">${currentTeam}</span>`
+                    : `<span style="color:var(--color-gray-400);font-size:0.8rem;">-</span>`;
+
+                return `<tr>
+                    <td><strong>${op.codigo || '-'}</strong></td>
+                    <td>${op.descricao || '-'}</td>
+                    <td>${op.tipoOperacao || op.tipo || '-'}</td>
+                    <td>${op.corporativo || 'Produtivas'}</td>
+                    <td>${op.grupoOperacao || op.grupo || '-'}</td>
+                    <td><span class="badge-equip os-fechada">${op.status || 'ATIVO'}</span></td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:nowrap;">
+                            ${teamBadge}
+                            <select class="op-equipe-select" data-codigo="${op.codigo}" style="padding:0.2rem 0.4rem;font-size:0.75rem;border-radius:6px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);cursor:pointer;">
+                                ${moverOptions}
+                            </select>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            // Adicionar evento para alterar Equipe da Operação
+            tbody.querySelectorAll('.op-equipe-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const cod = this.dataset.codigo;
+                    const newTeam = this.value;
+                    if (!cod) return;
+
+                    setCustomOpTeam(cod, newTeam);
+                    const targetOp = operacoes.find(o => String(o.codigo) === String(cod));
+                    if (targetOp) {
+                        targetOp.equipe = newTeam === '-' ? '' : newTeam;
+                    }
+                    addLog(`🚩 Equipe da operação ${cod} alterada para "${newTeam}"`, 'success');
+                    renderOperacoes();
+                    renderTeamTabs(false);
+                    atualizarStatusGeral();
+                });
+            });
         }
 
         // ================================================================
