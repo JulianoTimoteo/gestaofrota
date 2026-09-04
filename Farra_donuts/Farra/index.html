@@ -2768,14 +2768,16 @@
                             </div>
                         </div>
                         <div class="table-wrap"><table><thead><tr>
-                            <th>Frota</th><th>Descrição</th><th>Status OS</th>
+                            <th>Frota</th><th>Descrição</th><th>Operação</th><th>Status OS</th>
                         </tr></thead><tbody>` +
                         chunk.map(eq => {
                             const hasOS = equipamentosComOS.has(String(eq.codigo));
                             const osBtn = hasOS ? `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver OS">📋</button>` : '';
+                            const opText = eq.operacao || '-';
                             return `<tr>
                                 <td><strong>${eq.codigo || '-'}</strong></td>
                                 <td>${eq.descricao || '-'}</td>
+                                <td><span class="badge-equip os-fechada">${opText}</span></td>
                                 <td><span class="badge-equip ${hasOS ? 'os-aberta' : 'os-fechada'}">${hasOS ? 'Com OS' : 'OK'}</span> ${osBtn}</td>
                             </tr>`;
                         }).join('') +
