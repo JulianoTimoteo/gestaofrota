@@ -2326,14 +2326,42 @@
 
         function getOpTeam(op) {
             if (!op) return '-';
-            const codStr = String(op.codigo || '');
-            const custom = getCustomOpTeams();
-            if (custom[codStr]) return custom[codStr];
-            if (op.equipe && op.equipe !== '-') return op.equipe;
+            const codStr = String(op.codigo || '').trim();
+            const descStr = String(op.descricao || '').trim().toLowerCase();
 
-            // Busca se algum equipamento usa esta operação e herda a equipe do equipamento
-            const formatted = formatarOp(op).toLowerCase();
-            const matchedEq = equipments.find(e => e.operacao && e.operacao.toLowerCase() === formatted);
+            // 1. Equipe personalizada manualmente via localStorage
+            const custom = getCustomOpTeams();
+            if (codStr && custom[codStr]) return custom[codStr];
+
+            // 2. Propriedade direta de equipe do objeto
+            if (op.equipe && op.equipe !== '-' && op.equipe.trim() !== '') return op.equipe;
+
+            // 3. Busca em equipamentos por código exato ou formatação idêntica
+            const formatted = formatarOp(op).toLowerCase().trim();
+
+            const matchedEq = equipments.find(e => {
+                if (!e.operacao) return false;
+                const eqOp = e.operacao.trim().toLowerCase();
+
+                // Correspondência exata formatada
+                if (eqOp === formatted) return true;
+
+                // Correspondência exata por código no início (ex: "3003 -" ou "3003 ")
+                if (codStr) {
+                    const cLow = codStr.toLowerCase();
+                    if (eqOp === cLow || eqOp.startsWith(`${cLow} -`) || eqOp.startsWith(`${cLow} `)) {
+                        return true;
+                    }
+                }
+
+                // Correspondência por descrição exata
+                if (descStr && (eqOp === descStr || eqOp.endsWith(`- ${descStr}`))) {
+                    return true;
+                }
+
+                return false;
+            });
+
             if (matchedEq && matchedEq.grupo) {
                 return matchedEq.grupo;
             }
@@ -2748,12 +2776,26 @@
         function renderOperacoes() {
             const tbody   = document.getElementById('operTableBody');
             const countEl = document.getElementById('totalOperCount');
-            const filter  = (document.getElementById('filterOperacao')?.value || '').toLowerCase();
-            if (!tbody) return;
+            const filter  = (document.getElementById('filterOperacao')?.value || '').trim().toLowerCase();
 
-            const dados = operacoes.filter(op =>
-                `${op.codigo} ${op.descricao} ${op.tipoOperacao} ${op.grupoOperacao}`.toLowerCase().includes(filter)
-            );
+            const dados = operacoes.filter(op => {
+                if (!filter) return true;
+                const opTeam   = getOpTeam(op).toLowerCase();
+                const codStr   = String(op.codigo || '').toLowerCase();
+                const descStr  = String(op.descricao || '').toLowerCase();
+                const tipoStr  = String(op.tipoOperacao || op.tipo || '').toLowerCase();
+                const grupoStr = String(op.grupoOperacao || op.grupo || '').toLowerCase();
+                const corpStr  = String(op.corporativo || '').toLowerCase();
+
+                // Busca por correspondência exata de código ou contida nos campos/equipe
+                return codStr === filter ||
+                       codStr.includes(filter) ||
+                       descStr.includes(filter) ||
+                       tipoStr.includes(filter) ||
+                       grupoStr.includes(filter) ||
+                       corpStr.includes(filter) ||
+                       opTeam.includes(filter);
+            });
 
             if (countEl) countEl.textContent = dados.length;
 
