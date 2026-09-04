@@ -1978,6 +1978,18 @@
             localStorage.setItem('sf_custom_equip_types', JSON.stringify(custom));
         }
 
+        function getCustomEquipOps() {
+            try {
+                return JSON.parse(localStorage.getItem('sf_custom_equip_ops') || '{}');
+            } catch(e) { return {}; }
+        }
+
+        function setCustomEquipOp(codigo, newOp) {
+            const custom = getCustomEquipOps();
+            custom[codigo] = newOp;
+            localStorage.setItem('sf_custom_equip_ops', JSON.stringify(custom));
+        }
+
         // ================================================================
         // CARREGAR DADOS (sem alterar aba ativa)
         // ================================================================
@@ -2003,16 +2015,21 @@
 
                 if (result && result.success && result.data) {
                     const d = result.data;
+                    operacoes     = d.operacoes    || [];
+                    ordensServico = d.ordensServico || [];
+
                     const customGroups = getCustomEquipGroups();
                     const customTypes  = getCustomEquipTypes();
+                    const customOps    = getCustomEquipOps();
 
-                    // Mapear equipamentos com tipo limpo, suporte a tipo customizado e mover equipes
+                    // Mapear equipamentos com tipo limpo, operacao da lista e suporte a personalizacao
                     equipments = (d.equipamentos || []).map(eq => {
                         const codStr   = String(eq.codigo || '');
                         const desc     = eq.descricao || '';
                         const mod      = eq.modelo    || '';
                         const rawT     = eq.tipo      || '';
                         const defaultT = normalizarTipo(rawT, desc, mod);
+                        const defaultOp = eq.operacao || (operacoes[0] ? (operacoes[0].descricao || operacoes[0].codigo) : 'PREPARO DE SOLO');
                         return {
                             codigo:    codStr,
                             descricao: desc,
@@ -2020,14 +2037,11 @@
                             tipoRaw:   rawT,
                             tipo:      customTypes[codStr] || defaultT,
                             grupo:     customGroups[codStr] || eq.grupo || 'OUTRAS',
-                            operacao:  eq.operacao  || 'PREPARO DE SOLO',
+                            operacao:  customOps[codStr] || defaultOp,
                             statusOS:  eq.statusOS  || 'OK',
                             codOS:     eq.codOS     || ''
                         };
                     });
-
-                    operacoes    = d.operacoes    || [];
-                    ordensServico = d.ordensServico || [];
 
                     // Montar set de equipamentos com OS aberta
                     equipamentosComOS = new Set();
@@ -2203,8 +2217,13 @@
             const standardTeams = ['BIOMASSA', 'COLHEITA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PLANTIO', 'PREPARO', 'TRANSPORTE', 'TRATOS CULTURAIS'];
             const allTeams = [...new Set([...standardTeams, ...getEquipesDisponiveis()])].sort();
 
-            // Tipos para a lista suspensa (inclui tipos customizados se houver)
+            // Tipos para a lista suspensa
             const allTipos = [...new Set([...LISTA_TIPOS_PADRAO, ...equipments.map(e => e.tipo)])].sort();
+
+            // Operações carregadas da API (aba Operações)
+            const apiOps = operacoes.map(o => o.descricao || o.codigo).filter(Boolean);
+            const defaultOps = ['PREPARO DE SOLO', 'TRANSPORTE DE VINHACA', 'PULVERIZACAO DE DEFENSIVOS', 'COLHEITA DE CANA', 'PLANTIO DE CANA', 'HERBICIDA', 'TRATOS CULTURAIS', 'APLICAÇÃO DE ADUBO', 'CARREGAMENTO'];
+            const allOperacoes = [...new Set([...apiOps, ...defaultOps, ...equipments.map(e => e.operacao).filter(Boolean)])].sort();
 
             tbody.innerHTML = dados.map(eq => {
                 const hasOS       = equipamentosComOS.has(String(eq.codigo));
@@ -2220,6 +2239,10 @@
                     `<option value="${t}" ${t.toLowerCase() === (eq.tipo || '').toLowerCase() ? 'selected' : ''}>${t}</option>`
                 ).join('');
 
+                const operacaoOptions = allOperacoes.map(op =>
+                    `<option value="${op}" ${op.toLowerCase() === (eq.operacao || '').toLowerCase() ? 'selected' : ''}>${op}</option>`
+                ).join('');
+
                 return `<tr>
                     <td><strong>${eq.codigo || '-'}</strong></td>
                     <td>${eq.descricao || '-'}</td>
@@ -2229,7 +2252,11 @@
                             ${tipoOptions}
                         </select>
                     </td>
-                    <td style="font-size:0.8rem;">${eq.operacao || 'PREPARO DE SOLO'}</td>
+                    <td>
+                        <select class="operacao-select" data-codigo="${eq.codigo}" style="padding:0.25rem 0.4rem;font-size:0.78rem;border-radius:6px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);cursor:pointer;max-width:200px;">
+                            ${operacaoOptions}
+                        </select>
+                    </td>
                     <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
                     <td><span class="badge-equip ${statusClass}">${statusLabel}</span> ${osBtn}</td>
                     <td>
@@ -2252,6 +2279,25 @@
                         eq.tipo = newTipo;
                         setCustomEquipType(cod, newTipo);
                         addLog(`🏷️ Tipo do equipamento ${cod} alterado para "${newTipo}"`, 'success');
+                        renderEquipamentos();
+                        renderTeamTabs(false);
+                        atualizarStatusGeral();
+                    }
+                });
+            });
+
+            // Adicionar evento para alterar Operação do equipamento
+            tbody.querySelectorAll('.operacao-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const cod = this.dataset.codigo;
+                    const newOp = this.value;
+                    if (!cod || !newOp) return;
+
+                    const eq = equipments.find(item => item.codigo === cod);
+                    if (eq) {
+                        eq.operacao = newOp;
+                        setCustomEquipOp(cod, newOp);
+                        addLog(`⚡ Operação do equipamento ${cod} alterada para "${newOp}"`, 'success');
                         renderEquipamentos();
                         renderTeamTabs(false);
                         atualizarStatusGeral();
