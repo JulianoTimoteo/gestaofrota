@@ -1,0 +1,22 @@
+# Node modules & build artifacts
+node_modules/
+*.zip
+
+# Segredos - NUNCA commitar
+.env
+
+# Banco de dados local (contem dados operacionais, nao codigo)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Logs
+*.log
+logs/

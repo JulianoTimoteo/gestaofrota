@@ -1,0 +1,17 @@
+{
+  "name": "simplefarm-integration",
+  "version": "2.0.1",
+  "description": "Integração com SimpleFarm - Usina Pitangueiras",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  }
+}

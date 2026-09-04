@@ -1,0 +1,36 @@
+{
+    "simplefarm": {
+        "url_base": "https://simplefarm.usinapitangueiras.com.br:8050",
+        "url_login": "/Account/Login",
+        "url_dashboard": "/#/Home/Main",
+        "url_api": "/Home/GetWidgetValue"
+    },
+    "credentials": {
+        "username": "julianotimoteo",
+        "password": "Ttmotvini1986@#"
+    },
+    "widgets": {
+        "caminhoes_ativos": { "panel_id": 67, "widget_id": 497, "name": "Caminhões Ativos", "unit": "Un" },
+        "caminhoes_indo": { "panel_id": 67, "widget_id": 498, "name": "Caminhões Indo", "unit": "Un" },
+        "caminhoes_carregando": { "panel_id": 67, "widget_id": 499, "name": "Caminhões Carregando", "unit": "Un" },
+        "caminhoes_voltando": { "panel_id": 67, "widget_id": 500, "name": "Caminhões Voltando", "unit": "Un" },
+        "caminhoes_quebrados": { "panel_id": 67, "widget_id": 501, "name": "Caminhões Quebrados", "unit": "Un" },
+        "fila_externa_un": { "panel_id": 67, "widget_id": 566, "name": "Fila Externa (Un)", "unit": "Un" },
+        "fila_externa_ton": { "panel_id": 67, "widget_id": 502, "name": "Fila Externa (t)", "unit": "t" },
+        "viagens_internas": { "panel_id": 67, "widget_id": 567, "name": "Viagens Dentro Usina", "unit": "Un" },
+        "ton_estimada_interna": { "panel_id": 67, "widget_id": 503, "name": "Ton Estimada Interna", "unit": "t" },
+        "viagens_aderente": { "panel_id": 67, "widget_id": 560, "name": "Viagens Aderente", "unit": "Un" },
+        "viagens_atraso": { "panel_id": 67, "widget_id": 561, "name": "Viagens com Atraso", "unit": "Un" },
+        "viagens_adiantadas": { "panel_id": 67, "widget_id": 562, "name": "Viagens Adiantadas", "unit": "Un" },
+        "viagens_forcadas": { "panel_id": 67, "widget_id": 563, "name": "Viagens Forçadas", "unit": "Un" },
+        "viagens_paradas": { "panel_id": 67, "widget_id": 564, "name": "Viagens com Paradas", "unit": "Un" },
+        "viagens_total": { "panel_id": 67, "widget_id": 565, "name": "Quantidade de Viagens", "unit": "Qtde" }
+    },
+    "schedule": {
+        "interval_minutes": 10
+    },
+    "storage": {
+        "data_dir": "data",
+        "logs_dir": "logs"
+    }
+}

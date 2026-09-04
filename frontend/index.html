@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="theme-color" content="#0a0f1e">
+    <meta name="description" content="Gestão de Banco de Dados & Usuários · SimpleFarm Integration">
+    <title>Gestão de Banco & Acessos · SimpleFarm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg:        #0a0f1e;
+            --surface:   #0f172a;
+            --surface2:  #1e293b;
+            --border:    rgba(99,155,255,0.13);
+            --border-hi: rgba(14,165,233,0.35);
+            --text:      #f1f5f9;
+            --muted:     #94a3b8;
+            --low:       #4b5e78;
+            --accent:    #0ea5e9;
+            --accent-hi: #38bdf8;
+            --green:     #10b981;
+            --amber:     #f59e0b;
+            --red:       #ef4444;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body {
+            background: var(--bg);
+            background-image:
+                radial-gradient(ellipse 70% 40% at 15% 0%, rgba(14,165,233,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 35% at 85% 100%, rgba(99,102,241,0.06) 0%, transparent 60%);
+            padding: 1rem; color: var(--text); min-height: 100vh;
+        }
+        .app { max-width: 1440px; margin: 0 auto; display: none; }
+        .app.authenticated { display: block; }
+
+        /* OVERLAY DE LOGIN OBRIGATÓRIO */
+        .login-overlay {
+            position: fixed; inset: 0; background: var(--bg); z-index: 99999;
+            display: flex; align-items: center; justify-content: center; padding: 1rem;
+            background-image:
+                radial-gradient(ellipse 80% 60% at 50% -10%, rgba(14,165,233,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 50% at 50% 110%, rgba(99,102,241,0.12) 0%, transparent 70%);
+        }
+        .login-overlay.hidden { display: none !important; }
+        .login-card {
+            background: var(--surface); border: 1px solid var(--border-hi); border-radius: var(--radius-lg);
+            padding: 2.2rem 2rem; max-width: 440px; width: 100%; box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px); text-align: center;
+        }
+        .login-card .logo-icon {
+            width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, #0c629a, #0ea5e9);
+            color: white; font-size: 1.8rem; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.2rem; box-shadow: 0 8px 24px rgba(14,165,233,0.3);
+        }
+        .login-card h2 { font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 0.3rem; }
+        .login-card p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+        /* HEADER */
+        .header {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+            margin-bottom: 1rem; background: linear-gradient(135deg, #0c629a 0%, #0284c7 60%, #0369a1 100%);
+            padding: 1rem 1.4rem; border-radius: var(--radius-lg);
+            box-shadow: 0 4px 20px rgba(14,165,233,0.22), inset 0 1px 0 rgba(255,255,255,0.15);
+            position: relative; overflow: hidden;
+        }
+        .header::before {
+            content: ''; position: absolute; top: -60%; left: -5%; width: 30%; height: 220%;
+            background: rgba(255,255,255,0.04); transform: rotate(-20deg); pointer-events: none;
+        }
+        .header h1 { font-weight: 800; font-size: 1.35rem; display: flex; align-items: center; gap: 0.6rem; color: white; letter-spacing: -0.02em; }
+        .header h1 span { font-size: 0.72rem; font-weight: 400; opacity: 0.8; }
+        .badge-net { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+
+        .header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        .user-badge { background: rgba(0,0,0,0.25); padding: 0.4rem 0.8rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+
+        .btn {
+            background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25);
+            padding: 0.55rem 1.1rem; border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.82rem;
+            display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; transition: all 0.2s; color: white; min-height: 40px;
+        }
+        .btn:hover { background: rgba(255,255,255,0.25); }
+        .btn:active { transform: scale(0.97); }
+        .btn-green { background: rgba(16,185,129,0.8); border-color: rgba(16,185,129,0.4); }
+        .btn-accent { background: rgba(14,165,233,0.8); border-color: rgba(14,165,233,0.4); }
+        .btn-red { background: rgba(239,68,68,0.8); border-color: rgba(239,68,68,0.4); }
+        .btn-sm { padding: 0.35rem 0.75rem; min-height: 32px; font-size: 0.75rem; border-radius: 6px; }
+
+        /* STATUS BAR */
+        .status-bar {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);
+            padding: 0.7rem 1.2rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;
+        }
+        .status-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--muted); }
+        .status-item strong { color: var(--text); }
+        .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px rgba(16,185,129,.5); animation: pdot 2s infinite; }
+        @keyframes pdot { 0%,100%{opacity:1}50%{opacity:.5} }
+
+        /* TABS */
+        .tabs { display: flex; gap: 0.3rem; background: var(--surface); padding: 0.3rem; border-radius: var(--radius-md); margin-bottom: 1rem; border: 1px solid var(--border); flex-wrap: wrap; }
+        .tab-btn {
+            padding: 0.65rem 1rem; border: none; background: transparent; border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.82rem; color: var(--muted); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; min-height: 42px;
+        }
+        .tab-btn:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+        .tab-btn.active { background: linear-gradient(135deg, rgba(14,165,233,0.25), rgba(99,102,241,0.18)); color: var(--text); border: 1px solid var(--border-hi); box-shadow: 0 2px 10px rgba(14,165,233,0.12); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* CARDS */
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.2rem; backdrop-filter: blur(8px); margin-bottom: 1rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.7rem; flex-wrap: wrap; gap: 0.5rem; }
+        .card-header h2 { font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text); }
+        .card-header h2 i { color: var(--accent-hi); }
+
+        /* TABLES */
+        .table-wrap { overflow-x: auto; max-height: 520px; overflow-y: auto; border-radius: 8px; }
+        .table-wrap::-webkit-scrollbar { width: 4px; height: 4px; }
+        .table-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+        table th { text-align: left; padding: 0.6rem; font-weight: 700; color: var(--muted); border-bottom: 1px solid var(--border); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; background: var(--surface); position: sticky; top: 0; z-index: 2; white-space: nowrap; }
+        table td { padding: 0.55rem 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text); vertical-align: middle; }
+        table tr:hover td { background: rgba(255,255,255,0.025); }
+
+        /* FORM INPUTS */
+        .input-field { padding: 0.6rem 0.9rem; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.85rem; outline: none; background: var(--surface2); color: var(--text); min-height: 42px; width: 100%; }
+        .input-field:focus { border-color: var(--border-hi); box-shadow: 0 0 0 2px rgba(14,165,233,0.2); }
+        select.input-field { cursor: pointer; }
+
+        /* BADGES & PILLS */
+        .pill { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; }
+        .pill-green { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+        .pill-red   { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+        .pill-blue  { background: rgba(14,165,233,0.15); color: #38bdf8; border: 1px solid rgba(14,165,233,0.3); }
+        .pill-amber { background: rgba(245,158,11,0.18); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); }
+
+        /* MODAL */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 999; padding: 1rem; }
+        .modal-overlay.open { display: flex; }
+        .modal-box { background: var(--surface); border: 1px solid var(--border-hi); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 520px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; }
+        .modal-header h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+        .modal-close { background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
+        .form-group { margin-bottom: 1rem; text-align: left; }
+        .form-group label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
+
+        /* KPI GRID */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.8rem; margin-bottom: 1rem; }
+        .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 0.8rem; }
+        .kpi-icon { width: 44px; height: 44px; border-radius: 10px; background: rgba(14,165,233,0.15); color: var(--accent-hi); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; border: 1px solid rgba(14,165,233,0.2); }
+        .kpi-info label { font-size: 0.72rem; color: var(--muted); font-weight: 600; display: block; }
+        .kpi-info .val { font-size: 1.3rem; font-weight: 800; color: var(--text); }
+
+        .key-code { font-family: monospace; background: rgba(0,0,0,0.3); padding: 3px 6px; border-radius: 4px; color: #38bdf8; font-size: 0.78rem; word-break: break-all; }
+        .error-banner { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #f87171; padding: 0.6rem; border-radius: 8px; font-size: 0.8rem; margin-bottom: 1rem; display: none; }
+    </style>
+</head>
+<body>
+
+<!-- OVERLAY DE LOGIN OBRIGATÓRIO -->
+<div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+        <div class="logo-icon"><i class="fas fa-shield-halved"></i></div>
+        <h2>Acesso Restrito</h2>
+        <p>Informe as credenciais do Usuário Master para gerenciar o banco de dados e acessos.</p>
+        
+        <div class="error-banner" id="loginError"></div>
+
+        <form id="formLogin" onsubmit="realizarLogin(event)">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Usuário</label>
+                <input type="text" class="input-field" id="loginUser" required placeholder="ex: julianotimoteo" value="julianotimoteo">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Senha</label>
+                <input type="password" class="input-field" id="loginPwd" required placeholder="Sua senha master">
+            </div>
+            <button type="submit" class="btn btn-accent" style="width:100%; justify-content:center; margin-top:0.5rem; font-size:0.9rem;"><i class="fas fa-right-to-bracket"></i> Entrar na Aplicação</button>
+        </form>
+    </div>
+</div>
+
+<div class="app" id="mainApp">
+    <!-- HEADER -->
+    <div class="header">
+        <div>
+            <h1><i class="fas fa-server"></i> SimpleFarm DataServer <span>· Central de Integração & Banco de Dados</span></h1>
+        </div>
+        <div class="header-actions">
+            <div class="user-badge"><i class="fas fa-user-shield" style="color:#fbbf24;"></i> <span id="currentUserLabel">julianotimoteo (Master)</span></div>
+            <div class="badge-net"><i class="fas fa-wifi"></i> <span id="netIp">172.16.12.36:8000</span></div>
+            <button class="btn btn-green" onclick="sincronizarManualmente()"><i class="fas fa-sync"></i> Sync Agora</button>
+            <button class="btn btn-accent" onclick="abrirModalUsuario()"><i class="fas fa-user-plus"></i> Novo Usuário</button>
+            <button class="btn btn-red" onclick="realizarLogout()"><i class="fas fa-power-off"></i> Sair</button>
+        </div>
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-item"><span class="sdot"></span><span><strong>Status:</strong> <span id="sysStatus">Online</span></span></div>
+        <div class="status-item"><i class="fas fa-hard-drive" style="color:#0ea5e9"></i><span><strong>Cartão SD Tablet:</strong> <span id="sysDisk">-- / -- GB</span></span></div>
+        <div class="status-item"><i class="fas fa-microchip" style="color:#a78bfa"></i><span><strong>CPU / RAM:</strong> <span id="sysCpuRam">--% / --%</span></span></div>
+        <div class="status-item"><i class="fas fa-wrench" style="color:#f59e0b"></i><span><strong>OS Abertas:</strong> <span id="sysOs">--</span></span></div>
+        <div class="status-item"><i class="fas fa-clock" style="color:#34d399"></i><span><strong>Última Sync:</strong> <span id="sysSync">--</span></span></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="tab-overview"><i class="fas fa-chart-pie"></i> Visão Geral</button>
+        <button class="tab-btn" data-tab="tab-tables"><i class="fas fa-table"></i> Gerenciador de Tabelas</button>
+        <button class="tab-btn" data-tab="tab-users"><i class="fas fa-users-cog"></i> Usuários & Permissões</button>
+        <button class="tab-btn" data-tab="tab-apikeys"><i class="fas fa-key"></i> Chaves de API & Programas</button>
+        <button class="tab-btn" data-tab="tab-equip"><i class="fas fa-truck-monster"></i> Equipamentos</button>
+        <button class="tab-btn" data-tab="tab-audit"><i class="fas fa-history"></i> Auditoria & Logs</button>
+    </div>
+
+    <!-- TAB 1: VISÃO GERAL -->
+    <div id="tab-overview" class="tab-content active">
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon"><i class="fas fa-table"></i></div>
+                <div class="kpi-info"><label>Total de Tabelas</label><div class="val" id="kpiTabelas">--</div></div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon"><i class="fas fa-database"></i></div>
+                <div class="kpi-info"><label>Tamanho do Banco</label><div class="val" id="kpiDbSize">-- MB</div></div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon"><i class="fas fa-users"></i></div>
+                <div class="kpi-info"><label>Usuários Cadastrados</label><div class="val" id="kpiUsers">--</div></div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon"><i class="fas fa-plug"></i></div>
+                <div class="kpi-info"><label>Sistemas Conectados</label><div class="val" id="kpiApiKeys">--</div></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-list-ol"></i> Resumo das Tabelas do SQLite</h2>
+                <button class="btn btn-sm btn-accent" onclick="carregarOverview()"><i class="fas fa-redo"></i> Atualizar</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tabela</th>
+                            <th>Registros</th>
+                            <th>Colunas</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="overviewTableBody">
+                        <tr><td colspan="4" style="text-align:center;">Carregando tabelas...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: GERENCIADOR DE TABELAS -->
+    <div id="tab-tables" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-table"></i> Explorador de Tabelas SQLite</h2>
+                <div style="display:flex; gap:0.5rem; align-items:center;">
+                    <select class="input-field" id="selectTabela" onchange="carregarDadosTabela()"></select>
+                    <input type="text" class="input-field" id="filterTabelaText" placeholder="Buscar na tabela..." onkeyup="filtrarLinhasTabela()">
+                    <button class="btn btn-sm btn-accent" onclick="carregarDadosTabela()"><i class="fas fa-sync"></i></button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table id="tableDataExplorer">
+                    <thead id="tableDataHead"></thead>
+                    <tbody id="tableDataBody">
+                        <tr><td style="text-align:center;">Selecione uma tabela acima.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: USUÁRIOS & PERMISSÕES -->
+    <div id="tab-users" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-users"></i> Gestão de Usuários e Permissões</h2>
+                <button class="btn btn-green" onclick="abrirModalUsuario()"><i class="fas fa-user-plus"></i> Adicionar Usuário</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuário</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Perfil</th>
+                            <th>Status</th>
+                            <th>Último Login</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="8" style="text-align:center;">Carregando usuários...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: CHAVES DE API & PROGRAMAS -->
+    <div id="tab-apikeys" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-key"></i> Chaves de API para Programas & Sistemas Terceiros</h2>
+                <button class="btn btn-green" onclick="abrirModalApiKey()"><i class="fas fa-plus"></i> Gerar Nova Chave</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Programa / Sistema</th>
+                            <th>Chave de API (X-API-Key)</th>
+                            <th>Permissão</th>
+                            <th>Status</th>
+                            <th>Criado Em</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="apiKeysTableBody">
+                        <tr><td colspan="7" style="text-align:center;">Carregando chaves de API...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 5: EQUIPAMENTOS -->
+    <div id="tab-equip" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-truck-monster"></i> Equipamentos da Frota</h2>
+                <input type="text" class="input-field" id="filterEquip" placeholder="Filtrar equipamento..." onkeyup="filtrarEquipamentos()">
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descrição</th>
+                            <th>Modelo</th>
+                            <th>Tipo</th>
+                            <th>Grupo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="equipTableBody">
+                        <tr><td colspan="5" style="text-align:center;">Carregando equipamentos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 6: AUDITORIA & LOGS -->
+    <div id="tab-audit" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-history"></i> Log de Auditoria & Alterações</h2>
+                <button class="btn btn-sm btn-accent" onclick="carregarAuditoria()"><i class="fas fa-sync"></i> Atualizar</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tabela</th>
+                            <th>Registro ID</th>
+                            <th>Ação</th>
+                            <th>Detalhes</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditTableBody">
+                        <tr><td colspan="6" style="text-align:center;">Carregando auditoria...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL NOVO/EDITAR USUÁRIO -->
+<div class="modal-overlay" id="modalUser">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="modalUserTitle">Novo Usuário</h3>
+            <button class="modal-close" onclick="fecharModalUser()">&times;</button>
+        </div>
+        <form id="formUser" onsubmit="salvarUsuario(event)">
+            <input type="hidden" id="userId">
+            <div class="form-group">
+                <label>Usuário (Login)</label>
+                <input type="text" class="input-field" id="userUsername" required placeholder="ex: operador1">
+            </div>
+            <div class="form-group">
+                <label>Nome Completo</label>
+                <input type="text" class="input-field" id="userName" required placeholder="ex: João Silva">
+            </div>
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" class="input-field" id="userEmail" placeholder="ex: usuario@empresa.com">
+            </div>
+            <div class="form-group">
+                <label>Senha <span id="pwdHint" style="font-weight:400; font-size:0.7rem; color:var(--muted);">(deixe em branco para manter)</span></label>
+                <input type="password" class="input-field" id="userPassword" placeholder="******">
+            </div>
+            <div class="form-group">
+                <label>Perfil</label>
+                <select class="input-field" id="userAdmin">
+                    <option value="0">Operador (Acesso Leitura/Escrita Básico)</option>
+                    <option value="1">Administrador (Acesso Total)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select class="input-field" id="userAtivo">
+                    <option value="1">Ativo</option>
+                    <option value="0">Inativo / Bloqueado</option>
+                </select>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1rem;">
+                <button type="button" class="btn btn-sm" onclick="fecharModalUser()">Cancelar</button>
+                <button type="submit" class="btn btn-sm btn-green"><i class="fas fa-check"></i> Salvar Usuário</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL CRIAR CHAVE DE API -->
+<div class="modal-overlay" id="modalApiKey">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Gerar Nova Chave de API</h3>
+            <button class="modal-close" onclick="fecharModalApiKey()">&times;</button>
+        </div>
+        <form id="formApiKey" onsubmit="salvarApiKey(event)">
+            <div class="form-group">
+                <label>Nome do Programa / Sistema Terceiro</label>
+                <input type="text" class="input-field" id="apiKeyNome" required placeholder="ex: Sistema ERP, Python Script, PowerBI">
+            </div>
+            <div class="form-group">
+                <label>Permissão de Acesso</label>
+                <select class="input-field" id="apiKeyPerm">
+                    <option value="leitura">Apenas Leitura (GET /api/...)</option>
+                    <option value="total">Leitura e Escrita (GET/POST/PUT/DELETE)</option>
+                </select>
+            </div>
+            <div id="generatedKeyBox" style="display:none; background:rgba(14,165,233,0.1); border:1px solid rgba(14,165,233,0.3); padding:0.8rem; border-radius:8px; margin-bottom:1rem;">
+                <label style="font-size:0.7rem; color:var(--accent-hi); font-weight:700;">CHAVE GERADA (Copie agora):</label>
+                <div style="display:flex; gap:0.5rem; margin-top:4px;">
+                    <input type="text" class="input-field" id="generatedKeyText" readonly style="font-family:monospace; color:#38bdf8; font-weight:700;">
+                    <button type="button" class="btn btn-sm btn-accent" onclick="copiarChaveGerada()"><i class="fas fa-copy"></i> Copiar</button>
+                </div>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1rem;">
+                <button type="button" class="btn btn-sm" onclick="fecharModalApiKey()">Fechar</button>
+                <button type="submit" class="btn btn-sm btn-green" id="btnGerarKey"><i class="fas fa-key"></i> Gerar Chave</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+(function() {
+    const API = window.location.origin;
+    let allTableRows = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('netIp').textContent = window.location.host;
+        verificarAutenticacao();
+    });
+
+    // VERIFICAÇÃO DE LOGIN
+    function verificarAutenticacao() {
+        const token = sessionStorage.getItem('sf_session_token');
+        const user = sessionStorage.getItem('sf_session_user');
+
+        if (token && user) {
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('mainApp').classList.add('authenticated');
+            document.getElementById('currentUserLabel').textContent = user + (user === 'julianotimoteo' ? ' (Master)' : '');
+            
+            initTabs();
+            carregarStatusSistema();
+            carregarOverview();
+            carregarUsuarios();
+            carregarApiKeys();
+            carregarEquipamentos();
+            carregarAuditoria();
+
+            setInterval(carregarStatusSistema, 15000);
+        } else {
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            document.getElementById('mainApp').classList.remove('authenticated');
+        }
+    }
+
+    // REALIZAR LOGIN
+    window.realizarLogin = function(e) {
+        e.preventDefault();
+        const usr = document.getElementById('loginUser').value.trim();
+        const pwd = document.getElementById('loginPwd').value.trim();
+        const errBanner = document.getElementById('loginError');
+
+        errBanner.style.display = 'none';
+
+        fetch(API + '/api/auth/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ usuario: usr, senha: pwd })
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.success && d.token) {
+                sessionStorage.setItem('sf_session_token', d.token);
+                sessionStorage.setItem('sf_session_user', d.usuario);
+                verificarAutenticacao();
+            } else {
+                errBanner.textContent = d.error || 'Usuário ou senha incorretos.';
+                errBanner.style.display = 'block';
+            }
+        })
+        .catch(err => {
+            errBanner.textContent = 'Erro ao conectar ao servidor: ' + err.message;
+            errBanner.style.display = 'block';
+        });
+    };
+
+    window.realizarLogout = function() {
+        sessionStorage.removeItem('sf_session_token');
+        sessionStorage.removeItem('sf_session_user');
+        verificarAutenticacao();
+    };
+
+    // TABS
+    function initTabs() {
+        const btns = document.querySelectorAll('.tab-btn');
+        btns.forEach(b => {
+            b.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+                b.classList.add('active');
+                const target = document.getElementById(b.getAttribute('data-tab'));
+                if (target) target.classList.add('active');
+            });
+        });
+    }
+
+    // STATUS DO SISTEMA
+    window.carregarStatusSistema = function() {
+        fetch(API + '/api/system')
+            .then(r => r.json())
+            .then(d => {
+                if (d.success && d.data) {
+                    const r = d.data;
+                    const sdFree = r.disco.livre_gb || (r.disco.total_gb - r.disco.usado_gb).toFixed(2);
+                    document.getElementById('sysDisk').textContent = `${r.banco.tamanho_mb} MB (${sdFree} GB livres no SD)`;
+                    document.getElementById('sysCpuRam').textContent = `${r.cpu.percent}% / ${r.memoria.percent}%`;
+                    document.getElementById('sysSync').textContent = r.sync.ultimo_sucesso_em || 'Ativo';
+                    document.getElementById('kpiDbSize').textContent = `${r.banco.tamanho_mb} MB`;
+                    document.getElementById('kpiTabelas').textContent = r.banco.total_tabelas;
+                }
+            }).catch(() => {
+                document.getElementById('sysStatus').textContent = 'Offline';
+            });
+
+        fetch(API + '/api/status')
+            .then(r => r.json())
+            .then(d => {
+                if (d.success && d.data) {
+                    document.getElementById('sysOs').textContent = d.data.osAbertas || 0;
+                }
+            }).catch(() => {});
+    };
+
+    // OVERVIEW DE TABELAS
+    window.carregarOverview = function() {
+        fetch(API + '/api/db/tables')
+            .then(r => r.json())
+            .then(d => {
+                if (d.success && d.data) {
+                    const tbody = document.getElementById('overviewTableBody');
+                    const select = document.getElementById('selectTabela');
+                    select.innerHTML = '<option value="">-- Selecione uma tabela --</option>';
+                    
+                    const paineisConhecidos = [
+                        'LGT - Logística', 'IND - Análise de Cana (Impureza Vegetal)', 'AGR - Ctt', 
+                        'COA - Viagem com Peso Líquido', 'ConsolidadoDia', 'AcmSafra', 'OsOficina', 
+                        'Diponibilidade', 'Disponibilidade', 'LGT - Logistica_CTT', 'Social', 'coa_viagens', 'ordens_servico'
+                    ];
+
+                    let html = '';
+                    d.data.forEach(t => {
+                        const isPainel = paineisConhecidos.includes(t.tabela);
+                        const tagBadge = isPainel ? '<span class="pill pill-amber" style="margin-left:6px;"><i class="fas fa-desktop"></i> Painel SimpleFarm</span>' : '';
+                        
+                        select.innerHTML += `<option value="${t.tabela}">${t.tabela} (${t.registros} reg)</option>`;
+                        html += `
+                            <tr>
+                                <td><strong>${t.tabela}</strong> ${tagBadge}</td>
+                                <td><span class="pill pill-blue">${t.registros} registros</span></td>
+                                <td><span class="key-code">${t.colunas.slice(0, 5).join(', ')}${t.colunas.length > 5 ? '...' : ''}</span></td>
+                                <td><button class="btn btn-sm btn-accent" onclick="abrirTabela('${t.tabela}')"><i class="fas fa-eye"></i> Ver Tabela</button></td>
+                            </tr>
+                        `;
+                    });
+                    tbody.innerHTML = html || '<tr><td colspan="4">Nenhuma tabela encontrada.</td></tr>';
+                }
+            });
+    };
+
+    window.abrirTabela = function(nome) {
+        document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+        const tabBtn = document.querySelector('.tab-btn[data-tab="tab-tables"]');
+        if (tabBtn) tabBtn.classList.add('active');
+        document.getElementById('tab-tables').classList.add('active');
+        
+        const sel = document.getElementById('selectTabela');
+        sel.value = nome;
+        carregarDadosTabela();
+    };
+
+    // GERENCIADOR DE TABELA INDIVIDUAL
+    let currentSortCol = null;
+    let currentSortAsc = true;
+
+    window.ordenarColunaTabela = function(colName) {
+        if (currentSortCol === colName) {
+            currentSortAsc = !currentSortAsc;
+        } else {
+            currentSortCol = colName;
+            currentSortAsc = true;
+        }
+        
+        if (!allTableRows || allTableRows.length === 0) return;
+
+        allTableRows.sort((a, b) => {
+            let valA = a[colName] !== null && a[colName] !== undefined ? String(a[colName]) : '';
+            let valB = b[colName] !== null && b[colName] !== undefined ? String(b[colName]) : '';
+            
+            if (colName.toLowerCase().includes('data') && valA.includes('/') && valB.includes('/')) {
+                const parseDt = s => {
+                    const parts = s.split(' ');
+                    const d = parts[0].split('/');
+                    if (d.length === 3) {
+                        return `${d[2]}-${d[1].padStart(2, '0')}-${d[0].padStart(2, '0')} ${parts[1] || ''}`;
+                    }
+                    return s;
+                };
+                valA = parseDt(valA);
+                valB = parseDt(valB);
+            }
+            
+            if (valA < valB) return currentSortAsc ? -1 : 1;
+            if (valA > valB) return currentSortAsc ? 1 : -1;
+            return 0;
+        });
+
+        const tabela = document.getElementById('selectTabela').value;
+        const cols = Object.keys(allTableRows[0] || {});
+        renderHeadTabela(cols);
+        renderLinhasTabela(allTableRows, cols, tabela);
+    };
+
+    function renderHeadTabela(cols) {
+        const head = document.getElementById('tableDataHead');
+        let hHtml = '<tr>';
+        cols.forEach(c => {
+            let sortIcon = ' <i class="fas fa-sort" style="opacity:0.3; font-size:0.75rem;"></i>';
+            if (currentSortCol === c) {
+                sortIcon = currentSortAsc ? ' <i class="fas fa-sort-up" style="color:#38bdf8;"></i>' : ' <i class="fas fa-sort-down" style="color:#38bdf8;"></i>';
+            }
+            hHtml += `<th onclick="ordenarColunaTabela('${c}')" style="cursor:pointer; user-select:none;" title="Clique para ordenar por ${c}">${c}${sortIcon}</th>`;
+        });
+        hHtml += '<th>Ações</th></tr>';
+        head.innerHTML = hHtml;
+    }
+
+    window.carregarDadosTabela = function() {
+        const tabela = document.getElementById('selectTabela').value;
+        if (!tabela) return;
+
+        const head = document.getElementById('tableDataHead');
+        const body = document.getElementById('tableDataBody');
+        head.innerHTML = '<tr><th>Carregando colunas...</th></tr>';
+        body.innerHTML = '<tr><td>Carregando dados da tabela...</td></tr>';
+
+        let querySql = `SELECT * FROM "${tabela}" LIMIT 300`;
+        if (tabela.toLowerCase() === 'osoficina' || tabela.toLowerCase() === 'ordens_servico') {
+            querySql = `SELECT * FROM "${tabela}" ORDER BY CASE WHEN data_entrada LIKE '__/__/____%' THEN substr(data_entrada, 7, 4) || '-' || substr(data_entrada, 4, 2) || '-' || substr(data_entrada, 1, 2) || substr(data_entrada, 11) ELSE data_entrada END ASC LIMIT 300`;
+            currentSortCol = 'data_entrada';
+            currentSortAsc = true;
+        } else {
+            currentSortCol = null;
+            currentSortAsc = true;
+        }
+
+        fetch(API + '/api/db/query', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ query: querySql })
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.success) {
+                const cols = d.columns || [];
+                allTableRows = d.data || [];
+                renderHeadTabela(cols);
+                renderLinhasTabela(allTableRows, cols, tabela);
+            } else {
+                body.innerHTML = `<tr><td style="color:#f87171;">Erro: ${d.error}</td></tr>`;
+            }
+        });
+    };
+
+    function renderLinhasTabela(rows, cols, tabela) {
+        const body = document.getElementById('tableDataBody');
+        if (!rows || rows.length === 0) {
+            body.innerHTML = `<tr><td colspan="${cols.length + 1}" style="text-align:center;">Nenhum registro encontrado.</td></tr>`;
+            return;
+        }
+
+        let bHtml = '';
+        rows.forEach(r => {
+            bHtml += '<tr>';
+            cols.forEach(c => {
+                let val = r[c] !== null && r[c] !== undefined ? r[c] : '';
+                bHtml += `<td>${val}</td>`;
+            });
+            const regId = r.id || r.ID || r.codigo || '';
+            bHtml += `<td><button class="btn btn-sm btn-red" onclick="deletarLinhaTabela('${tabela}', '${regId}')"><i class="fas fa-trash"></i></button></td>`;
+            bHtml += '</tr>';
+        });
+        body.innerHTML = bHtml;
+    }
+
+    window.filtrarLinhasTabela = function() {
+        const txt = document.getElementById('filterTabelaText').value.toLowerCase();
+        const tabela = document.getElementById('selectTabela').value;
+        if (!allTableRows) return;
+        const filtered = allTableRows.filter(row => JSON.stringify(row).toLowerCase().includes(txt));
+        const cols = Object.keys(allTableRows[0] || {});
+        renderLinhasTabela(filtered, cols, tabela);
+    };
+
+    window.deletarLinhaTabela = function(tabela, regId) {
+        if (!regId) { alert('Esta tabela não possui coluna ID simples para exclusão direta.'); return; }
+        if (!confirm(`Tem certeza que deseja excluir o registro #${regId} da tabela "${tabela}"?`)) return;
+
+        fetch(API + '/api/db/query', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ query: `DELETE FROM "${tabela}" WHERE id = ${regId}` })
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.success) {
+                alert('Registro excluído com sucesso!');
+                carregarDadosTabela();
+                carregarOverview();
+            } else {
+                alert('Erro ao excluir: ' + d.error);
+            }
+        });
+    };
+
+    // GESTÃO DE USUÁRIOS E PROTEÇÃO MASTER
+    window.carregarUsuarios = function() {
+        fetch(API + '/api/usuarios')
+            .then(r => r.json())
+            .then(d => {
+                if (d.success && d.data) {
+                    document.getElementById('kpiUsers').textContent = d.data.length;
+                    const tbody = document.getElementById('usersTableBody');
+                    let html = '';
+                    d.data.forEach(u => {
+                        const isMaster = (u.usuario === 'julianotimoteo' || u.id === 2);
+                        const statusPill = u.ativo ? '<span class="pill pill-green">Ativo</span>' : '<span class="pill pill-red">Inativo</span>';
+                        const adminPill = isMaster
+                            ? '<span class="pill pill-amber"><i class="fas fa-crown"></i> Master Protegido</span>'
+                            : (u.admin ? '<span class="pill pill-amber">Administrador</span>' : '<span class="pill pill-blue">Operador</span>');
+
+                        const deleteButton = isMaster
+                            ? '<span style="font-size:0.75rem; color:var(--amber); font-weight:700;"><i class="fas fa-lock"></i> Protegido</span>'
+                            : `<button class="btn btn-sm btn-red" onclick="deletarUsuario(${u.id}, '${u.usuario}')"><i class="fas fa-trash"></i> Excluir</button>`;
+
+                        html += `
+                            <tr>
+                                <td>#${u.id}</td>
+                                <td><strong>${u.usuario}</strong></td>
+                                <td>${u.nome || '--'}</td>
+                                <td>${u.email || '--'}</td>
+                                <td>${adminPill}</td>
+                                <td>${statusPill}</td>
+                                <td>${u.ultimo_login || 'Nunca'}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-accent" onclick='editarUsuario(${JSON.stringify(u)})'><i class="fas fa-edit"></i> Editar</button>
+                                    ${deleteButton}
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    tbody.innerHTML = html || '<tr><td colspan="8">Nenhum usuário cadastrado.</td></tr>';
+                }
+            });
+    };
+
+    window.abrirModalUsuario = function() {
+        document.getElementById('modalUserTitle').textContent = 'Novo Usuário';
+        document.getElementById('userId').value = '';
+        document.getElementById('userUsername').value = '';
+        document.getElementById('userName').value = '';
+        document.getElementById('userEmail').value = '';
+        document.getElementById('userPassword').value = '';
+        document.getElementById('userPassword').required = true;
+        document.getElementById('pwdHint').style.display = 'none';
+        document.getElementById('userAdmin').value = '0';
+        document.getElementById('userAtivo').value = '1';
+        document.getElementById('modalUser').classList.add('open');
+    };
+
+    window.editarUsuario = function(u) {
+        document.getElementById('modalUserTitle').textContent = 'Editar Usuário #' + u.id;
+        document.getElementById('userId').value = u.id;
+        document.getElementById('userUsername').value = u.usuario;
+        document.getElementById('userName').value = u.nome || '';
+        document.getElementById('userEmail').value = u.email || '';
+        document.getElementById('userPassword').value = '';
+        document.getElementById('userPassword').required = false;
+        document.getElementById('pwdHint').style.display = 'inline';
+        document.getElementById('userAdmin').value = u.admin ? '1' : '0';
+        document.getElementById('userAtivo').value = u.ativo ? '1' : '0';
+        document.getElementById('modalUser').classList.add('open');
+    };
+
+    window.fecharModalUser = function() { document.getElementById('modalUser').classList.remove('open'); };
+
+    window.salvarUsuario = function(e) {
+        e.preventDefault();
+        const id = document.getElementById('userId').value;
+        const payload = {
+            usuario: document.getElementById('userUsername').value,
+            nome: document.getElementById('userName').value,
+            email: document.getElementById('userEmail').value,
+            admin: parseInt(document.getElementById('userAdmin').value),
+            ativo: parseInt(document.getElementById('userAtivo').value),
+        };
+        const pwd = document.getElementById('userPassword').value;
+        if (pwd) payload.senha = pwd;
+
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API}/api/usuarios/${id}` : `${API}/api/usuarios`;
+
+        fetch(url, {
+            method: method,
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.success) {
+                alert(id ? 'Usuário atualizado com sucesso!' : 'Novo usuário criado com sucesso!');
+                fecharModalUser();
+                carregarUsuarios();
+            } else {
+                alert('Erro: ' + d.error);
+            }
+        });
+    };
+
+    window.deletarUsuario = function(id, name) {
+        if (name === 'julianotimoteo' || id === 2) {
+            alert('O usuário master (julianotimoteo) é protegido e não pode ser excluído.');
+            return;
+        }
+        if (!confirm(`Excluir o usuário "${name}" (#${id})?`)) return;
+        fetch(`${API}/api/usuarios/${id}`, { method: 'DELETE' })
+            .then(r => r.json())
+            .then(d => {
+                if (d.success) {
+                    alert('Usuário excluído!');
+                    carregarUsuarios();
+                } else alert('Erro: ' + d.error);
+            });
+    };
+
+    // CHAVES DE API & PROGRAMAS
+    window.carregarApiKeys = function() {
+        fetch(API + '/api/apikeys')
+            .then(r => r.json())
+            .then(d => {
+                if (d.success && d.data) {
+                    document.getElementById('kpiApiKeys').textContent = d.data.length;
+                    const tbody = document.getElementById('apiKeysTableBody');
+                    let html = '';
+                    d.data.forEach(k => {
+                        const statusPill = k.ativo ? '<span class="pill pill-green">Ativa</span>' : '<span class="pill pill-red">Revogada</span>';
+                        html += `
+                            <tr>
+                                <td>#${k.id}</td>
+                                <td><strong><i class="fas fa-robot"></i> ${k.nome_programa}</strong></td>
+                                <td><span class="key-code">${k.chave_api}</span></td>
+                                <td><span class="pill pill-blue">${k.permissao}</span></td>
+                                <td>${statusPill}</td>
+                                <td>${k.criado_em}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-accent" onclick="copiarTexto('${k.chave_api}')"><i class="fas fa-copy"></i> Copiar</button>
+                                    <button class="btn btn-sm btn-red" onclick="deletarApiKey(${k.id}, '${k.nome_programa}')"><i class="fas fa-ban"></i> Revogar</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    tbody.innerHTML = html || '<tr><td colspan="7">Nenhuma chave de API cadastrada.</td></tr>';
+                }
+            });
+    };
+
+    window.abrirModalApiKey = function() {
+        document.getElementById('apiKeyNome').value = '';
+        document.getElementById('generatedKeyBox').style.display = 'none';
+        document.getElementById('btnGerarKey').style.display = 'inline-flex';
+        document.getElementById('modalApiKey').classList.add('open');
+    };
+
+    window.fecharModalApiKey = function() { document.getElementById('modalApiKey').classList.remove('open'); };
+
+    window.salvarApiKey = function(e) {
+        e.preventDefault();
+        const nome = document.getElementById('apiKeyNome').value;
+        const perm = document.getElementById('apiKeyPerm').value;
+
+        fetch(API + '/api/apikeys', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ nome_programa: nome, permissao: perm })
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.success && d.chave_api) {
+                document.getElementById('generatedKeyText').value = d.chave_api;
+                document.getElementById('generatedKeyBox').style.display = 'block';
+                document.getElementById('btnGerarKey').style.display = 'none';
+                carregarApiKeys();
+            } else alert('Erro ao gerar chave: ' + d.error);
+        });
+    };
+
+    window.copiarChaveGerada = function() {
+        const val = document.getElementById('generatedKeyText').value;
+        copiarTexto(val);
+    };
+
+    window.copiarTexto = function(txt) {
+        navigator.clipboard.writeText(txt).then(() => alert('Chave copiada para a área de transferência!'));
+    };
+
+    window.deletarApiKey = function(id, nome) {
+        if (!confirm(`Revogar a chave de API do sistema "${nome}" (#${id})?`)) return;
+        fetch(`${API}/api/apikeys/${id}`, { method: 'DELETE' })
+            .then(r => r.json())
+            .then(d => {
+                if (d.success) {
+                    alert('Chave de API revogada!');
+                    carregarApiKeys();
+                } else alert('Erro: ' + d.error);
+            });
+    };
+
+    // EQUIPAMENTOS
+    window.carregarEquipamentos = function() {
+        fetch(API + '/api/tabelas/equipamentos')
+            .then(r => r.json())
+            .then(d => {
+                if (d.success && d.data) {
+                    const tbody = document.getElementById('equipTableBody');
+                    let html = '';
+                    d.data.forEach(e => {
+                        html += `
+                            <tr>
+                                <td><strong>${e.codigo}</strong></td>
+                                <td>${e.descricao || '--'}</td>
+                                <td>${e.modelo || '--'}</td>
+                                <td>${e.tipo || '--'}</td>
+                                <td>${e.grupo || '--'}</td>
+                            </tr>
+                        `;
+                    });
+                    tbody.innerHTML = html || '<tr><td colspan="5">Nenhum equipamento cadastrado.</td></tr>';
+                }
+            });
+    };
+
+    window.filtrarEquipamentos = function() {
+        const q = document.getElementById('filterEquip').value.toLowerCase();
+        const rows = document.querySelectorAll('#equipTableBody tr');
+        rows.forEach(r => {
+            r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
+        });
+    };
+
+    // AUDITORIA
+    window.carregarAuditoria = function() {
+        fetch(API + '/api/alteracoes?limit=50')
+            .then(r => r.json())
+            .then(d => {
+                if (d.success && d.data) {
+                    const tbody = document.getElementById('auditTableBody');
+                    let html = '';
+                    d.data.forEach(a => {
+                        html += `
+                            <tr>
+                                <td>#${a.id}</td>
+                                <td><span class="pill pill-blue">${a.tabela}</span></td>
+                                <td>${a.registro_id || '--'}</td>
+                                <td><span class="pill pill-amber">${a.acao}</span></td>
+                                <td>${a.valor_novo || a.valor_antigo || '--'}</td>
+                                <td>${a.data_alteracao}</td>
+                            </tr>
+                        `;
+                    });
+                    tbody.innerHTML = html || '<tr><td colspan="6">Sem registros de alteração.</td></tr>';
+                }
+            });
+    };
+
+    // MANUAIS
+    window.sincronizarManualmente = function() {
+        fetch(API + '/api/sync', { method: 'POST' })
+            .then(r => r.json())
+            .then(d => {
+                if (d.success) {
+                    alert('Sincronização iniciada com sucesso!');
+                    carregarStatusSistema();
+                    carregarOverview();
+                } else alert('Erro na sincronização: ' + d.error);
+            });
+    };
+})();
+</script>
+</body>
+</html>
