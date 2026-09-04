@@ -1767,6 +1767,139 @@
             }
         }
 
+        /* ===== LOGO IMAGE STYLES ===== */
+        .header-logo-img {
+            height: 38px;
+            width: auto;
+            object-fit: contain;
+            vertical-align: middle;
+            margin-right: 10px;
+            background: #ffffff;
+            padding: 3px 8px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .login-logo-img {
+            max-height: 60px;
+            max-width: 240px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 0.75rem auto;
+            background: #ffffff;
+            padding: 4px 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== GLOBAL LOADER OVERLAY ===== */
+        .global-loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(8px);
+            z-index: 999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .global-loader-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .center-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        .loader-circle-9 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75px;
+            height: 75px;
+            background: transparent;
+            border: 3px solid #3c3c3c;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 80px;
+            font-family: sans-serif;
+            font-size: 10px;
+            color: #00eaff;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .loader-circle-9:before {
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-top: 3px solid #00eaff;
+            border-right: 3px solid #00eaff;
+            border-radius: 50%;
+            animation: animateC 2s linear infinite;
+        }
+
+        .loader-circle-9 span {
+            display: block;
+            position: absolute;
+            top: calc(50% - 2px);
+            left: 50%;
+            width: 50%;
+            height: 4px;
+            background: transparent;
+            transform-origin: left;
+            animation: animate 2s linear infinite;
+        }
+
+        .loader-circle-9 span:before {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #00eaff;
+            top: -6px;
+            right: -8px;
+            box-shadow: 0 0 20px #00eaff;
+        }
+
+        @keyframes animateC {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes animate {
+            0% {
+                transform: rotate(45deg);
+            }
+            100% {
+                transform: rotate(405deg);
+            }
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-8px); }
             to { opacity: 1; transform: translateY(0); }
@@ -1774,10 +1907,20 @@
     </style>
 </head>
 <body>
+    <!-- GLOBAL LOADER OVERLAY -->
+    <div class="global-loader-overlay" id="globalLoaderOverlay">
+        <div class="center-body">
+            <div class="loader-circle-9">
+                Aguarde...
+                <span></span>
+            </div>
+        </div>
+    </div>
+
     <!-- LOGIN OVERLAY -->
     <div class="login-overlay" id="loginOverlay">
         <div class="login-card">
-            <h2><i class="fas fa-tractor" style="color:#2563eb;"></i> Gestão de Frota</h2>
+            <h2><img src="logo.png" alt="Usina Pitangueiras" class="login-logo-img"> Gestão de Frota</h2>
             <p>Sistema de gerenciamento de equipamentos agrícolas</p>
             <form id="loginForm">
                 <div class="login-field">
@@ -1813,7 +1956,7 @@
         <!-- HEADER UNIFICADO (LIMPO E ESTÁVEL) -->
         <div class="header" id="mainHeader">
             <h1>
-                <i class="fas fa-tractor"></i> Gestão de Frota
+                <img src="logo.png" alt="Usina Pitangueiras" class="header-logo-img"> Gestão de Frota
                 <span class="badge-version">v14 - API</span>
             </h1>
             <div class="header-info">
@@ -2040,6 +2183,19 @@
         }
 
         // ================================================================
+        // GLOBAL LOADER
+        // ================================================================
+        function showGlobalLoader() {
+            const loader = document.getElementById('globalLoaderOverlay');
+            if (loader) loader.classList.add('active');
+        }
+
+        function hideGlobalLoader() {
+            const loader = document.getElementById('globalLoaderOverlay');
+            if (loader) loader.classList.remove('active');
+        }
+
+        // ================================================================
         // RELÓGIO
         // ================================================================
         function startRealtimeClock() {
@@ -2090,6 +2246,7 @@
             statusEl.textContent = 'Entrando...';
             statusEl.className   = 'login-status info';
             if (loginBtn) loginBtn.disabled = true;
+            showGlobalLoader();
 
             try {
                 const res  = await fetch(`${API_BASE}/api/auth/login`, {
@@ -2121,6 +2278,7 @@
                 statusEl.className   = 'login-status error';
             } finally {
                 if (loginBtn) loginBtn.disabled = false;
+                hideGlobalLoader();
             }
         }
 
@@ -2373,7 +2531,10 @@
         // ================================================================
         async function carregarDados(isBackground = false) {
             if (!authToken) return;
-            if (!isBackground) setConnectionStatus('syncing');
+            if (!isBackground) {
+                setConnectionStatus('syncing');
+                showGlobalLoader();
+            }
 
             try {
                 const res    = await fetch(`${API_BASE}/api/dados`, {
@@ -2464,10 +2625,13 @@
                 }
             } catch (error) {
                 console.warn('Erro ao carregar dados:', error);
+                setConnectionStatus('error');
+                addLog('❌ Falha ao buscar dados da API', 'error');
+            } finally {
+                if (!isBackground) {
+                    hideGlobalLoader();
+                }
             }
-
-            setConnectionStatus('error');
-            addLog('❌ Falha ao buscar dados da API', 'error');
         }
 
         // ================================================================
