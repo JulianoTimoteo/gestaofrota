@@ -431,6 +431,50 @@ app.post('/api/sync/tablet/pull', requireAuth, async (req, res) => {
     }
 });
 
+// ================================================================
+// PERSISTÊNCIA JSON DAS CONFIGURAÇÕES ADMIN (ESTADO GLOBAL COMPARTILHADO)
+// ================================================================
+const ADMIN_CONFIG_FILE = path.join(__dirname, 'admin_config.json');
+const fs = require('fs');
+
+function getAdminConfigFromFile() {
+    if (!fs.existsSync(ADMIN_CONFIG_FILE)) {
+        const initial = { customGroups: {}, customTypes: {}, customOps: {}, customOpTeams: {}, ultimaAlteracao: new Date().toISOString() };
+        try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(initial, null, 2), 'utf8'); } catch(e){}
+        return initial;
+    }
+    try {
+        const str = fs.readFileSync(ADMIN_CONFIG_FILE, 'utf8');
+        return JSON.parse(str);
+    } catch(e) {
+        return { customGroups: {}, customTypes: {}, customOps: {}, customOpTeams: {} };
+    }
+}
+
+function saveAdminConfigToFile(data) {
+    const current = getAdminConfigFromFile();
+    if (data.customGroups) Object.assign(current.customGroups, data.customGroups);
+    if (data.customTypes) Object.assign(current.customTypes, data.customTypes);
+    if (data.customOps) Object.assign(current.customOps, data.customOps);
+    if (data.customOpTeams) Object.assign(current.customOpTeams, data.customOpTeams);
+    current.ultimaAlteracao = new Date().toISOString();
+    try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(current, null, 2), 'utf8'); } catch(e){}
+    return current;
+}
+
+app.get('/api/config/admin', (req, res) => {
+    res.json({ success: true, data: getAdminConfigFromFile() });
+});
+
+app.post('/api/config/admin', (req, res) => {
+    try {
+        const updated = saveAdminConfigToFile(req.body || {});
+        res.json({ success: true, message: 'Configurações do Admin salvas no JSON', data: updated });
+    } catch(err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 // Buscar dados (com cache)
 app.get('/api/dados', requireAuth, async (req, res) => {
     try {
@@ -441,12 +485,15 @@ app.get('/api/dados', requireAuth, async (req, res) => {
             proxyGet('/api/status')
         ]);
 
+        const adminConfig = getAdminConfigFromFile();
+
         res.json({
             success: true,
             data: {
                 equipamentos: mapEquipamentos(equipData.data || []),
                 operacoes: mapOperacoes(operData.data || []),
                 ordensServico: mapOS(osData.data || []),
+                adminConfig: adminConfig,
                 ultimaSincronizacao: statusData.data?.ultimaSincronizacao || new Date().toISOString()
             }
         });
