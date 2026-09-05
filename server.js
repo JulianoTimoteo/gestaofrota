@@ -290,6 +290,17 @@ app.post('/api/sync', requireAuth, async (req, res) => {
     }
 });
 
+// Auto-Cure Watchdog Proxy Endpoint
+app.all(['/api/sync/auto-cure'], requireAuth, async (req, res) => {
+    try {
+        const result = await proxyPost('/api/sync/auto-cure', req.body);
+        res.json(result);
+    } catch (error) {
+        console.error('❌ Erro ao acionar Auto-Cure:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // ==================== SYNC TABLET ====================
 
 app.post('/api/sync/tablet/push', requireAuth, async (req, res) => {
