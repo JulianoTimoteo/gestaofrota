@@ -2857,6 +2857,7 @@
                 <span class="counter" title="OS Abertas"><strong id="osAbertasCount">0</strong> OS📋</span>
                 <span class="counter ok" title="Equipamentos OK"><strong id="equipOkCount">0</strong> OK✅</span>
                 <span class="counter os" title="Equipamentos com OS"><strong id="equipOsCount">0</strong> c/OS📋</span>
+                <span class="counter user" title="Usuários Conectados" style="background:rgba(139,92,246,0.12);color:#7c3aed;border:1px solid rgba(139,92,246,0.25);padding:0.2rem 0.55rem;border-radius:6px;font-size:0.78rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;"><strong id="totalUsersConnectedCount">1</strong> 👤 Online</span>
             </div>
         </div>
 
@@ -2957,7 +2958,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem;">
+                        <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:1rem;margin-bottom:1rem;">
                             <div style="background:var(--color-gray-50);padding:0.85rem 1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
                                 <div style="font-size:0.7rem;color:var(--color-gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.25rem;">Equipamentos</div>
                                 <div style="font-size:1.5rem;font-weight:800;color:var(--color-primary);" id="syncEquipCount">—</div>
@@ -2969,6 +2970,10 @@
                             <div style="background:var(--color-gray-50);padding:0.85rem 1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
                                 <div style="font-size:0.7rem;color:var(--color-gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.25rem;">Operações</div>
                                 <div style="font-size:1.5rem;font-weight:800;color:#22c55e;" id="syncOpCount">—</div>
+                            </div>
+                            <div style="background:var(--color-gray-50);padding:0.85rem 1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
+                                <div style="font-size:0.7rem;color:var(--color-gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.25rem;">Usuários Conectados</div>
+                                <div style="font-size:1.5rem;font-weight:800;color:#8b5cf6;" id="syncUsersConnectedCount">1</div>
                             </div>
                         </div>
                         <div style="font-size:0.78rem;color:var(--color-gray-500);margin-bottom:0.75rem;">
@@ -9169,6 +9174,40 @@
             if (loginBtn) loginBtn.disabled = true;
             showGlobalLoader();
 
+            if (isStaticGitHubPages()) {
+                const role = 'admin';
+                const token = 'sf_cloud_token_' + Date.now();
+                const storage = keep ? localStorage : sessionStorage;
+                storage.setItem('sf_auth_token', token);
+                storage.setItem('sf_auth_user',  user);
+                storage.setItem('sf_auth_role',  role);
+                authToken = token;
+                userRole  = role;
+                statusEl.textContent = '✅ Acesso Standalone / Cloud concedido!';
+                statusEl.className   = 'login-status success';
+
+                if (cardWrapper) {
+                    cardWrapper.classList.remove('state-default', 'state-error');
+                    cardWrapper.classList.add('state-success');
+                }
+
+                updateAuthUI();
+                applyRBAC();
+
+                const overlay = document.getElementById('loginOverlay');
+                if (overlay) overlay.classList.add('hidden');
+
+                try {
+                    await carregarDados();
+                } catch (loadErr) {
+                    console.warn('Alerta ao carregar dados pós-login:', loadErr);
+                }
+                iniciarSyncTimer();
+                if (loginBtn) loginBtn.disabled = false;
+                hideGlobalLoader();
+                return;
+            }
+
             try {
                 const res  = await fetch(`${API_BASE}/api/auth/login`, {
                     method:  'POST',
@@ -9253,12 +9292,14 @@
 
         async function doLogout() {
             const token = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token');
-            try {
-                await fetch(`${API_BASE}/api/auth/logout`, {
-                    method: 'POST',
-                    headers: { Authorization: 'Bearer ' + token }
-                });
-            } catch (e) {}
+            if (!isStaticGitHubPages()) {
+                try {
+                    await fetch(`${API_BASE}/api/auth/logout`, {
+                        method: 'POST',
+                        headers: { Authorization: 'Bearer ' + token }
+                    });
+                } catch (e) {}
+            }
             ['sf_auth_token','sf_auth_user','sf_auth_role'].forEach(k => {
                 localStorage.removeItem(k);
                 sessionStorage.removeItem(k);
@@ -9950,6 +9991,7 @@
 
         var singleSessionTimer = null;
         function iniciarCheckSessaoUnicaTimer() {
+            if (isStaticGitHubPages()) return;
             if (singleSessionTimer) clearInterval(singleSessionTimer);
             singleSessionTimer = setInterval(async () => {
                 if (!authToken) return;
@@ -10069,6 +10111,22 @@
             const tbody   = document.getElementById('usuariosTableBody');
             const countEl = document.getElementById('totalUsuariosCount');
             if (!tbody) return;
+
+            if (isStaticGitHubPages()) {
+                if (countEl) countEl.textContent = `1 usuário registrado (Modo Cloud)`;
+                tbody.innerHTML = `<tr>
+                    <td><strong>#1</strong></td>
+                    <td><strong style="color:var(--color-primary);">julianotimoteo</strong></td>
+                    <td>Juliano Timóteo</td>
+                    <td style="font-size:0.8rem;color:var(--color-gray-600);">julianotimoteo@usinapitangueiras.com.br</td>
+                    <td><span class="badge-equip os-aberta">Administrador</span></td>
+                    <td><span style="font-size:0.8rem;font-weight:600;">Acesso Total (Admin + Equipes)</span></td>
+                    <td><span class="badge-equip os-fechada"><i class="fas fa-check-circle"></i> Ativo</span></td>
+                    <td style="font-size:0.8rem;color:var(--color-gray-500);">Online agora</td>
+                    <td><span style="font-weight:700;color:var(--color-primary);display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-shield-alt"></i> Master (Protegido)</span></td>
+                </tr>`;
+                return;
+            }
 
             try {
                 const res = await fetch(`${API_BASE}/api/usuarios`, {
