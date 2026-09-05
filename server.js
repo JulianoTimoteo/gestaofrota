@@ -10,7 +10,7 @@ app.use(express.json());
 app.use('/sw.js', express.static(path.join(__dirname, 'sw.js'), {
     headers: { 'Content-Type': 'application/javascript' }
 }));
-app.get('/favicon.ico', (req, res) => res.status(204).end());
+app.get('/favicon.ico', (req, res) => res.sendFile(path.join(__dirname, 'favicon.ico')));
 app.get('/all.min.css', (req, res) => res.status(204).end());
 app.use(express.static('.', {
     maxAge: 0,
@@ -37,7 +37,7 @@ const PORT = 3000;
 const HOST = '0.0.0.0';
 const PYTHON_API = 'http://127.0.0.1:8000';
 const REQUEST_TIMEOUT = 120000;
-const CACHE_TTL = 600000; // 10 minutos de cache (600.000 ms) para chamadas GET
+const CACHE_TTL = 5000; // 5 segundos de cache para refletir estado de conexão em tempo real
 
 // ================================================================
 // CACHE EM MEMÓRIA PARA REDUZIR CHAMADAS AO PYTHON BACKEND
@@ -446,7 +446,7 @@ app.get('/api/dados', requireAuth, async (req, res) => {
 });
 
 // Buscar apenas Equipamentos (com cache)
-app.get('/api/equipamentos', requireAuth, async (req, res) => {
+app.get(['/api/equipamentos', '/api/tabelas/equipamentos', '/api/tabela/equipamentos'], requireAuth, async (req, res) => {
     try {
         const result = await proxyGet('/api/equipamentos');
         res.json({
@@ -456,6 +456,29 @@ app.get('/api/equipamentos', requireAuth, async (req, res) => {
         });
     } catch (error) {
         console.error('❌ Erro ao buscar equipamentos:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Proxy generico para tabelas do banco
+app.get(['/api/tables/:tabela', '/api/tabelas/:tabela', '/api/tabela/:tabela'], requireAuth, async (req, res) => {
+    try {
+        const result = await proxyGet(`/api/tables/${req.params.tabela}`);
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Cadastrar novo Equipamento / Frota
+app.post('/api/equipamentos', requireAuth, async (req, res) => {
+    try {
+        const result = await proxyPost('/api/equipamentos', req.body);
+        invalidateCache('/api/equipamentos');
+        invalidateCache('/api/dados');
+        res.json(result);
+    } catch (error) {
+        console.error('❌ Erro ao cadastrar equipamento:', error.message);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -471,6 +494,19 @@ app.get('/api/operacoes', requireAuth, async (req, res) => {
         });
     } catch (error) {
         console.error('❌ Erro ao buscar operações:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Cadastrar nova Operação Produtiva
+app.post('/api/operacoes', requireAuth, async (req, res) => {
+    try {
+        const result = await proxyPost('/api/operacoes', req.body);
+        invalidateCache('/api/operacoes');
+        invalidateCache('/api/dados');
+        res.json(result);
+    } catch (error) {
+        console.error('❌ Erro ao cadastrar operação:', error.message);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -550,6 +586,10 @@ const serverInstance = app.listen(PORT, HOST, () => {
   console.log(`🔗 Proxy API: ${PYTHON_API}`);
   console.log(`\n⚠️  Deixe este terminal aberto enquanto usa a aplicação.\n`);
 });
+
+// Otimizacao de Keep-Alive para alta concorrencia (ate 100 clientes em paralelo)
+serverInstance.keepAliveTimeout = 65000;
+serverInstance.headersTimeout = 66000;
 
 serverInstance.on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
