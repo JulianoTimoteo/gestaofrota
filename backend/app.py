@@ -2993,6 +2993,66 @@ def auth_config():
     """Retorna configuracao de autenticacao."""
     return jsonify(success=True, autenticacao_ativa=ATIVAR_AUTENTICACAO)
 
+# ==================== API - CONFIGURAÇÃO PERSISTENTE ADMIN (JSON) ====================
+ADMIN_CONFIG_PATH = os.path.join(PROJECT_DIR, 'config', 'admin_config.json')
+
+def get_admin_config():
+    if not os.path.exists(ADMIN_CONFIG_PATH):
+        os.makedirs(os.path.dirname(ADMIN_CONFIG_PATH), exist_ok=True)
+        default_cfg = {
+            'customGroups': {},
+            'customTypes': {},
+            'customOps': {},
+            'customOpTeams': {},
+            'ultimaAlteracao': datetime.now().isoformat()
+        }
+        try:
+            with open(ADMIN_CONFIG_PATH, 'w', encoding='utf-8') as f:
+                import json
+                json.dump(default_cfg, f, indent=2, ensure_ascii=False)
+        except Exception:
+            pass
+        return default_cfg
+    try:
+        with open(ADMIN_CONFIG_PATH, 'r', encoding='utf-8') as f:
+            import json
+            return json.load(f)
+    except Exception:
+        return {'customGroups': {}, 'customTypes': {}, 'customOps': {}, 'customOpTeams': {}}
+
+def save_admin_config(data):
+    os.makedirs(os.path.dirname(ADMIN_CONFIG_PATH), exist_ok=True)
+    current = get_admin_config()
+    if 'customGroups' in data and isinstance(data['customGroups'], dict):
+        current['customGroups'].update(data['customGroups'])
+    if 'customTypes' in data and isinstance(data['customTypes'], dict):
+        current['customTypes'].update(data['customTypes'])
+    if 'customOps' in data and isinstance(data['customOps'], dict):
+        current['customOps'].update(data['customOps'])
+    if 'customOpTeams' in data and isinstance(data['customOpTeams'], dict):
+        current['customOpTeams'].update(data['customOpTeams'])
+    current['ultimaAlteracao'] = datetime.now().isoformat()
+    try:
+        with open(ADMIN_CONFIG_PATH, 'w', encoding='utf-8') as f:
+            import json
+            json.dump(current, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        logger.error(f'Erro ao salvar admin_config.json: {e}')
+    return current
+
+@app.route('/api/config/admin', methods=['GET'])
+def get_admin_config_endpoint():
+    return jsonify(success=True, data=get_admin_config())
+
+@app.route('/api/config/admin', methods=['POST'])
+def save_admin_config_endpoint():
+    try:
+        data = request.get_json() or {}
+        updated = save_admin_config(data)
+        return jsonify(success=True, message='Configuracoes do Admin salvas no JSON', data=updated)
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
 @app.route('/api/auth/token', methods=['POST'])
 def auth_token():
     """Gera um JWT Bearer a partir do login local do sistema."""

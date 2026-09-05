@@ -9249,6 +9249,26 @@
             return 'Outros';
         }
 
+        async function syncAdminConfigToServer() {
+            if (isStaticGitHubPages()) return;
+            const payload = {
+                customGroups: getCustomEquipGroups(),
+                customTypes: getCustomEquipTypes(),
+                customOps: getCustomEquipOps(),
+                customOpTeams: getCustomOpTeams()
+            };
+            try {
+                await fetch(`${API_BASE}/api/config/admin`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(payload)
+                }).catch(() => null);
+            } catch(e) {}
+        }
+
         function getCustomEquipGroups() {
             try {
                 return JSON.parse(localStorage.getItem('sf_custom_equip_groups') || '{}');
@@ -9259,6 +9279,7 @@
             const custom = getCustomEquipGroups();
             custom[codigo] = newGrupo;
             localStorage.setItem('sf_custom_equip_groups', JSON.stringify(custom));
+            syncAdminConfigToServer();
         }
 
         function formatarOp(op) {
@@ -9280,6 +9301,7 @@
             const custom = getCustomEquipTypes();
             custom[codigo] = newTipo;
             localStorage.setItem('sf_custom_equip_types', JSON.stringify(custom));
+            syncAdminConfigToServer();
         }
 
         function getCustomEquipOps() {
@@ -9292,6 +9314,7 @@
             const custom = getCustomEquipOps();
             custom[codigo] = newOp;
             localStorage.setItem('sf_custom_equip_ops', JSON.stringify(custom));
+            syncAdminConfigToServer();
         }
 
         function getCustomOpTeams() {
@@ -9304,6 +9327,7 @@
             const custom = getCustomOpTeams();
             custom[String(codigo)] = team;
             localStorage.setItem('sf_custom_op_teams', JSON.stringify(custom));
+            syncAdminConfigToServer();
         }
 
         function getOpTeam(op) {
@@ -9311,7 +9335,7 @@
             const codStr = String(op.codigo || '').trim();
             const descStr = String(op.descricao || '').trim().toLowerCase();
 
-            // 1. Equipe personalizada manualmente via localStorage
+            // 1. Equipe personalizada manualmente via localStorage ou server JSON
             const custom = getCustomOpTeams();
             if (codStr && custom[codStr]) return custom[codStr];
 
@@ -9355,23 +9379,29 @@
 
         function isOperacaoProdutiva(op) {
             if (!op) return false;
+            const status = String(op.status || '').toUpperCase();
+            if (status === 'INATIVO' || status === 'INATIVA') return false;
+
             const grupo = String(op.grupoOperacao || op.grupo || '').toUpperCase();
             const tipo  = String(op.tipoOperacao || op.tipo || '').toUpperCase();
             const corp  = String(op.corporativo || '').toUpperCase();
+            const desc  = String(op.descricao || '').toUpperCase();
 
-            // Excluir explicitamente improdutivas, manutenção, clima e faltas
+            // Excluir explicitamente improdutivas, manutenção, clima, faltas, testes e indeterminados
             if (grupo.includes('IMPRODUTIVA') || tipo.includes('IMPRODUTIVA') ||
-                tipo.includes('MANUTENÇÃO') || tipo.includes('CLIMA') ||
-                tipo.includes('FALTA') || grupo.includes('MANUTENÇÃO')) {
+                tipo.includes('MANUTENÇÃO') || grupo.includes('MANUTENÇÃO') ||
+                tipo.includes('CLIMA') || tipo.includes('FALTA') ||
+                grupo.includes('INDETERMINADO') || tipo.includes('INDETERMINADO') ||
+                desc.includes('INDETERMINADO') || desc.includes('OPERAÇÃO TESTE') || desc.includes('OPERACAO TESTE')) {
                 return false;
             }
 
-            // Se contiver a palavra PRODUTIVA ou Produtivas
-            if (grupo.includes('PRODUTIVA') || tipo.includes('PRODUTIVA') || corp.includes('PRODUTIVA')) {
+            // Apenas operações produtoras válidas
+            if (grupo.includes('PRODUTIVA') || tipo.includes('PRODUTIVA') || corp.includes('PRODUTIVA') || tipo.includes('AUXILIAR')) {
                 return true;
             }
 
-            return true;
+            return false;
         }
 
         // ================================================================
@@ -9488,12 +9518,45 @@
             }
         }
 
+        async function carregarAdminConfigDoServidor() {
+            if (isStaticGitHubPages()) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/config/admin`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => null);
+                    if (data && data.success && data.data) {
+                        const cfg = data.data;
+                        if (cfg.customGroups) {
+                            const cur = getCustomEquipGroups();
+                            localStorage.setItem('sf_custom_equip_groups', JSON.stringify({ ...cur, ...cfg.customGroups }));
+                        }
+                        if (cfg.customTypes) {
+                            const cur = getCustomEquipTypes();
+                            localStorage.setItem('sf_custom_equip_types', JSON.stringify({ ...cur, ...cfg.customTypes }));
+                        }
+                        if (cfg.customOps) {
+                            const cur = getCustomEquipOps();
+                            localStorage.setItem('sf_custom_equip_ops', JSON.stringify({ ...cur, ...cfg.customOps }));
+                        }
+                        if (cfg.customOpTeams) {
+                            const cur = getCustomOpTeams();
+                            localStorage.setItem('sf_custom_op_teams', JSON.stringify({ ...cur, ...cfg.customOpTeams }));
+                        }
+                    }
+                }
+            } catch(e) {}
+        }
+
         async function carregarDados(isBackground = false) {
             if (!authToken) {
                 authToken = 'sf_standalone_session_token';
                 localStorage.setItem('sf_auth_token', authToken);
                 updateAuthUI();
             }
+
+            await carregarAdminConfigDoServidor();
 
             if (!isBackground) {
                 setConnectionStatus('syncing');
