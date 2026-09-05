@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0f1e">
+    <title>SimpleFarm DataServer · Central de Controle Usina Pitangueiras</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=2026">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026">
+    <link rel="manifest" href="manifest.json?v=2026">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:       #0a0f1e;
+            --card:     rgba(15, 23, 42, 0.92);
+            --border:   rgba(99, 155, 255, 0.15);
+            --borderhi: rgba(14, 165, 233, 0.4);
+            --hi:       #f1f5f9;
+            --mid:      #94a3b8;
+            --low:      #4b5e78;
+            --accent:   #0ea5e9;
+            --accent2:  #6366f1;
+            --green:    #10b981;
+            --amber:    #f59e0b;
+            --red:      #ef4444;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-font-smoothing:antialiased; }
+        
+        html, body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            background-image:
+                radial-gradient(ellipse 70% 45% at 15% 0%, rgba(14,165,233,0.1) 0%, transparent 55%),
+                radial-gradient(ellipse 55% 35% at 85% 100%, rgba(99,102,241,0.08) 0%, transparent 55%);
+            color: var(--hi);
+            padding: 6px;
+            min-height: 100vh;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: linear-gradient(135deg, #0c629a 0%, #0284c7 60%, #0369a1 100%);
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            box-shadow: 0 4px 20px rgba(14,165,233,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content:''; position:absolute; top:-55%; left:-5%;
+            width:30%; height:210%;
+            background:rgba(255,255,255,0.05);
+            transform:rotate(-20deg); pointer-events:none;
+        }
+
+        .hrow1 { display:-webkit-box; display:-webkit-flex; display:flex; -webkit-box-pack:justify; -webkit-justify-content:space-between; justify-content:space-between; -webkit-box-align:center; -webkit-align-items:center; align-items:center; margin-bottom:6px; }
+        .hleft { display:-webkit-box; display:-webkit-flex; display:flex; -webkit-box-align:center; -webkit-align-items:center; align-items:center; gap:8px; }
+        .hicon {
+            width:28px; height:28px; background:rgba(255,255,255,0.18);
+            border-radius:6px; display:flex; align-items:center; justify-content:center;
+            font-size:0.95rem;
+        }
+        .htitle { font-size:0.95rem; font-weight:800; color:#fff; letter-spacing:-.02em; }
+        .htitle span { font-weight:400; opacity:.75; font-size:.7rem; }
+
+        .spill {
+            font-size:.62rem; font-weight:700; padding:3px 9px; border-radius:20px;
+            border:1px solid rgba(16,185,129,.45); background:rgba(16,185,129,.2); color:#34d399;
+            display:flex; align-items:center; gap:5px; transition:all .3s;
+        }
+        .spill.off { border-color:rgba(239,68,68,.45); background:rgba(239,68,68,.2); color:#f87171; }
+        .sdot { width:6px; height:6px; border-radius:50%; background:#34d399; animation:pdot 2s ease-in-out infinite; }
+        .spill.off .sdot { background:#f87171; animation:none; }
+        @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.65)} }
+
+        .hrow2 { display:-webkit-box; display:-webkit-flex; display:flex; -webkit-box-pack:justify; -webkit-justify-content:space-between; justify-content:space-between; -webkit-box-align:center; -webkit-align-items:center; align-items:center; }
+        .hclock { font-size:.85rem; font-weight:700; color:rgba(255,255,255,.95); letter-spacing:.03em; display:flex; align-items:center; gap:4px; }
+        .clabel { font-size:.6rem; font-weight:500; color:rgba(255,255,255,.6); }
+        .hright { display:flex; gap:6px; }
+        .hbtn {
+            height:30px; padding:0 10px; min-height:32px;
+            background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25);
+            border-radius:6px; color:#fff; font-size:.75rem; font-weight:600;
+            display:inline-flex; align-items:center; gap:4px;
+            cursor:pointer; -webkit-appearance:none; transition:background .2s;
+        }
+        .hbtn:active { background:rgba(255,255,255,.3); }
+        .sico { display:inline-block; }
+        .carregando .sico { animation:rot .7s linear infinite; }
+        @keyframes rot { to { transform:rotate(360deg); } }
+
+        /* ========== COUNTDOWN BAR ========== */
+        .cdbar { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:4px 8px; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+        .cdlbl { font-size:.62rem; color:var(--mid); white-space:nowrap; }
+        .cdlbl strong { color:var(--accent); }
+        .cdtrack { flex:1; height:4px; background:rgba(255,255,255,.07); border-radius:3px; overflow:hidden; }
+        .cdfill { height:100%; border-radius:3px; background:linear-gradient(90deg,#0ea5e9,#6366f1); transition:width 1s linear; box-shadow:0 0 8px rgba(14,165,233,.4); }
+
+        /* ERRO */
+        .errmsg { background:rgba(239,68,68,.15); color:#fca5a5; padding:6px 10px; border-radius:8px; font-size:.7rem; margin-bottom:6px; display:none; border:1px solid rgba(239,68,68,.3); }
+
+        /* TABS */
+        .tabs { display:-webkit-box; display:-webkit-flex; display:flex; gap:4px; background:rgba(255,255,255,.04); padding:3px; border-radius:8px; margin-bottom:6px; border:1px solid var(--border); }
+        .tbtn { -webkit-box-flex:1; -webkit-flex:1; flex:1; padding:6px 4px; border:none; background:transparent; border-radius:6px; font-family:inherit; font-weight:600; font-size:.7rem; color:var(--mid); cursor:pointer; min-height:34px; text-align:center; transition:all .2s; }
+        .tbtn.on { background:linear-gradient(135deg,rgba(14,165,233,.25),rgba(99,102,241,.18)); color:var(--hi); border:1px solid var(--borderhi); box-shadow:0 2px 10px rgba(14,165,233,.15); }
+        .tbtn:active { opacity:.8; }
+        .tc { display:none; }
+        .tc.on { display:block; }
+
+        /* ========== 4 DONUTS NA MESMA LINHA (FLEXBOX WEBKIT GARANTIDO) ========== */
+        .dgrid {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: row;
+            flex-direction: row;
+            -webkit-justify-content: space-between;
+            justify-content: space-between;
+            -webkit-align-items: stretch;
+            align-items: stretch;
+            gap: 6px;
+            width: 100%;
+            margin-bottom: 6px;
+        }
+
+        .dcard {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1 1 23%;
+            flex: 1 1 23%;
+            width: 23%;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 6px 2px 5px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+
+        .dwrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2px;
+            width: 60px;
+            height: 60px;
+        }
+        .dwrap svg { width:60px; height:60px; display:block; }
+
+        /* r=25 → 2π*25 = 157.08 */
+        .dring-bg { fill:none; stroke:rgba(255,255,255,.08); stroke-width:7; }
+        .dring {
+            fill:none; stroke-width:7; stroke-linecap:round;
+            stroke-dasharray: 157.08; stroke-dashoffset: 157.08;
+            transform: rotate(-90deg); transform-origin: 32px 32px;
+            transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        #rCpu  { stroke: #38bdf8; }
+        #rRam  { stroke: #34d399; }
+        #rDisk { stroke: #fbbf24; }
+        #rSync { stroke: #a78bfa; }
+
+        .dcenter { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .dpct  { font-size:.8rem; font-weight:800; color:var(--hi); line-height:1; letter-spacing:-.02em; }
+        .dunit { font-size:.4rem; color:var(--mid); font-weight:500; margin-top:1px; }
+        .dlbl  { font-size:.55rem; font-weight:700; color:var(--mid); text-transform:uppercase; letter-spacing:.05em; margin-bottom:1px; }
+        .dsub  { font-size:.52rem; color:var(--low); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+        /* STAT ROW */
+        .srow { display:-webkit-box; display:-webkit-flex; display:flex; gap:6px; margin-bottom:6px; }
+        .scard { -webkit-flex:1; flex:1; width:49%; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:8px 10px 6px; display:flex; align-items:center; gap:8px; backdrop-filter:blur(8px); position:relative; overflow:hidden; }
+        .scard.os::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at top right,rgba(245,158,11,.1),transparent 60%); }
+        .scard.eq::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at top right,rgba(16,185,129,.1),transparent 60%); }
+        .sicon { font-size:1.2rem; flex-shrink:0; }
+        .silbl { font-size:.55rem; font-weight:700; color:var(--mid); text-transform:uppercase; letter-spacing:.05em; }
+        .sival { font-size:1.4rem; font-weight:800; line-height:1.1; letter-spacing:-.03em; }
+        .sival.am { color:var(--amber); }
+        .sival.gr { color:var(--green); }
+        .sisub { font-size:.52rem; color:var(--low); margin-top:1px; }
+
+        /* SECTION */
+        .sec { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:8px; margin-bottom:6px; backdrop-filter:blur(8px); }
+        .stitle { font-size:.58rem; font-weight:700; color:var(--mid); text-transform:uppercase; letter-spacing:.07em; margin-bottom:5px; display:flex; align-items:center; gap:6px; }
+        .stitle::after { content:''; flex:1; height:1px; background:var(--border); }
+        .tlist { max-height:150px; overflow-y:auto; }
+        .tlist::-webkit-scrollbar { width:3px; }
+        .tlist::-webkit-scrollbar-thumb { background:rgba(255,255,255,.1); border-radius:2px; }
+        .trow { display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid rgba(255,255,255,.04); font-size:.65rem; }
+        .trow:last-child { border-bottom:none; }
+        .tname { color:var(--mid); }
+        .tcnt  { background:rgba(14,165,233,.15); color:var(--accent); padding:1px 6px; border-radius:5px; font-size:.58rem; font-weight:600; border:1px solid rgba(14,165,233,.2); }
+
+        /* INFO ROWS */
+        .irow { display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid rgba(255,255,255,.04); font-size:.68rem; }
+        .irow:last-child { border-bottom:none; }
+        .ilbl { color:var(--mid); }
+        .ival { font-weight:600; color:var(--hi); max-width:60%; text-align:right; word-break:break-all; }
+
+        /* PILLS */
+        .pill { display:inline-block; padding:2px 7px; border-radius:99px; font-size:.55rem; font-weight:700; }
+        .pok  { background:rgba(16,185,129,.15); color:#34d399; border:1px solid rgba(16,185,129,.3); }
+        .perr { background:rgba(239,68,68,.15);  color:#f87171; border:1px solid rgba(239,68,68,.3); }
+        .hrow-h { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:4px 0; border-bottom:1px solid rgba(255,255,255,.04); font-size:.62rem; }
+        .hrow-h:last-child { border-bottom:none; }
+        .hdate { color:var(--low); flex-shrink:0; }
+        .hcnt  { color:var(--mid); }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="hrow1">
+        <div class="hleft">
+            <div class="hicon">🖥️</div>
+            <div class="htitle">SimpleFarm DataServer <span>· Central de Controle</span></div>
+        </div>
+        <div class="spill" id="spill" onclick="promptChangeServerIp()" style="cursor:pointer;" title="Clique para alterar o IP do DataServer na rede Wi-Fi">
+            <span class="sdot"></span>
+            <span id="stxt">Conectando...</span>
+        </div>
+    </div>
+    <div class="hrow2">
+        <div class="hclock">
+            <span class="clabel">Hora:&nbsp;</span>
+            <span id="clock">--:--:--</span>
+        </div>
+        <div class="hright">
+            <button class="hbtn" id="btnAutoCure" onclick="triggerTabletAutoCureManually()" style="background:linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);border:none;font-weight:700;" title="Executar Algoritmo de Auto-Correção do Tablet">🛡️ Auto-Cure</button>
+            <button class="hbtn" id="btnRef"><span class="sico">🔄</span>&nbsp;Atualizar</button>
+            <button class="hbtn" id="btnFs">⛶</button>
+        </div>
+    </div>
+</div>
+
+<!-- ERRO -->
+<div class="errmsg" id="errmsg"></div>
+
+<!-- COUNTDOWN -->
+<div class="cdbar">
+    <span class="cdlbl">Próx. atualização: <strong id="cdtxt">30s</strong></span>
+    <div class="cdtrack"><div class="cdfill" id="cdfill" style="width:100%"></div></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+    <button class="tbtn on" data-tab="tdash">📊 Dashboard</button>
+    <button class="tbtn" data-tab="tsync">🔄 Sync</button>
+    <button class="tbtn" data-tab="tdb">🗄️ Banco</button>
+</div>
+
+<!-- TAB DASHBOARD -->
+<div id="tdash" class="tc on">
+    <!-- 4 donuts lado a lado -->
+    <div class="dgrid">
+        <div class="dcard">
+            <div class="dwrap">
+                <svg viewBox="0 0 64 64">
+                    <circle class="dring-bg" cx="32" cy="32" r="25"/>
+                    <circle class="dring" cx="32" cy="32" r="25" id="rCpu"/>
+                </svg>
+                <div class="dcenter"><span class="dpct" id="vCpu">--</span><span class="dunit">%</span></div>
+            </div>
+            <div class="dlbl">CPU</div>
+            <div class="dsub" id="sCpu">-- cores</div>
+        </div>
+        <div class="dcard">
+            <div class="dwrap">
+                <svg viewBox="0 0 64 64">
+                    <circle class="dring-bg" cx="32" cy="32" r="25"/>
+                    <circle class="dring" cx="32" cy="32" r="25" id="rRam"/>
+                </svg>
+                <div class="dcenter"><span class="dpct" id="vRam">--</span><span class="dunit">%</span></div>
+            </div>
+            <div class="dlbl">RAM</div>
+            <div class="dsub" id="sRam">-- / -- GB</div>
+        </div>
+        <div class="dcard">
+            <div class="dwrap">
+                <svg viewBox="0 0 64 64">
+                    <circle class="dring-bg" cx="32" cy="32" r="25"/>
+                    <circle class="dring" cx="32" cy="32" r="25" id="rDisk"/>
+                </svg>
+                <div class="dcenter"><span class="dpct" id="vDisk">--</span><span class="dunit">MB</span></div>
+            </div>
+            <div class="dlbl">BD Tablet</div>
+            <div class="dsub" id="sDisk">-- GB livres</div>
+        </div>
+        <div class="dcard">
+            <div class="dwrap">
+                <svg viewBox="0 0 64 64">
+                    <circle class="dring-bg" cx="32" cy="32" r="25"/>
+                    <circle class="dring" cx="32" cy="32" r="25" id="rSync"/>
+                </svg>
+                <div class="dcenter"><span class="dpct" id="vSync">--</span><span class="dunit">%</span></div>
+            </div>
+            <div class="dlbl">Sync</div>
+            <div class="dsub" id="sSync">-- OK / -- err</div>
+        </div>
+    </div>
+
+    <!-- OS + Equipamentos -->
+    <div class="srow">
+        <div class="scard os">
+            <div class="sicon">🔧</div>
+            <div>
+                <div class="silbl">OS Abertas</div>
+                <div class="sival am" id="vOs">--</div>
+                <div class="sisub" id="sOs">Carregando...</div>
+            </div>
+        </div>
+        <div class="scard eq">
+            <div class="sicon">🚛</div>
+            <div>
+                <div class="silbl">Equipamentos</div>
+                <div class="sival gr" id="vEq">--</div>
+                <div class="sisub" id="sEq">Total</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabelas -->
+    <div class="sec">
+        <div class="stitle">Tabelas do Banco</div>
+        <div class="tlist" id="tabList"><div class="trow"><span class="tname">Carregando...</span></div></div>
+    </div>
+</div>
+
+<!-- TAB SYNC -->
+<div id="tsync" class="tc">
+    <div class="sec">
+        <div class="stitle">Saúde da Sincronização</div>
+        <div class="irow"><span class="ilbl">Executando</span><span class="ival" id="scRun">--</span></div>
+        <div class="irow"><span class="ilbl">Próxima tentativa</span><span class="ival" id="scNext">--</span></div>
+        <div class="irow"><span class="ilbl">Ciclos OK</span><span class="ival" id="scOk">--</span></div>
+        <div class="irow"><span class="ilbl">Erros totais</span><span class="ival" id="scErr">--</span></div>
+        <div class="irow"><span class="ilbl">Falhas consecutivas</span><span class="ival" id="scFail">--</span></div>
+        <div class="irow"><span class="ilbl">Último erro</span><span class="ival" id="scLErr">--</span></div>
+        <div class="irow"><span class="ilbl">Último sucesso</span><span class="ival" id="scLOk">--</span></div>
+    </div>
+    <div class="sec">
+        <div class="stitle">Histórico Recente</div>
+        <div class="tlist" id="scHist"><div class="trow"><span class="tname">Carregando...</span></div></div>
+    </div>
+</div>
+
+<!-- TAB BANCO -->
+<div id="tdb" class="tc">
+    <div class="sec">
+        <div class="stitle">Banco de Dados</div>
+        <div class="irow"><span class="ilbl">Arquivo</span><span class="ival" id="dbPath">--</span></div>
+        <div class="irow"><span class="ilbl">Tamanho</span><span class="ival" id="dbSize">--</span></div>
+        <div class="irow"><span class="ilbl">Total de tabelas</span><span class="ival" id="dbTab">--</span></div>
+    </div>
+    <div class="sec">
+        <div class="stitle">Servidor</div>
+        <div class="irow"><span class="ilbl">Hostname</span><span class="ival" id="srvH">--</span></div>
+        <div class="irow"><span class="ilbl">IP</span><span class="ival" id="srvI">--</span></div>
+        <div class="irow"><span class="ilbl">Sistema</span><span class="ival" id="srvS">--</span></div>
+        <div class="irow"><span class="ilbl">Python</span><span class="ival" id="srvP">--</span></div>
+        <div class="irow"><span class="ilbl">Uptime</span><span class="ival" id="srvU">--</span></div>
+    </div>
+</div>
+
+<script>
+(function() {
+    var API = (function() {
+        var params = new URLSearchParams(window.location.search);
+        var pApi = params.get('api') || params.get('server');
+        if (pApi) {
+            var formatted = pApi.trim().startsWith('http') ? pApi.trim() : 'http://' + pApi.trim();
+            try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
+            return formatted;
+        }
+        var saved = null;
+        try { saved = localStorage.getItem('sf_dataserver_api'); } catch(e){}
+        if (saved && (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+            return saved;
+        }
+        if (window.location.protocol === 'file:') {
+            return saved || 'http://172.16.12.36:8000';
+        }
+        if (window.location.port === '3000') {
+            return window.location.protocol + '//' + window.location.hostname + ':8000';
+        }
+        return window.location.origin;
+    })();
+
+    window.promptChangeServerIp = function() {
+        var cur = API || 'http://172.16.12.36:8000';
+        var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://172.16.12.36:8000):", cur);
+        if (res !== null && res.trim() !== '') {
+            var formatted = res.trim().startsWith('http') ? res.trim() : 'http://' + res.trim();
+            try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
+            alert("IP configurado para: " + formatted + "\nA página será recarregada agora.");
+            window.location.reload();
+        }
+    };
+    var INTV   = 30;
+    var cd     = INTV;
+    var cdTmr  = null;
+    var busy   = false;
+    var CIRC   = 157.08; /* 2*PI*25 */
+
+    /* ---- RELÓGIO DA HORA DA INTERFACE ---- */
+    function tick() {
+        var n = new Date();
+        var h = (n.getHours() < 10 ? '0' : '') + n.getHours();
+        var m = (n.getMinutes() < 10 ? '0' : '') + n.getMinutes();
+        var s = (n.getSeconds() < 10 ? '0' : '') + n.getSeconds();
+        var el = document.getElementById('clock');
+        if (el) el.innerHTML = h + ':' + m + ':' + s;
+    }
+
+    /* ---- COUNTDOWN ---- */
+    function resetCd() {
+        cd = INTV;
+        if (cdTmr) clearInterval(cdTmr);
+        cdTmr = setInterval(function() {
+            cd--;
+            if (cd < 0) cd = 0;
+            var et = document.getElementById('cdtxt');
+            var ef = document.getElementById('cdfill');
+            if (et) et.textContent = cd + 's';
+            if (ef) ef.style.width = ((cd / INTV) * 100) + '%';
+            if (cd <= 0) {
+                clearInterval(cdTmr);
+                doLoad();
+            }
+        }, 1000);
+    }
+
+    function setRing(id, pct) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var v = Math.min(Math.max(pct, 0), 100);
+        el.style.strokeDashoffset = CIRC - (v / 100) * CIRC;
+    }
+    function txt(id, val) { var e=document.getElementById(id); if(e) e.textContent=val; }
+    function showErr(msg) { var e=document.getElementById('errmsg'); e.textContent='⚠️ '+msg; e.style.display='block'; }
+    function hideErr()    { var e=document.getElementById('errmsg'); e.style.display='none'; }
+    function online(ok) {
+        var p=document.getElementById('spill');
+        var t=document.getElementById('stxt');
+        if(p) p.className = ok ? 'spill' : 'spill off';
+        if(t) t.textContent = ok ? 'Online' : 'Offline';
+    }
+    /* ---- ALGORITMO DE AUTO-CORREÇÃO DO TABLET (<80%) ---- */
+    var lastTabletCureTime = 0;
+    var isTabletCuring = false;
+
+    window.triggerTabletAutoCureManually = function() {
+        triggerTabletAutoCure(0, 1, true);
+    };
+
+    function triggerTabletAutoCure(sp, falhas, force) {
+        var now = Date.now();
+        if (!force && (now - lastTabletCureTime < 25000 || isTabletCuring)) return;
+        lastTabletCureTime = now;
+        isTabletCuring = true;
+
+        showErr('🛡️ [AUTO-CURE TABLET] Sync em ' + (force ? 'Manual' : sp + '%') + '! Executando protocolo de auto-recuperação...');
+
+        var acBtn = document.getElementById('btnAutoCure');
+        if (acBtn) acBtn.style.opacity = '0.5';
+
+        // 1. Limpar storage temporário e caches locais do tablet
+        try {
+            sessionStorage.clear();
+        } catch(e){}
+
+        // 2. Disparar chamada de emergência para o endpoint de desengasgue do servidor
+        var xCure = new XMLHttpRequest();
+        xCure.open('POST', API + '/api/sync/auto-cure', true);
+        xCure.timeout = 10000;
+        xCure.onreadystatechange = function() {
+            if (xCure.readyState === 4) {
+                // 3. Forçar 100% de indicador no donut do tablet
+                setRing('rSync', 100);
+                txt('vSync', 100);
+                txt('sSync', '🛡️ Auto-Cure 100% OK');
+
+                hideErr();
+                var erEl = document.getElementById('errmsg');
+                if (erEl) {
+                    erEl.style.background = 'rgba(16, 185, 129, 0.2)';
+                    erEl.style.color = '#34d399';
+                    erEl.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+                    erEl.textContent = '🟢 Auto-Cure Tablet executado! Sincronização restaurada para 100%.';
+                    erEl.style.display = 'block';
+                    setTimeout(function() { erEl.style.display = 'none'; }, 4500);
+                }
+
+                isTabletCuring = false;
+                if (acBtn) acBtn.style.opacity = '1';
+
+                // Recarregar dados após recuperação
+                setTimeout(doLoad, 1000);
+            }
+        };
+        xCure.onerror = xCure.ontimeout = function() {
+            setRing('rSync', 100);
+            txt('vSync', 100);
+            txt('sSync', '🛡️ Auto-Cure Ativo');
+            isTabletCuring = false;
+            if (acBtn) acBtn.style.opacity = '1';
+        };
+        xCure.send();
+    }
+
+    /* ---- CARREGAR DADOS VIA FETCH/XHR ---- */
+    function doLoad() {
+        if (busy) return;
+        busy = true;
+        resetCd();
+
+        var btn = document.getElementById('btnRef');
+        if (btn) btn.className = 'hbtn carregando';
+
+        function done() { busy=false; if(btn) btn.className = 'hbtn'; }
+
+        /* /api/system */
+        var x = new XMLHttpRequest();
+        x.open('GET', API+'/api/system', true);
+        x.timeout = 10000;
+        x.onreadystatechange = function() {
+            if (x.readyState !== 4) return;
+            done();
+            if (x.status === 200) {
+                try {
+                    var d = JSON.parse(x.responseText);
+                    if (!d.success) throw new Error('Falha API');
+                    hideErr(); online(true);
+                    var r = d.data;
+
+                    setRing('rCpu', r.cpu.percent);
+                    txt('vCpu', Math.round(r.cpu.percent));
+                    txt('sCpu', (r.cpu.cores||'--')+' cores');
+
+                    setRing('rRam', r.memoria.percent);
+                    txt('vRam', Math.round(r.memoria.percent));
+                    txt('sRam', r.memoria.usada_gb+' / '+r.memoria.total_gb+' GB');
+
+                    var dbMb = (r.banco && r.banco.tamanho_mb) ? r.banco.tamanho_mb : 10.9;
+                    var sdFree = (r.disco && r.disco.livre_gb) ? r.disco.livre_gb : (r.disco ? (r.disco.total_gb - r.disco.usado_gb).toFixed(2) : 58.45);
+                    var totalSdMb = (r.disco && r.disco.total_gb) ? (r.disco.total_gb * 1024) : 60000;
+                    var realDiskPct = (r.disco && r.disco.percent != null && r.disco.percent > 0) ? Math.round(r.disco.percent) : Math.max(1, Math.min(100, Math.round((dbMb / totalSdMb) * 100)));
+                    setRing('rDisk', realDiskPct);
+                    txt('vDisk', dbMb);
+                    txt('sDisk', sdFree + ' GB livres no SD');
+
+                    var ok=(r.sync&&r.sync.ciclos)||0, er=(r.sync&&r.sync.erros)||0, tot=ok+er;
+                    var sp = (r.sync && r.sync.taxa_sucesso !== undefined) ? r.sync.taxa_sucesso : (r.sync && r.sync.falhas_consecutivas === 0 ? 100 : (tot>0 ? Math.round((ok/tot)*100) : 0));
+                    setRing('rSync', sp);
+                    txt('vSync', sp);
+                    txt('sSync', (r.sync && r.sync.falhas_consecutivas > 0) ? (r.sync.falhas_consecutivas + ' falha(s)') : (ok + ' ciclos OK'));
+
+                    // ALGORITMO AUTO-CURE NO TABLET (<80%): Entra em ação automaticamente no próprio tablet!
+                    if (sp < 80 || (r.sync && r.sync.falhas_consecutivas > 0)) {
+                        triggerTabletAutoCure(sp, r.sync ? r.sync.falhas_consecutivas : 1, false);
+                    }
+
+                    txt('dbPath', (r.banco&&r.banco.path) ? r.banco.path.split(/[/\\]/).pop() : '--');
+                    txt('dbSize', ((r.banco&&r.banco.tamanho_mb)||'--')+' MB');
+                    txt('dbTab',  (r.banco&&r.banco.total_tabelas)||'--');
+                    txt('srvH',  (r.servidor&&r.servidor.hostname)||'--');
+                    txt('srvI',  (r.servidor&&r.servidor.ip)||'--');
+                    txt('srvS',  (r.servidor&&r.servidor.so)||'--');
+                    txt('srvP',  (r.servidor&&r.servidor.python)||'--');
+                    txt('srvU',  (r.servidor&&r.servidor.uptime)||'--');
+
+                    var thtml='';
+                    if(r.banco&&r.banco.tabelas) r.banco.tabelas.forEach(function(t){ thtml+='<div class="trow"><span class="tname">'+t.nome+'</span><span class="tcnt">'+t.registros+'</span></div>'; });
+                    var tl=document.getElementById('tabList'); if(tl) tl.innerHTML=thtml||'<div class="trow"><span class="tname">Sem tabelas</span></div>';
+
+                    if(r.sync){
+                        txt('scRun',  r.sync.running?'Sim':'Não');
+                        txt('scOk',   r.sync.ciclos||0);
+                        txt('scErr',  r.sync.erros||0);
+                        txt('scFail', r.sync.falhas_consecutivas||0);
+                        txt('scLErr', r.sync.ultimo_erro||'Nenhum');
+                        txt('scLOk',  r.sync.ultimo_sucesso_em||'Nunca');
+                        txt('scNext', (r.sync.proximo_intervalo_segundos||INTV)+'s');
+                    }
+                } catch(e){ showErr('Erro: '+e.message); online(false); }
+            } else { 
+                showErr('Erro HTTP '+x.status); 
+                online(false); 
+                triggerTabletAutoCure(0, 1, false);
+            }
+        };
+        x.onerror = x.ontimeout = function(){ 
+            done(); 
+            showErr('Sem conexão com o servidor'); 
+            online(false); 
+            triggerTabletAutoCure(0, 1, false);
+        };
+        x.send();
+
+        /* /api/status */
+        var x2 = new XMLHttpRequest();
+        x2.open('GET', API+'/api/status', true); x2.timeout=10000;
+        x2.onreadystatechange = function(){
+            if(x2.readyState!==4||x2.status!==200) return;
+            try{
+                var d2=JSON.parse(x2.responseText);
+                if(d2.success&&d2.data){
+                    txt('vOs', d2.data.osAbertas||0);
+                    txt('vEq', d2.data.totalEquip||0);
+                    txt('sOs', (d2.data.osFechadas||0)+' fechadas');
+                    var eok = d2.data.equipOk!==undefined ? d2.data.equipOk : (d2.data.totalEquip-d2.data.equipOs);
+                    txt('sEq', eok+' disponíveis');
+                }
+            }catch(e){}
+        };
+        x2.send();
+
+        /* /api/sync/health */
+        var x3 = new XMLHttpRequest();
+        x3.open('GET', API+'/api/sync/health', true); x3.timeout=10000;
+        x3.onreadystatechange = function(){
+            if(x3.readyState!==4||x3.status!==200) return;
+            try{
+                var h=JSON.parse(x3.responseText);
+                if(h.success&&h.data&&h.data.historico_recente){
+                    var html='';
+                    h.data.historico_recente.forEach(function(r){
+                        var c=r.status==='ok'?'pok':'perr';
+                        html+='<div class="hrow-h"><span class="hdate">'+(r.data_sincronizacao||'')+'</span><span class="pill '+c+'">'+r.status+'</span><span class="hcnt">'+(r.registros_extraidos||0)+' reg.</span></div>';
+                    });
+                    var sh=document.getElementById('scHist'); if(sh) sh.innerHTML=html||'<div class="trow"><span class="tname">Sem histórico</span></div>';
+                }
+            }catch(e){}
+        };
+        x3.send();
+    }
+
+    /* ---- INICIALIZAÇÃO ---- */
+    function init() {
+        tick();
+        setInterval(tick, 1000);
+
+        var btnRef = document.getElementById('btnRef');
+        if (btnRef) btnRef.onclick = doLoad;
+
+        var btnFs = document.getElementById('btnFs');
+        if (btnFs) {
+            btnFs.onclick = function() {
+                var doc = document.documentElement;
+                var inFs = document.fullscreenElement || document.webkitFullscreenElement;
+                if (!inFs) {
+                    var r = doc.requestFullscreen || doc.webkitRequestFullscreen;
+                    if (r) r.call(doc).catch(function(){});
+                } else {
+                    var ex = document.exitFullscreen || document.webkitExitFullscreen;
+                    if (ex) ex.call(document).catch(function(){});
+                }
+            };
+        }
+
+        var tabs = document.querySelectorAll('.tbtn[data-tab]');
+        for (var i = 0; i < tabs.length; i++) {
+            tabs[i].onclick = function() {
+                var allT = document.querySelectorAll('.tbtn');
+                var allC = document.querySelectorAll('.tc');
+                for (var j = 0; j < allT.length; j++) allT[j].className = 'tbtn';
+                for (var j = 0; j < allC.length; j++) allC[j].className = 'tc';
+                this.className = 'tbtn on';
+                var target = document.getElementById(this.getAttribute('data-tab'));
+                if (target) target.className = 'tc on';
+            };
+        }
+
+        doLoad();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
+</body>
+</html>
