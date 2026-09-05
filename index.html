@@ -9318,36 +9318,39 @@
             // 2. Propriedade direta de equipe do objeto
             if (op.equipe && op.equipe !== '-' && op.equipe.trim() !== '') return op.equipe;
 
-            // 3. Busca em equipamentos por código exato ou formatação idêntica
-            const formatted = formatarOp(op).toLowerCase().trim();
+            // 3. SE NÃO TIVER EQUIPE DIRETA, DETERMINAR BASEADO NO NOME/TIPO DA OPERAÇÃO:
+            if (descStr.includes('herbicida') || descStr.includes('defensiv') || descStr.includes('inseticida') || descStr.includes('fungicida') || descStr.includes('catacao') || descStr.includes('dessecacao')) return 'HERBICIDA';
+            if (descStr.includes('vinhaça') || descStr.includes('vinhaca') || descStr.includes('fertilizante') || descStr.includes('fertirrigacao') || descStr.includes('adubação') || descStr.includes('adubacao') || descStr.includes('gesso') || descStr.includes('calcario') || descStr.includes('compostagem') || descStr.includes('torta')) return 'FERTIRRIGACAO';
+            if (descStr.includes('preparo') || descStr.includes('aração') || descStr.includes('aracao') || descStr.includes('subsolagem') || descStr.includes('sulcação') || descStr.includes('sulcacao') || descStr.includes('terraceamento') || descStr.includes('terraplanagem') || descStr.includes('gradagem') || descStr.includes('curva') || descStr.includes('soqueira') || descStr.includes('quebra de lombo')) return 'PREPARO';
+            if (descStr.includes('corte') || descStr.includes('colheita') || descStr.includes('transbordo') || descStr.includes('biomassa') || descStr.includes('cana') || descStr.includes('mesa') || descStr.includes('basculante') || descStr.includes('enfardamento')) return 'BIOMASSA';
+            if (descStr.includes('linha amarela') || descStr.includes('pa ') || descStr.includes('pá ') || descStr.includes('escavadeira') || descStr.includes('estrada') || descStr.includes('aterro')) return 'LINHA AMARELA';
+            if (descStr.includes('tratos') || descStr.includes('cultivo') || descStr.includes('plantio') || descStr.includes('roçadeira') || descStr.includes('rocadeira') || descStr.includes('muda') || descStr.includes('silagem') || descStr.includes('canterizador')) return 'TRATOS CULTURAIS';
 
-            const matchedEq = equipments.find(e => {
-                if (!e.operacao) return false;
-                const eqOp = e.operacao.trim().toLowerCase();
-
-                // Correspondência exata formatada
-                if (eqOp === formatted) return true;
-
-                // Correspondência exata por código no início (ex: "3003 -" ou "3003 ")
-                if (codStr) {
-                    const cLow = codStr.toLowerCase();
-                    if (eqOp === cLow || eqOp.startsWith(`${cLow} -`) || eqOp.startsWith(`${cLow} `)) {
-                        return true;
-                    }
-                }
-
-                // Correspondência por descrição exata
-                if (descStr && (eqOp === descStr || eqOp.endsWith(`- ${descStr}`))) {
-                    return true;
-                }
-
-                return false;
-            });
-
-            if (matchedEq && matchedEq.grupo) {
-                return matchedEq.grupo;
+            // 4. Checagem por código de operação:
+            if (codStr.startsWith('1')) {
+                if (['1031', '1032', '1064', '1078', '1079', '1090', '1091', '1105'].includes(codStr)) return 'HERBICIDA';
+                if (['1028', '1029', '1033', '1034', '1050', '1068', '1070', '1071', '1072', '1076', '1082', '1084', '1089', '1092', '1094', '1102'].includes(codStr)) return 'FERTIRRIGACAO';
+                if (['1006', '1007', '1008', '1009', '1010', '1024', '1052', '1061'].includes(codStr)) return 'BIOMASSA';
+                if (['1002', '1003', '1005', '1042', '1056'].includes(codStr)) return 'LINHA AMARELA';
+                if (['1044', '1045', '1046', '1047', '1048', '1074', '1081', '1096'].includes(codStr)) return 'TRATOS CULTURAIS';
+                return 'PREPARO';
             }
-            return '-';
+            if (codStr.startsWith('2')) {
+                if (['2018', '2020', '2042'].includes(codStr)) return 'FERTIRRIGACAO';
+                return 'BIOMASSA';
+            }
+            if (codStr.startsWith('3')) {
+                if (['3063', '3083', '3084', '3087', '3094'].includes(codStr)) return 'FERTIRRIGACAO';
+                return 'BIOMASSA';
+            }
+            if (codStr.startsWith('4')) {
+                if (['4017', '4018', '4024'].includes(codStr)) return 'FERTIRRIGACAO';
+                return 'BIOMASSA';
+            }
+            if (codStr.startsWith('5')) return 'HERBICIDA';
+            if (codStr.startsWith('6')) return 'FERTIRRIGACAO';
+
+            return 'PREPARO';
         }
 
         function isOperacaoProdutiva(op) {
@@ -9423,7 +9426,7 @@
                 const mod      = eq.modelo    || '';
                 const rawT     = eq.tipo      || '';
                 const defaultT = normalizarTipo(rawT, desc, mod);
-                const defaultOp = (operacoes[0] ? formatarOp(operacoes[0]) : '101 - PREPARO DE SOLO');
+                const defaultOp = '101 - PREPARO DE SOLO';
                 const assignedGroup = customGroups[codStr] || eq.grupo || 'PREPARO';
                 const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : (VALID_TEAMS.includes(eq.grupo) ? eq.grupo : 'PREPARO');
                 return {
@@ -10408,13 +10411,7 @@
                 activeTeam = teams[0];
             }
 
-            const currIndex = teams.indexOf(activeTeam);
-            const prevIndex = (currIndex - 1 + total) % total;
-            const nextIndex = (currIndex + 1) % total;
-
-            const prevTeam = teams[prevIndex];
-            const currTeam = teams[currIndex];
-            const nextTeam = teams[nextIndex];
+            const isMobile = window.innerWidth <= 768;
 
             const getTeamCount = (teamName) => {
                 const is24h = (teamName === '24h⚠️' || teamName === '24H ⚠️');
@@ -10430,23 +10427,43 @@
             };
 
             let html = '';
-            if (total >= 3) {
-                html = `
-                    <button class="team-carousel-btn side-btn prev-btn" data-team="${prevTeam}" title="Clique para girar para a esquerda (${prevTeam})">
-                        <i class="fas fa-chevron-left" style="font-size:0.75rem;opacity:0.75;"></i> ${getTeamLabel(prevTeam)} <span class="count">${getTeamCount(prevTeam)}</span>
-                    </button>
-                    <button class="team-carousel-btn center-active" data-team="${currTeam}" title="Aba Ativa Selecionada">
-                        ${getTeamLabel(currTeam)} <span class="count">${getTeamCount(currTeam)}</span>
-                    </button>
-                    <button class="team-carousel-btn side-btn next-btn" data-team="${nextTeam}" title="Clique para girar para a direita (${nextTeam})">
-                        ${getTeamLabel(nextTeam)} <span class="count">${getTeamCount(nextTeam)}</span> <i class="fas fa-chevron-right" style="font-size:0.75rem;opacity:0.75;"></i>
-                    </button>
-                `;
+            if (isMobile) {
+                // NO CELULAR (<= 768px): Carrossel Cíclico 3 Itens (Esquerda - Centro Ativo - Direita)
+                const currIndex = teams.indexOf(activeTeam);
+                const prevIndex = (currIndex - 1 + total) % total;
+                const nextIndex = (currIndex + 1) % total;
+
+                const prevTeam = teams[prevIndex];
+                const currTeam = teams[currIndex];
+                const nextTeam = teams[nextIndex];
+
+                if (total >= 3) {
+                    html = `
+                        <button class="team-carousel-btn side-btn prev-btn" data-team="${prevTeam}" title="Girar para a esquerda (${prevTeam})">
+                            <i class="fas fa-chevron-left" style="font-size:0.75rem;opacity:0.75;"></i> ${getTeamLabel(prevTeam)} <span class="count">${getTeamCount(prevTeam)}</span>
+                        </button>
+                        <button class="team-carousel-btn center-active" data-team="${currTeam}" title="Aba Ativa Selecionada">
+                            ${getTeamLabel(currTeam)} <span class="count">${getTeamCount(currTeam)}</span>
+                        </button>
+                        <button class="team-carousel-btn side-btn next-btn" data-team="${nextTeam}" title="Girar para a direita (${nextTeam})">
+                            ${getTeamLabel(nextTeam)} <span class="count">${getTeamCount(nextTeam)}</span> <i class="fas fa-chevron-right" style="font-size:0.75rem;opacity:0.75;"></i>
+                        </button>
+                    `;
+                } else {
+                    html = teams.map(team => {
+                        const isActive = team === activeTeam;
+                        const sideClass = isActive ? 'center-active' : 'side-btn';
+                        return `<button class="team-carousel-btn ${sideClass}" data-team="${team}">
+                            ${getTeamLabel(team)} <span class="count">${getTeamCount(team)}</span>
+                        </button>`;
+                    }).join('');
+                }
             } else {
+                // NO DESKTOP (> 768px): Exibe TODAS as abas de equipe lado a lado de forma horizontal
                 html = teams.map(team => {
                     const isActive = team === activeTeam;
-                    const sideClass = isActive ? 'center-active' : 'side-btn';
-                    return `<button class="team-carousel-btn ${sideClass}" data-team="${team}">
+                    const activeClass = isActive ? 'active' : '';
+                    return `<button class="sub-tab-btn ${activeClass}" data-team="${team}">
                         ${getTeamLabel(team)} <span class="count">${getTeamCount(team)}</span>
                     </button>`;
                 }).join('');
@@ -10454,7 +10471,7 @@
 
             container.innerHTML = html;
 
-            container.querySelectorAll('.team-carousel-btn').forEach(btn => {
+            container.querySelectorAll('.team-carousel-btn, .sub-tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const targetTeam = btn.dataset.team;
                     if (!targetTeam) return;
@@ -10463,6 +10480,7 @@
                     localStorage.setItem('sf_active_team', activeTeam);
 
                     renderTeamTabs(false);
+                    if (!isMobile) autoCenterTab(btn);
                 });
             });
 
@@ -10732,6 +10750,9 @@
                 const tabBtn = e.target.closest('.tab-btn, .sub-tab-btn, .team-filter-btn');
                 if (tabBtn) autoCenterTab(tabBtn);
             });
+
+            // Re-renderizar abas de equipes ao redimensionar a janela (mobile x desktop)
+            window.addEventListener('resize', () => renderTeamTabs(false));
 
             // Botão sync manual (se existir)
             const syncBtn = document.getElementById('syncNowBtn');
