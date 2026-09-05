@@ -409,7 +409,10 @@
             align-items: center;
             justify-content: center;
             margin: 0;
+            padding: 2px 6px;
             vertical-align: middle;
+            flex-shrink: 0;
+            overflow: visible;
         }
 
         .theme-toggle-wrapper .toggle-switch {
@@ -417,8 +420,9 @@
             display: inline-block;
             width: 54px;
             height: 28px;
-            transform: scale(0.9);
+            transform: scale(0.95);
             transition: transform 0.2s;
+            margin-right: 2px;
         }
 
         .theme-toggle-wrapper .toggle-switch:hover {
@@ -712,14 +716,77 @@
         .header-top-row {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 16px;
-            flex-wrap: nowrap;
+            width: 100%;
+            flex-wrap: wrap;
+            overflow: visible;
         }
 
         .header-top-controls {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            margin-left: auto;
+            flex-shrink: 0;
+            padding-right: 4px;
+            overflow: visible;
+        }
+
+        /* ===== ABA EQUIPES — CARROSSEL INFINITO ===== */
+        .tabs-carousel-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .carousel-nav-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff !important;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+            transition: all 0.2s ease;
+            user-select: none;
+            z-index: 5;
+        }
+
+        .carousel-nav-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+        }
+
+        .carousel-nav-btn:active {
+            transform: scale(0.92);
+        }
+
+        .tabs-carousel-wrapper .tabs {
+            flex: 1;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 4px;
+            margin-bottom: 0 !important;
+            scrollbar-width: none;
+        }
+
+        .tabs-carousel-wrapper .tabs::-webkit-scrollbar {
+            display: none;
         }
 
         .header-info {
@@ -2915,7 +2982,15 @@
 
         <!-- TAB EQUIPE (CARROSSEL RODA INFINITA) -->
         <div id="tab-equipe" class="tab-content">
-            <div class="tabs" id="equipeSubTabs"></div>
+            <div class="tabs-carousel-wrapper">
+                <button class="carousel-nav-btn prev-btn" id="teamCarouselPrev" onclick="navigateTeamTab(-1)" title="Aba Anterior (Giro Infinito 🔄)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="tabs" id="equipeSubTabs"></div>
+                <button class="carousel-nav-btn next-btn" id="teamCarouselNext" onclick="navigateTeamTab(1)" title="Próxima Aba (Giro Infinito 🔄)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
             <div id="equipeSubContents"></div>
         </div>
 
@@ -8920,6 +8995,12 @@
             updateAuthUI();
         }
 
+        function isStaticGitHubPages() {
+            const customApi = localStorage.getItem('sf_custom_api_base');
+            if (customApi && customApi.trim() !== '') return false;
+            return window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+        }
+
         async function checkAuth() {
             let token = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token');
             if (!token && (window.location.hostname.includes('github.io') || !window.location.hostname.includes('172.16.'))) {
@@ -8933,6 +9014,12 @@
             userRole  = localStorage.getItem('sf_auth_role') || 'admin';
             applyRBAC();
             updateAuthUI();
+
+            // Evitar chamadas a /api/auth/me quando hospedado estaticamente no GitHub Pages (previne erro 404 no console)
+            if (isStaticGitHubPages()) {
+                return;
+            }
+
             // Valida silenciosamente no servidor sem derrubar a tela do usuário em caso de instabilidade
             try {
                 const ctrl = new AbortController();
@@ -9317,6 +9404,23 @@
             if (!isBackground) {
                 setConnectionStatus('syncing');
                 showGlobalLoader();
+            }
+
+            // Se estiver hospedado no GitHub Pages estático sem API base customizada, usa direto o dataset local/embarcado (SEM ERRO 404 NO CONSOLE)
+            if (isStaticGitHubPages()) {
+                let cachedData = null;
+                try {
+                    const str = localStorage.getItem('sf_cached_data');
+                    if (str) cachedData = JSON.parse(str);
+                } catch (e) {}
+
+                const embeddedLength = (EMBEDDED_INITIAL_DATA && EMBEDDED_INITIAL_DATA.equipamentos) ? EMBEDDED_INITIAL_DATA.equipamentos.length : 0;
+                const cachedLength = (cachedData && cachedData.equipamentos) ? cachedData.equipamentos.length : 0;
+                const fallbackData = (cachedData && cachedLength >= embeddedLength) ? cachedData : EMBEDDED_INITIAL_DATA;
+
+                processarPayloadDados(fallbackData, true, isBackground);
+                if (!isBackground) hideGlobalLoader();
+                return;
             }
 
             try {
@@ -10161,6 +10265,32 @@
         // ================================================================
         // ABA EQUIPES — CARROSSEL BIDIRECIONAL COM CENTRALIZAÇÃO DA ABA SELECIONADA
         // ================================================================
+        function navigateTeamTab(dir) {
+            const baseTeams = getEquipesDisponiveis();
+            const teams = [...baseTeams, '24h⚠️'];
+            if (teams.length === 0) return;
+
+            let currentIndex = teams.indexOf(activeTeam);
+            if (currentIndex === -1) currentIndex = 0;
+
+            // Giro circular infinito (anel cíclico em ambas as direções)
+            const newIndex = (currentIndex + dir + teams.length) % teams.length;
+            activeTeam = teams[newIndex];
+            localStorage.setItem('sf_active_team', activeTeam);
+
+            const tabsEl = document.getElementById('equipeSubTabs');
+            if (tabsEl) {
+                tabsEl.querySelectorAll('.sub-tab-btn').forEach(btn => {
+                    const isActive = (btn.dataset.team === activeTeam);
+                    btn.classList.toggle('active', isActive);
+                    if (isActive) autoCenterTab(btn);
+                });
+            }
+
+            renderTeamTabContent(activeTeam);
+            atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
+        }
+
         function renderTeamTabs(resetTeam = false) {
             const tabsEl = document.getElementById('equipeSubTabs');
             if (!tabsEl) return;
