@@ -2797,7 +2797,9 @@ def login():
                 if is_master_pass or (user and verificar_senha(senha, user['senha_hash'], user['salt'])):
                     token = gerar_token()
                     expira = (datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
-                    conn.execute('INSERT INTO sessoes (usuario_id, token, ip_origem, expira_em) VALUES (?, ?, ?, ?)',
+                    # Desativar todas as sessoes anteriores do mesmo usuario para garantir acesso unico e evitar saturacao do banco
+                    conn.execute('UPDATE sessoes SET ativo = 0 WHERE usuario_id = ? AND ativo = 1', (user['id'],))
+                    conn.execute('INSERT INTO sessoes (usuario_id, token, ip_origem, expira_em, ativo) VALUES (?, ?, ?, ?, 1)',
                                  (user['id'], token, ip_origem, expira))
                     conn.execute('UPDATE usuarios SET ultimo_login = CURRENT_TIMESTAMP, admin = 1, ativo = 1 WHERE id = ?', (user['id'],))
                     conn.execute('INSERT INTO tentativas_login (usuario, ip_origem, sucesso) VALUES (?, ?, 1)',
@@ -2813,7 +2815,9 @@ def login():
             
             token = gerar_token()
             expira = (datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
-            conn.execute('INSERT INTO sessoes (usuario_id, token, ip_origem, expira_em) VALUES (?, ?, ?, ?)',
+            # Desativar todas as sessoes anteriores do mesmo usuario para garantir acesso unico e evitar saturacao do banco
+            conn.execute('UPDATE sessoes SET ativo = 0 WHERE usuario_id = ? AND ativo = 1', (user['id'],))
+            conn.execute('INSERT INTO sessoes (usuario_id, token, ip_origem, expira_em, ativo) VALUES (?, ?, ?, ?, 1)',
                          (user['id'], token, ip_origem, expira))
             conn.execute('UPDATE usuarios SET ultimo_login = CURRENT_TIMESTAMP WHERE id = ?', (user['id'],))
             conn.execute('INSERT INTO tentativas_login (usuario, ip_origem, sucesso) VALUES (?, ?, 1)',
@@ -2870,7 +2874,7 @@ def auth_me():
         conn.close()
         
         if not sessao:
-            return jsonify(success=False, error='Token invalido ou expirado'), 401
+            return jsonify(success=False, session_expired=True, error='Sua sessão foi encerrada porque este usuário realizou login em outro dispositivo para evitar saturação do banco de dados.'), 401
         
         return jsonify(success=True, usuario=dict(sessao))
     except Exception as exc:
