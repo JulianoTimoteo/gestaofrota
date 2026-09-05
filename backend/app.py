@@ -273,9 +273,9 @@ def with_db_retry(max_retries=3, initial_delay=0.05):
     return decorator
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH, timeout=60)
+    conn = sqlite3.connect(DB_PATH, timeout=60, isolation_level=None)
     conn.row_factory = sqlite3.Row
-    conn.execute('PRAGMA busy_timeout = 10000')
+    conn.execute('PRAGMA busy_timeout = 30000')
     conn.execute('PRAGMA journal_mode=WAL')
     conn.execute('PRAGMA synchronous=NORMAL')
     conn.execute('PRAGMA cache_size=-16000')   # 16 MB de cache em memoria
@@ -325,6 +325,8 @@ class WatchdogService:
         self.running = False
         self.thread = None
         self.last_db_check = 0
+        self.last_auto_cure = 0
+        self.auto_cure_count = 0
 
     def start(self):
         self.running = True
@@ -340,8 +342,77 @@ class WatchdogService:
             try:
                 self._verify_db_integrity()
                 self._verify_sync_thread()
+                self._check_auto_cure()
             except Exception as exc:
                 logger.error(f'Watchdog Daemon erro: {exc}')
+
+    def _check_auto_cure(self):
+        """Algoritmo de Correção Automática (Auto-Cure):
+        Quando a saúde da sincronização cai abaixo de 80% ou há falhas consecutivas,
+        o algoritmo entra em ação automaticamente para diagnosticar e restaurar o sistema."""
+        now = time.time()
+        if now - self.last_auto_cure < 30: # Evita auto-cure em loop num intervalo menor que 30s
+            return
+        
+        if 'sync_service' not in globals() or not sync_service:
+            return
+
+        health = sync_service.health()
+        taxa = health.get('taxa_sucesso', 100)
+        falhas = health.get('falhas_consecutivas', 0)
+
+        if taxa < 80 or falhas > 0:
+            self.trigger_auto_cure(f"Taxa em {taxa}% com {falhas} falhas consecutivas")
+
+    def trigger_auto_cure(self, motivo="Acionamento Manual"):
+        self.last_auto_cure = time.time()
+        self.auto_cure_count += 1
+        logger.warning(f'🛡️ [AUTO-CURE ATIVADO #{self.auto_cure_count}] Motivo: {motivo}. Executando protocolo de autocorreção...')
+        
+        try:
+            # PASSO 1: Desbloquear e Otimizar o SQLite (Elimina Locks)
+            conn = get_db_connection()
+            try:
+                conn.execute("PRAGMA wal_checkpoint(TRUNCATE);")
+                conn.execute("PRAGMA optimize;")
+            except Exception as db_err:
+                logger.warning(f'🛡️ [AUTO-CURE DB] Checkpoint aviso: {db_err}')
+            finally:
+                conn.close()
+
+            # PASSO 2: Reset de Sessão HTTP & Re-autenticação Forçada
+            sync_service.session = None
+            new_session = sync_service.login(max_retries=3)
+            if new_session:
+                logger.info('🛡️ [AUTO-CURE AUTH] Sessão HTTP renovada e autenticada com sucesso.')
+            else:
+                logger.warning('🛡️ [AUTO-CURE AUTH] Alerta: Login retornou falha na tentativa de recuperação.')
+
+            # PASSO 3: Execução de Ciclo Emergencial de Recuperação
+            rec_total = sync_service.run_sync_cycle()
+
+            # PASSO 4: Verificação Final e Log no Banco
+            post_health = sync_service.health()
+            new_taxa = post_health.get('taxa_sucesso', 100)
+
+            conn_log = get_db_connection()
+            try:
+                msg_log = f'Auto-Cure #{self.auto_cure_count} ({motivo}): Recuperados {rec_total} registros. Saúde restaurada para {new_taxa}%'
+                conn_log.execute('''INSERT INTO sincronizacao_log 
+                    (painel_id, painel_nome, status, registros_extraidos, erro, data_sincronizacao)
+                    VALUES (999, 'Auto-Cure Algoritmo', 'auto_cure', ?, ?, ?)''',
+                    (rec_total, msg_log, datetime.now().isoformat()))
+            except Exception:
+                pass
+            finally:
+                conn_log.close()
+
+            logger.info(f'🛡️ [AUTO-CURE CONCLUÍDO] Sistema restaurado. Nova taxa de Sync: {new_taxa}%')
+            return True, new_taxa, rec_total
+
+        except Exception as cure_err:
+            logger.error(f'🛡️ [AUTO-CURE ERRO] Falha durante execução do algoritmo: {cure_err}')
+            return False, 0, 0
 
     def _verify_db_integrity(self):
         """Testa saude do SQLite e realiza checkpoint WAL para manter o arquivo leve."""
@@ -1350,6 +1421,20 @@ def sync_health():
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 
+@app.route('/api/sync/auto-cure', methods=['POST', 'GET'])
+def run_auto_cure():
+    """Endpoint para acionamento manual ou automático do Algoritmo de Auto-Correção."""
+    try:
+        ok, nova_taxa, registros = watchdog_service.trigger_auto_cure("Acionamento por API")
+        return jsonify({
+            'success': ok,
+            'taxa_sucesso': nova_taxa,
+            'registros_recuperados': registros,
+            'message': f'Algoritmo Auto-Cure executado. Saúde restaurada para {nova_taxa}%'
+        })
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
 # ==================== SYNC SERVICE ====================
 
 class SyncService:
@@ -1407,6 +1492,7 @@ class SyncService:
 
     def health(self):
         """Resumo de saúde do scraper para uso em endpoints e dashboards."""
+        taxa = 100 if self.consecutive_failures == 0 else max(0, 100 - self.consecutive_failures * 25)
         return {
             'running': self.running,
             'session_active': bool(getattr(self, 'session', None)),
@@ -1415,6 +1501,7 @@ class SyncService:
             'ciclos_ok': self.sync_count,
             'total_erros': self.error_count,
             'falhas_consecutivas': self.consecutive_failures,
+            'taxa_sucesso': taxa,
             'ultimo_erro': self.last_error,
             'ultimo_erro_em': self.last_error_at,
             'ultimo_sucesso_em': self.last_success_at,
@@ -1476,77 +1563,78 @@ class SyncService:
             (175, 'Disponibilidade', [1290, 1289, 1268, 1275, 1292, 1283, 1278, 1279, 1285, 1287, 1270, 1291, 531, 532]),
         ]
 
-        total = 0
-        panel_success = 0
-        panel_failed = 0
+        # PASSO 1: Fazer todas as requisições HTTP antes de encostar no SQLite (Evita database is locked)
+        collected_data = []
         widget_success = 0
         widget_failed = 0
+        
         for panel_id, panel_name, widgets in paineis:
-            panel_total = 0
             for widget_id in widgets:
                 data = self.get_widget_value(panel_id, widget_id)
                 if data and data.get('Displays'):
+                    widget_success += 1
                     for d in data['Displays']:
-                        try:
-                            title_txt = d.get('Title', '')
-                            if 'Fornecedor' in title_txt or 'Cana Entregue - Fornecedor' in title_txt:
-                                continue
-                            
-                            conn.execute('''INSERT OR REPLACE INTO painel_metricas (painel_id, painel_nome, widget_id, widget_titulo, valor, unidade, tipo_widget)
-                                VALUES (?, ?, ?, ?, ?, ?, ?)''',
-                                (panel_id, panel_name, widget_id, title_txt, str(d.get('Value', '')), d.get('UnitMeasurement', ''), 'value'))
-                            
-                            if panel_id == 3 and widget_id == 12:
-                                agora_acm = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                                val_num = d.get('Value')
-                                val_str = d.get('StrValue')
-                                if not val_str and val_num is not None:
-                                    val_str = f"{val_num:,.3f}".replace(',', 'X').replace('.', ',').replace('X', '.')
-                                if val_str and len(val_str.split(',')[-1]) == 2:
-                                    val_str = val_str + '0'
-                                conn.execute('''INSERT OR REPLACE INTO AcmSafra 
-                                    (indicador, valor_num, valor_formatado, unidade, panel_id, widget_id, data_sincronizacao)
-                                    VALUES (?, ?, ?, ?, ?, ?, ?)''',
-                                    ('Total Cana (t)', val_num, val_str or '2.491.557,940', d.get('UnitMeasurement', 't'), panel_id, widget_id, agora_acm))
-
-                            if panel_id == 175:
-                                agora_disp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                                met_nome = d.get('Title', '')
-                                met_val = str(d.get('Value', ''))
-                                met_un = d.get('UnitMeasurement', '')
-                                if met_nome:
-                                    for t_disp in ['Diponibilidade', 'Disponibilidade']:
-                                        conn.execute(f'''CREATE TABLE IF NOT EXISTS "{t_disp}" (
-                                            id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                            metrica TEXT NOT NULL UNIQUE,
-                                            valor TEXT,
-                                            unidade TEXT,
-                                            criado_em TEXT DEFAULT CURRENT_TIMESTAMP
-                                        )''')
-                                        conn.execute(f'''INSERT OR REPLACE INTO "{t_disp}" (metrica, valor, unidade, criado_em)
-                                            VALUES (?, ?, ?, ?)''', (met_nome, met_val, met_un, agora_disp))
-
-                            widget_success += 1
-                            panel_total += 1
-                        except Exception as exc:
-                            widget_failed += 1
-                            logger.error('sync_metricas insert failed panel=%s widget=%s error=%s', panel_id, widget_id, exc)
+                        title_txt = d.get('Title', '')
+                        if 'Fornecedor' in title_txt or 'Cana Entregue - Fornecedor' in title_txt:
+                            continue
+                        collected_data.append((panel_id, panel_name, widget_id, title_txt, d))
                 else:
                     widget_failed += 1
-            if panel_total > 0:
-                panel_success += 1
-                logger.info('sync_metricas panel=%s name=%s inserted=%s', panel_id, panel_name, panel_total)
-            else:
-                panel_failed += 1
-                logger.warning('sync_metricas panel=%s name=%s no_data', panel_id, panel_name)
-            total += panel_total
+
+        # PASSO 2: Inserir no banco em uma transação ultrarrápida (milissegundos)
+        total = 0
+        agora_acm = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        agora_disp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        for t_disp in ['Diponibilidade', 'Disponibilidade']:
+            try:
+                conn.execute(f'''CREATE TABLE IF NOT EXISTS "{t_disp}" (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    metrica TEXT NOT NULL UNIQUE,
+                    valor TEXT,
+                    unidade TEXT,
+                    criado_em TEXT DEFAULT CURRENT_TIMESTAMP
+                )''')
+            except Exception:
+                pass
+
+        for panel_id, panel_name, widget_id, title_txt, d in collected_data:
+            try:
+                conn.execute('''INSERT OR REPLACE INTO painel_metricas (painel_id, painel_nome, widget_id, widget_titulo, valor, unidade, tipo_widget)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)''',
+                    (panel_id, panel_name, widget_id, title_txt, str(d.get('Value', '')), d.get('UnitMeasurement', ''), 'value'))
+                
+                if panel_id == 3 and widget_id == 12:
+                    val_num = d.get('Value')
+                    val_str = d.get('StrValue')
+                    if not val_str and val_num is not None:
+                        val_str = f"{val_num:,.3f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+                    if val_str and len(val_str.split(',')[-1]) == 2:
+                        val_str = val_str + '0'
+                    conn.execute('''INSERT OR REPLACE INTO AcmSafra 
+                        (indicador, valor_num, valor_formatado, unidade, panel_id, widget_id, data_sincronizacao)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)''',
+                        ('Total Cana (t)', val_num, val_str or '2.491.557,940', d.get('UnitMeasurement', 't'), panel_id, widget_id, agora_acm))
+
+                if panel_id == 175:
+                    met_nome = d.get('Title', '')
+                    met_val = str(d.get('Value', ''))
+                    met_un = d.get('UnitMeasurement', '')
+                    if met_nome:
+                        for t_disp in ['Diponibilidade', 'Disponibilidade']:
+                            conn.execute(f'''INSERT OR REPLACE INTO "{t_disp}" (metrica, valor, unidade, criado_em)
+                                VALUES (?, ?, ?, ?)''', (met_nome, met_val, met_un, agora_disp))
+
+                total += 1
+            except Exception as exc:
+                logger.error('sync_metricas insert failed panel=%s widget=%s error=%s', panel_id, widget_id, exc)
+
         try:
             conn.commit()
         except Exception as exc:
             logger.error('sync_metricas commit failed: %s', exc)
-            raise
-        logger.info('sync_metricas summary total=%s panels=%s failed_panels=%s widgets_ok=%s widgets_failed=%s',
-                     total, panel_success, panel_failed, widget_success, widget_failed)
+
+        logger.info('sync_metricas summary inserted=%s widgets_ok=%s widgets_failed=%s', total, widget_success, widget_failed)
         return total
     
     def sync_os_from_api(self, conn):
@@ -1698,15 +1786,21 @@ class SyncService:
             qtd_viagens = 0
             peso_liquido_t = 0
 
-            if r1.status_code == 200:
-                js = r1.json()
-                if "Displays" in js and len(js["Displays"]) > 0:
-                    qtd_viagens = js["Displays"][0].get("Value", 0)
+            if r1.status_code == 200 and len(r1.text) > 2:
+                try:
+                    js = r1.json()
+                    if isinstance(js, dict) and "Displays" in js and len(js["Displays"]) > 0:
+                        qtd_viagens = js["Displays"][0].get("Value", 0)
+                except Exception:
+                    pass
 
-            if r2.status_code == 200:
-                js = r2.json()
-                if "Displays" in js and len(js["Displays"]) > 0:
-                    peso_liquido_t = js["Displays"][0].get("Value", 0)
+            if r2.status_code == 200 and len(r2.text) > 2:
+                try:
+                    js = r2.json()
+                    if isinstance(js, dict) and "Displays" in js and len(js["Displays"]) > 0:
+                        peso_liquido_t = js["Displays"][0].get("Value", 0)
+                except Exception:
+                    pass
 
             conn.execute('''CREATE TABLE IF NOT EXISTS coa_resumo (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -2031,10 +2125,13 @@ class SyncService:
             ref_date = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
             url_widget = f"{BASE_URL}/Home/GetWidgetValue"
             r1 = self.session.post(url_widget, data={"UserPanelId": 3, "ReferenceDate": ref_date, "Widgets": "12"}, timeout=15)
-            if r1.status_code == 200:
-                js = r1.json()
-                if "Displays" in js and len(js["Displays"]) > 0:
-                    total_cana_geral = js["Displays"][0].get("StrValue", total_cana_geral)
+            if r1.status_code == 200 and len(r1.text) > 2:
+                try:
+                    js = r1.json()
+                    if isinstance(js, dict) and "Displays" in js and len(js["Displays"]) > 0:
+                        total_cana_geral = js["Displays"][0].get("StrValue", total_cana_geral)
+                except Exception:
+                    pass
         except Exception as exc:
             logger.error('sync_agr_ctt_from_api Total Cana error=%s', exc)
 

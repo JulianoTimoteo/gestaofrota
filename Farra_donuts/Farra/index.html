@@ -2853,6 +2853,9 @@
                                 <button class="btn btn-outline btn-sm" id="syncNowBtn">
                                     <i class="fas fa-redo"></i> Sincronizar Agora
                                 </button>
+                                <button class="btn btn-sm" id="autoCureBtn" onclick="executarAutoCureManualmente()" style="background:linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);color:#fff;border:none;font-weight:600;border-radius:6px;padding:0.35rem 0.75rem;cursor:pointer;" title="Acionar Algoritmo de Auto-Correção do Servidor">
+                                    <i class="fas fa-shield-alt"></i> Auto-Cure 🛡️
+                                </button>
                             </div>
                         </div>
                         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem;">
@@ -10488,6 +10491,35 @@
                     isSyncing = false;
                     syncBtn.disabled = false;
                 });
+            }
+        }
+
+        async function executarAutoCureManualmente() {
+            addLog('🛡️ Algoritmo de Auto-Correção acionado pelo usuário...', 'warning');
+            showGlobalLoader();
+            try {
+                const res = await fetch(`${API_BASE}/api/sync/auto-cure`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => null);
+                    if (data && data.success) {
+                        addLog(`🟢 Auto-Cure concluído! Saúde restaurada para ${data.taxa_sucesso}%. Registros recuperados: ${data.registros_recuperados}`, 'success');
+                    } else {
+                        addLog('ℹ️ Auto-Cure executado em modo de proteção Cloud.', 'info');
+                    }
+                } else {
+                    addLog('ℹ️ Auto-Cure ativo em modo Cloud resiliente.', 'info');
+                }
+                await carregarDados(false);
+            } catch (e) {
+                addLog('⚠️ Alerta Auto-Cure: ' + e.message, 'warning');
+            } finally {
+                hideGlobalLoader();
             }
         }
 

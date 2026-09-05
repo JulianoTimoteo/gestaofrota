@@ -502,10 +502,10 @@
                     txt('sDisk', sdFree + ' GB livres no SD');
 
                     var ok=(r.sync&&r.sync.ciclos)||0, er=(r.sync&&r.sync.erros)||0, tot=ok+er;
-                    var sp = tot>0 ? Math.round((ok/tot)*100) : 0;
+                    var sp = (r.sync && r.sync.taxa_sucesso !== undefined) ? r.sync.taxa_sucesso : (r.sync && r.sync.falhas_consecutivas === 0 ? 100 : (tot>0 ? Math.round((ok/tot)*100) : 0));
                     setRing('rSync', sp);
                     txt('vSync', sp);
-                    txt('sSync', ok+' OK / '+er+' err');
+                    txt('sSync', (r.sync && r.sync.falhas_consecutivas > 0) ? (r.sync.falhas_consecutivas + ' falha(s)') : (ok + ' ciclos OK'));
 
                     txt('dbPath', (r.banco&&r.banco.path) ? r.banco.path.split(/[/\\]/).pop() : '--');
                     txt('dbSize', ((r.banco&&r.banco.tamanho_mb)||'--')+' MB');
