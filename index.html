@@ -709,6 +709,19 @@
             100% { transform: scale(1.22); filter: drop-shadow(0 6px 14px rgba(16, 185, 129, 0.5)); }
         }
 
+        .header-top-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: nowrap;
+        }
+
+        .header-top-controls {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .header-info {
             display: flex;
             align-items: center;
@@ -763,43 +776,47 @@
 
         .radar-dot-container {
             position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 12px;
-            height: 12px;
-            min-width: 12px;
-            min-height: 12px;
-            flex-shrink: 0;
-            aspect-ratio: 1 / 1;
+            display: inline-block !important;
+            width: 8px !important;
+            height: 8px !important;
+            min-width: 8px !important;
+            min-height: 8px !important;
+            max-width: 8px !important;
+            max-height: 8px !important;
+            flex: 0 0 8px !important;
+            margin-right: 4px;
+            vertical-align: middle;
         }
 
         .radar-core {
-            width: 8px;
-            height: 8px;
-            min-width: 8px;
-            min-height: 8px;
-            border-radius: 50%;
+            display: block !important;
+            width: 8px !important;
+            height: 8px !important;
+            min-width: 8px !important;
+            min-height: 8px !important;
+            max-width: 8px !important;
+            max-height: 8px !important;
+            border-radius: 50% !important;
             background-color: #16a34a;
             z-index: 2;
             transition: background-color 0.3s ease;
-            flex-shrink: 0;
-            aspect-ratio: 1 / 1;
         }
 
         .radar-ping {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
+            width: 8px !important;
+            height: 8px !important;
+            min-width: 8px !important;
+            min-height: 8px !important;
+            max-width: 8px !important;
+            max-height: 8px !important;
+            border-radius: 50% !important;
             background-color: #22c55e;
             z-index: 1;
             animation: radarRipple 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
             transition: background-color 0.3s ease;
-            flex-shrink: 0;
-            aspect-ratio: 1 / 1;
         }
 
         @keyframes radarRipple {
@@ -2068,66 +2085,105 @@
 
         @media (max-width: 768px) {
             body {
-                padding: 0.5rem;
-                font-size: 14px;
+                padding: 0.35rem;
+                font-size: 13.5px;
             }
             .header {
-                padding: 0.75rem 0.85rem;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.65rem;
+                padding: 0.5rem 0.65rem !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 0.45rem !important;
+                border-radius: 12px;
+                margin-bottom: 0.6rem !important;
+            }
+            .header-top-row {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                width: 100% !important;
+                gap: 6px !important;
             }
             .header h1 {
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
-                justify-content: space-between;
-                width: 100%;
-                font-size: 1.05rem;
-                gap: 0.5rem;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                font-size: 0.92rem !important;
+                gap: 5px !important;
+                white-space: nowrap !important;
+                margin: 0 !important;
+            }
+            .header-logo-img {
+                height: 26px !important;
+                width: auto !important;
+            }
+            .badge-version {
+                font-size: 0.65rem !important;
+                padding: 1px 5px !important;
+            }
+            .header-top-controls {
+                gap: 6px !important;
             }
             .header-info {
-                width: 100%;
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
-                justify-content: center;
-                gap: 6px 8px;
-                font-size: 0.8rem;
-                padding-top: 0.35rem;
-                border-top: 1px solid rgba(0, 0, 0, 0.06);
+                width: 100% !important;
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 4px 6px !important;
+                font-size: 0.75rem !important;
+                padding-top: 0.4rem !important;
+                border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
             }
             body.dark-theme .header-info {
-                border-top-color: rgba(255, 255, 255, 0.08);
+                border-top-color: rgba(255, 255, 255, 0.1) !important;
             }
             .header-info .divider {
                 display: none !important;
             }
             .header-info .status-badge {
-                padding: 4px 10px;
-                font-size: 0.8rem;
+                padding: 2px 8px !important;
+                font-size: 0.75rem !important;
+                height: 24px !important;
+                line-height: 24px !important;
+                white-space: nowrap !important;
             }
             .header-info .datetime {
-                font-size: 0.78rem;
-                background: rgba(0, 0, 0, 0.04);
-                padding: 3px 8px;
-                border-radius: 6px;
-                border: 1px solid rgba(0, 0, 0, 0.06);
+                font-size: 0.72rem !important;
+                background: rgba(0, 0, 0, 0.03) !important;
+                padding: 2px 6px !important;
+                border-radius: 6px !important;
+                border: 1px solid rgba(0, 0, 0, 0.05) !important;
+                height: 24px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                white-space: nowrap !important;
             }
             body.dark-theme .header-info .datetime {
-                background: rgba(255, 255, 255, 0.06);
-                border-color: rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.06) !important;
+                border-color: rgba(255, 255, 255, 0.1) !important;
             }
             .header-info .counter {
-                font-size: 0.78rem;
-                background: rgba(0, 0, 0, 0.04);
-                padding: 3px 8px;
-                border-radius: 6px;
-                border: 1px solid rgba(0, 0, 0, 0.06);
+                font-size: 0.72rem !important;
+                background: rgba(0, 0, 0, 0.03) !important;
+                padding: 2px 6px !important;
+                border-radius: 6px !important;
+                border: 1px solid rgba(0, 0, 0, 0.05) !important;
+                height: 24px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                white-space: nowrap !important;
             }
             body.dark-theme .header-info .counter {
-                background: rgba(255, 255, 255, 0.06);
-                border-color: rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.06) !important;
+                border-color: rgba(255, 255, 255, 0.1) !important;
+            }
+            .user-menu {
+                padding: 2px 6px !important;
+                font-size: 0.75rem !important;
+                height: 26px !important;
+                border-radius: 6px !important;
             }
             .user-info-badge {
                 margin-left: 0;
@@ -2665,32 +2721,44 @@
 
     <div class="app">
         <!-- HEADER UNIFICADO (LIMPO E ESTÁVEL) -->
+        <!-- HEADER UNIFICADO (LIMPO E ESTÁVEL) -->
         <div class="header" id="mainHeader">
-            <h1>
-                <div class="logo-refresh-btn" id="logoRefreshBtn" title="Clique para atualizar os dados" onclick="carregarDadosManualmenteLogo()">
-                    <img src="logo.png" alt="Usina Pitangueiras" class="header-logo-img">
-                    <span class="logo-refresh-tooltip" id="logoRefreshTooltip"><i class="fas fa-sync-alt"></i> Atualizar dados</span>
+            <div class="header-top-row">
+                <h1>
+                    <div class="logo-refresh-btn" id="logoRefreshBtn" title="Clique para atualizar os dados" onclick="carregarDadosManualmenteLogo()">
+                        <img src="logo.png" alt="Usina Pitangueiras" class="header-logo-img">
+                        <span class="logo-refresh-tooltip" id="logoRefreshTooltip"><i class="fas fa-sync-alt"></i> Atualizar dados</span>
+                    </div>
+                    <span class="header-app-title">Gestão de Frota</span>
+                    <span class="badge-version">v14 - API</span>
+                </h1>
+                <div class="header-top-controls">
+                    <div class="theme-toggle-wrapper" title="Alternar Tema Claro / Escuro">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="themeToggleCheckbox" />
+                            <span class="slider">
+                                <div class="clouds">
+                                    <svg viewBox="0 0 100 100" class="cloud cloud1">
+                                        <path d="M30,45 Q35,25 50,25 Q65,25 70,45 Q80,45 85,50 Q90,55 85,60 Q80,65 75,60 Q65,60 60,65 Q55,70 50,65 Q45,70 40,65 Q35,60 25,60 Q20,65 15,60 Q10,55 15,50 Q20,45 30,45"></path>
+                                    </svg>
+                                    <svg viewBox="0 0 100 100" class="cloud cloud2">
+                                        <path d="M30,45 Q35,25 50,25 Q65,25 70,45 Q80,45 85,50 Q90,55 85,60 Q80,65 75,60 Q65,60 60,65 Q55,70 50,65 Q45,70 40,65 Q35,60 25,60 Q20,65 15,60 Q10,55 15,50 Q20,45 30,45"></path>
+                                    </svg>
+                                </div>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="user-menu" id="userMenu">
+                        <div id="userBadge" style="display:inline-flex; align-items:center; gap:0.35rem;">
+                            <i class="fas fa-user-circle" style="color:var(--color-primary); font-size:1.05em;"></i>
+                            <span id="userRoleBadge">--</span>
+                        </div>
+                        <button class="logout-btn" id="logoutBtn" style="display:none;"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                    </div>
                 </div>
-                <span>Gestão de Frota</span>
-                <span class="badge-version">v14 - API</span>
-            </h1>
+            </div>
+
             <div class="header-info">
-                <div class="theme-toggle-wrapper" title="Alternar Tema Claro / Escuro">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="themeToggleCheckbox" />
-                        <span class="slider">
-                            <div class="clouds">
-                                <svg viewBox="0 0 100 100" class="cloud cloud1">
-                                    <path d="M30,45 Q35,25 50,25 Q65,25 70,45 Q80,45 85,50 Q90,55 85,60 Q80,65 75,60 Q65,60 60,65 Q55,70 50,65 Q45,70 40,65 Q35,60 25,60 Q20,65 15,60 Q10,55 15,50 Q20,45 30,45"></path>
-                                </svg>
-                                <svg viewBox="0 0 100 100" class="cloud cloud2">
-                                    <path d="M30,45 Q35,25 50,25 Q65,25 70,45 Q80,45 85,50 Q90,55 85,60 Q80,65 75,60 Q65,60 60,65 Q55,70 50,65 Q45,70 40,65 Q35,60 25,60 Q20,65 15,60 Q10,55 15,50 Q20,45 30,45"></path>
-                                </svg>
-                            </div>
-                        </span>
-                    </label>
-                </div>
-                <span class="divider">|</span>
                 <span class="status-badge connected" id="statusContainer" onclick="promptChangeServerIp()" style="cursor:pointer;" title="Clique para alterar o IP do Servidor na rede Wi-Fi (Modo sem cabo USB)">
                     <span class="radar-dot-container">
                         <span class="radar-ping" id="radarPing"></span>
@@ -2704,14 +2772,6 @@
                 <span class="counter" title="OS Abertas"><strong id="osAbertasCount">0</strong> OS📋</span>
                 <span class="counter ok" title="Equipamentos OK"><strong id="equipOkCount">0</strong> OK✅</span>
                 <span class="counter os" title="Equipamentos com OS"><strong id="equipOsCount">0</strong> c/OS📋</span>
-                <span class="divider">|</span>
-                <div class="user-menu" id="userMenu">
-                    <div id="userBadge" style="display:inline-flex; align-items:center; gap:0.35rem;">
-                        <i class="fas fa-user-circle" style="color:var(--color-primary); font-size:1.05em;"></i>
-                        <span id="userRoleBadge">--</span>
-                    </div>
-                    <button class="logout-btn" id="logoutBtn" style="display:none;"><i class="fas fa-sign-out-alt"></i> Sair</button>
-                </div>
             </div>
         </div>
 
