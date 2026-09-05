@@ -9345,7 +9345,15 @@
                     if (str) cachedData = JSON.parse(str);
                 } catch (e) {}
 
-                const fallbackData = cachedData || EMBEDDED_INITIAL_DATA;
+                const embeddedLength = (EMBEDDED_INITIAL_DATA && EMBEDDED_INITIAL_DATA.equipamentos) ? EMBEDDED_INITIAL_DATA.equipamentos.length : 0;
+                const cachedLength = (cachedData && cachedData.equipamentos) ? cachedData.equipamentos.length : 0;
+                const fallbackData = (cachedData && cachedLength >= embeddedLength) ? cachedData : EMBEDDED_INITIAL_DATA;
+                
+                // Limpar cache antigo se estiver desatualizado
+                if (cachedData && cachedLength < embeddedLength) {
+                    try { localStorage.removeItem('sf_cached_data'); } catch (e) {}
+                }
+
                 processarPayloadDados(fallbackData, true, isBackground);
 
             } catch (error) {
@@ -9356,7 +9364,10 @@
                     if (str) cachedData = JSON.parse(str);
                 } catch (e) {}
 
-                const fallbackData = cachedData || EMBEDDED_INITIAL_DATA;
+                const embeddedLength = (EMBEDDED_INITIAL_DATA && EMBEDDED_INITIAL_DATA.equipamentos) ? EMBEDDED_INITIAL_DATA.equipamentos.length : 0;
+                const cachedLength = (cachedData && cachedData.equipamentos) ? cachedData.equipamentos.length : 0;
+                const fallbackData = (cachedData && cachedLength >= embeddedLength) ? cachedData : EMBEDDED_INITIAL_DATA;
+
                 processarPayloadDados(fallbackData, true, isBackground);
             } finally {
                 if (!isBackground) {
@@ -9577,9 +9588,9 @@
         // FILTROS E RENDER DE EQUIPAMENTOS
         // ================================================================
         function getEquipesDisponiveis() {
-            const VALID_TEAMS = new Set(['BIOMASSA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS']);
-            const teams = new Set(equipments.map(eq => eq.grupo).filter(g => g && VALID_TEAMS.has(g)));
-            return [...teams].sort();
+            const standardTeams = ['BIOMASSA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
+            const extraTeams = equipments.map(eq => eq.grupo).filter(g => g && !standardTeams.includes(g));
+            return [...new Set([...standardTeams, ...extraTeams])].sort();
         }
 
         function renderEquipTeamFilter() {
