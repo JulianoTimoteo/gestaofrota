@@ -2788,6 +2788,14 @@
                             </button>
                         </div>
                     </div>
+                    <div class="login-field">
+                        <label>Perfil de Acesso</label>
+                        <select id="loginRole" style="width:100%;padding:0.55rem 0.75rem;font-size:0.85rem;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-weight:600;cursor:pointer;">
+                            <option value="auto">Automático (Detectar pelo usuário)</option>
+                            <option value="visualizador">Gerente / Operador (Somente Equipes)</option>
+                            <option value="admin">Administrador (Acesso Total)</option>
+                        </select>
+                    </div>
                     <div class="login-field" style="display:flex; align-items:center; gap:0.5rem; text-align:left;">
                         <input type="checkbox" id="keepLogged" style="width:auto;">
                         <label for="keepLogged" style="margin:0; text-transform:none; letter-spacing:0; font-weight:500;">Manter conectado</label>
@@ -2857,7 +2865,6 @@
                 <span class="counter" title="OS Abertas"><strong id="osAbertasCount">0</strong> OS📋</span>
                 <span class="counter ok" title="Equipamentos OK"><strong id="equipOkCount">0</strong> OK✅</span>
                 <span class="counter os" title="Equipamentos com OS"><strong id="equipOsCount">0</strong> c/OS📋</span>
-                <span class="counter user" title="Usuários Conectados" style="background:rgba(139,92,246,0.12);color:#7c3aed;border:1px solid rgba(139,92,246,0.25);padding:0.2rem 0.55rem;border-radius:6px;font-size:0.78rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;"><strong id="totalUsersConnectedCount">1</strong> 👤 Online</span>
             </div>
         </div>
 
@@ -9175,7 +9182,22 @@
             showGlobalLoader();
 
             if (isStaticGitHubPages()) {
-                const role = 'admin';
+                const userInp = user.toLowerCase();
+                const selectedRole = document.getElementById('loginRole')?.value || 'auto';
+                let role = 'visualizador';
+
+                if (selectedRole === 'admin') {
+                    role = 'admin';
+                } else if (selectedRole === 'visualizador') {
+                    role = 'visualizador';
+                } else {
+                    if (userInp === 'julianotimoteo' || userInp === 'admin' || userInp.includes('master')) {
+                        role = 'admin';
+                    } else {
+                        role = 'visualizador';
+                    }
+                }
+
                 const token = 'sf_cloud_token_' + Date.now();
                 const storage = keep ? localStorage : sessionStorage;
                 storage.setItem('sf_auth_token', token);
@@ -9317,12 +9339,6 @@
 
         async function checkAuth() {
             let token = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token');
-            if (!token && (window.location.hostname.includes('github.io') || !window.location.hostname.includes('172.16.'))) {
-                token = 'sf_cloud_demo_token';
-                localStorage.setItem('sf_auth_token', token);
-                localStorage.setItem('sf_auth_user', 'julianotimoteo');
-                localStorage.setItem('sf_auth_role', 'admin');
-            }
             if (!token) { updateAuthUI(); return; }
             authToken = token;
             userRole  = localStorage.getItem('sf_auth_role') || 'admin';
