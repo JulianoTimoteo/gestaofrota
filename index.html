@@ -2705,17 +2705,9 @@
             </div>
         </div>
 
-        <!-- TAB EQUIPE (MENU RODA INFINITA) -->
+        <!-- TAB EQUIPE (CARROSSEL RODA INFINITA) -->
         <div id="tab-equipe" class="tab-content">
-            <div class="infinite-carousel-container">
-                <button type="button" class="carousel-nav-btn carousel-prev" onclick="navigateTeamTab(-1)" title="Anterior (Roda Infinita)">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <div class="tabs" id="equipeSubTabs"></div>
-                <button type="button" class="carousel-nav-btn carousel-next" onclick="navigateTeamTab(1)" title="Próximo (Roda Infinita)">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
+            <div class="tabs" id="equipeSubTabs"></div>
             <div id="equipeSubContents"></div>
         </div>
 
@@ -4351,53 +4343,16 @@
         }
 
         // ================================================================
-        // NAVIGATE TEAM TABS (RODA INFINITA / INFINITE LOOP)
-        // ================================================================
-        function navigateTeamTab(direction) {
-            const baseTeams = getEquipesDisponiveis();
-            const teams     = [...baseTeams, '24h⚠️'];
-            if (teams.length === 0) return;
-
-            let currentIndex = teams.indexOf(activeTeam);
-            if (currentIndex === -1) currentIndex = 0;
-
-            let newIndex;
-            if (direction > 0) {
-                newIndex = (currentIndex + 1) % teams.length;
-            } else {
-                newIndex = (currentIndex - 1 + teams.length) % teams.length;
-            }
-
-            activeTeam = teams[newIndex];
-            localStorage.setItem('sf_active_team', activeTeam);
-
-            const tabsEl = document.getElementById('equipeSubTabs');
-            if (tabsEl) {
-                tabsEl.querySelectorAll('.sub-tab-btn').forEach(btn => {
-                    if (btn.dataset.team === activeTeam) {
-                        btn.classList.add('active');
-                        autoCenterTab(btn);
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                });
-            }
-
-            renderTeamTabContent(activeTeam);
-            atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
-        }
-
-        // ================================================================
-        // ABA EQUIPES — re-renderiza conteúdo mas mantém aba selecionada
+        // ABA EQUIPES — RODA INFINITA (CARROSSEL GIRATÓRIO CIRCULAR)
         // ================================================================
         function renderTeamTabs(resetTeam = false) {
-            const tabsEl   = document.getElementById('equipeSubTabs');
+            const tabsEl = document.getElementById('equipeSubTabs');
             if (!tabsEl) return;
 
             const baseTeams = getEquipesDisponiveis();
-            const teams     = [...baseTeams, '24h⚠️'];
+            const canonicalTeams = [...baseTeams, '24h⚠️'];
 
-            if (teams.length === 0) {
+            if (canonicalTeams.length === 0) {
                 tabsEl.innerHTML = '';
                 document.getElementById('equipeSubContents').innerHTML =
                     '<div class="empty-message" style="padding:3rem;text-align:center;"><i class="fas fa-database" style="font-size:2rem;color:var(--color-gray-300);margin-bottom:0.5rem;display:block;"></i>Aguardando dados...</div>';
@@ -4405,11 +4360,17 @@
             }
 
             // Manter equipe ativa se ainda existir, senão pega a primeira
-            if (resetTeam || !activeTeam || !teams.includes(activeTeam)) {
-                activeTeam = teams[0];
+            if (resetTeam || !activeTeam || !canonicalTeams.includes(activeTeam)) {
+                activeTeam = canonicalTeams[0];
             }
 
-            tabsEl.innerHTML = teams.map(team => {
+            // RODA INFINITA: Rotacionar os botões em círculo para que a aba selecionada vá para a FRENTE do carrossel
+            const activeIdx = canonicalTeams.indexOf(activeTeam);
+            const orderedTeams = activeIdx >= 0
+                ? canonicalTeams.slice(activeIdx).concat(canonicalTeams.slice(0, activeIdx))
+                : canonicalTeams;
+
+            tabsEl.innerHTML = orderedTeams.map(team => {
                 const is24h = (team === '24h⚠️' || team === '24H ⚠️');
                 const count = is24h
                     ? equipments.filter(eq => isEquip24h(eq)).length
@@ -4428,19 +4389,11 @@
                 btn.addEventListener('click', () => {
                     activeTeam = btn.dataset.team;
                     localStorage.setItem('sf_active_team', activeTeam);
-                    tabsEl.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    renderTeamTabContent(activeTeam);
-                    atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
-                    autoCenterTab(btn);
+                    renderTeamTabs(false); // Re-renderiza o carrossel na nova ordem circular!
                 });
             });
 
-            const activeBtn = tabsEl.querySelector('.sub-tab-btn.active');
-            if (activeBtn) {
-                setTimeout(() => autoCenterTab(activeBtn), 50);
-            }
-
+            tabsEl.scrollLeft = 0;
             renderTeamTabContent(activeTeam);
             atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
         }
