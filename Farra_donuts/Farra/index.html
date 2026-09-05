@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Frota - SimpleFarm</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=2026">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026">
+    <link rel="manifest" href="manifest.json?v=2026">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -23,14 +28,14 @@
             --color-danger-text: #991b1b;
             --color-gray-50: #f8fafc;
             --color-gray-100: #f1f5f9;
-            --color-gray-200: #e2e8f0;
-            --color-gray-300: #cbd5e1;
-            --color-gray-400: #94a3b8;
-            --color-gray-500: #64748b;
-            --color-gray-600: #475569;
-            --color-gray-700: #334155;
-            --color-gray-800: #1e293b;
-            --color-gray-900: #0f172a;
+            --color-gray-200: #cbd5e1;
+            --color-gray-300: #000000;
+            --color-gray-400: #000000;
+            --color-gray-500: #000000;
+            --color-gray-600: #000000;
+            --color-gray-700: #000000;
+            --color-gray-800: #000000;
+            --color-gray-900: #000000;
             --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
@@ -65,25 +70,44 @@
 
         body {
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            color: var(--color-gray-800);
+            color: #000000;
             min-height: 100vh;
             padding: 0.75rem;
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* ===== DARK THEME OVERRIDES ===== */
+        /* ===== MODO CLARO: SEM TEXTO CINZA & BORDAS NOS BOTÕES ===== */
+        body:not(.dark-theme) h1, body:not(.dark-theme) h2, body:not(.dark-theme) h3,
+        body:not(.dark-theme) p, body:not(.dark-theme) span, body:not(.dark-theme) div,
+        body:not(.dark-theme) label, body:not(.dark-theme) td, body:not(.dark-theme) th,
+        body:not(.dark-theme) .fleet-total-label, body:not(.dark-theme) .fleet-legend-pct,
+        body:not(.dark-theme) .fleet-legend-left, body:not(.dark-theme) .header-info .status,
+        body:not(.dark-theme) .header-info .datetime, body:not(.dark-theme) .header-info .counter,
+        body:not(.dark-theme) .header-info .counter strong, body:not(.dark-theme) .fleet-legend-val,
+        body:not(.dark-theme) .empty-message, body:not(.dark-theme) .count-badge {
+            color: #000000 !important;
+        }
+
+        body:not(.dark-theme) table th {
+            background: #f1f5f9 !important;
+            color: #000000 !important;
+            font-weight: 600 !important;
+            border-bottom-color: #cbd5e1 !important;
+        }
+
+        /* ===== MODO ESCURO: SEM TEXTO CINZA (TUDO BRANCO) & BORDAS SUAVES ===== */
         body.dark-theme {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
-            color: #f8fafc !important;
+            color: #ffffff !important;
             --color-gray-50: #1e293b;
             --color-gray-100: #334155;
             --color-gray-200: #475569;
-            --color-gray-300: #64748b;
-            --color-gray-400: #94a3b8;
-            --color-gray-500: #cbd5e1;
-            --color-gray-600: #e2e8f0;
-            --color-gray-700: #f1f5f9;
-            --color-gray-800: #f8fafc;
+            --color-gray-300: #ffffff;
+            --color-gray-400: #ffffff;
+            --color-gray-500: #ffffff;
+            --color-gray-600: #ffffff;
+            --color-gray-700: #ffffff;
+            --color-gray-800: #ffffff;
             --color-gray-900: #ffffff;
         }
 
@@ -96,25 +120,55 @@
         body.dark-theme .footer-note {
             background: #1e293b !important;
             border-color: #334155 !important;
-            color: #f8fafc !important;
+            color: #ffffff !important;
         }
 
         body.dark-theme h1, body.dark-theme h2, body.dark-theme h3,
+        body.dark-theme p, body.dark-theme span, body.dark-theme div,
+        body.dark-theme label, body.dark-theme td, body.dark-theme th,
         body.dark-theme .fleet-total-value, body.dark-theme .donut-value,
-        body.dark-theme table td, body.dark-theme table th,
-        body.dark-theme .header-info .counter strong,
-        body.dark-theme .fleet-legend-val {
-            color: #f8fafc !important;
+        body.dark-theme .fleet-total-label, body.dark-theme .fleet-legend-pct,
+        body.dark-theme .fleet-legend-left, body.dark-theme .header-info .status,
+        body.dark-theme .header-info .datetime, body.dark-theme .header-info .counter,
+        body.dark-theme .header-info .counter strong, body.dark-theme .fleet-legend-val,
+        body.dark-theme .empty-message, body.dark-theme .count-badge {
+            color: #ffffff !important;
+        }
+
+        /* EXCEÇÃO DE SEGURANÇA: ELEMENTOS COM FUNDO VERDE/CLARO DEVEM TER TEXTO PRETO NO MODO ESCURO */
+        body.dark-theme .sd-trigger,
+        body.dark-theme .sd-trigger *,
+        body.dark-theme .sd-label,
+        body.dark-theme .badge-equip.os-fechada,
+        body.dark-theme .badge-equip.os-aberta,
+        body.dark-theme .badge-equip.team-badge,
+        body.dark-theme .pill-green,
+        body.dark-theme .pill-red,
+        body.dark-theme .pill-amber,
+        body.dark-theme .pill-blue,
+        body:not(.dark-theme) .sd-trigger,
+        body:not(.dark-theme) .sd-trigger *,
+        body:not(.dark-theme) .sd-label,
+        body:not(.dark-theme) .badge-equip.os-fechada,
+        body:not(.dark-theme) .badge-equip.os-aberta,
+        body:not(.dark-theme) .badge-equip.team-badge,
+        body:not(.dark-theme) .pill-green,
+        body:not(.dark-theme) .pill-red,
+        body:not(.dark-theme) .pill-amber,
+        body:not(.dark-theme) .pill-blue {
+            color: #000000 !important;
+            font-weight: 500 !important;
         }
 
         body.dark-theme table th {
             background: #0f172a !important;
-            color: #94a3b8 !important;
+            color: #ffffff !important;
             border-bottom-color: #334155 !important;
         }
 
         body.dark-theme table td {
             border-bottom-color: #334155 !important;
+            color: #ffffff !important;
         }
 
         body.dark-theme table tr:hover td {
@@ -130,29 +184,106 @@
 
         body.dark-theme .tabs {
             background: #0f172a !important;
-        }
-
-        body.dark-theme .tab-btn {
-            color: #94a3b8 !important;
-        }
-
-        body.dark-theme .tab-btn.active {
-            background: #334155 !important;
-            color: #ffffff !important;
+            border: 1px solid rgba(255,255,255,0.15) !important;
         }
 
         body.dark-theme .team-filter-bar {
             background: #0f172a !important;
-            border-color: #334155 !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
         }
 
-        body.dark-theme .team-filter-btn {
-            color: #94a3b8 !important;
+        /* ===== ESTILOS DE BOTÕES PARA MODO CLARO E ESCURO ===== */
+
+        /* MODO CLARO - BOTÕES INATIVOS E ATIVOS */
+        body:not(.dark-theme) .team-filter-btn,
+        body:not(.dark-theme) .tab-btn,
+        body:not(.dark-theme) .sub-tab-btn,
+        body:not(.dark-theme) .btn-secondary,
+        body:not(.dark-theme) .btn-outline {
+            border: 1px solid rgba(0, 0, 0, 0.3) !important;
+            color: #000000 !important;
+            background: rgba(0, 0, 0, 0.02) !important;
+            font-weight: 600 !important;
         }
 
-        body.dark-theme .team-filter-btn.active {
-            background: var(--color-primary) !important;
-            color: white !important;
+        body:not(.dark-theme) .team-filter-btn:hover,
+        body:not(.dark-theme) .tab-btn:hover,
+        body:not(.dark-theme) .sub-tab-btn:hover {
+            background: rgba(0, 0, 0, 0.06) !important;
+            border-color: #000000 !important;
+            color: #000000 !important;
+        }
+
+        body:not(.dark-theme) .team-filter-btn.active,
+        body:not(.dark-theme) .tab-btn.active,
+        body:not(.dark-theme) .sub-tab-btn.active {
+            background: #2563eb !important;
+            border: 1px solid #1d4ed8 !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3) !important;
+        }
+
+        body:not(.dark-theme) .team-filter-btn .count,
+        body:not(.dark-theme) .tab-btn .count,
+        body:not(.dark-theme) .sub-tab-btn .count {
+            background: rgba(0, 0, 0, 0.1) !important;
+            color: #000000 !important;
+            border: 1px solid rgba(0, 0, 0, 0.2) !important;
+        }
+
+        body:not(.dark-theme) .team-filter-btn.active .count,
+        body:not(.dark-theme) .tab-btn.active .count,
+        body:not(.dark-theme) .sub-tab-btn.active .count {
+            background: rgba(255, 255, 255, 0.25) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+        }
+
+        /* MODO ESCURO - BOTÕES INATIVOS COM CONTORNO SUAVE & ATIVOS PREENCHIDOS DE AZUL COM CONTORNO AZUL */
+        body.dark-theme .team-filter-btn,
+        body.dark-theme .tab-btn,
+        body.dark-theme .sub-tab-btn,
+        body.dark-theme .btn-secondary,
+        body.dark-theme .btn-outline {
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            font-weight: 600 !important;
+        }
+
+        body.dark-theme .team-filter-btn:hover,
+        body.dark-theme .tab-btn:hover,
+        body.dark-theme .sub-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-color: rgba(255, 255, 255, 0.5) !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme .team-filter-btn.active,
+        body.dark-theme .tab-btn.active,
+        body.dark-theme .sub-tab-btn.active {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+            border: 1px solid #60a5fa !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            box-shadow: 0 0 12px rgba(96, 165, 250, 0.35) !important;
+        }
+
+        body.dark-theme .team-filter-btn .count,
+        body.dark-theme .tab-btn .count,
+        body.dark-theme .sub-tab-btn .count {
+            background: rgba(255, 255, 255, 0.18) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+        }
+
+        body.dark-theme .team-filter-btn.active .count,
+        body.dark-theme .tab-btn.active .count,
+        body.dark-theme .sub-tab-btn.active .count {
+            background: rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
         }
 
         /* ===== SEARCHABLE DROPDOWN PARA OPERAÇÃO ===== */
@@ -169,24 +300,28 @@
             padding: 0.35rem 0.6rem;
             font-size: 0.78rem;
             border-radius: 6px;
-            border: 1px solid var(--color-gray-300);
-            background: var(--color-gray-50);
-            color: var(--color-gray-800);
+            border: 1px solid #10b981 !important;
+            background: #dcfce7 !important;
+            color: #000000 !important;
+            font-weight: 700 !important;
             cursor: pointer;
             text-align: left;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(16, 185, 129, 0.2);
         }
         .sd-trigger:hover {
-            border-color: var(--color-primary);
+            border-color: #059669 !important;
+            background: #bbf7d0 !important;
         }
-        .sd-label {
+        .sd-label, .sd-trigger *, .sd-trigger span, .sd-trigger i {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            font-weight: 500;
+            font-weight: 700 !important;
+            color: #000000 !important;
         }
         .sd-popover {
             display: none;
@@ -489,6 +624,91 @@
             letter-spacing: 0.02em;
         }
 
+        /* ===== BOTÃO REFRESH NA LOGO DO HEADER ===== */
+        .logo-refresh-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-md);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header-logo-img {
+            max-height: 38px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), filter 0.25s ease;
+        }
+
+        .logo-refresh-btn:hover {
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .logo-refresh-btn:hover .header-logo-img {
+            transform: scale(1.18);
+            filter: drop-shadow(0 4px 10px rgba(16, 185, 129, 0.4));
+        }
+
+        .logo-refresh-tooltip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #059669;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            padding: 0.22rem 0.6rem;
+            border-radius: 20px;
+            opacity: 0;
+            max-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            transform: translateX(-6px) scale(0.95);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
+        }
+
+        body.dark-theme .logo-refresh-tooltip {
+            background: rgba(16, 185, 129, 0.18);
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #34d399;
+        }
+
+        .logo-refresh-btn:hover .logo-refresh-tooltip {
+            opacity: 1;
+            max-width: 160px;
+            transform: translateX(0) scale(1);
+        }
+
+        .logo-refresh-btn:active .header-logo-img {
+            transform: scale(0.95);
+        }
+
+        .logo-refresh-btn.refreshing .header-logo-img {
+            animation: logoPulse 1s infinite alternate ease-in-out;
+        }
+
+        .logo-refresh-btn.refreshing .logo-refresh-tooltip {
+            opacity: 1;
+            max-width: 160px;
+            transform: translateX(0) scale(1);
+        }
+
+        .logo-refresh-btn.refreshing .logo-refresh-tooltip i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes logoPulse {
+            0% { transform: scale(1.05); filter: drop-shadow(0 2px 5px rgba(16, 185, 129, 0.2)); }
+            100% { transform: scale(1.22); filter: drop-shadow(0 6px 14px rgba(16, 185, 129, 0.5)); }
+        }
+
         .header-info {
             display: flex;
             align-items: center;
@@ -514,7 +734,7 @@
         }
 
         .header-info .datetime {
-            color: var(--color-gray-600);
+            color: inherit;
             font-variant-numeric: tabular-nums;
             font-size: 0.85rem;
             font-weight: 500;
@@ -527,13 +747,13 @@
             gap: 4px;
             font-size: 0.85rem;
             font-weight: 500;
-            color: var(--color-gray-600);
+            color: inherit;
             white-space: nowrap;
         }
 
         .header-info .counter strong {
             font-weight: 700;
-            color: var(--color-gray-900);
+            color: inherit;
         }
 
         .header-info .counter.ok strong { color: #22c55e; }
@@ -545,7 +765,7 @@
             gap: 8px;
             font-size: 0.85rem;
             font-weight: 600;
-            color: var(--color-gray-800);
+            color: inherit;
             background: var(--color-gray-50);
             padding: 0.3rem 0.75rem;
             border-radius: var(--radius-full);
@@ -555,7 +775,7 @@
         .header-info .logout-btn {
             background: transparent;
             border: none;
-            color: var(--color-gray-500);
+            color: inherit;
             cursor: pointer;
             font-size: 0.8rem;
             font-weight: 500;
@@ -621,14 +841,14 @@
             display: block;
             font-size: 1.25rem;
             font-weight: 700;
-            color: var(--color-gray-900);
+            color: inherit;
             line-height: 1.2;
         }
 
         .fleet-total-label {
             display: block;
             font-size: 0.65rem;
-            color: var(--color-gray-500);
+            color: inherit;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-top: 0.2rem;
@@ -660,8 +880,8 @@
             display: flex;
             align-items: center;
             gap: 0.6rem;
-            font-weight: 500;
-            color: var(--color-gray-700);
+            font-weight: 600;
+            color: inherit;
         }
 
         .fleet-dot {
@@ -684,12 +904,12 @@
 
         .fleet-legend-val {
             font-weight: 700;
-            color: var(--color-gray-900);
+            color: inherit;
         }
 
         .fleet-legend-pct {
             font-size: 0.8rem;
-            color: var(--color-gray-500);
+            color: inherit;
             width: 36px;
             text-align: right;
             font-weight: 600;
@@ -703,7 +923,7 @@
 
         .fleet-legend-total {
             font-weight: 700;
-            color: var(--color-gray-900);
+            color: inherit;
         }
 
         @media (max-width: 640px) {
@@ -774,6 +994,18 @@
             background: var(--color-success);
             border-color: var(--color-success);
             color: white;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            color: #334155;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+            color: #0f172a;
         }
 
         .btn-outline {
@@ -954,7 +1186,7 @@
             padding: 0.2rem 0.65rem;
             border-radius: 6px;
             font-size: 0.7rem;
-            font-weight: 500;
+            font-weight: 500 !important;
             display: inline-flex;
             align-items: center;
             gap: 0.25rem;
@@ -963,23 +1195,24 @@
         }
 
         .badge-equip.team-badge {
-            background: var(--color-primary-light);
-            color: var(--color-primary-dark);
-            border-color: rgba(37, 99, 235, 0.15);
+            background: #dbeafe !important;
+            color: #000000 !important;
+            border: 1px solid #3b82f6 !important;
+            font-weight: 500 !important;
         }
 
         .badge-equip.os-aberta {
-            background: var(--color-danger-bg);
-            color: var(--color-danger);
-            font-weight: 600;
-            border-color: rgba(239, 68, 68, 0.15);
+            background: #fee2e2 !important;
+            color: #000000 !important;
+            font-weight: 500 !important;
+            border: 1px solid #ef4444 !important;
         }
 
         .badge-equip.os-fechada {
-            background: var(--color-success-bg);
-            color: var(--color-success-text);
-            font-weight: 600;
-            border-color: rgba(16, 185, 129, 0.15);
+            background: #dcfce7 !important;
+            color: #000000 !important;
+            font-weight: 500 !important;
+            border: 1px solid #10b981 !important;
         }
 
         .os-info-btn {
@@ -1114,6 +1347,49 @@
             border-radius: 12px;
             font-size: 0.7rem;
             font-weight: 600;
+        }
+
+        /* ===== ABA VERMELHA 24H ⚠️ ===== */
+        .sub-tab-btn.btn-24h-alert,
+        .team-filter-btn.btn-24h-alert {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid #f87171 !important;
+            font-weight: 600 !important;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4) !important;
+        }
+
+        .sub-tab-btn.btn-24h-alert:hover,
+        .team-filter-btn.btn-24h-alert:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+            border-color: #ef4444 !important;
+            color: #ffffff !important;
+        }
+
+        .sub-tab-btn.btn-24h-alert.active,
+        .team-filter-btn.btn-24h-alert.active {
+            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%) !important;
+            border: 1px solid #fca5a5 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.75) !important;
+        }
+
+        .sub-tab-btn.btn-24h-alert .count,
+        .team-filter-btn.btn-24h-alert .count {
+            background: rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .pulse-icon {
+            animation: pulseWarning 1.5s infinite ease-in-out;
+            color: #fef08a !important;
+            margin-left: 2px;
+        }
+
+        @keyframes pulseWarning {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.25); opacity: 0.7; }
         }
 
         /* ===== DONUT CHART GRID & CARD STYLING (MATCHING EXACT IMAGE DESIGN) ===== */
@@ -1383,7 +1659,8 @@
             border-radius: var(--radius-xl);
             padding: 2.5rem;
             width: 100%;
-            max-width: 420px;
+            max-width: 100%;
+            box-sizing: border-box;
             box-shadow: var(--shadow-xl);
             text-align: center;
             border: 1px solid var(--color-gray-200);
@@ -1556,6 +1833,18 @@
             border-top-color: #334155 !important;
         }
 
+        body.dark-theme .btn-secondary {
+            background: #334155 !important;
+            border-color: #475569 !important;
+            color: #f8fafc !important;
+        }
+
+        body.dark-theme .btn-secondary:hover:not(:disabled) {
+            background: #475569 !important;
+            border-color: #64748b !important;
+            color: #ffffff !important;
+        }
+
         /* ===== FOOTER ===== */
         .footer-note {
             margin-top: 1.5rem;
@@ -1572,22 +1861,31 @@
         }
 
         /* ===== TOUCH SCROLL FOR ALL TABS & FILTER BARS ===== */
-        .nav-tabs, .sub-nav-tabs, .team-filter-bar {
+        .tabs, .sub-tabs, .nav-tabs, .sub-nav-tabs, .team-filter-bar, #equipeSubTabs, #adminSubTabs, #mainTabs, #equipTeamFilter {
+            display: flex;
             overflow-x: auto !important;
             overflow-y: hidden !important;
             flex-wrap: nowrap !important;
             -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
             scrollbar-width: none;
             -ms-overflow-style: none;
             padding-bottom: 4px;
-            padding-right: 1.5rem !important;
         }
-        .nav-tabs::-webkit-scrollbar, .sub-nav-tabs::-webkit-scrollbar, .team-filter-bar::-webkit-scrollbar {
-            display: none;
+        .tabs::-webkit-scrollbar, .sub-tabs::-webkit-scrollbar, .nav-tabs::-webkit-scrollbar, .sub-nav-tabs::-webkit-scrollbar, .team-filter-bar::-webkit-scrollbar,
+        #equipeSubTabs::-webkit-scrollbar, #adminSubTabs::-webkit-scrollbar, #mainTabs::-webkit-scrollbar, #equipTeamFilter::-webkit-scrollbar {
+            display: none !important;
         }
         .tab-btn, .sub-tab-btn, .team-filter-btn {
-            flex-shrink: 0 !important;
-            white-space: nowrap !important;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .sub-tab-btn.active, .team-filter-btn.active {
+            background: #2563eb !important;
+            color: #ffffff !important;
+            border: 2px solid #60a5fa !important;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.4) !important;
+            font-weight: 700 !important;
         }
 
         /* ===== RESPONSIVE BREAKPOINTS (TABLETS, PHONES & ULTRAWIDE) ===== */
@@ -1659,9 +1957,54 @@
                 width: 100%;
                 max-width: 100%;
             }
-            .tab-btn, .sub-tab-btn {
-                padding: 0.55rem 0.85rem;
-                font-size: 0.82rem;
+
+            /* ===== 3-BUTTON MOBILE TAB CAROUSEL (3 EXPOSED BUTTONS AT A TIME) ===== */
+            .tabs, .sub-tabs, #equipeSubTabs, #adminSubTabs, .team-filter-bar, #equipTeamFilter {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+                scroll-behavior: smooth;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                gap: 6px !important;
+                padding: 0.35rem 0.25rem !important;
+            }
+
+            #mainTabs > .tab-btn {
+                flex: 1 1 0 !important;
+                min-width: 0 !important;
+                justify-content: center !important;
+                text-align: center !important;
+            }
+
+            .sub-tab-btn,
+            #equipeSubTabs > .sub-tab-btn,
+            #adminSubTabs > .tab-btn,
+            .team-filter-bar > .team-filter-btn,
+            #equipTeamFilter > .team-filter-btn {
+                flex: 0 0 calc((100% - 12px) / 3) !important;
+                min-width: calc((100% - 12px) / 3) !important;
+                max-width: calc((100% - 12px) / 3) !important;
+                scroll-snap-align: center;
+                box-sizing: border-box !important;
+                text-align: center !important;
+                justify-content: center !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                padding: 0.55rem 0.2rem !important;
+                font-size: 0.75rem !important;
+                border-radius: 8px !important;
+            }
+
+            .sub-tab-btn .count,
+            .team-filter-btn .count {
+                margin-left: 3px !important;
+                padding: 1px 4px !important;
+                font-size: 0.62rem !important;
             }
             .os-report-card {
                 padding: 0.75rem !important;
@@ -1786,18 +2129,57 @@
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
         }
 
-        .login-logo-img {
-            max-height: 120px;
-            max-width: 480px;
+        .login-logo-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+            padding: 14px 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(16, 185, 129, 0.06);
+            margin: 0 auto 1.25rem auto;
             width: 100%;
-            height: auto;
+            max-width: 520px;
+            border: 1px solid rgba(16, 185, 129, 0.12);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+            cursor: pointer;
+        }
+
+        .login-logo-box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08), 0 3px 10px rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .login-logo-img {
+            height: 108px;
+            max-height: 120px;
+            width: auto;
+            max-width: 100%;
             object-fit: contain;
             display: block;
-            margin: 0 auto 1rem auto;
-            background: #ffffff;
-            padding: 8px 16px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.35s ease;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+        }
+
+        .login-logo-box:hover .login-logo-img {
+            transform: scale(1.02);
+            filter: drop-shadow(0 3px 8px rgba(16, 185, 129, 0.08));
+        }
+
+        .login-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--color-gray-900);
+            margin-bottom: 0.35rem;
+            text-align: center;
+        }
+
+        .login-subtitle {
+            font-size: 0.85rem;
+            color: var(--color-gray-500);
+            margin-bottom: 1.5rem;
+            text-align: center;
         }
 
         /* ===== GLOBAL LOADER OVERLAY ===== */
@@ -1911,6 +2293,124 @@
             from { opacity: 0; transform: translateY(-8px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* ===== COMET ORB & DYNAMIC BORDER EFFECT AROUND LOGIN CARD ===== */
+        .login-card-wrapper {
+            position: relative;
+            padding: 3px;
+            border-radius: 22px;
+            overflow: hidden;
+            max-width: 440px;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0 auto;
+            display: block;
+            transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 2px solid transparent;
+        }
+
+        .comet-track {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 250deg,
+                rgba(56, 189, 248, 0.12) 285deg,
+                rgba(56, 189, 248, 0.8) 335deg,
+                #38bdf8 357deg,
+                #ffffff 360deg
+            );
+            animation: rotateComet 12s linear infinite;
+            pointer-events: none;
+            transition: background 0.6s ease;
+        }
+
+        @keyframes rotateComet {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 1. Estado Padrão (Azul Elétrico com Orbe Orbitando Devagar) */
+        .login-card-wrapper.state-default {
+            box-shadow: 0 12px 45px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.25);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .login-card-wrapper.state-default .comet-track {
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 250deg,
+                rgba(56, 189, 248, 0.12) 285deg,
+                rgba(56, 189, 248, 0.8) 335deg,
+                #38bdf8 357deg,
+                #ffffff 360deg
+            );
+            animation: rotateComet 12s linear infinite;
+        }
+
+        /* 2. Estado de Sucesso (Verde Vibrante + Borda Verde Completa) */
+        .login-card-wrapper.state-success {
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.75), 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(16, 185, 129, 0.4);
+            border-color: #10b981 !important;
+            transform: scale(1.02);
+        }
+
+        .login-card-wrapper.state-success .comet-track {
+            background: conic-gradient(
+                from 0deg,
+                #10b981 0deg,
+                #34d399 90deg,
+                #10b981 180deg,
+                #6ee7b7 270deg,
+                #ffffff 360deg
+            );
+            animation: rotateComet 4s linear infinite;
+        }
+
+        /* 3. Estado de Erro (Vermelho Intenso + Borda Vermelha + Continua Orbitando em Vermelho) */
+        .login-card-wrapper.state-error {
+            box-shadow: 0 0 35px rgba(239, 68, 68, 0.65), 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(239, 68, 68, 0.3);
+            border-color: #ef4444 !important;
+            animation: shakeCard 0.45s ease-in-out;
+        }
+
+        .login-card-wrapper.state-error .comet-track {
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 240deg,
+                rgba(239, 68, 68, 0.18) 280deg,
+                rgba(239, 68, 68, 0.85) 330deg,
+                #ef4444 356deg,
+                #ffffff 360deg
+            );
+            animation: rotateComet 10s linear infinite;
+        }
+
+        @keyframes shakeCard {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-9px); }
+            40% { transform: translateX(9px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 2;
+            border-radius: 19px !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
     </style>
 </head>
 <body>
@@ -1926,36 +2426,39 @@
 
     <!-- LOGIN OVERLAY -->
     <div class="login-overlay" id="loginOverlay">
-        <div class="login-card">
-            <h2><img src="logo.png" alt="Usina Pitangueiras" class="login-logo-img"> Gestão de Frota</h2>
-            <p>Sistema de gerenciamento de equipamentos agrícolas</p>
-            <form id="loginForm">
-                <div class="login-field">
-                    <label>Usuário</label>
-                    <input type="text" id="loginUser" placeholder="Digite seu usuário" autocomplete="username">
+        <div class="login-card-wrapper state-default" id="loginCardWrapper">
+            <div class="comet-track" id="cometTrack"></div>
+            <div class="login-card">
+                <div class="login-logo-box">
+                    <img src="logo.png" alt="Usina Pitangueiras" class="login-logo-img">
                 </div>
-                <div class="login-field">
-                    <label>Senha</label>
-                    <div style="position:relative;">
-                        <input type="password" id="loginPass" placeholder="Digite sua senha" autocomplete="current-password" style="padding-right:2.5rem;">
-                        <button type="button" id="togglePassBtn" style="position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#64748b; padding:0.2rem;">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                <h2 class="login-title">Gestão de Frota</h2>
+                <p class="login-subtitle">Sistema de gerenciamento de equipamentos agrícolas</p>
+                <form id="loginForm">
+                    <div class="login-field">
+                        <label>Usuário</label>
+                        <input type="text" id="loginUser" placeholder="Digite seu usuário" autocomplete="username">
                     </div>
-                </div>
-                <div class="login-field" style="display:flex; align-items:center; gap:0.5rem; text-align:left;">
-                    <input type="checkbox" id="keepLogged" style="width:auto;">
-                    <label for="keepLogged" style="margin:0; text-transform:none; letter-spacing:0; font-weight:500;">Manter conectado</label>
-                </div>
-                <div class="login-actions">
-                    <button type="submit" class="btn btn-primary" id="loginBtn" style="width:100%; justify-content:center;"><i class="fas fa-sign-in-alt"></i> Entrar</button>
-                </div>
-                <div class="login-status" id="loginStatus"></div>
-                <div style="margin-top:0.8rem; padding:0.6rem 0.8rem; background:rgba(37,99,235,0.08); border-radius:0.5rem; border:1px solid rgba(37,99,235,0.2); font-size:0.78rem; color:#64748b; text-align:left;">
-                    <strong style="color:#2563eb;"><i class="fas fa-info-circle"></i> Acesso padrão:</strong><br>
-                    Usuário: <code style="background:#f1f5f9;padding:0 4px;border-radius:3px;">admin</code> &nbsp;|&nbsp; Senha: <code style="background:#f1f5f9;padding:0 4px;border-radius:3px;">farra@2026</code>
-                </div>
-            </form>
+                    <div class="login-field">
+                        <label>Senha</label>
+                        <div style="position:relative;">
+                            <input type="password" id="loginPass" placeholder="Digite sua senha" autocomplete="current-password" style="padding-right:2.5rem;">
+                            <button type="button" id="togglePassBtn" style="position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#64748b; padding:0.2rem;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="login-field" style="display:flex; align-items:center; gap:0.5rem; text-align:left;">
+                        <input type="checkbox" id="keepLogged" style="width:auto;">
+                        <label for="keepLogged" style="margin:0; text-transform:none; letter-spacing:0; font-weight:500;">Manter conectado</label>
+                    </div>
+                    <div class="login-actions">
+                        <button type="submit" class="btn btn-primary" id="loginBtn" style="width:100%; justify-content:center;"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+                    </div>
+                    <div class="login-status" id="loginStatus"></div>
+
+                </form>
+            </div>
         </div>
     </div>
 
@@ -1963,7 +2466,11 @@
         <!-- HEADER UNIFICADO (LIMPO E ESTÁVEL) -->
         <div class="header" id="mainHeader">
             <h1>
-                <img src="logo.png" alt="Usina Pitangueiras" class="header-logo-img"> Gestão de Frota
+                <div class="logo-refresh-btn" id="logoRefreshBtn" title="Clique para atualizar os dados" onclick="carregarDadosManualmenteLogo()">
+                    <img src="logo.png" alt="Usina Pitangueiras" class="header-logo-img">
+                    <span class="logo-refresh-tooltip" id="logoRefreshTooltip"><i class="fas fa-sync-alt"></i> Atualizar dados</span>
+                </div>
+                <span>Gestão de Frota</span>
                 <span class="badge-version">v14 - API</span>
             </h1>
             <div class="header-info">
@@ -1983,7 +2490,7 @@
                     </label>
                 </div>
                 <span class="divider">|</span>
-                <span class="status connected" id="statusContainer">
+                <span class="status connected" id="statusContainer" onclick="promptChangeServerIp()" style="cursor:pointer;" title="Clique para alterar o IP do Servidor na rede Wi-Fi (Modo sem cabo USB)">
                     <span class="status-dot gray" id="statusDot"></span>
                     <span id="connectionStatus">Conectado</span>
                 </span>
@@ -2016,6 +2523,7 @@
                 <button class="tab-btn active" data-subtab="tab-equipamentos"><i class="fas fa-list"></i> Equipamentos</button>
                 <button class="tab-btn" data-subtab="tab-operacoes"><i class="fas fa-tasks"></i> Operações</button>
                 <button class="tab-btn" data-subtab="tab-sync"><i class="fas fa-cloud-upload-alt"></i> Sincronização</button>
+                <button class="tab-btn" data-subtab="tab-usuarios"><i class="fas fa-user-shield"></i> Permissões</button>
             </div>
             <div id="adminSubContents">
                 <!-- Equipamentos -->
@@ -2024,6 +2532,7 @@
                         <div class="card-header">
                             <h2><i class="fas fa-list"></i> Equipamentos</h2>
                             <div class="flex gap-2">
+                                <button type="button" id="btnOpenAddEquip" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;padding:0.4rem 0.88rem;font-size:0.82rem;font-weight:600;border-radius:8px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#fff;border:none;cursor:pointer;box-shadow:0 2px 6px rgba(16,185,129,0.3);white-space:nowrap;"><i class="fas fa-plus-circle"></i> +Frota</button>
                                 <input type="text" class="filter-input" id="filterEquip" placeholder="Filtrar equipamento...">
                                 <span class="count-badge" id="totalEquipCount">0</span>
                             </div>
@@ -2058,6 +2567,7 @@
                         <div class="card-header">
                             <h2><i class="fas fa-tasks"></i> Operações Produtivas</h2>
                             <div class="flex gap-2">
+                                <button type="button" id="btnOpenAddOper" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;padding:0.4rem 0.88rem;font-size:0.82rem;font-weight:600;border-radius:8px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#fff;border:none;cursor:pointer;box-shadow:0 2px 6px rgba(16,185,129,0.3);white-space:nowrap;"><i class="fas fa-plus-circle"></i> +Operação</button>
                                 <input type="text" class="filter-input" id="filterOperacao" placeholder="Filtrar operação...">
                                 <span class="count-badge" id="totalOperCount">0</span>
                             </div>
@@ -2115,6 +2625,38 @@
                         <div class="api-log" id="apiLog" style="background:#0f172a;padding:0.8rem;border-radius:8px;color:#94a3b8;font-family:monospace;font-size:0.75rem;max-height:280px;overflow-y:auto;"></div>
                     </div>
                 </div>
+
+                <!-- Permissões de Usuários -->
+                <div id="tab-usuarios" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-user-shield"></i> Níveis de Acesso e Permissões de Usuários</h2>
+                            <div class="flex gap-2">
+                                <span class="count-badge" id="totalUsuariosCount">0 usuários</span>
+                            </div>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Usuário</th>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th>Nível de Acesso (Cargo)</th>
+                                        <th>Acesso no Sistema</th>
+                                        <th>Status</th>
+                                        <th>Último Login</th>
+                                        <th>Alterar Permissão</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usuariosTableBody">
+                                    <tr><td colspan="9" class="empty-message">Carregando usuários do banco...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -2141,6 +2683,105 @@
         </div>
     </div>
 
+    <!-- MODAL CADASTRAR NOVA FROTA -->
+    <div class="action-modal-overlay" id="modalAddEquipOverlay">
+        <div class="action-modal" style="max-width:480px;width:92%;">
+            <h3><i class="fas fa-truck-monster" style="color:var(--color-primary);"></i> Cadastrar Nova Frota</h3>
+            <form id="formAddEquip" style="display:flex;flex-direction:column;gap:0.9rem;margin-top:1rem;">
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Código da Frota / Equipamento *</label>
+                    <input type="text" id="addEquipCodigo" class="filter-input" placeholder="Ex: 11800" required style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Descrição do Equipamento *</label>
+                    <input type="text" id="addEquipDescricao" class="filter-input" placeholder="Ex: TRATOR CASE PUMA 200" required style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Modelo *</label>
+                    <input type="text" id="addEquipModelo" class="filter-input" placeholder="Ex: CASE PUMA 200" required style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Tipo de Equipamento *</label>
+                    <select id="addEquipTipo" class="filter-input" required style="width:100%;cursor:pointer;">
+                        <option value="Trator">Trator</option>
+                        <option value="Caminhão">Caminhão</option>
+                        <option value="Motobomba">Motobomba</option>
+                        <option value="Uniport">Uniport</option>
+                        <option value="Pá carregadeira">Pá carregadeira</option>
+                        <option value="Motoniveladora">Motoniveladora</option>
+                        <option value="Colhedora">Colhedora</option>
+                        <option value="Pulverizador">Pulverizador</option>
+                        <option value="Escavadeira">Escavadeira</option>
+                        <option value="Veículo Utilitário">Veículo Utilitário</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Equipe / Grupo *</label>
+                    <select id="addEquipGrupo" class="filter-input" required style="width:100%;cursor:pointer;">
+                        <option value="BIOMASSA">BIOMASSA</option>
+                        <option value="FERTIRRIGACAO">FERTIRRIGACAO</option>
+                        <option value="HERBICIDA">HERBICIDA</option>
+                        <option value="LINHA AMARELA">LINHA AMARELA</option>
+                        <option value="PREPARO" selected>PREPARO</option>
+                        <option value="TRATOS CULTURAIS">TRATOS CULTURAIS</option>
+                    </select>
+                </div>
+                <div id="addEquipError" style="color:#ef4444;font-size:0.8rem;display:none;font-weight:600;"></div>
+                <div class="action-modal-actions" style="margin-top:0.5rem;display:flex;justify-content:flex-end;gap:0.5rem;">
+                    <button type="button" class="btn btn-secondary" id="btnCancelAddEquip">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnSaveAddEquip" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%);border:none;"><i class="fas fa-save"></i> Salvar Frota</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CADASTRAR NOVA OPERAÇÃO PRODUTIVA -->
+    <div class="action-modal-overlay" id="modalAddOperOverlay">
+        <div class="action-modal" style="max-width:480px;width:92%;">
+            <h3><i class="fas fa-tasks" style="color:var(--color-primary);"></i> Cadastrar Nova Operação Produtiva</h3>
+            <form id="formAddOper" style="display:flex;flex-direction:column;gap:0.9rem;margin-top:1rem;">
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Código da Operação *</label>
+                    <input type="text" id="addOperCodigo" class="filter-input" placeholder="Ex: 1099" required style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Descrição da Operação *</label>
+                    <input type="text" id="addOperDescricao" class="filter-input" placeholder="Ex: PREPARO PROFUNDO DE SOLO" required style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Tipo de Operação</label>
+                    <input type="text" id="addOperTipo" class="filter-input" value="PRODUTIVA" readonly style="width:100%;opacity:0.8;cursor:not-allowed;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Corporativo</label>
+                    <input type="text" id="addOperCorporativo" class="filter-input" value="PITANGUEIRAS" readonly style="width:100%;opacity:0.8;cursor:not-allowed;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Grupo de Operação</label>
+                    <input type="text" id="addOperGrupo" class="filter-input" value="Produtivas" readonly style="width:100%;opacity:0.8;cursor:not-allowed;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Equipe Vinculada (Opcional)</label>
+                    <select id="addOperEquipe" class="filter-input" style="width:100%;cursor:pointer;">
+                        <option value="">- Sem equipe inicial -</option>
+                        <option value="BIOMASSA">BIOMASSA</option>
+                        <option value="FERTIRRIGACAO">FERTIRRIGACAO</option>
+                        <option value="HERBICIDA">HERBICIDA</option>
+                        <option value="LINHA AMARELA">LINHA AMARELA</option>
+                        <option value="PREPARO">PREPARO</option>
+                        <option value="TRATOS CULTURAIS">TRATOS CULTURAIS</option>
+                    </select>
+                </div>
+                <div id="addOperError" style="color:#ef4444;font-size:0.8rem;display:none;font-weight:600;"></div>
+                <div class="action-modal-actions" style="margin-top:0.5rem;display:flex;justify-content:flex-end;gap:0.5rem;">
+                    <button type="button" class="btn btn-secondary" id="btnCancelAddOper">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnSaveAddOper" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%);border:none;"><i class="fas fa-save"></i> Salvar Operação</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // ================================================================
         // ESTADO GLOBAL — única fonte da verdade
@@ -2160,16 +2801,49 @@
         let activeAdminSub   = localStorage.getItem('sf_active_admin_subtab')  || 'tab-equipamentos';
         let activeTeam       = localStorage.getItem('sf_active_team')          || null;
 
-        const ADMIN_ROLES = ['admin', 'analista', 'supervisor', 'manager', 'leader'];
+        const ADMIN_ROLES = ['admin'];
 
         // ================================================================
-        // API BASE
+        // API BASE (Suporte a Wi-Fi, IP Dinâmico e modo 100% sem cabo USB)
         // ================================================================
-        const API_BASE = (
-            window.location.port === '5500' ||
-            window.location.port === '5501' ||
-            window.location.protocol === 'file:'
-        ) ? 'http://localhost:3000' : window.location.origin;
+        const API_BASE = (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramApi = urlParams.get('api') || urlParams.get('server');
+            if (paramApi) {
+                let formatted = paramApi.trim();
+                if (!formatted.startsWith('http://') && !formatted.startsWith('https://')) {
+                    formatted = 'http://' + formatted;
+                }
+                localStorage.setItem('sf_custom_api_base', formatted);
+                return formatted;
+            }
+            const savedApi = localStorage.getItem('sf_custom_api_base');
+            if (savedApi && (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+                return savedApi;
+            }
+            if (window.location.protocol === 'file:') {
+                return savedApi || 'http://172.16.12.36:3000';
+            }
+            return window.location.origin;
+        })();
+
+        function promptChangeServerIp() {
+            const current = localStorage.getItem('sf_custom_api_base') || API_BASE || 'http://172.16.12.36:3000';
+            const input = prompt(
+                "IP do Servidor na rede Wi-Fi:\n\n" +
+                "Insira o endereço IP do servidor para conectar o tablet via Wi-Fi sem cabo USB (exemplo: http://172.16.12.36:3000):",
+                current
+            );
+            if (input !== null && input.trim() !== '') {
+                let formatted = input.trim();
+                if (!formatted.startsWith('http://') && !formatted.startsWith('https://')) {
+                    formatted = 'http://' + formatted;
+                }
+                localStorage.setItem('sf_custom_api_base', formatted);
+                alert("IP do Servidor configurado para: " + formatted + "\nA página será recarregada agora.");
+                window.location.reload();
+            }
+        }
 
         // ================================================================
         // TEMA
@@ -2239,15 +2913,20 @@
         // LOGIN
         // ================================================================
         async function doLogin() {
-            const user      = document.getElementById('loginUser').value.trim();
-            const pass      = document.getElementById('loginPass').value;
-            const keep      = document.getElementById('keepLogged')?.checked;
-            const statusEl  = document.getElementById('loginStatus');
-            const loginBtn  = document.getElementById('loginBtn');
+            const user        = document.getElementById('loginUser').value.trim();
+            const pass        = document.getElementById('loginPass').value;
+            const keep        = document.getElementById('keepLogged')?.checked;
+            const statusEl    = document.getElementById('loginStatus');
+            const loginBtn    = document.getElementById('loginBtn');
+            const cardWrapper = document.getElementById('loginCardWrapper');
 
             if (!user || !pass) {
                 statusEl.textContent = 'Preencha usuário e senha';
                 statusEl.className   = 'login-status error';
+                if (cardWrapper) {
+                    cardWrapper.classList.remove('state-default', 'state-success');
+                    cardWrapper.classList.add('state-error');
+                }
                 return;
             }
             statusEl.textContent = 'Entrando...';
@@ -2264,25 +2943,48 @@
                 const data = await res.json();
 
                 if (res.ok && data.success && data.token) {
+                    const role = data.role || (data.admin ? 'admin' : 'admin');
                     const storage = keep ? localStorage : sessionStorage;
                     storage.setItem('sf_auth_token', data.token);
-                    storage.setItem('sf_auth_user',  data.usuario);
-                    storage.setItem('sf_auth_role',  data.role || 'visualizador');
+                    storage.setItem('sf_auth_user',  data.usuario || user);
+                    storage.setItem('sf_auth_role',  role);
                     authToken = data.token;
-                    userRole  = data.role || 'visualizador';
+                    userRole  = role;
                     statusEl.textContent = '✅ Login efetuado!';
                     statusEl.className   = 'login-status success';
-                    applyRBAC();
+
+                    if (cardWrapper) {
+                        cardWrapper.classList.remove('state-default', 'state-error');
+                        cardWrapper.classList.add('state-success');
+                    }
+
                     updateAuthUI();
-                    await carregarDados();
+                    applyRBAC();
+
+                    const overlay = document.getElementById('loginOverlay');
+                    if (overlay) overlay.classList.add('hidden');
+
+                    try {
+                        await carregarDados();
+                    } catch (loadErr) {
+                        console.warn('Alerta ao carregar dados pós-login:', loadErr);
+                    }
                     iniciarSyncTimer();
                 } else {
                     statusEl.textContent = data.error || 'Usuário ou senha inválidos';
                     statusEl.className   = 'login-status error';
+                    if (cardWrapper) {
+                        cardWrapper.classList.remove('state-default', 'state-success');
+                        cardWrapper.classList.add('state-error');
+                    }
                 }
             } catch (err) {
                 statusEl.textContent = 'Erro de conexão. Verifique se o servidor está rodando.';
                 statusEl.className   = 'login-status error';
+                if (cardWrapper) {
+                    cardWrapper.classList.remove('state-default', 'state-success');
+                    cardWrapper.classList.add('state-error');
+                }
             } finally {
                 if (loginBtn) loginBtn.disabled = false;
                 hideGlobalLoader();
@@ -2347,7 +3049,10 @@
             )) {
                 return true;
             }
-            if (document.querySelector('.sd-popover.active') || document.querySelector('#osReportModalOverlay.active')) {
+            if (document.querySelector('.sd-popover.active') ||
+                document.querySelector('#osReportModalOverlay.active') ||
+                document.querySelector('#modalAddEquipOverlay.active') ||
+                document.querySelector('#modalAddOperOverlay.active')) {
                 return true;
             }
             return false;
@@ -2357,18 +3062,30 @@
         // STATUS / CONEXÃO
         // ================================================================
         function setConnectionStatus(type, message = '') {
-            const dot  = document.getElementById('statusDot');
-            const conn = document.getElementById('connectionStatus');
+            const dot       = document.getElementById('statusDot');
+            const conn      = document.getElementById('connectionStatus');
+            const container = document.getElementById('statusContainer');
+            const footer    = document.getElementById('footerStatus');
             if (!dot || !conn) return;
             const map = {
-                success: ['green',  'Conectado'],
-                error:   ['red',    'Offline'],
-                syncing: ['yellow', 'Atualizando...'],
-                gray:    ['gray',   message || 'Aguardando...']
+                success: ['green',  'Conectado',    'connected'],
+                error:   ['red',    'Desconectado', 'disconnected'],
+                syncing: ['yellow', 'Atualizando...', 'syncing'],
+                gray:    ['gray',   message || 'Aguardando...', '']
             };
-            const [color, label] = map[type] || map.gray;
+            const [color, label, containerClass] = map[type] || map.gray;
             dot.className    = `status-dot ${color}`;
             conn.textContent = label;
+            if (container && containerClass !== undefined) {
+                container.className = `status ${containerClass}`;
+            }
+            if (footer) {
+                if (type === 'error') {
+                    footer.textContent = `Desconectado · ${message || 'Sem conexão com o servidor'}`;
+                } else if (type === 'syncing') {
+                    footer.textContent = `Atualizando dados do servidor...`;
+                }
+            }
         }
 
         function atualizarStatusGeral(teamFilter = null) {
@@ -2557,6 +3274,21 @@
         // ================================================================
         // CARREGAR DADOS (sem alterar aba ativa)
         // ================================================================
+        async function carregarDadosManualmenteLogo() {
+            const btn = document.getElementById('logoRefreshBtn');
+            const tooltip = document.getElementById('logoRefreshTooltip');
+            if (btn) btn.classList.add('refreshing');
+            if (tooltip) tooltip.innerHTML = '<i class="fas fa-sync-alt"></i> Sincronizando...';
+
+            await carregarDados(false);
+
+            if (tooltip) tooltip.innerHTML = '<i class="fas fa-check-circle"></i> Atualizado!';
+            setTimeout(() => {
+                if (btn) btn.classList.remove('refreshing');
+                if (tooltip) tooltip.innerHTML = '<i class="fas fa-sync-alt"></i> Atualizar dados';
+            }, 1800);
+        }
+
         async function carregarDados(isBackground = false) {
             if (!authToken) return;
             if (!isBackground) {
@@ -2589,6 +3321,18 @@
                     const customTypes  = getCustomEquipTypes();
                     const customOps    = getCustomEquipOps();
 
+                    const VALID_TEAMS = ['BIOMASSA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
+                    let customGroupsChanged = false;
+                    Object.keys(customGroups).forEach(k => {
+                        if (customGroups[k] && !VALID_TEAMS.includes(customGroups[k])) {
+                            delete customGroups[k];
+                            customGroupsChanged = true;
+                        }
+                    });
+                    if (customGroupsChanged) {
+                        localStorage.setItem('sf_custom_equip_groups', JSON.stringify(customGroups));
+                    }
+
                     // Mapear equipamentos com tipo limpo, operacao da lista concatenada e suporte a personalizacao
                     equipments = (d.equipamentos || []).map(eq => {
                         const codStr   = String(eq.codigo || '');
@@ -2597,13 +3341,15 @@
                         const rawT     = eq.tipo      || '';
                         const defaultT = normalizarTipo(rawT, desc, mod);
                         const defaultOp = (operacoes[0] ? formatarOp(operacoes[0]) : '101 - PREPARO DE SOLO');
+                        const assignedGroup = customGroups[codStr] || eq.grupo || 'PREPARO';
+                        const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : (VALID_TEAMS.includes(eq.grupo) ? eq.grupo : 'PREPARO');
                         return {
                             codigo:    codStr,
                             descricao: desc,
                             modelo:    mod,
                             tipoRaw:   rawT,
                             tipo:      customTypes[codStr] || defaultT,
-                            grupo:     customGroups[codStr] || eq.grupo || 'OUTRAS',
+                            grupo:     finalGroup,
                             operacao:  customOps[codStr] || (eq.operacao ? formatarOp(eq.operacao) : defaultOp),
                             statusOS:  eq.statusOS  || 'OK',
                             codOS:     eq.codOS     || ''
@@ -2650,11 +3396,16 @@
                         renderTeamTabs(false);
                     }
                     return;
+                } else {
+                    const errMsg = (result && result.error) ? result.error : 'Falha na resposta do servidor';
+                    setConnectionStatus('error', 'Desconectado');
+                    addLog(`❌ ${errMsg}`, 'error');
+                    return;
                 }
             } catch (error) {
                 console.warn('Erro ao carregar dados:', error);
-                setConnectionStatus('error');
-                addLog('❌ Falha ao buscar dados da API', 'error');
+                setConnectionStatus('error', 'Desconectado');
+                addLog(`❌ Falha ao buscar dados da API: ${error.message || 'Sem conexão'}`, 'error');
             } finally {
                 if (!isBackground) {
                     hideGlobalLoader();
@@ -2697,6 +3448,27 @@
         }
 
         // ================================================================
+        // AUTO-CENTER TAB BUTTONS (ROLA PARA O CENTRO AO CLICAR)
+        // ================================================================
+        function autoCenterTab(btn) {
+            if (!btn) return;
+            const container = btn.parentElement;
+            if (!container) return;
+
+            try {
+                btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            } catch (e) {
+                const btnLeft = btn.offsetLeft;
+                const btnWidth = btn.offsetWidth;
+                const containerWidth = container.clientWidth;
+                container.scrollTo({
+                    left: btnLeft - (containerWidth / 2) + (btnWidth / 2),
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // ================================================================
         // TAB SWITCHING — estável, nunca volta para admin sozinho
         // ================================================================
         function switchMainTab(tabId, persist = true) {
@@ -2727,6 +3499,9 @@
             document.querySelectorAll('#adminSubContents > .tab-content').forEach(el => {
                 el.classList.toggle('active', el.id === subId);
             });
+            if (subId === 'tab-usuarios') {
+                renderUsuariosList();
+            }
         }
 
         // ================================================================
@@ -2744,7 +3519,7 @@
                 switchMainTab(activeMainTab, false);
                 switchAdminSubTab(activeAdminSub, false);
             } else {
-                // Visualizador: só vê equipes
+                // Usuário com acesso somente a Equipes: ocultar totalmente as abas principais superiores (#mainTabs)
                 if (mainTabs)        mainTabs.style.display        = 'none';
                 if (adminTabContent) adminTabContent.style.display = 'none';
                 switchMainTab('tab-equipe', false);
@@ -2752,10 +3527,108 @@
         }
 
         // ================================================================
+        // GESTÃO DE PERMISSÕES DE USUÁRIOS DO BANCO
+        // ================================================================
+        async function renderUsuariosList() {
+            const tbody   = document.getElementById('usuariosTableBody');
+            const countEl = document.getElementById('totalUsuariosCount');
+            if (!tbody) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/usuarios`, {
+                    headers: { Authorization: 'Bearer ' + authToken }
+                });
+                if (!res.ok) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="empty-message">Apenas administradores podem visualizar as permissões.</td></tr>';
+                    return;
+                }
+                const result = await res.json();
+                if (result && result.success && Array.isArray(result.data)) {
+                    const users = result.data;
+                    if (countEl) countEl.textContent = `${users.length} usuários registrados`;
+
+                    const rolesMap = {
+                        'admin': { label: 'Administrador', badge: 'os-aberta', access: 'Acesso Total (Admin + Equipes)' },
+                        'analista': { label: 'Analista', badge: 'team-badge', access: 'Acesso Total (Admin + Equipes)' },
+                        'manager': { label: 'Gerente', badge: 'team-badge', access: 'Somente Equipes' },
+                        'supervisor': { label: 'Supervisor', badge: 'team-badge', access: 'Acesso Total (Admin + Equipes)' },
+                        'leader': { label: 'Líder', badge: 'team-badge', access: 'Acesso Total (Admin + Equipes)' },
+                        'operador': { label: 'Operador', badge: 'os-fechada', access: 'Somente Equipes' },
+                        'visualizador': { label: 'Visualizador', badge: 'os-fechada', access: 'Somente Equipes' }
+                    };
+
+                    tbody.innerHTML = users.map(u => {
+                        const roleInfo = rolesMap[u.nivel_chave] || { label: u.nivel_chave || 'Visualizador', badge: 'os-fechada', access: 'Somente Equipes' };
+                        const isProtectedMaster = (u.usuario === 'julianotimoteo');
+                        const roleSelect = isProtectedMaster
+                            ? `<span style="font-weight:700;color:var(--color-primary);display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-shield-alt"></i> Master (Protegido)</span>`
+                            : `<select class="user-role-select" data-userid="${u.id}" style="padding:0.25rem 0.45rem;font-size:0.78rem;font-weight:600;border-radius:6px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);cursor:pointer;">
+                                <option value="admin" ${u.nivel_chave === 'admin' ? 'selected' : ''}>Administrador (Acesso Total)</option>
+                                <option value="analista" ${u.nivel_chave === 'analista' ? 'selected' : ''}>Analista (Acesso Total)</option>
+                                <option value="supervisor" ${u.nivel_chave === 'supervisor' ? 'selected' : ''}>Supervisor (Acesso Total)</option>
+                                <option value="operador" ${u.nivel_chave === 'operador' ? 'selected' : ''}>Operador (Somente Equipes)</option>
+                                <option value="visualizador" ${u.nivel_chave === 'visualizador' ? 'selected' : ''}>Visualizador (Somente Equipes)</option>
+                               </select>`;
+
+                        const userEmail = u.email || `${u.usuario}@usinapitangueiras.com.br`;
+                        const lastLogin = u.ultimo_login ? u.ultimo_login : 'Nunca acessou';
+                        const statusBadge = u.ativo !== 0 ? '<span class="badge-equip os-fechada"><i class="fas fa-check-circle"></i> Ativo</span>' : '<span class="badge-equip os-aberta">Inativo</span>';
+
+                        return `<tr>
+                            <td><strong>#${u.id}</strong></td>
+                            <td><strong style="color:var(--color-primary);">${u.usuario}</strong></td>
+                            <td>${u.nome || u.usuario}</td>
+                            <td style="font-size:0.8rem;color:var(--color-gray-600);">${userEmail}</td>
+                            <td><span class="badge-equip ${roleInfo.badge}">${roleInfo.label}</span></td>
+                            <td><span style="font-size:0.8rem;font-weight:600;">${roleInfo.access}</span></td>
+                            <td>${statusBadge}</td>
+                            <td style="font-size:0.8rem;color:var(--color-gray-500);">${lastLogin}</td>
+                            <td>${roleSelect}</td>
+                        </tr>`;
+                    }).join('');
+
+                    tbody.querySelectorAll('.user-role-select').forEach(select => {
+                        select.addEventListener('change', async function() {
+                            const userId = this.dataset.userid;
+                            const newRole = this.value;
+                            if (!userId || !newRole) return;
+
+                            showGlobalLoader();
+                            try {
+                                const r = await fetch(`${API_BASE}/api/usuarios/${userId}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${authToken}`
+                                    },
+                                    body: JSON.stringify({ nivel_chave: newRole })
+                                });
+                                const resData = await r.json();
+                                if (r.ok && resData.success) {
+                                    addLog(`👤 Nível do usuário #${userId} alterado para "${newRole}" com sucesso no banco de dados!`, 'success');
+                                    renderUsuariosList();
+                                } else {
+                                    alert(resData.error || 'Erro ao atualizar permissão no banco.');
+                                }
+                            } catch (err) {
+                                alert('Falha ao comunicar com o servidor: ' + err.message);
+                            } finally {
+                                hideGlobalLoader();
+                            }
+                        });
+                    });
+                }
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="7" class="empty-message">Erro ao carregar usuários: ${e.message}</td></tr>`;
+            }
+        }
+
+        // ================================================================
         // FILTROS E RENDER DE EQUIPAMENTOS
         // ================================================================
         function getEquipesDisponiveis() {
-            const teams = new Set(equipments.map(eq => eq.grupo).filter(Boolean));
+            const VALID_TEAMS = new Set(['BIOMASSA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS']);
+            const teams = new Set(equipments.map(eq => eq.grupo).filter(g => g && VALID_TEAMS.has(g)));
             return [...teams].sort();
         }
 
@@ -2792,7 +3665,7 @@
                 return;
             }
 
-            const standardTeams = ['BIOMASSA', 'COLHEITA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PLANTIO', 'PREPARO', 'TRANSPORTE', 'TRATOS CULTURAIS'];
+            const standardTeams = ['BIOMASSA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
             const allTeams = [...new Set([...standardTeams, ...getEquipesDisponiveis()])].sort();
 
             // Tipos para a lista suspensa
@@ -2835,7 +3708,7 @@
 
                 return `<tr>
                     <td><strong>${eq.codigo || '-'}</strong></td>
-                    <td>${eq.descricao || '-'}</td>
+                    <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
                     <td style="font-size:0.8rem;color:var(--color-gray-500);">${eq.modelo || '-'}</td>
                     <td>
                         <select class="tipo-select" data-codigo="${eq.codigo}" style="padding:0.25rem 0.4rem;font-size:0.78rem;font-weight:600;border-radius:6px;border:1px solid #93c5fd;background:#eff6ff;color:#1d4ed8;cursor:pointer;">
@@ -2999,7 +3872,7 @@
                 return;
             }
 
-            const allTeams = [...new Set(equipments.map(e => e.grupo).filter(Boolean))].sort();
+            const allTeams = getEquipesDisponiveis();
 
             tbody.innerHTML = dados.map(op => {
                 const currentTeam = getOpTeam(op);
@@ -3012,7 +3885,7 @@
 
                 return `<tr>
                     <td><strong>${op.codigo || '-'}</strong></td>
-                    <td>${op.descricao || '-'}</td>
+                    <td style="font-weight: 400 !important;">${op.descricao || '-'}</td>
                     <td>${op.tipoOperacao || op.tipo || '-'}</td>
                     <td>${op.corporativo || 'Produtivas'}</td>
                     <td>${op.grupoOperacao || op.grupo || '-'}</td>
@@ -3142,13 +4015,195 @@
         }
 
         // ================================================================
+        // CADASTRO DE NOVA FROTA E OPERAÇÃO PRODUTIVA
+        // ================================================================
+        async function submitAddEquip(e) {
+            if (e) e.preventDefault();
+            const codigo    = (document.getElementById('addEquipCodigo')?.value || '').trim();
+            const descricao = (document.getElementById('addEquipDescricao')?.value || '').trim();
+            const modelo    = (document.getElementById('addEquipModelo')?.value || '').trim();
+            const tipo      = (document.getElementById('addEquipTipo')?.value || 'Trator').trim();
+            const grupo     = (document.getElementById('addEquipGrupo')?.value || 'PREPARO').trim();
+            const errEl     = document.getElementById('addEquipError');
+
+            if (!codigo || !descricao || !modelo) {
+                if (errEl) { errEl.textContent = 'Por favor, preencha todos os campos obrigatórios.'; errEl.style.display = 'block'; }
+                return;
+            }
+
+            const exists = equipments.some(eq => String(eq.codigo) === String(codigo));
+            if (exists) {
+                if (errEl) { errEl.textContent = `A frota ${codigo} já está cadastrada no sistema.`; errEl.style.display = 'block'; }
+                return;
+            }
+
+            if (errEl) errEl.style.display = 'none';
+            showGlobalLoader();
+
+            try {
+                const res = await fetch(`${API_BASE}/api/equipamentos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ codigo, descricao, modelo, tipo, grupo })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    const defaultOp = (operacoes[0] ? formatarOp(operacoes[0]) : '101 - PREPARO DE SOLO');
+                    const newEquip = {
+                        codigo: String(codigo),
+                        descricao: descricao,
+                        modelo: modelo,
+                        tipoRaw: tipo,
+                        tipo: tipo,
+                        grupo: grupo,
+                        operacao: defaultOp,
+                        statusOS: 'OK',
+                        codOS: ''
+                    };
+                    equipments.unshift(newEquip);
+
+                    document.getElementById('modalAddEquipOverlay')?.classList.remove('active');
+                    document.getElementById('formAddEquip')?.reset();
+
+                    addLog(`✅ Frota ${codigo} (${descricao}) cadastrada no programa e gravada no banco!`, 'success');
+                    renderEquipamentos();
+                    renderTeamTabs(false);
+                    atualizarStatusGeral();
+                } else {
+                    if (errEl) { errEl.textContent = data.error || 'Erro ao gravar no banco de dados.'; errEl.style.display = 'block'; }
+                }
+            } catch (err) {
+                if (errEl) { errEl.textContent = 'Falha de conexão ao enviar para o banco: ' + err.message; errEl.style.display = 'block'; }
+            } finally {
+                hideGlobalLoader();
+            }
+        }
+
+        async function submitAddOper(e) {
+            if (e) e.preventDefault();
+            const codigo    = (document.getElementById('addOperCodigo')?.value || '').trim();
+            const descricao = (document.getElementById('addOperDescricao')?.value || '').trim();
+            const tipoOp    = 'PRODUTIVA';
+            const corp      = 'PITANGUEIRAS';
+            const grupoOp   = 'Produtivas';
+            const equipe    = (document.getElementById('addOperEquipe')?.value || '').trim();
+            const errEl     = document.getElementById('addOperError');
+
+            if (!codigo || !descricao) {
+                if (errEl) { errEl.textContent = 'Por favor, preencha o Código e a Descrição da operação.'; errEl.style.display = 'block'; }
+                return;
+            }
+
+            const exists = operacoes.some(op => String(op.codigo) === String(codigo));
+            if (exists) {
+                if (errEl) { errEl.textContent = `A operação ${codigo} já está cadastrada no sistema.`; errEl.style.display = 'block'; }
+                return;
+            }
+
+            if (errEl) errEl.style.display = 'none';
+            showGlobalLoader();
+
+            try {
+                const res = await fetch(`${API_BASE}/api/operacoes`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ codigo, descricao, tipoOperacao: tipoOp, corporativo: corp, grupoOperacao: grupoOp, equipe, status: 'ATIVO' })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    const newOper = {
+                        codigo: String(codigo),
+                        descricao: descricao,
+                        tipoOperacao: tipoOp,
+                        tipo: tipoOp,
+                        corporativo: corp,
+                        grupoOperacao: grupoOp,
+                        status: 'ATIVO',
+                        equipe: equipe
+                    };
+                    if (equipe) setCustomOpTeam(codigo, equipe);
+                    operacoes.unshift(newOper);
+
+                    document.getElementById('modalAddOperOverlay')?.classList.remove('active');
+                    document.getElementById('formAddOper')?.reset();
+
+                    addLog(`✅ Operação Produtiva ${codigo} (${descricao}) cadastrada no programa e gravada no banco!`, 'success');
+                    renderOperacoes();
+                    renderTeamTabs(false);
+                    atualizarStatusGeral();
+                } else {
+                    if (errEl) { errEl.textContent = data.error || 'Erro ao gravar no banco de dados.'; errEl.style.display = 'block'; }
+                }
+            } catch (err) {
+                if (errEl) { errEl.textContent = 'Falha de conexão ao enviar para o banco: ' + err.message; errEl.style.display = 'block'; }
+            } finally {
+                hideGlobalLoader();
+            }
+        }
+
+        // ================================================================
+        // VERIFICAR EQUIPAMENTOS EM OS > 24 HORAS
+        // ================================================================
+        function getEquipPermanenciaDias(eq) {
+            if (!eq || !eq.codigo) return 0;
+            const codStr = String(eq.codigo).trim();
+
+            const osMatches = ordensServico.filter(os => {
+                const osCod = (os.codigoEquip || os.codigo_equip || '').split(' - ')[0].trim();
+                return osCod === codStr;
+            });
+
+            let maxDias = 0;
+
+            if (osMatches.length > 0) {
+                for (const os of osMatches) {
+                    let dias = parseFloat(String(os.diasPermanencia || os.dias_permanencia || 0).replace(',', '.'));
+                    if (isNaN(dias)) dias = 0;
+
+                    if (dias <= 0) {
+                        const dataEnt = os.dataEntrada || os.data_entrada;
+                        if (dataEnt) {
+                            const entDate = new Date(dataEnt);
+                            if (!isNaN(entDate.getTime())) {
+                                dias = (new Date() - entDate) / (1000 * 60 * 60 * 24);
+                            }
+                        }
+                    }
+
+                    if (dias > maxDias) maxDias = dias;
+                }
+            }
+
+            if (maxDias === 0 && eq.diasOS) {
+                const d = parseFloat(String(eq.diasOS).replace(',', '.'));
+                if (!isNaN(d)) maxDias = d;
+            }
+
+            return maxDias;
+        }
+
+        function isEquip24h(eq) {
+            return getEquipPermanenciaDias(eq) >= 1.0;
+        }
+
+        // ================================================================
         // ABA EQUIPES — re-renderiza conteúdo mas mantém aba selecionada
         // ================================================================
         function renderTeamTabs(resetTeam = false) {
             const tabsEl   = document.getElementById('equipeSubTabs');
             if (!tabsEl) return;
 
-            const teams = getEquipesDisponiveis();
+            const baseTeams = getEquipesDisponiveis();
+            const teams     = [...baseTeams, '24h⚠️'];
+
             if (teams.length === 0) {
                 tabsEl.innerHTML = '';
                 document.getElementById('equipeSubContents').innerHTML =
@@ -3162,9 +4217,16 @@
             }
 
             tabsEl.innerHTML = teams.map(team => {
-                const count = equipments.filter(eq => eq.grupo === team).length;
-                return `<button class="sub-tab-btn ${team === activeTeam ? 'active' : ''}" data-team="${team}">
-                    ${team} <span class="count">${count}</span>
+                const is24h = (team === '24h⚠️' || team === '24H ⚠️');
+                const count = is24h
+                    ? equipments.filter(eq => isEquip24h(eq)).length
+                    : equipments.filter(eq => eq.grupo === team).length;
+
+                const extraClass = is24h ? 'btn-24h-alert' : '';
+                const label = is24h ? '24h <i class="fas fa-exclamation-triangle pulse-icon"></i>' : team;
+
+                return `<button class="sub-tab-btn ${team === activeTeam ? 'active' : ''} ${extraClass}" data-team="${team}">
+                    ${label} <span class="count">${count}</span>
                 </button>`;
             }).join('');
 
@@ -3176,17 +4238,87 @@
                     tabsEl.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     renderTeamTabContent(activeTeam);
-                    atualizarStatusGeral(activeTeam);
+                    atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
+                    autoCenterTab(btn);
                 });
             });
 
+            const activeBtn = tabsEl.querySelector('.sub-tab-btn.active');
+            if (activeBtn) {
+                setTimeout(() => autoCenterTab(activeBtn), 50);
+            }
+
             renderTeamTabContent(activeTeam);
-            atualizarStatusGeral(activeTeam);
+            atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
         }
 
         function renderTeamTabContent(team) {
             const content = document.getElementById('equipeSubContents');
             if (!content) return;
+
+            const is24hTab = (team === '24h⚠️' || team === '24H ⚠️');
+
+            if (is24hTab) {
+                // Filtrar apenas equipamentos com >= 1.0 dia (>= 24h)
+                let eqs24h = equipments.filter(eq => isEquip24h(eq));
+
+                // ORDENAR DO COM MAIS DIAS PARA O COM MENOS DIAS (Decrescente)
+                eqs24h.sort((a, b) => getEquipPermanenciaDias(b) - getEquipPermanenciaDias(a));
+
+                if (eqs24h.length === 0) {
+                    content.innerHTML = `<div class="card" style="padding:3rem 1.5rem;text-align:center;border-radius:12px;">
+                        <i class="fas fa-check-circle" style="font-size:2.8rem;color:#22c55e;margin-bottom:0.75rem;display:block;"></i>
+                        <h3 style="font-size:1.15rem;font-weight:700;">Nenhum equipamento em OS a mais de 24h!</h3>
+                        <p style="font-size:0.85rem;color:var(--color-gray-500);margin-top:0.3rem;">Todos os equipamentos da frota estão operacionais ou com menos de 24h na oficina.</p>
+                    </div>`;
+                    return;
+                }
+
+                let html = `<div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i> Equipamentos a mais de 24h em OS Oficina (Ordenado por Maior Tempo)</h2>
+                        <span class="count-badge os-aberta">${eqs24h.length} em OS crítica</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Frota</th>
+                                    <th>Descrição</th>
+                                    <th>Modelo</th>
+                                    <th>Equipe Original</th>
+                                    <th>Operação</th>
+                                    <th>Permanência OS ⬇️</th>
+                                    <th>Status OS</th>
+                                </tr>
+                            </thead>
+                            <tbody>` +
+                            eqs24h.map(eq => {
+                                const osBtn = `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver detalhes da OS">📋</button>`;
+                                const diasVal = getEquipPermanenciaDias(eq);
+                                const diasPermText = diasVal > 0 ? `${diasVal.toFixed(1).replace('.', ',')} dias` : '> 24h';
+                                return `<tr>
+                                    <td><strong>${eq.codigo || '-'}</strong></td>
+                                    <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
+                                    <td style="font-size:0.8rem;color:var(--color-gray-500);">${eq.modelo || '-'}</td>
+                                    <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
+                                    <td><span class="badge-equip os-fechada">${eq.operacao || '-'}</span></td>
+                                    <td><span class="badge-equip os-aberta" style="font-weight:700;"><i class="fas fa-clock"></i> ${diasPermText}</span></td>
+                                    <td><span class="badge-equip os-aberta">Com OS</span> ${osBtn}</td>
+                                </tr>`;
+                            }).join('') +
+                            `</tbody>
+                        </table>
+                    </div>
+                </div>`;
+
+                content.innerHTML = html;
+
+                content.querySelectorAll('.os-info-btn').forEach(btn => {
+                    btn.addEventListener('click', () => openOsReportModal(btn.dataset.frota));
+                });
+                return;
+            }
 
             const teamEqs   = equipments.filter(eq => eq.grupo === team);
             const teamOps   = operacoes.filter(op => (op.equipe || '') === team);
@@ -3271,7 +4403,7 @@
                             const opText = eq.operacao || '-';
                             return `<tr>
                                 <td><strong>${eq.codigo || '-'}</strong></td>
-                                <td>${eq.descricao || '-'}</td>
+                                <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
                                 <td><span class="badge-equip os-fechada">${opText}</span></td>
                                 <td><span class="badge-equip ${hasOS ? 'os-aberta' : 'os-fechada'}">${hasOS ? 'Com OS' : 'OK'}</span> ${osBtn}</td>
                             </tr>`;
@@ -3348,10 +4480,39 @@
                 if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
             });
 
-            // Delegação para botão OS (qualquer lugar)
+            // Modal Cadastrar Frota
+            document.getElementById('btnOpenAddEquip')?.addEventListener('click', () => {
+                document.getElementById('addEquipError').style.display = 'none';
+                document.getElementById('modalAddEquipOverlay')?.classList.add('active');
+            });
+            document.getElementById('btnCancelAddEquip')?.addEventListener('click', () => {
+                document.getElementById('modalAddEquipOverlay')?.classList.remove('active');
+            });
+            document.getElementById('formAddEquip')?.addEventListener('submit', submitAddEquip);
+            document.getElementById('modalAddEquipOverlay')?.addEventListener('click', e => {
+                if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
+            });
+
+            // Modal Cadastrar Operação Produtiva
+            document.getElementById('btnOpenAddOper')?.addEventListener('click', () => {
+                document.getElementById('addOperError').style.display = 'none';
+                document.getElementById('modalAddOperOverlay')?.classList.add('active');
+            });
+            document.getElementById('btnCancelAddOper')?.addEventListener('click', () => {
+                document.getElementById('modalAddOperOverlay')?.classList.remove('active');
+            });
+            document.getElementById('formAddOper')?.addEventListener('submit', submitAddOper);
+            document.getElementById('modalAddOperOverlay')?.addEventListener('click', e => {
+                if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
+            });
+
+            // Delegação para botão OS e centralização automática de abas (qualquer lugar)
             document.addEventListener('click', e => {
-                const btn = e.target.closest('.os-info-btn');
-                if (btn) openOsReportModal(btn.dataset.frota);
+                const osBtn = e.target.closest('.os-info-btn');
+                if (osBtn) openOsReportModal(osBtn.dataset.frota);
+
+                const tabBtn = e.target.closest('.tab-btn, .sub-tab-btn, .team-filter-btn');
+                if (tabBtn) autoCenterTab(tabBtn);
             });
 
             // Botão sync manual (se existir)

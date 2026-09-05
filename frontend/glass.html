@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0a0f1e">
     <title>SimpleFarm DataServer · Central de Controle Usina Pitangueiras</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=2026">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026">
+    <link rel="manifest" href="manifest.json?v=2026">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -225,7 +230,7 @@
             <div class="hicon">🖥️</div>
             <div class="htitle">SimpleFarm DataServer <span>· Central de Controle</span></div>
         </div>
-        <div class="spill" id="spill">
+        <div class="spill" id="spill" onclick="promptChangeServerIp()" style="cursor:pointer;" title="Clique para alterar o IP do DataServer na rede Wi-Fi">
             <span class="sdot"></span>
             <span id="stxt">Conectando...</span>
         </div>
@@ -373,7 +378,38 @@
 
 <script>
 (function() {
-    var API    = window.location.origin;
+    var API = (function() {
+        var params = new URLSearchParams(window.location.search);
+        var pApi = params.get('api') || params.get('server');
+        if (pApi) {
+            var formatted = pApi.trim().startsWith('http') ? pApi.trim() : 'http://' + pApi.trim();
+            try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
+            return formatted;
+        }
+        var saved = null;
+        try { saved = localStorage.getItem('sf_dataserver_api'); } catch(e){}
+        if (saved && (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+            return saved;
+        }
+        if (window.location.protocol === 'file:') {
+            return saved || 'http://172.16.12.36:8000';
+        }
+        if (window.location.port === '3000') {
+            return window.location.protocol + '//' + window.location.hostname + ':8000';
+        }
+        return window.location.origin;
+    })();
+
+    window.promptChangeServerIp = function() {
+        var cur = API || 'http://172.16.12.36:8000';
+        var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://172.16.12.36:8000):", cur);
+        if (res !== null && res.trim() !== '') {
+            var formatted = res.trim().startsWith('http') ? res.trim() : 'http://' + res.trim();
+            try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
+            alert("IP configurado para: " + formatted + "\nA página será recarregada agora.");
+            window.location.reload();
+        }
+    };
     var INTV   = 30;
     var cd     = INTV;
     var cdTmr  = null;
@@ -459,7 +495,9 @@
 
                     var dbMb = (r.banco && r.banco.tamanho_mb) ? r.banco.tamanho_mb : 10.9;
                     var sdFree = (r.disco && r.disco.livre_gb) ? r.disco.livre_gb : (r.disco ? (r.disco.total_gb - r.disco.usado_gb).toFixed(2) : 58.45);
-                    setRing('rDisk', Math.min(dbMb * 2, 100));
+                    var totalSdMb = (r.disco && r.disco.total_gb) ? (r.disco.total_gb * 1024) : 60000;
+                    var realDiskPct = (r.disco && r.disco.percent != null && r.disco.percent > 0) ? Math.round(r.disco.percent) : Math.max(1, Math.min(100, Math.round((dbMb / totalSdMb) * 100)));
+                    setRing('rDisk', realDiskPct);
                     txt('vDisk', dbMb);
                     txt('sDisk', sdFree + ' GB livres no SD');
 

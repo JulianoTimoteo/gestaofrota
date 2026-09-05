@@ -25,7 +25,7 @@ except ImportError:
 
 BASE_URL = os.environ.get('SF_BASE_URL', 'https://simplefarm.usinapitangueiras.com.br:8050')
 USERNAME = os.environ.get('SF_USERNAME', 'julianotimoteo')
-PASSWORD = os.environ.get('SF_PASSWORD', 'Ttmotvini1986@#')
+PASSWORD = os.environ.get('SF_PASSWORD', '')
 
 def init_db(conn):
     conn.execute('''CREATE TABLE IF NOT EXISTS ordens_servico (

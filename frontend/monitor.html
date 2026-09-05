@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0a0f1e">
     <title>Gestor Frota · Monitor</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=2026">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026">
+    <link rel="manifest" href="manifest.json?v=2026">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -173,7 +178,7 @@
 <body>
     <div class="header">
         <h1>🖥️ SimpleFarm DataServer</h1>
-        <div class="status-pill" id="statusPill">
+        <div class="status-pill" id="statusPill" onclick="promptChangeServerIp()" style="cursor:pointer;" title="Clique para alterar o IP do DataServer na rede Wi-Fi">
             <span class="status-dot"></span>
             <span id="statusText">Conectando...</span>
         </div>
@@ -260,7 +265,38 @@
     </div>
 
 <script>
-    var API = window.location.origin;
+    var API = (function() {
+        var params = new URLSearchParams(window.location.search);
+        var pApi = params.get('api') || params.get('server');
+        if (pApi) {
+            var formatted = pApi.trim().startsWith('http') ? pApi.trim() : 'http://' + pApi.trim();
+            try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
+            return formatted;
+        }
+        var saved = null;
+        try { saved = localStorage.getItem('sf_dataserver_api'); } catch(e){}
+        if (saved && (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+            return saved;
+        }
+        if (window.location.protocol === 'file:') {
+            return saved || 'http://172.16.12.36:8000';
+        }
+        if (window.location.port === '3000') {
+            return window.location.protocol + '//' + window.location.hostname + ':8000';
+        }
+        return window.location.origin;
+    })();
+
+    window.promptChangeServerIp = function() {
+        var cur = API || 'http://172.16.12.36:8000';
+        var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://172.16.12.36:8000):", cur);
+        if (res !== null && res.trim() !== '') {
+            var formatted = res.trim().startsWith('http') ? res.trim() : 'http://' + res.trim();
+            try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
+            alert("IP configurado para: " + formatted + "\nA página será recarregada agora.");
+            window.location.reload();
+        }
+    };
 
     function showError(msg) {
         var el = document.getElementById('errorMsg');

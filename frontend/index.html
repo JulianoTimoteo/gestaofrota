@@ -6,6 +6,11 @@
     <meta name="theme-color" content="#0a0f1e">
     <meta name="description" content="Gestão de Banco de Dados & Usuários · SimpleFarm Integration">
     <title>Gestão de Banco & Acessos · SimpleFarm</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=2026">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026">
+    <link rel="manifest" href="manifest.json?v=2026">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,9 +22,9 @@
             --surface2:  #1e293b;
             --border:    rgba(99,155,255,0.13);
             --border-hi: rgba(14,165,233,0.35);
-            --text:      #f1f5f9;
-            --muted:     #94a3b8;
-            --low:       #4b5e78;
+            --text:      #ffffff;
+            --muted:     #ffffff;
+            --low:       #ffffff;
             --accent:    #0ea5e9;
             --accent-hi: #38bdf8;
             --green:     #10b981;
@@ -61,7 +66,7 @@
             margin: 0 auto 1.2rem; box-shadow: 0 8px 24px rgba(14,165,233,0.3);
         }
         .login-card h2 { font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 0.3rem; }
-        .login-card p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; }
+        .login-card p { font-size: 0.82rem; color: #ffffff; margin-bottom: 1.5rem; }
 
         /* HEADER */
         .header {
@@ -76,22 +81,22 @@
             background: rgba(255,255,255,0.04); transform: rotate(-20deg); pointer-events: none;
         }
         .header h1 { font-weight: 800; font-size: 1.35rem; display: flex; align-items: center; gap: 0.6rem; color: white; letter-spacing: -0.02em; }
-        .header h1 span { font-size: 0.72rem; font-weight: 400; opacity: 0.8; }
+        .header h1 span { font-size: 0.72rem; font-weight: 400; opacity: 0.9; color: #ffffff; }
         .badge-net { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 5px; }
 
         .header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
         .user-badge { background: rgba(0,0,0,0.25); padding: 0.4rem 0.8rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 
         .btn {
-            background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3);
             padding: 0.55rem 1.1rem; border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.82rem;
             display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; transition: all 0.2s; color: white; min-height: 40px;
         }
-        .btn:hover { background: rgba(255,255,255,0.25); }
+        .btn:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); }
         .btn:active { transform: scale(0.97); }
-        .btn-green { background: rgba(16,185,129,0.8); border-color: rgba(16,185,129,0.4); }
-        .btn-accent { background: rgba(14,165,233,0.8); border-color: rgba(14,165,233,0.4); }
-        .btn-red { background: rgba(239,68,68,0.8); border-color: rgba(239,68,68,0.4); }
+        .btn-green { background: rgba(16,185,129,0.8); border-color: rgba(16,185,129,0.5); }
+        .btn-accent { background: rgba(14,165,233,0.8); border-color: rgba(14,165,233,0.5); }
+        .btn-red { background: rgba(239,68,68,0.8); border-color: rgba(239,68,68,0.5); }
         .btn-sm { padding: 0.35rem 0.75rem; min-height: 32px; font-size: 0.75rem; border-radius: 6px; }
 
         /* STATUS BAR */
@@ -99,18 +104,18 @@
             background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);
             padding: 0.7rem 1.2rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;
         }
-        .status-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--muted); }
-        .status-item strong { color: var(--text); }
+        .status-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #ffffff; }
+        .status-item strong { color: #ffffff; }
         .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px rgba(16,185,129,.5); animation: pdot 2s infinite; }
         @keyframes pdot { 0%,100%{opacity:1}50%{opacity:.5} }
 
         /* TABS */
-        .tabs { display: flex; gap: 0.3rem; background: var(--surface); padding: 0.3rem; border-radius: var(--radius-md); margin-bottom: 1rem; border: 1px solid var(--border); flex-wrap: wrap; }
+        .tabs { display: flex; gap: 0.3rem; background: var(--surface); padding: 0.3rem; border-radius: var(--radius-md); margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.2); flex-wrap: wrap; }
         .tab-btn {
-            padding: 0.65rem 1rem; border: none; background: transparent; border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.82rem; color: var(--muted); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; min-height: 42px;
+            padding: 0.65rem 1rem; border: 1px solid rgba(255,255,255,0.3) !important; background: rgba(255,255,255,0.05); border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.82rem; color: #ffffff !important; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; min-height: 42px;
         }
-        .tab-btn:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-        .tab-btn.active { background: linear-gradient(135deg, rgba(14,165,233,0.25), rgba(99,102,241,0.18)); color: var(--text); border: 1px solid var(--border-hi); box-shadow: 0 2px 10px rgba(14,165,233,0.12); }
+        .tab-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.5) !important; color: #ffffff !important; }
+        .tab-btn.active { background: linear-gradient(135deg, #2563eb, #1d4ed8) !important; color: #ffffff !important; border: 1px solid #60a5fa !important; box-shadow: 0 0 12px rgba(96,165,250,0.35) !important; font-weight: 700 !important; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
@@ -134,12 +139,12 @@
         .input-field:focus { border-color: var(--border-hi); box-shadow: 0 0 0 2px rgba(14,165,233,0.2); }
         select.input-field { cursor: pointer; }
 
-        /* BADGES & PILLS */
-        .pill { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; }
-        .pill-green { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
-        .pill-red   { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
-        .pill-blue  { background: rgba(14,165,233,0.15); color: #38bdf8; border: 1px solid rgba(14,165,233,0.3); }
-        .pill-amber { background: rgba(245,158,11,0.18); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); }
+        /* BADGES & PILLS COM TEXTO PRETO DE ALTO CONTRASTE */
+        .pill { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 0.68rem; font-weight: 500 !important; }
+        .pill-green { background: #dcfce7 !important; color: #000000 !important; border: 1px solid #10b981 !important; }
+        .pill-red   { background: #fee2e2 !important; color: #000000 !important; border: 1px solid #ef4444 !important; }
+        .pill-blue  { background: #dbeafe !important; color: #000000 !important; border: 1px solid #3b82f6 !important; }
+        .pill-amber { background: #fef3c7 !important; color: #000000 !important; border: 1px solid #f59e0b !important; }
 
         /* MODAL */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 999; padding: 1rem; }
@@ -195,7 +200,7 @@
         </div>
         <div class="header-actions">
             <div class="user-badge"><i class="fas fa-user-shield" style="color:#fbbf24;"></i> <span id="currentUserLabel">julianotimoteo (Master)</span></div>
-            <div class="badge-net"><i class="fas fa-wifi"></i> <span id="netIp">172.16.12.36:8000</span></div>
+            <div class="badge-net" onclick="promptChangeServerIp()" style="cursor:pointer;" title="Clique para alterar o IP do DataServer na rede Wi-Fi"><i class="fas fa-wifi"></i> <span id="netIp">172.16.12.36:8000</span></div>
             <button class="btn btn-green" onclick="sincronizarManualmente()"><i class="fas fa-sync"></i> Sync Agora</button>
             <button class="btn btn-accent" onclick="abrirModalUsuario()"><i class="fas fa-user-plus"></i> Novo Usuário</button>
             <button class="btn btn-red" onclick="realizarLogout()"><i class="fas fa-power-off"></i> Sair</button>
@@ -480,8 +485,38 @@
 </div>
 
 <script>
-(function() {
-    const API = window.location.origin;
+    const API = (function() {
+        var params = new URLSearchParams(window.location.search);
+        var pApi = params.get('api') || params.get('server');
+        if (pApi) {
+            var formatted = pApi.trim().startsWith('http') ? pApi.trim() : 'http://' + pApi.trim();
+            try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
+            return formatted;
+        }
+        var saved = null;
+        try { saved = localStorage.getItem('sf_dataserver_api'); } catch(e){}
+        if (saved && (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+            return saved;
+        }
+        if (window.location.protocol === 'file:') {
+            return saved || 'http://172.16.12.36:8000';
+        }
+        if (window.location.port === '3000') {
+            return window.location.protocol + '//' + window.location.hostname + ':8000';
+        }
+        return window.location.origin;
+    })();
+
+    window.promptChangeServerIp = function() {
+        var cur = API || 'http://172.16.12.36:8000';
+        var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://172.16.12.36:8000):", cur);
+        if (res !== null && res.trim() !== '') {
+            var formatted = res.trim().startsWith('http') ? res.trim() : 'http://' + res.trim();
+            try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
+            alert("IP configurado para: " + formatted + "\nA página será recarregada agora.");
+            window.location.reload();
+        }
+    };
     let allTableRows = [];
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -745,14 +780,36 @@
             bHtml += '<tr>';
             cols.forEach(c => {
                 let val = r[c] !== null && r[c] !== undefined ? r[c] : '';
+                const cLow = String(c).toLowerCase();
+                if (cLow.includes('senha') || cLow.includes('hash') || cLow === 'salt') {
+                    val = '<span style="color:var(--muted); font-family:monospace; opacity:0.6;">••••••••••••</span>';
+                }
                 bHtml += `<td>${val}</td>`;
             });
             const regId = r.id || r.ID || r.codigo || '';
-            bHtml += `<td><button class="btn btn-sm btn-red" onclick="deletarLinhaTabela('${tabela}', '${regId}')"><i class="fas fa-trash"></i></button></td>`;
+            const editUserBtn = (tabela.toLowerCase() === 'usuarios')
+                ? `<button class="btn btn-sm btn-accent" style="margin-right:6px;" onclick="abrirEditarUsuarioTabela('${regId}')"><i class="fas fa-edit"></i> Editar</button>`
+                : '';
+            bHtml += `<td>${editUserBtn}<button class="btn btn-sm btn-red" onclick="deletarLinhaTabela('${tabela}', '${regId}')"><i class="fas fa-trash"></i></button></td>`;
             bHtml += '</tr>';
         });
         body.innerHTML = bHtml;
     }
+
+    window.abrirEditarUsuarioTabela = function(regId) {
+        fetch(API + '/api/usuarios')
+            .then(r => r.json())
+            .then(d => {
+                if (d.success && d.data) {
+                    const u = d.data.find(x => String(x.id) === String(regId) || String(x.usuario) === String(regId));
+                    if (u) {
+                        editarUsuario(u);
+                    } else {
+                        alert('Usuário não encontrado.');
+                    }
+                }
+            });
+    };
 
     window.filtrarLinhasTabela = function() {
         const txt = document.getElementById('filterTabelaText').value.toLowerCase();
@@ -988,7 +1045,7 @@
 
     // EQUIPAMENTOS
     window.carregarEquipamentos = function() {
-        fetch(API + '/api/tabelas/equipamentos')
+        fetch(API + '/api/equipamentos')
             .then(r => r.json())
             .then(d => {
                 if (d.success && d.data) {
@@ -1055,7 +1112,6 @@
                 } else alert('Erro na sincronização: ' + d.error);
             });
     };
-})();
 </script>
 </body>
 </html>
