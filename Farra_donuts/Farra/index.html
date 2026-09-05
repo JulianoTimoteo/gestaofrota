@@ -768,19 +768,29 @@
             justify-content: center;
             width: 12px;
             height: 12px;
+            min-width: 12px;
+            min-height: 12px;
+            flex-shrink: 0;
+            aspect-ratio: 1 / 1;
         }
 
         .radar-core {
             width: 8px;
             height: 8px;
+            min-width: 8px;
+            min-height: 8px;
             border-radius: 50%;
             background-color: #16a34a;
             z-index: 2;
             transition: background-color 0.3s ease;
+            flex-shrink: 0;
+            aspect-ratio: 1 / 1;
         }
 
         .radar-ping {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             border-radius: 50%;
@@ -788,6 +798,8 @@
             z-index: 1;
             animation: radarRipple 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
             transition: background-color 0.3s ease;
+            flex-shrink: 0;
+            aspect-ratio: 1 / 1;
         }
 
         @keyframes radarRipple {
@@ -2060,28 +2072,62 @@
                 font-size: 14px;
             }
             .header {
-                padding: 0.85rem 1rem;
+                padding: 0.75rem 0.85rem;
                 flex-direction: column;
                 align-items: stretch;
-                gap: 0.75rem;
+                gap: 0.65rem;
             }
-            .header-left {
-                flex-direction: row;
+            .header h1 {
+                display: flex;
                 flex-wrap: wrap;
                 align-items: center;
                 justify-content: space-between;
-                gap: 0.5rem;
                 width: 100%;
-            }
-            .header-left h1 {
-                font-size: 1.15rem;
+                font-size: 1.05rem;
+                gap: 0.5rem;
             }
             .header-info {
                 width: 100%;
-                justify-content: flex-start;
-                font-size: 0.78rem;
-                gap: 6px;
+                display: flex;
                 flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+                gap: 6px 8px;
+                font-size: 0.8rem;
+                padding-top: 0.35rem;
+                border-top: 1px solid rgba(0, 0, 0, 0.06);
+            }
+            body.dark-theme .header-info {
+                border-top-color: rgba(255, 255, 255, 0.08);
+            }
+            .header-info .divider {
+                display: none !important;
+            }
+            .header-info .status-badge {
+                padding: 4px 10px;
+                font-size: 0.8rem;
+            }
+            .header-info .datetime {
+                font-size: 0.78rem;
+                background: rgba(0, 0, 0, 0.04);
+                padding: 3px 8px;
+                border-radius: 6px;
+                border: 1px solid rgba(0, 0, 0, 0.06);
+            }
+            body.dark-theme .header-info .datetime {
+                background: rgba(255, 255, 255, 0.06);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            .header-info .counter {
+                font-size: 0.78rem;
+                background: rgba(0, 0, 0, 0.04);
+                padding: 3px 8px;
+                border-radius: 6px;
+                border: 1px solid rgba(0, 0, 0, 0.06);
+            }
+            body.dark-theme .header-info .counter {
+                background: rgba(255, 255, 255, 0.06);
+                border-color: rgba(255, 255, 255, 0.1);
             }
             .user-info-badge {
                 margin-left: 0;
