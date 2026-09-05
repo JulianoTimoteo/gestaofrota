@@ -183,13 +183,15 @@
 
         /* STAT ROW */
         .srow { display:-webkit-box; display:-webkit-flex; display:flex; gap:6px; margin-bottom:6px; }
-        .scard { -webkit-flex:1; flex:1; width:49%; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:8px 10px 6px; display:flex; align-items:center; gap:8px; backdrop-filter:blur(8px); position:relative; overflow:hidden; }
+        .scard { -webkit-flex:1; flex:1; width:32%; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:8px 8px 6px; display:flex; align-items:center; gap:6px; backdrop-filter:blur(8px); position:relative; overflow:hidden; }
         .scard.os::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at top right,rgba(245,158,11,.1),transparent 60%); }
+        .scard.usr::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at top right,rgba(14,165,233,.1),transparent 60%); }
         .scard.eq::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at top right,rgba(16,185,129,.1),transparent 60%); }
         .sicon { font-size:1.2rem; flex-shrink:0; }
         .silbl { font-size:.55rem; font-weight:700; color:var(--mid); text-transform:uppercase; letter-spacing:.05em; }
         .sival { font-size:1.4rem; font-weight:800; line-height:1.1; letter-spacing:-.03em; }
         .sival.am { color:var(--amber); }
+        .sival.bl { color:var(--accent); }
         .sival.gr { color:var(--green); }
         .sisub { font-size:.52rem; color:var(--low); margin-top:1px; }
 
@@ -314,7 +316,7 @@
         </div>
     </div>
 
-    <!-- OS + Equipamentos -->
+    <!-- OS + Usuários + Equipamentos -->
     <div class="srow">
         <div class="scard os">
             <div class="sicon">🔧</div>
@@ -322,6 +324,14 @@
                 <div class="silbl">OS Abertas</div>
                 <div class="sival am" id="vOs">--</div>
                 <div class="sisub" id="sOs">Carregando...</div>
+            </div>
+        </div>
+        <div class="scard usr">
+            <div class="sicon">👤</div>
+            <div>
+                <div class="silbl">Total Users</div>
+                <div class="sival bl" id="vUsr">--</div>
+                <div class="sisub" id="sUsr">Conectados</div>
             </div>
         </div>
         <div class="scard eq">
@@ -625,6 +635,11 @@
                     txt('sOs', (d2.data.osFechadas||0)+' fechadas');
                     var eok = d2.data.equipOk!==undefined ? d2.data.equipOk : (d2.data.totalEquip-d2.data.equipOs);
                     txt('sEq', eok+' disponíveis');
+
+                    var uConn = d2.data.usuariosConectados !== undefined ? d2.data.usuariosConectados : (d2.data.conectados || 1);
+                    var uTot  = d2.data.totalUsuarios !== undefined ? d2.data.totalUsuarios : 7;
+                    txt('vUsr', uConn);
+                    txt('sUsr', uConn + ' de ' + uTot + ' reg.');
                 }
             }catch(e){}
         };

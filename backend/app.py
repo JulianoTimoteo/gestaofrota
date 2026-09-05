@@ -2880,6 +2880,33 @@ def auth_me():
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 
+@app.route('/api/status', methods=['GET'])
+def get_api_status():
+    """Retorna estatisticas de OS, equipamentos e total de usuarios conectados."""
+    try:
+        conn = get_db_connection()
+        os_abertas = conn.execute("SELECT COUNT(*) FROM ordens_servico WHERE upper(status_os) != 'FECHADA' AND upper(status_os) != 'OK'").fetchone()[0]
+        os_fechadas = conn.execute("SELECT COUNT(*) FROM ordens_servico WHERE upper(status_os) = 'FECHADA' OR upper(status_os) = 'OK'").fetchone()[0]
+        total_equip = conn.execute("SELECT COUNT(*) FROM equipamentos").fetchone()[0]
+        equip_os = conn.execute("SELECT COUNT(DISTINCT codigo_equip) FROM ordens_servico WHERE upper(status_os) != 'FECHADA' AND upper(status_os) != 'OK'").fetchone()[0]
+        equip_ok = max(0, total_equip - equip_os)
+
+        total_usuarios = conn.execute("SELECT COUNT(*) FROM usuarios").fetchone()[0]
+        conectados = conn.execute("SELECT COUNT(DISTINCT usuario_id) FROM sessoes WHERE ativo = 1 AND expira_em > datetime('now')").fetchone()[0]
+        conn.close()
+
+        return jsonify(success=True, data={
+            'osAbertas': os_abertas,
+            'osFechadas': os_fechadas,
+            'totalEquip': total_equip,
+            'equipOs': equip_os,
+            'equipOk': equip_ok,
+            'totalUsuarios': total_usuarios,
+            'usuariosConectados': conectados
+        })
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
 @app.route('/api/usuarios', methods=['GET'])
 @require_admin
 def listar_usuarios():

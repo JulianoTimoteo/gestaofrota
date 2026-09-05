@@ -8953,6 +8953,7 @@
                         console.warn('Alerta ao carregar dados pós-login:', loadErr);
                     }
                     iniciarSyncTimer();
+                    iniciarCheckSessaoUnicaTimer();
                 } else {
                     statusEl.textContent = data.error || 'Usuário ou senha inválidos';
                     statusEl.className   = 'login-status error';
@@ -8991,6 +8992,7 @@
                     console.warn('Alerta ao carregar dados pós-login:', loadErr);
                 }
                 iniciarSyncTimer();
+                iniciarCheckSessaoUnicaTimer();
             } finally {
                 if (loginBtn) loginBtn.disabled = false;
                 hideGlobalLoader();
@@ -9585,6 +9587,24 @@
                 await carregarDados(true); // background = true
                 isSyncing = false;
             }, DEZ_MINUTOS);
+        }
+
+        var singleSessionTimer = null;
+        function iniciarCheckSessaoUnicaTimer() {
+            if (singleSessionTimer) clearInterval(singleSessionTimer);
+            singleSessionTimer = setInterval(async () => {
+                if (!authToken) return;
+                try {
+                    const res = await fetch(`${API_BASE}/api/auth/me`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    }).catch(() => null);
+
+                    if (res && res.status === 401) {
+                        const d = await res.json().catch(() => null);
+                        desconectarPorAcessoDuplicado(d ? d.error : 'Sua sessão foi encerrada porque este usuário entrou em outro dispositivo.');
+                    }
+                } catch(e) {}
+            }, 5000);
         }
 
         // ================================================================
@@ -10785,6 +10805,7 @@
             if (authToken) {
                 await carregarDados(false);
                 iniciarSyncTimer();
+                iniciarCheckSessaoUnicaTimer();
                 checkAuth(); // valida token em background, sem bloquear
             }
         }
