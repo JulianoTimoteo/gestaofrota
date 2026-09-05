@@ -733,60 +733,92 @@
             overflow: visible;
         }
 
-        /* ===== ABA EQUIPES — CARROSSEL INFINITO ===== */
-        .tabs-carousel-wrapper {
-            position: relative;
+        /* ===== ABA EQUIPES — CARROSSEL 3 ITENS (ESQUERDA - CENTRO ATIVO - DIREITA) ===== */
+        .team-carousel-container {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 14px;
             width: 100%;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
+            padding: 8px 4px;
+            user-select: none;
+            flex-wrap: wrap;
         }
 
-        .carousel-nav-btn {
+        .team-carousel-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: #ffffff !important;
-            border: none;
+            gap: 8px;
+            padding: 0.65rem 1.25rem;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 0.95rem;
-            flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
-            transition: all 0.2s ease;
-            user-select: none;
-            z-index: 5;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            border: 1px solid var(--color-gray-200);
+            background: var(--color-gray-50);
+            color: var(--color-gray-700);
         }
 
-        .carousel-nav-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
-            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+        /* Item da Esquerda e Direita (Visíveis como botões de rotação lateral) */
+        .team-carousel-btn.side-btn {
+            opacity: 0.85;
+            transform: scale(0.94);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.8);
+            border-color: #cbd5e1;
         }
 
-        .carousel-nav-btn:active {
+        .team-carousel-btn.side-btn:hover {
+            opacity: 1;
+            transform: scale(1.02);
+            background: rgba(37, 99, 235, 0.08);
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .team-carousel-btn.side-btn:active {
             transform: scale(0.92);
         }
 
-        .tabs-carousel-wrapper .tabs {
-            flex: 1;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 4px;
-            margin-bottom: 0 !important;
-            scrollbar-width: none;
+        /* Item Central (ABA ATIVA - DESTAQUE MASTER AZUL) */
+        .team-carousel-btn.center-active {
+            opacity: 1;
+            transform: scale(1.08);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+            border: 1px solid #60a5fa !important;
+            color: #ffffff !important;
+            font-weight: 800 !important;
+            box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4) !important;
+            z-index: 2;
         }
 
-        .tabs-carousel-wrapper .tabs::-webkit-scrollbar {
-            display: none;
+        .team-carousel-btn .count {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 0.15rem 0.55rem;
+            border-radius: 9999px;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .team-carousel-btn.center-active .count {
+            background: rgba(255, 255, 255, 0.25) !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme .team-carousel-btn.side-btn {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+            color: #cbd5e1 !important;
+        }
+
+        body.dark-theme .team-carousel-btn.side-btn:hover {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-color: #60a5fa !important;
+            color: #ffffff !important;
         }
 
         .header-info {
@@ -2980,17 +3012,9 @@
             </div>
         </div>
 
-        <!-- TAB EQUIPE (CARROSSEL RODA INFINITA) -->
+        <!-- TAB EQUIPE (CARROSSEL CÍCLICO 3 ITENS) -->
         <div id="tab-equipe" class="tab-content">
-            <div class="tabs-carousel-wrapper">
-                <button class="carousel-nav-btn prev-btn" id="teamCarouselPrev" onclick="navigateTeamTab(-1)" title="Aba Anterior (Giro Infinito 🔄)">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <div class="tabs" id="equipeSubTabs"></div>
-                <button class="carousel-nav-btn next-btn" id="teamCarouselNext" onclick="navigateTeamTab(1)" title="Próxima Aba (Giro Infinito 🔄)">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
+            <div class="team-carousel-container" id="equipeSubTabs"></div>
             <div id="equipeSubContents"></div>
         </div>
 
@@ -10263,7 +10287,7 @@
         }
 
         // ================================================================
-        // ABA EQUIPES — CARROSSEL BIDIRECIONAL COM CENTRALIZAÇÃO DA ABA SELECIONADA
+        // ABA EQUIPES — CARROSSEL CÍCLICO 3 ITENS (ESQUERDA - CENTRO ATIVO - DIREITA)
         // ================================================================
         function navigateTeamTab(dir) {
             const baseTeams = getEquipesDisponiveis();
@@ -10273,74 +10297,89 @@
             let currentIndex = teams.indexOf(activeTeam);
             if (currentIndex === -1) currentIndex = 0;
 
-            // Giro circular infinito (anel cíclico em ambas as direções)
             const newIndex = (currentIndex + dir + teams.length) % teams.length;
             activeTeam = teams[newIndex];
             localStorage.setItem('sf_active_team', activeTeam);
 
-            const tabsEl = document.getElementById('equipeSubTabs');
-            if (tabsEl) {
-                tabsEl.querySelectorAll('.sub-tab-btn').forEach(btn => {
-                    const isActive = (btn.dataset.team === activeTeam);
-                    btn.classList.toggle('active', isActive);
-                    if (isActive) autoCenterTab(btn);
-                });
-            }
-
-            renderTeamTabContent(activeTeam);
-            atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
+            renderTeamTabs(false);
         }
 
         function renderTeamTabs(resetTeam = false) {
-            const tabsEl = document.getElementById('equipeSubTabs');
-            if (!tabsEl) return;
+            const container = document.getElementById('equipeSubTabs');
+            if (!container) return;
 
             const baseTeams = getEquipesDisponiveis();
             const teams = [...baseTeams, '24h⚠️'];
+            const total = teams.length;
 
-            if (teams.length === 0) {
-                tabsEl.innerHTML = '';
+            if (total === 0) {
+                container.innerHTML = '';
                 document.getElementById('equipeSubContents').innerHTML =
                     '<div class="empty-message" style="padding:3rem;text-align:center;"><i class="fas fa-database" style="font-size:2rem;color:var(--color-gray-300);margin-bottom:0.5rem;display:block;"></i>Aguardando dados...</div>';
                 return;
             }
 
-            // Manter equipe ativa se ainda existir, senão pega a primeira
             if (resetTeam || !activeTeam || !teams.includes(activeTeam)) {
                 activeTeam = teams[0];
             }
 
-            tabsEl.innerHTML = teams.map(team => {
-                const is24h = (team === '24h⚠️' || team === '24H ⚠️');
-                const count = is24h
+            const currIndex = teams.indexOf(activeTeam);
+            const prevIndex = (currIndex - 1 + total) % total;
+            const nextIndex = (currIndex + 1) % total;
+
+            const prevTeam = teams[prevIndex];
+            const currTeam = teams[currIndex];
+            const nextTeam = teams[nextIndex];
+
+            const getTeamCount = (teamName) => {
+                const is24h = (teamName === '24h⚠️' || teamName === '24H ⚠️');
+                return is24h
                     ? equipments.filter(eq => isEquip24h(eq)).length
-                    : equipments.filter(eq => eq.grupo === team).length;
+                    : equipments.filter(eq => eq.grupo === teamName).length;
+            };
 
-                const extraClass = is24h ? 'btn-24h-alert' : '';
-                const label = is24h ? '24h <i class="fas fa-exclamation-triangle pulse-icon"></i>' : team;
+            const getTeamLabel = (teamName) => {
+                return (teamName === '24h⚠️' || teamName === '24H ⚠️')
+                    ? '24h <i class="fas fa-exclamation-triangle pulse-icon"></i>'
+                    : teamName;
+            };
 
-                return `<button class="sub-tab-btn ${team === activeTeam ? 'active' : ''} ${extraClass}" data-team="${team}">
-                    ${label} <span class="count">${count}</span>
-                </button>`;
-            }).join('');
+            let html = '';
+            if (total >= 3) {
+                html = `
+                    <button class="team-carousel-btn side-btn prev-btn" data-team="${prevTeam}" title="Clique para girar para a esquerda (${prevTeam})">
+                        <i class="fas fa-chevron-left" style="font-size:0.75rem;opacity:0.75;"></i> ${getTeamLabel(prevTeam)} <span class="count">${getTeamCount(prevTeam)}</span>
+                    </button>
+                    <button class="team-carousel-btn center-active" data-team="${currTeam}" title="Aba Ativa Selecionada">
+                        ${getTeamLabel(currTeam)} <span class="count">${getTeamCount(currTeam)}</span>
+                    </button>
+                    <button class="team-carousel-btn side-btn next-btn" data-team="${nextTeam}" title="Clique para girar para a direita (${nextTeam})">
+                        ${getTeamLabel(nextTeam)} <span class="count">${getTeamCount(nextTeam)}</span> <i class="fas fa-chevron-right" style="font-size:0.75rem;opacity:0.75;"></i>
+                    </button>
+                `;
+            } else {
+                html = teams.map(team => {
+                    const isActive = team === activeTeam;
+                    const sideClass = isActive ? 'center-active' : 'side-btn';
+                    return `<button class="team-carousel-btn ${sideClass}" data-team="${team}">
+                        ${getTeamLabel(team)} <span class="count">${getTeamCount(team)}</span>
+                    </button>`;
+                }).join('');
+            }
 
-            // Event listeners nas tabs de equipe: funciona para ambos os lados (esquerda e direita)
-            tabsEl.querySelectorAll('.sub-tab-btn').forEach(btn => {
+            container.innerHTML = html;
+
+            container.querySelectorAll('.team-carousel-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    activeTeam = btn.dataset.team;
+                    const targetTeam = btn.dataset.team;
+                    if (!targetTeam) return;
+
+                    activeTeam = targetTeam;
                     localStorage.setItem('sf_active_team', activeTeam);
-                    tabsEl.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    renderTeamTabContent(activeTeam);
-                    atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
-                    autoCenterTab(btn); // Centraliza a aba selecionada no meio da tela (esquerda <-> direita)!
+
+                    renderTeamTabs(false);
                 });
             });
-
-            const activeBtn = tabsEl.querySelector('.sub-tab-btn.active');
-            if (activeBtn) {
-                setTimeout(() => autoCenterTab(activeBtn), 50);
-            }
 
             renderTeamTabContent(activeTeam);
             atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
