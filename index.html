@@ -774,58 +774,40 @@
             box-shadow: 0 0 10px rgba(234, 179, 8, 0.22);
         }
 
-        .radar-dot-container {
-            position: relative;
-            display: inline-block !important;
-            width: 8px !important;
-            height: 8px !important;
-            min-width: 8px !important;
-            min-height: 8px !important;
-            max-width: 8px !important;
-            max-height: 8px !important;
-            flex: 0 0 8px !important;
-            margin-right: 4px;
-            vertical-align: middle;
+        .radar-icon-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            margin-right: 2px;
         }
 
-        .radar-core {
-            display: block !important;
-            width: 8px !important;
-            height: 8px !important;
-            min-width: 8px !important;
-            min-height: 8px !important;
-            max-width: 8px !important;
-            max-height: 8px !important;
-            border-radius: 50% !important;
-            background-color: #16a34a;
-            z-index: 2;
-            transition: background-color 0.3s ease;
+        .radar-svg {
+            width: 14px;
+            height: 14px;
+            overflow: visible;
+            display: block;
         }
 
-        .radar-ping {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 8px !important;
-            height: 8px !important;
-            min-width: 8px !important;
-            min-height: 8px !important;
-            max-width: 8px !important;
-            max-height: 8px !important;
-            border-radius: 50% !important;
-            background-color: #22c55e;
-            z-index: 1;
-            animation: radarRipple 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
-            transition: background-color 0.3s ease;
+        .radar-svg-core {
+            transition: fill 0.3s ease;
         }
 
-        @keyframes radarRipple {
+        .radar-svg-ping {
+            transform-origin: 12px 12px;
+            animation: svgRadarRipple 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+            transition: fill 0.3s ease;
+        }
+
+        @keyframes svgRadarRipple {
             0% {
-                transform: scale(0.8);
-                opacity: 0.9;
+                transform: scale(0.6);
+                opacity: 0.95;
             }
             75%, 100% {
-                transform: scale(2.6);
+                transform: scale(2.2);
                 opacity: 0;
             }
         }
@@ -2107,8 +2089,10 @@
                 display: flex !important;
                 flex-wrap: nowrap !important;
                 align-items: center !important;
-                justify-content: flex-start !important;
-                font-size: 0.92rem !important;
+                justify-content: center !important;
+                flex: 1 !important;
+                text-align: center !important;
+                font-size: 0.95rem !important;
                 gap: 5px !important;
                 white-space: nowrap !important;
                 margin: 0 !important;
@@ -2760,9 +2744,11 @@
 
             <div class="header-info">
                 <span class="status-badge connected" id="statusContainer" onclick="promptChangeServerIp()" style="cursor:pointer;" title="Clique para alterar o IP do Servidor na rede Wi-Fi (Modo sem cabo USB)">
-                    <span class="radar-dot-container">
-                        <span class="radar-ping" id="radarPing"></span>
-                        <span class="radar-core green" id="statusDot"></span>
+                    <span class="radar-icon-box">
+                        <svg class="radar-svg" viewBox="0 0 24 24" width="14" height="14">
+                            <circle class="radar-svg-ping" id="radarPing" cx="12" cy="12" r="7" fill="#22c55e" />
+                            <circle class="radar-svg-core" id="statusDot" cx="12" cy="12" r="4.5" fill="#16a34a" />
+                        </svg>
                     </span>
                     <span id="connectionStatus">Conectado</span>
                 </span>
@@ -3397,18 +3383,20 @@
         // ================================================================
         function setConnectionStatus(type, message = '') {
             const dot       = document.getElementById('statusDot');
+            const ping      = document.getElementById('radarPing');
             const conn      = document.getElementById('connectionStatus');
             const container = document.getElementById('statusContainer');
             const footer    = document.getElementById('footerStatus');
-            if (!dot || !conn) return;
+            if (!conn) return;
             const map = {
-                success: ['green',  'Conectado',    'connected'],
-                error:   ['red',    'Desconectado', 'disconnected'],
-                syncing: ['yellow', 'Atualizando...', 'syncing'],
-                gray:    ['gray',   message || 'Aguardando...', '']
+                success: ['#16a34a', '#22c55e', 'Conectado',    'connected'],
+                error:   ['#dc2626', '#ef4444', 'Desconectado', 'disconnected'],
+                syncing: ['#ca8a04', '#eab308', 'Atualizando...', 'syncing'],
+                gray:    ['#6b7280', '#9ca3af', message || 'Aguardando...', '']
             };
-            const [color, label, containerClass] = map[type] || map.gray;
-            dot.className    = `radar-core ${color}`;
+            const [coreColor, pingColor, label, containerClass] = map[type] || map.gray;
+            if (dot)  dot.setAttribute('fill', coreColor);
+            if (ping) ping.setAttribute('fill', pingColor);
             conn.textContent = label;
             if (container && containerClass !== undefined) {
                 container.className = `status-badge ${containerClass}`;
