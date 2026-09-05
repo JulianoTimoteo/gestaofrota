@@ -3603,17 +3603,15 @@
             const container = btn.parentElement;
             if (!container) return;
 
-            try {
-                btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-            } catch (e) {
-                const btnLeft = btn.offsetLeft;
-                const btnWidth = btn.offsetWidth;
-                const containerWidth = container.clientWidth;
-                container.scrollTo({
-                    left: btnLeft - (containerWidth / 2) + (btnWidth / 2),
-                    behavior: 'smooth'
-                });
-            }
+            const btnLeft = btn.offsetLeft;
+            const btnWidth = btn.offsetWidth;
+            const containerWidth = container.clientWidth;
+            const targetScrollLeft = btnLeft - (containerWidth / 2) + (btnWidth / 2);
+
+            container.scrollTo({
+                left: Math.max(0, targetScrollLeft),
+                behavior: 'smooth'
+            });
         }
 
         // ================================================================
@@ -4343,16 +4341,16 @@
         }
 
         // ================================================================
-        // ABA EQUIPES — RODA INFINITA (CARROSSEL GIRATÓRIO CIRCULAR)
+        // ABA EQUIPES — CARROSSEL BIDIRECIONAL COM CENTRALIZAÇÃO DA ABA SELECIONADA
         // ================================================================
         function renderTeamTabs(resetTeam = false) {
             const tabsEl = document.getElementById('equipeSubTabs');
             if (!tabsEl) return;
 
             const baseTeams = getEquipesDisponiveis();
-            const canonicalTeams = [...baseTeams, '24h⚠️'];
+            const teams = [...baseTeams, '24h⚠️'];
 
-            if (canonicalTeams.length === 0) {
+            if (teams.length === 0) {
                 tabsEl.innerHTML = '';
                 document.getElementById('equipeSubContents').innerHTML =
                     '<div class="empty-message" style="padding:3rem;text-align:center;"><i class="fas fa-database" style="font-size:2rem;color:var(--color-gray-300);margin-bottom:0.5rem;display:block;"></i>Aguardando dados...</div>';
@@ -4360,17 +4358,11 @@
             }
 
             // Manter equipe ativa se ainda existir, senão pega a primeira
-            if (resetTeam || !activeTeam || !canonicalTeams.includes(activeTeam)) {
-                activeTeam = canonicalTeams[0];
+            if (resetTeam || !activeTeam || !teams.includes(activeTeam)) {
+                activeTeam = teams[0];
             }
 
-            // RODA INFINITA: Rotacionar os botões em círculo para que a aba selecionada vá para a FRENTE do carrossel
-            const activeIdx = canonicalTeams.indexOf(activeTeam);
-            const orderedTeams = activeIdx >= 0
-                ? canonicalTeams.slice(activeIdx).concat(canonicalTeams.slice(0, activeIdx))
-                : canonicalTeams;
-
-            tabsEl.innerHTML = orderedTeams.map(team => {
+            tabsEl.innerHTML = teams.map(team => {
                 const is24h = (team === '24h⚠️' || team === '24H ⚠️');
                 const count = is24h
                     ? equipments.filter(eq => isEquip24h(eq)).length
@@ -4384,16 +4376,24 @@
                 </button>`;
             }).join('');
 
-            // Event listeners nas tabs de equipe
+            // Event listeners nas tabs de equipe: funciona para ambos os lados (esquerda e direita)
             tabsEl.querySelectorAll('.sub-tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     activeTeam = btn.dataset.team;
                     localStorage.setItem('sf_active_team', activeTeam);
-                    renderTeamTabs(false); // Re-renderiza o carrossel na nova ordem circular!
+                    tabsEl.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderTeamTabContent(activeTeam);
+                    atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
+                    autoCenterTab(btn); // Centraliza a aba selecionada no meio da tela (esquerda <-> direita)!
                 });
             });
 
-            tabsEl.scrollLeft = 0;
+            const activeBtn = tabsEl.querySelector('.sub-tab-btn.active');
+            if (activeBtn) {
+                setTimeout(() => autoCenterTab(activeBtn), 50);
+            }
+
             renderTeamTabContent(activeTeam);
             atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
         }
