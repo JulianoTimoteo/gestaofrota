@@ -1,7 +1,7 @@
 {
-  "name": "simplefarm-integration",
-  "version": "2.0.1",
-  "description": "Integração com SimpleFarm - Usina Pitangueiras",
+  "name": "gestaofrota",
+  "version": "2.1.0",
+  "description": "Gestor de Frota - App Web & Central de Integração - Usina Pitangueiras",
   "main": "server.js",
   "engines": {
     "node": ">=22.5.0"

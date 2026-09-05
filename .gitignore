@@ -1,0 +1,23 @@
+# Dependências do Node
+node_modules/
+
+# Bancos de dados locais (contêm dados dinâmicos da usina, não código-fonte)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Segredos e variáveis de ambiente
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+
+# IDE e sistema
+.DS_Store
+Thumbs.db
+.kilo/
+.vscode/
+.idea/
