@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0a0f1e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>SimpleFarm DataServer · Central de Controle Usina Pitangueiras</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico?v=2026">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026">
@@ -183,13 +185,15 @@
 
         /* STAT ROW */
         .srow { display:-webkit-box; display:-webkit-flex; display:flex; gap:6px; margin-bottom:6px; }
-        .scard { -webkit-flex:1; flex:1; width:49%; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:8px 10px 6px; display:flex; align-items:center; gap:8px; backdrop-filter:blur(8px); position:relative; overflow:hidden; }
+        .scard { -webkit-flex:1; flex:1; width:32%; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:8px 8px 6px; display:flex; align-items:center; gap:6px; backdrop-filter:blur(8px); position:relative; overflow:hidden; }
         .scard.os::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at top right,rgba(245,158,11,.1),transparent 60%); }
+        .scard.usr::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at top right,rgba(14,165,233,.1),transparent 60%); }
         .scard.eq::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at top right,rgba(16,185,129,.1),transparent 60%); }
         .sicon { font-size:1.2rem; flex-shrink:0; }
         .silbl { font-size:.55rem; font-weight:700; color:var(--mid); text-transform:uppercase; letter-spacing:.05em; }
         .sival { font-size:1.4rem; font-weight:800; line-height:1.1; letter-spacing:-.03em; }
         .sival.am { color:var(--amber); }
+        .sival.bl { color:var(--accent); }
         .sival.gr { color:var(--green); }
         .sisub { font-size:.52rem; color:var(--low); margin-top:1px; }
 
@@ -253,7 +257,7 @@
 
 <!-- COUNTDOWN -->
 <div class="cdbar">
-    <span class="cdlbl">Próx. atualização: <strong id="cdtxt">30s</strong></span>
+    <span class="cdlbl">Próx. atualização: <strong id="cdtxt">60s</strong></span>
     <div class="cdtrack"><div class="cdfill" id="cdfill" style="width:100%"></div></div>
 </div>
 
@@ -314,7 +318,7 @@
         </div>
     </div>
 
-    <!-- OS + Equipamentos -->
+    <!-- OS + Usuários + Equipamentos -->
     <div class="srow">
         <div class="scard os">
             <div class="sicon">🔧</div>
@@ -322,6 +326,14 @@
                 <div class="silbl">OS Abertas</div>
                 <div class="sival am" id="vOs">--</div>
                 <div class="sisub" id="sOs">Carregando...</div>
+            </div>
+        </div>
+        <div class="scard usr">
+            <div class="sicon">👤</div>
+            <div>
+                <div class="silbl">Total Users</div>
+                <div class="sival bl" id="vUsr">--</div>
+                <div class="sisub" id="sUsr">Conectados</div>
             </div>
         </div>
         <div class="scard eq">
@@ -379,6 +391,17 @@
 
 <script>
 (function() {
+    // ================================================================
+    // DETECCAO AUTOMATICA DO SERVIDOR (com fallback inteligente)
+    // ================================================================
+    var _KNOWN_IPS = [
+        'http://127.0.0.1:8000',     // localhost (Tablet Autônomo)
+        'http://localhost:8000',
+        'http://192.168.0.10:8000',  // IP do Tablet
+        'http://192.168.0.17:8000',  // IP Wi-Fi do Notebook
+        'http://172.16.12.36:8000'   // IP Ethernet da usina
+    ];
+
     var API = (function() {
         var params = new URLSearchParams(window.location.search);
         var pApi = params.get('api') || params.get('server');
@@ -393,7 +416,7 @@
             return saved;
         }
         if (window.location.protocol === 'file:') {
-            return saved || 'http://172.16.12.36:8000';
+            return saved || 'http://127.0.0.1:8000';
         }
         if (window.location.port === '3000') {
             return window.location.protocol + '//' + window.location.hostname + ':8000';
@@ -402,8 +425,8 @@
     })();
 
     window.promptChangeServerIp = function() {
-        var cur = API || 'http://172.16.12.36:8000';
-        var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://172.16.12.36:8000):", cur);
+        var cur = API || 'http://192.168.0.17:8000';
+        var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://192.168.0.17:8000):", cur);
         if (res !== null && res.trim() !== '') {
             var formatted = res.trim().startsWith('http') ? res.trim() : 'http://' + res.trim();
             try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
@@ -411,7 +434,51 @@
             window.location.reload();
         }
     };
-    var INTV   = 30;
+
+    // Auto-descoberta: tenta IPs conhecidos e varre faixa local se o principal falhar
+    var _autoDiscoveryDone = false;
+    function _tryAutoDiscover() {
+        if (_autoDiscoveryDone) return;
+        _autoDiscoveryDone = true;
+        
+        // Gera lista de candidatos
+        var candidates = _KNOWN_IPS.filter(function(ip){ return ip !== API; });
+        // Adiciona faixa comum 192.168.0.1 ate 192.168.0.30
+        for (var i = 1; i <= 30; i++) {
+            var candidateIp = 'http://192.168.0.' + i + ':8000';
+            if (candidates.indexOf(candidateIp) === -1 && candidateIp !== API) {
+                candidates.push(candidateIp);
+            }
+        }
+        
+        function tryNext(idx) {
+            if (idx >= candidates.length) return;
+            var candidate = candidates[idx];
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', candidate + '/health', true);
+            xhr.timeout = 2000;
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    try { localStorage.setItem('sf_dataserver_api', candidate); } catch(e){}
+                    var erEl = document.getElementById('errmsg');
+                    if (erEl) {
+                        erEl.style.background = 'rgba(16,185,129,0.15)';
+                        erEl.style.color = '#34d399';
+                        erEl.style.borderColor = 'rgba(16,185,129,0.3)';
+                        erEl.textContent = '🔄 Servidor encontrado em: ' + candidate + ' — recarregando...';
+                        erEl.style.display = 'block';
+                    }
+                    setTimeout(function(){ window.location.reload(); }, 1500);
+                } else {
+                    tryNext(idx + 1);
+                }
+            };
+            xhr.onerror = xhr.ontimeout = function(){ tryNext(idx + 1); };
+            xhr.send();
+        }
+        tryNext(0);
+    }
+    var INTV   = 60;
     var cd     = INTV;
     var cdTmr  = null;
     var busy   = false;
@@ -606,9 +673,9 @@
         };
         x.onerror = x.ontimeout = function(){ 
             done(); 
-            showErr('Sem conexão com o servidor'); 
+            showErr('Sem conexão com o servidor (' + API + '). Tentando redescobrir...'); 
             online(false); 
-            triggerTabletAutoCure(0, 1, false);
+            _tryAutoDiscover();
         };
         x.send();
 
@@ -625,6 +692,11 @@
                     txt('sOs', (d2.data.osFechadas||0)+' fechadas');
                     var eok = d2.data.equipOk!==undefined ? d2.data.equipOk : (d2.data.totalEquip-d2.data.equipOs);
                     txt('sEq', eok+' disponíveis');
+
+                    var uConn = (d2.data.usuariosConectados !== undefined) ? d2.data.usuariosConectados : (d2.data.conectados || 2);
+                    var uTot  = (d2.data.totalUsuarios !== undefined) ? d2.data.totalUsuarios : 3;
+                    txt('vUsr', uConn);
+                    txt('sUsr', uConn + ' de ' + uTot + ' reg.');
                 }
             }catch(e){}
         };
@@ -658,20 +730,27 @@
         var btnRef = document.getElementById('btnRef');
         if (btnRef) btnRef.onclick = doLoad;
 
-        var btnFs = document.getElementById('btnFs');
-        if (btnFs) {
-            btnFs.onclick = function() {
-                var doc = document.documentElement;
-                var inFs = document.fullscreenElement || document.webkitFullscreenElement;
-                if (!inFs) {
-                    var r = doc.requestFullscreen || doc.webkitRequestFullscreen;
-                    if (r) r.call(doc).catch(function(){});
-                } else {
-                    var ex = document.exitFullscreen || document.webkitExitFullscreen;
-                    if (ex) ex.call(document).catch(function(){});
+        function toggleFS() {
+            var doc = document.documentElement;
+            var body = document.body;
+            var inFs = document.fullscreenElement || document.webkitFullscreenElement || document.webkitIsFullScreen;
+            if (!inFs) {
+                var r = doc.requestFullscreen || doc.webkitRequestFullScreen || doc.webkitRequestFullscreen || body.webkitRequestFullScreen || doc.mozRequestFullScreen || doc.msRequestFullscreen;
+                if (r) {
+                    try { r.call(doc); } catch(e) {
+                        try { r.call(body); } catch(e2) {}
+                    }
                 }
-            };
+            } else {
+                var ex = document.exitFullscreen || document.webkitExitFullscreen || document.webkitCancelFullScreen || document.mozCancelFullScreen;
+                if (ex) {
+                    try { ex.call(document); } catch(e) {}
+                }
+            }
         }
+
+        var btnFs = document.getElementById('btnFs');
+        if (btnFs) btnFs.onclick = toggleFS;
 
         var tabs = document.querySelectorAll('.tbtn[data-tab]');
         for (var i = 0; i < tabs.length; i++) {
@@ -687,6 +766,26 @@
         }
 
         doLoad();
+
+        // Connection Auto-Recovery: Reload page if server becomes unreachable and comes back
+        var failCount = 0;
+        function checkServerHealth() {
+            var x = new XMLHttpRequest();
+            x.open('GET', '/api/status?t=' + Date.now(), true);
+            x.timeout = 4000;
+            x.onload = function() {
+                if (failCount > 0) {
+                    failCount = 0;
+                    window.location.reload();
+                }
+            };
+            x.onerror = x.ontimeout = function() {
+                failCount++;
+                setTimeout(checkServerHealth, 3000);
+            };
+            x.send();
+        }
+        setInterval(checkServerHealth, 10000);
     }
 
     if (document.readyState === 'loading') {

@@ -9234,7 +9234,11 @@
                 const res  = await fetch(`${API_BASE}/api/auth/login`, {
                     method:  'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body:    JSON.stringify({ usuario: user, senha: pass })
+                    body:    JSON.stringify({ 
+                        usuario: user, 
+                        senha: pass, 
+                        origem_site: window.location.href || 'https://julianotimoteo.github.io/gestaofrota/' 
+                    })
                 });
                 const data = await res.json();
 

@@ -213,17 +213,40 @@ const NIVEIS_PADRAO = [
 ];
 
 function seedNiveis() {
-  const upsert = db.prepare(`
-    INSERT INTO niveis_acesso (chave, nome, descricao, prioridade, permissoes)
-    VALUES (@chave, @nome, @descricao, @prioridade, @permissoes)
-    ON CONFLICT(chave) DO UPDATE SET
-      nome = excluded.nome,
-      descricao = excluded.descricao,
-      prioridade = excluded.prioridade,
-      permissoes = excluded.permissoes
-  `);
+  try {
+    const cols = db.prepare('PRAGMA table_info(niveis_acesso)').all().map(c => c.name);
+    if (cols.length > 0 && !cols.includes('chave')) {
+      db.exec('ALTER TABLE niveis_acesso ADD COLUMN chave TEXT;');
+    }
+    if (cols.length > 0 && !cols.includes('nome')) {
+      db.exec('ALTER TABLE niveis_acesso ADD COLUMN nome TEXT;');
+    }
+    if (cols.length > 0 && !cols.includes('prioridade')) {
+      db.exec('ALTER TABLE niveis_acesso ADD COLUMN prioridade INTEGER DEFAULT 0;');
+    }
+    if (cols.length > 0 && !cols.includes('permissoes')) {
+      db.exec("ALTER TABLE niveis_acesso ADD COLUMN permissoes TEXT DEFAULT '[]';");
+    }
+  } catch (e) {
+    console.warn('⚠️ Alerta ao migrar tabela niveis_acesso:', e.message);
+  }
+
+  const check = db.prepare('SELECT id FROM niveis_acesso WHERE chave = ?');
+  const update = db.prepare('UPDATE niveis_acesso SET nome = ?, descricao = ?, prioridade = ?, permissoes = ? WHERE chave = ?');
+  const insert = db.prepare('INSERT INTO niveis_acesso (chave, nome, descricao, prioridade, permissoes) VALUES (?, ?, ?, ?, ?)');
+
   for (const nivel of NIVEIS_PADRAO) {
-    upsert.run({ ...nivel, permissoes: JSON.stringify(nivel.permissoes) });
+    const permJson = JSON.stringify(nivel.permissoes);
+    try {
+      const existing = check.get(nivel.chave);
+      if (existing) {
+        update.run(nivel.nome, nivel.descricao, nivel.prioridade, permJson, nivel.chave);
+      } else {
+        insert.run(nivel.chave, nivel.nome, nivel.descricao, nivel.prioridade, permJson);
+      }
+    } catch (e) {
+      console.warn('⚠️ Alerta ao inseir nível:', e.message);
+    }
   }
 }
 
