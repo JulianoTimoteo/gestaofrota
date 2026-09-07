@@ -95,9 +95,76 @@ Para endpoints legados protegidos por sessão, continue usando:
 curl http://172.16.12.36:8000/api/sync?token=<session_token>
 ```
 
+### 3.5 Rastreamento de Origem do Site (`origem_site`) e Auditoria
+
+Ao realizar a autenticação a partir de aplicações web terceiras ou hospedadas no GitHub Pages (`https://julianotimoteo.github.io/gestaofrota/`), a API identifica e registra automaticamente o site de origem.
+
+Exemplo de requisição informando a origem:
+
+```bash
+curl -X POST http://172.16.12.36:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -H "Origin: https://julianotimoteo.github.io" \
+  -d '{
+    "usuario": "julianotimoteo",
+    "senha": "tmotvini1986@#",
+    "origem_site": "https://julianotimoteo.github.io/gestaofrota/"
+  }'
+```
+
 ---
 
-## 4. Chaves e Tokens
+## 4. Consulta de Sessões Ativas & Status em Tempo Real
+
+### 4.1 Endpoint de Sessões Ativas (`/api/sessoes/activas` ou `/api/sessoes/ativas`)
+
+Retorna todas as sessões ativas no momento, contendo usuário, e-mail, IP e site de origem:
+
+```bash
+curl http://172.16.12.36:8000/api/sessoes/activas
+```
+
+Retorno de exemplo:
+
+```json
+{
+  "success": true,
+  "total": 2,
+  "data": [
+    {
+      "id": 15,
+      "usuario": "julianotimoteo",
+      "nome": "Juliano Timóteo",
+      "email": "julianotimoteo@usinapitangueiras.com.br",
+      "ip_origem": "172.16.12.100",
+      "origem_site": "https://julianotimoteo.github.io/gestaofrota/",
+      "criado_em": "2026-09-07 11:00:00",
+      "ultima_atividade": "2026-09-07 11:09:45"
+    },
+    {
+      "id": 16,
+      "usuario": "rafaelfarra",
+      "nome": "Rafael Farra",
+      "email": "rafaelfarra@usinapitangueiras.com.br",
+      "ip_origem": "172.16.12.101",
+      "origem_site": "https://julianotimoteo.github.io/gestaofrota/",
+      "criado_em": "2026-09-07 11:02:00",
+      "ultima_atividade": "2026-09-07 11:09:47"
+    }
+  ]
+}
+```
+
+### 4.2 Status com Contagem Automática de Conectados (`/api/status`)
+
+O endpoint `/api/status` inclui:
+- `totalUsuarios`: Total de usuários ativos cadastrados no banco (ex: 3).
+- `usuariosConectados`: Quantidade exata de usuários distintos com sessão ativa em tempo real.
+- `sessoesAtivas`: Lista detalhada das sessões com seus respectivos sites de origem.
+
+---
+
+## 5. Chaves e Tokens
 
 - **Session token:** gerado no login local (`/api/auth/login`). Validade definida por `expira_em`.
 - **JWT:** gerado em `/api/auth/token`. Validade padrão de 12h, configurável via `JWT_EXPIRES_IN` no backend.
@@ -106,11 +173,13 @@ curl http://172.16.12.36:8000/api/sync?token=<session_token>
 
 ---
 
-## 5. Considerações
+## 6. Considerações
 
+- CORS está ativado para permitir acesso de qualquer origem (`Access-Control-Allow-Origin: *`), incluindo o site no GitHub Pages (`https://julianotimoteo.github.io/gestaofrota/`).
 - Rotas públicas legadas continuam válidas em `127.0.0.1` sem token.
 - Para acesso externo estável, utilize `http://<IP_DO_SERVIDOR>:8000`.
 - Em caso de falha, valide:
   - `/health`
   - `/api/status`
+  - `/api/sessoes/activas`
   - `/api/sync/health`
