@@ -2804,6 +2804,11 @@
                         <button type="submit" class="btn btn-primary" id="loginBtn" style="width:100%; justify-content:center;"><i class="fas fa-sign-in-alt"></i> Entrar</button>
                     </div>
                     <div class="login-status" id="loginStatus"></div>
+                    <div style="margin-top:0.75rem; text-align:center;">
+                        <button type="button" onclick="promptChangeServerIp()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; color:#94a3b8; font-size:0.75rem; padding:4px 8px; cursor:pointer;" title="Clique para alterar o IP do DataServer no banco de dados">
+                            <i class="fas fa-server"></i> DataServer: <span id="lblServerIpDisplay">http://172.16.12.36:8000</span> ✏️
+                        </button>
+                    </div>
 
                 </form>
             </div>
@@ -9065,20 +9070,17 @@
             }
             const savedApi = localStorage.getItem('sf_custom_api_base');
             if (savedApi) return savedApi;
-            if (window.location.protocol === 'file:') {
-                return 'http://172.16.12.36:3000';
+            if (window.location.protocol === 'file:' || window.location.hostname.includes('github.io')) {
+                return 'http://172.16.12.36:8000';
             }
-            if (window.location.hostname.includes('github.io')) {
-                return 'https://julianotimoteo.github.io/gestaofrota';
-            }
-            return window.location.origin;
+            return window.location.origin.includes('8000') ? window.location.origin : 'http://172.16.12.36:8000';
         })();
 
         function promptChangeServerIp() {
-            const current = localStorage.getItem('sf_custom_api_base') || API_BASE || 'http://172.16.12.36:3000';
+            const current = localStorage.getItem('sf_custom_api_base') || API_BASE || 'http://172.16.12.36:8000';
             const input = prompt(
-                "IP do Servidor na rede Wi-Fi:\n\n" +
-                "Insira o endereço IP do servidor para conectar o tablet via Wi-Fi sem cabo USB (exemplo: http://172.16.12.36:3000):",
+                "Endereço IP do DataServer (Servidor de Banco de Dados):\n\n" +
+                "Insira o IP do servidor para autenticação e sincronização (exemplo: http://172.16.12.36:8000 ou http://seu-ip:8000):",
                 current
             );
             if (input !== null && input.trim() !== '') {
@@ -9087,10 +9089,17 @@
                     formatted = 'http://' + formatted;
                 }
                 localStorage.setItem('sf_custom_api_base', formatted);
-                alert("IP do Servidor configurado para: " + formatted + "\nA página será recarregada agora.");
+                alert("IP do DataServer configurado para: " + formatted + "\nA página será recarregada agora.");
                 window.location.reload();
             }
         }
+
+        function updateServerIpBadge() {
+            const el = document.getElementById('lblServerIpDisplay');
+            if (el) el.textContent = API_BASE;
+        }
+        document.addEventListener('DOMContentLoaded', updateServerIpBadge);
+        setTimeout(updateServerIpBadge, 300);
 
         // ================================================================
         // TEMA
