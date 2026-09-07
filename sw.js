@@ -1,9 +1,13 @@
-const CACHE_NAME = 'fleet-cache-v1';
-const OFFLINE_URL = '/index.html';
+const CACHE_NAME = 'fleet-cache-v2';
+const OFFLINE_URL = './index.html';
 const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/sw.js'
+    './',
+    './index.html',
+    './manifest.json',
+    './auth.js',
+    './android-chrome-192x192.png',
+    './android-chrome-512x512.png',
+    './favicon.ico'
 ];
 
 self.addEventListener('install', (event) => {
@@ -14,7 +18,7 @@ self.addEventListener('install', (event) => {
                 try {
                     await cache.add(asset);
                 } catch (e) {
-                    // Skip assets that don't exist
+                    // Skip non-critical assets
                 }
             }
         })()
@@ -39,7 +43,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    if (event.request.method === 'GET') {
+    if (event.request.method === 'GET' && !event.request.url.includes('/api/')) {
         event.respondWith(
             caches.match(event.request).then((cachedResponse) => {
                 if (cachedResponse) {

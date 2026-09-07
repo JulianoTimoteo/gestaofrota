@@ -1025,6 +1025,123 @@
             transform: translateX(3px);
         }
 
+        /* ===== BANNER PWA INSTALAÇÃO NO CELULAR ===== */
+        .pwa-install-banner {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 99999;
+            max-width: 440px;
+            width: calc(100% - 3rem);
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(37, 99, 235, 0.3);
+            animation: pwaSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
+        }
+        .pwa-install-banner.hidden {
+            display: none !important;
+        }
+        @keyframes pwaSlideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .pwa-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+        .pwa-banner-icon img {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            object-fit: cover;
+        }
+        .pwa-banner-text {
+            flex: 1;
+            text-align: left;
+        }
+        .pwa-banner-text h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            color: #ffffff !important;
+        }
+        .pwa-banner-text p {
+            font-size: 0.78rem;
+            color: #94a3b8 !important;
+            line-height: 1.35;
+            margin: 0;
+        }
+        .pwa-banner-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pwa-btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+        .pwa-btn-primary:hover {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            transform: translateY(-1px);
+        }
+        .pwa-btn-close {
+            background: rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+        .pwa-btn-close:hover {
+            background: rgba(239, 68, 68, 0.25);
+            color: #ef4444;
+        }
+
+        .btn-pwa-header {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+            transition: all 0.2s ease;
+        }
+        .btn-pwa-header:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.45);
+        }
+
         /* ===== DASHBOARD DONUT CHART ===== */
         .fleet-dashboard-card {
             margin-bottom: 1.25rem;
@@ -2820,11 +2937,51 @@
 
                 </form>
             </div>
+    <!-- BANNER FLUTUANTE PARA INSTALAR COMO APLICATIVO CELULAR (PWA) -->
+    <div id="pwaInstallBanner" class="pwa-install-banner hidden">
+        <div class="pwa-banner-content">
+            <div class="pwa-banner-icon">
+                <img src="android-chrome-192x192.png" alt="Gestão Frota App" onerror="this.src='apple-touch-icon.png'">
+            </div>
+            <div class="pwa-banner-text">
+                <h4>📲 Instalar Aplicativo Gestão de Frota</h4>
+                <p>Instale no seu celular para um uso mais rápido, prático e em tela cheia sem abrir o navegador!</p>
+            </div>
+            <div class="pwa-banner-actions">
+                <button id="btnPwaInstallNow" class="pwa-btn-primary"><i class="fas fa-download"></i> Instalar App</button>
+                <button id="btnPwaDismiss" class="pwa-btn-close" title="Agora Não"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL COM INSTRUÇÕES DE INSTALAÇÃO NO IOS (IPHONE / IPAD) -->
+    <div id="iosInstallModal" class="action-modal-overlay">
+        <div class="action-modal" style="max-width:440px; text-align:center;">
+            <div class="action-modal-header" style="justify-content:center;">
+                <h3>📱 Instalar no iPhone / iPad</h3>
+            </div>
+            <div class="action-modal-body" style="text-align:left; font-size:0.9rem; line-height:1.6;">
+                <p style="margin-bottom:1rem; color:var(--color-gray-700);">Siga estes 3 passos simples para adicionar o <strong>Gestão de Frota</strong> na sua tela de início:</p>
+                <div style="background:var(--color-gray-100); padding:0.85rem; border-radius:10px; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.75rem;">
+                    <span style="font-size:1.4rem; color:var(--color-primary);">1️⃣</span>
+                    <span>Toque no botão <strong>Compartilhar</strong> <i class="fas fa-share-square" style="color:#007aff; font-size:1.1rem;"></i> no menu do Safari.</span>
+                </div>
+                <div style="background:var(--color-gray-100); padding:0.85rem; border-radius:10px; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.75rem;">
+                    <span style="font-size:1.4rem; color:var(--color-primary);">2️⃣</span>
+                    <span>Role a lista e toque em <strong>Adicionar à Tela de Início</strong> <i class="fas fa-plus-square" style="color:#007aff; font-size:1.1rem;"></i>.</span>
+                </div>
+                <div style="background:var(--color-gray-100); padding:0.85rem; border-radius:10px; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.75rem;">
+                    <span style="font-size:1.4rem; color:var(--color-primary);">3️⃣</span>
+                    <span>Toque em <strong>Adicionar</strong> no canto superior direito!</span>
+                </div>
+            </div>
+            <div class="action-modal-footer" style="justify-content:center;">
+                <button class="btn btn-primary" onclick="document.getElementById('iosInstallModal').classList.remove('active')">Entendido</button>
+            </div>
         </div>
     </div>
 
     <div class="app">
-        <!-- HEADER UNIFICADO (LIMPO E ESTÁVEL) -->
         <!-- HEADER UNIFICADO (LIMPO E ESTÁVEL) -->
         <div class="header" id="mainHeader">
             <div class="header-top-row">
@@ -2853,6 +3010,9 @@
                         </label>
                     </div>
                     <div class="user-menu" id="userMenu">
+                        <button id="btnHeaderInstallPwa" class="btn-pwa-header" style="display:none;" title="Instalar aplicativo no celular">
+                            <i class="fas fa-mobile-alt"></i> <span>Baixar App</span>
+                        </button>
                         <div id="userBadge" style="display:inline-flex; align-items:center; gap:0.45rem; background:rgba(37, 99, 235, 0.08); padding:0.4rem 0.8rem; border-radius:20px; border:1px solid rgba(37, 99, 235, 0.15);">
                             <i class="fas fa-user-circle" style="color:var(--color-primary); font-size:1.15em;"></i>
                             <span id="userRoleBadge" style="font-weight:600; color:var(--color-gray-900);">--</span>
@@ -11246,18 +11406,89 @@
         }
 
         // ================================================================
-        // INIT APP
+        // INSTALAÇÃO DO APLICATIVO CELULAR (PWA)
         // ================================================================
-        async function initApp() {
-            // Desregistrar service workers antigos
+        let deferredPwaPrompt = null;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPwaPrompt = e;
+            showPwaInstallPrompt();
+        });
+
+        function isAppInstalled() {
+            return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
+        }
+
+        function showPwaInstallPrompt() {
+            if (isAppInstalled()) return;
+            const dismissed = localStorage.getItem('sf_pwa_dismissed');
+            if (dismissed && (Date.now() - parseInt(dismissed, 10)) < 24 * 3600 * 1000) {
+                const headerBtn = document.getElementById('btnHeaderInstallPwa');
+                if (headerBtn) headerBtn.style.display = 'inline-flex';
+                return;
+            }
+
+            setTimeout(() => {
+                const banner = document.getElementById('pwaInstallBanner');
+                if (banner) banner.classList.remove('hidden');
+                const headerBtn = document.getElementById('btnHeaderInstallPwa');
+                if (headerBtn) headerBtn.style.display = 'inline-flex';
+            }, 1800);
+        }
+
+        async function triggerPwaInstall() {
+            const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+            if (isIOS) {
+                const modal = document.getElementById('iosInstallModal');
+                if (modal) modal.classList.add('active');
+                return;
+            }
+
+            if (deferredPwaPrompt) {
+                deferredPwaPrompt.prompt();
+                const choiceResult = await deferredPwaPrompt.userChoice;
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('Usuário aceitou a instalação do aplicativo!');
+                    dismissPwaBanner();
+                }
+                deferredPwaPrompt = null;
+            } else {
+                alert('📱 Para instalar como App no seu celular:\n\n1. No menu do seu navegador (três pontos no topo ou rodapé)\n2. Selecione "Instalar aplicativo" ou "Adicionar à Tela Inicial".');
+            }
+        }
+
+        function dismissPwaBanner() {
+            const banner = document.getElementById('pwaInstallBanner');
+            if (banner) banner.classList.add('hidden');
+            localStorage.setItem('sf_pwa_dismissed', Date.now().toString());
+        }
+
+        function initPwaInstall() {
+            document.getElementById('btnPwaInstallNow')?.addEventListener('click', triggerPwaInstall);
+            document.getElementById('btnHeaderInstallPwa')?.addEventListener('click', triggerPwaInstall);
+            document.getElementById('btnPwaDismiss')?.addEventListener('click', dismissPwaBanner);
+
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(regs => {
-                    regs.forEach(r => r.unregister());
+                navigator.serviceWorker.register('./sw.js').then(reg => {
+                    console.log('Service Worker PWA registrado:', reg.scope);
+                }).catch(err => {
+                    console.warn('Alerta SW PWA:', err);
                 });
             }
 
+            if (!isAppInstalled()) {
+                showPwaInstallPrompt();
+            }
+        }
+
+        // ================================================================
+        // INIT APP
+        // ================================================================
+        async function initApp() {
             initThemeToggle();
             startRealtimeClock();
+            initPwaInstall();
 
             // Lê token antes de qualquer chamada para evitar flicker
             authToken = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token') || '';
