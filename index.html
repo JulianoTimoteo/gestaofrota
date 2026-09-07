@@ -2804,11 +2804,6 @@
                         <button type="submit" class="btn btn-primary" id="loginBtn" style="width:100%; justify-content:center;"><i class="fas fa-sign-in-alt"></i> Entrar</button>
                     </div>
                     <div class="login-status" id="loginStatus"></div>
-                    <div style="margin-top:0.75rem; text-align:center;">
-                        <button type="button" onclick="promptChangeServerIp()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; color:#94a3b8; font-size:0.75rem; padding:4px 8px; cursor:pointer;" title="Clique para alterar o IP do DataServer no banco de dados">
-                            <i class="fas fa-server"></i> DataServer: <span id="lblServerIpDisplay">http://172.16.12.36:8000</span> ✏️
-                        </button>
-                    </div>
 
                 </form>
             </div>
@@ -9290,17 +9285,12 @@
                 }
             } catch (err) {
                 console.error('Erro de conexão ao DataServer:', err);
-                statusEl.innerHTML = `⚠️ <strong>Falha de Conexão com o DataServer (${API_BASE}):</strong><br>` +
-                                     `<small>O navegador impediu a conexão (Mixed Content HTTPS➔HTTP ou servidor inacessível).<br>` +
-                                     `Acesse via Wi-Fi diretamente no DataServer: <a href="${API_BASE}" target="_blank" style="color:#38bdf8;text-decoration:underline;">${API_BASE}</a> ou clique no botão de IP abaixo para configurar.</small>`;
+                statusEl.textContent = 'Erro ao comunicar com o servidor de dados.';
                 statusEl.className = 'login-status error';
                 if (cardWrapper) {
                     cardWrapper.classList.remove('state-default', 'state-success');
                     cardWrapper.classList.add('state-error');
                 }
-            }
-                iniciarSyncTimer();
-                iniciarCheckSessaoUnicaTimer();
             } finally {
                 if (loginBtn) loginBtn.disabled = false;
                 hideGlobalLoader();
