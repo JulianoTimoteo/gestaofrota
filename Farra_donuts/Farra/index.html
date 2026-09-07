@@ -993,23 +993,36 @@
         }
 
         .header-info .logout-btn {
-            background: transparent;
-            border: none;
-            color: inherit;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.16) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
             cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 500;
-            padding: 0.2rem 0.5rem;
-            border-radius: var(--radius-sm);
-            transition: all 0.15s ease;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.45rem 0.9rem;
+            border-radius: 8px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 0.5rem;
+            box-shadow: 0 2px 5px rgba(239, 68, 68, 0.06);
         }
 
         .header-info .logout-btn:hover {
-            color: var(--color-danger);
-            background: var(--color-danger-bg);
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #ffffff;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+        }
+
+        .header-info .logout-btn i {
+            font-size: 0.95rem;
+            transition: transform 0.2s ease;
+        }
+
+        .header-info .logout-btn:hover i {
+            transform: translateX(3px);
         }
 
         /* ===== DASHBOARD DONUT CHART ===== */
@@ -2840,11 +2853,14 @@
                         </label>
                     </div>
                     <div class="user-menu" id="userMenu">
-                        <div id="userBadge" style="display:inline-flex; align-items:center; gap:0.35rem;">
-                            <i class="fas fa-user-circle" style="color:var(--color-primary); font-size:1.05em;"></i>
-                            <span id="userRoleBadge">--</span>
+                        <div id="userBadge" style="display:inline-flex; align-items:center; gap:0.45rem; background:rgba(37, 99, 235, 0.08); padding:0.4rem 0.8rem; border-radius:20px; border:1px solid rgba(37, 99, 235, 0.15);">
+                            <i class="fas fa-user-circle" style="color:var(--color-primary); font-size:1.15em;"></i>
+                            <span id="userRoleBadge" style="font-weight:600; color:var(--color-gray-900);">--</span>
                         </div>
-                        <button class="logout-btn" id="logoutBtn" style="display:none;"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                        <button class="logout-btn" id="logoutBtn" style="display:none;" title="Encerrar Sessão">
+                            <i class="fas fa-right-from-bracket"></i>
+                            <span>Sair</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -9065,20 +9081,17 @@
             }
             const savedApi = localStorage.getItem('sf_custom_api_base');
             if (savedApi) return savedApi;
-            if (window.location.protocol === 'file:') {
-                return 'http://172.16.12.36:3000';
+            if (window.location.protocol === 'file:' || window.location.hostname.includes('github.io')) {
+                return 'http://172.16.12.36:8000';
             }
-            if (window.location.hostname.includes('github.io')) {
-                return 'https://julianotimoteo.github.io/gestaofrota';
-            }
-            return window.location.origin;
+            return window.location.origin.includes('8000') ? window.location.origin : 'http://172.16.12.36:8000';
         })();
 
         function promptChangeServerIp() {
-            const current = localStorage.getItem('sf_custom_api_base') || API_BASE || 'http://172.16.12.36:3000';
+            const current = localStorage.getItem('sf_custom_api_base') || API_BASE || 'http://172.16.12.36:8000';
             const input = prompt(
-                "IP do Servidor na rede Wi-Fi:\n\n" +
-                "Insira o endereço IP do servidor para conectar o tablet via Wi-Fi sem cabo USB (exemplo: http://172.16.12.36:3000):",
+                "Endereço IP do DataServer (Servidor de Banco de Dados):\n\n" +
+                "Insira o IP do servidor para autenticação e sincronização (exemplo: http://172.16.12.36:8000 ou http://seu-ip:8000):",
                 current
             );
             if (input !== null && input.trim() !== '') {
@@ -9087,10 +9100,17 @@
                     formatted = 'http://' + formatted;
                 }
                 localStorage.setItem('sf_custom_api_base', formatted);
-                alert("IP do Servidor configurado para: " + formatted + "\nA página será recarregada agora.");
+                alert("IP do DataServer configurado para: " + formatted + "\nA página será recarregada agora.");
                 window.location.reload();
             }
         }
+
+        function updateServerIpBadge() {
+            const el = document.getElementById('lblServerIpDisplay');
+            if (el) el.textContent = API_BASE;
+        }
+        document.addEventListener('DOMContentLoaded', updateServerIpBadge);
+        setTimeout(updateServerIpBadge, 300);
 
         // ================================================================
         // TEMA
@@ -9147,12 +9167,15 @@
             if (overlay)   overlay.classList.toggle('hidden', !!token);
             if (logoutBtn) logoutBtn.style.display = token ? 'inline-flex' : 'none';
 
-            // Atualiza badge do role
+            // Exibe o PRIMEIRO NOME do usuario logado no servidor
             const roleBadge = document.getElementById('userRoleBadge');
             if (roleBadge) {
-                const names = { admin:'Admin', analista:'Analista', supervisor:'Supervisor',
-                                manager:'Gerente', leader:'Líder', visualizador:'Visualizador' };
-                roleBadge.textContent = names[userRole] || userRole;
+                const rawName = localStorage.getItem('sf_auth_name') || sessionStorage.getItem('sf_auth_name') || localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || 'Usuário';
+                let firstName = rawName.trim();
+                if (firstName.includes('@')) firstName = firstName.split('@')[0];
+                firstName = firstName.split(' ')[0];
+                firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+                roleBadge.textContent = firstName;
             }
         }
 
@@ -9198,10 +9221,18 @@
                     }
                 }
 
+                const nameMap = {
+                    'julianotimoteo': 'Juliano Timóteo',
+                    'rafaelfarra': 'Rafael Aparecido Farra',
+                    'logistica': 'Logistica Usina Pitangueiras'
+                };
+                const userDisplayName = nameMap[userInp] || user;
+
                 const token = 'sf_cloud_token_' + Date.now();
                 const storage = keep ? localStorage : sessionStorage;
                 storage.setItem('sf_auth_token', token);
                 storage.setItem('sf_auth_user',  user);
+                storage.setItem('sf_auth_name',  userDisplayName);
                 storage.setItem('sf_auth_role',  role);
                 authToken = token;
                 userRole  = role;
@@ -9245,8 +9276,10 @@
                 if (res.ok && data.success && data.token) {
                     const role = data.role || (data.admin ? 'admin' : 'admin');
                     const storage = keep ? localStorage : sessionStorage;
+                    const displayName = data.nome || data.usuario || user;
                     storage.setItem('sf_auth_token', data.token);
                     storage.setItem('sf_auth_user',  data.usuario || user);
+                    storage.setItem('sf_auth_name',  displayName);
                     storage.setItem('sf_auth_role',  role);
                     authToken = data.token;
                     userRole  = role;
@@ -9280,36 +9313,13 @@
                     }
                 }
             } catch (err) {
-                console.warn('Servidor API offline, usando autenticação Standalone/Cloud:', err);
-                const role = 'admin';
-                const token = 'sf_cloud_token_' + Date.now();
-                const storage = keep ? localStorage : sessionStorage;
-                storage.setItem('sf_auth_token', token);
-                storage.setItem('sf_auth_user',  user);
-                storage.setItem('sf_auth_role',  role);
-                authToken = token;
-                userRole  = role;
-                statusEl.textContent = '✅ Login efetuado com sucesso!';
-                statusEl.className   = 'login-status success';
-
+                console.error('Erro de conexão ao DataServer:', err);
+                statusEl.textContent = 'Erro ao comunicar com o servidor de dados.';
+                statusEl.className = 'login-status error';
                 if (cardWrapper) {
-                    cardWrapper.classList.remove('state-default', 'state-error');
-                    cardWrapper.classList.add('state-success');
+                    cardWrapper.classList.remove('state-default', 'state-success');
+                    cardWrapper.classList.add('state-error');
                 }
-
-                updateAuthUI();
-                applyRBAC();
-
-                const overlay = document.getElementById('loginOverlay');
-                if (overlay) overlay.classList.add('hidden');
-
-                try {
-                    await carregarDados();
-                } catch (loadErr) {
-                    console.warn('Alerta ao carregar dados pós-login:', loadErr);
-                }
-                iniciarSyncTimer();
-                iniciarCheckSessaoUnicaTimer();
             } finally {
                 if (loginBtn) loginBtn.disabled = false;
                 hideGlobalLoader();
@@ -9326,7 +9336,7 @@
                     });
                 } catch (e) {}
             }
-            ['sf_auth_token','sf_auth_user','sf_auth_role'].forEach(k => {
+            ['sf_auth_token','sf_auth_user','sf_auth_name','sf_auth_role'].forEach(k => {
                 localStorage.removeItem(k);
                 sessionStorage.removeItem(k);
             });
@@ -9336,9 +9346,12 @@
         }
 
         function isStaticGitHubPages() {
+            if (typeof API_BASE === 'string' && API_BASE.trim() !== '' && !API_BASE.includes('github.io')) {
+                return false;
+            }
             const customApi = localStorage.getItem('sf_custom_api_base');
             if (customApi && customApi.trim() !== '') return false;
-            return window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+            return false;
         }
 
         async function checkAuth() {

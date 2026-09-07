@@ -113,17 +113,18 @@ def sync_db_from_tablet():
         return False
 
 def sync_db_to_tablet():
-    """Push database to tablet SD card (Apenas se ADB habilitado e conectado)."""
+    """Push database to tablet SD card and Termux simplefarm DB (Apenas se ADB habilitado e conectado)."""
     import subprocess
     if not TABLET_DB_ENABLED or not is_adb_connected():
         return False
     try:
-        subprocess.run(['adb', 'push', DB_PATH, TABLET_DB_PATH], check=True, timeout=5)
-        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Download/meus_banco.db'], check=True, timeout=5)
-        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Documents/meus_banco.db'], check=True, timeout=5)
-        subprocess.run('adb shell "mkdir -p /mnt/expand/72d8bcde-d291-403c-bab1-6ecc6dee1126/media/0/ && cp /sdcard/meus_banco.db /mnt/expand/72d8bcde-d291-403c-bab1-6ecc6dee1126/media/0/meus_banco.db"', shell=True, capture_output=True, timeout=5)
+        subprocess.run(['adb', 'push', DB_PATH, TABLET_DB_PATH], capture_output=True, timeout=5)
+        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Download/meus_banco.db'], capture_output=True, timeout=5)
+        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Documents/meus_banco.db'], capture_output=True, timeout=5)
+        subprocess.run('adb shell "su -c cp /sdcard/meus_banco.db /data/data/com.termux/files/home/simplefarm/meus_banco.db"', shell=True, capture_output=True, timeout=5)
         return True
-    except:
+    except Exception as exc:
+        logger.error(f'Erro ao sincronizar DB com tablet: {exc}')
         return False
 
 # SimpleFarm API (credenciais APENAS no backend)
@@ -2825,6 +2826,10 @@ def login():
                     conn.commit()
                     conn.close()
                     registrar_alteracao('usuarios', user['id'], 'login_sucesso', None, f'Login via {origem_site}', user['id'], ip_origem)
+                    try:
+                        threading.Thread(target=sync_db_to_tablet, daemon=True).start()
+                    except Exception:
+                        pass
                     return jsonify(success=True, token=token, usuario=user['usuario'], admin=1, role='admin', expira_em=expira, origem_site=origem_site)
 
             senha_ok = user and verificar_senha(senha, user['senha_hash'], user['salt'])
@@ -2845,6 +2850,10 @@ def login():
             conn.commit()
             conn.close()
             registrar_alteracao('usuarios', user['id'], 'login_sucesso', None, f'Login via {origem_site}', user['id'], ip_origem)
+            try:
+                threading.Thread(target=sync_db_to_tablet, daemon=True).start()
+            except Exception:
+                pass
             
             return jsonify(success=True, token=token, usuario=user['usuario'], admin=user['admin'], role='admin' if user['admin'] else 'operador', expira_em=expira, origem_site=origem_site)
         except sqlite3.OperationalError as e:

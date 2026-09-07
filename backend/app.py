@@ -113,17 +113,18 @@ def sync_db_from_tablet():
         return False
 
 def sync_db_to_tablet():
-    """Push database to tablet SD card (Apenas se ADB habilitado e conectado)."""
+    """Push database to tablet SD card and Termux simplefarm DB (Apenas se ADB conectado)."""
     import subprocess
-    if not TABLET_DB_ENABLED or not is_adb_connected():
+    if not is_adb_connected():
         return False
     try:
-        subprocess.run(['adb', 'push', DB_PATH, TABLET_DB_PATH], check=True, timeout=5)
-        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Download/meus_banco.db'], check=True, timeout=5)
-        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Documents/meus_banco.db'], check=True, timeout=5)
-        subprocess.run('adb shell "mkdir -p /mnt/expand/72d8bcde-d291-403c-bab1-6ecc6dee1126/media/0/ && cp /sdcard/meus_banco.db /mnt/expand/72d8bcde-d291-403c-bab1-6ecc6dee1126/media/0/meus_banco.db"', shell=True, capture_output=True, timeout=5)
+        subprocess.run(['adb', 'push', DB_PATH, TABLET_DB_PATH], capture_output=True, timeout=5)
+        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Download/meus_banco.db'], capture_output=True, timeout=5)
+        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Documents/meus_banco.db'], capture_output=True, timeout=5)
+        subprocess.run(['adb', 'shell', 'su', '-c', 'cp /sdcard/meus_banco.db /data/data/com.termux/files/home/simplefarm/meus_banco.db'], capture_output=True, timeout=5)
         return True
-    except:
+    except Exception as exc:
+        logger.error(f'Erro ao sincronizar DB com tablet: {exc}')
         return False
 
 # SimpleFarm API (credenciais APENAS no backend)
@@ -179,20 +180,21 @@ def require_auth(f):
         if not token:
             return jsonify(success=False, error='Token de autenticacao necessario'), 401
         
+        agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         conn = get_db_connection()
         sessao = conn.execute('''
             SELECT s.*, u.usuario, u.admin 
             FROM sessoes s 
             JOIN usuarios u ON s.usuario_id = u.id 
-            WHERE s.token = ? AND s.ativo = 1 AND s.expira_em > datetime('now', 'localtime')
-        ''', (token,)).fetchone()
+            WHERE s.token = ? AND s.ativo = 1 AND s.expira_em > ?
+        ''', (token, agora)).fetchone()
         
         if not sessao:
             conn.close()
             return jsonify(success=False, error='Token invalido ou expirado'), 401
         
         try:
-            conn.execute("UPDATE sessoes SET ultima_atividade = datetime('now', 'localtime') WHERE id = ?", (sessao['id'],))
+            conn.execute("UPDATE sessoes SET ultima_atividade = ? WHERE id = ?", (agora, sessao['id']))
             conn.commit()
         except Exception:
             pass
@@ -216,20 +218,21 @@ def require_admin(f):
         if not token:
             return jsonify(success=False, error='Token necessario'), 401
         
+        agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         conn = get_db_connection()
         sessao = conn.execute('''
             SELECT s.*, u.usuario, u.admin 
             FROM sessoes s 
             JOIN usuarios u ON s.usuario_id = u.id 
-            WHERE s.token = ? AND s.ativo = 1 AND s.expira_em > datetime('now', 'localtime') AND u.admin = 1
-        ''', (token,)).fetchone()
+            WHERE s.token = ? AND s.ativo = 1 AND s.expira_em > ? AND u.admin = 1
+        ''', (token, agora)).fetchone()
         
         if not sessao:
             conn.close()
             return jsonify(success=False, error='Acesso de admin necessario'), 403
         
         try:
-            conn.execute("UPDATE sessoes SET ultima_atividade = datetime('now', 'localtime') WHERE id = ?", (sessao['id'],))
+            conn.execute("UPDATE sessoes SET ultima_atividade = ? WHERE id = ?", (agora, sessao['id']))
             conn.commit()
         except Exception:
             pass
@@ -2825,6 +2828,10 @@ def login():
                     conn.commit()
                     conn.close()
                     registrar_alteracao('usuarios', user['id'], 'login_sucesso', None, f'Login via {origem_site}', user['id'], ip_origem)
+                    try:
+                        threading.Thread(target=sync_db_to_tablet, daemon=True).start()
+                    except Exception:
+                        pass
                     return jsonify(success=True, token=token, usuario=user['usuario'], admin=1, role='admin', expira_em=expira, origem_site=origem_site)
 
             senha_ok = user and verificar_senha(senha, user['senha_hash'], user['salt'])
@@ -2845,6 +2852,10 @@ def login():
             conn.commit()
             conn.close()
             registrar_alteracao('usuarios', user['id'], 'login_sucesso', None, f'Login via {origem_site}', user['id'], ip_origem)
+            try:
+                threading.Thread(target=sync_db_to_tablet, daemon=True).start()
+            except Exception:
+                pass
             
             return jsonify(success=True, token=token, usuario=user['usuario'], admin=user['admin'], role='admin' if user['admin'] else 'operador', expira_em=expira, origem_site=origem_site)
         except sqlite3.OperationalError as e:
@@ -2885,20 +2896,24 @@ def auth_me():
         if not token:
             return jsonify(success=False, error='Token necessario'), 401
         
+        now_dt = datetime.now()
+        agora = now_dt.strftime('%Y-%m-%d %H:%M:%S')
+        cutoff = (now_dt - timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S')
+
         conn = get_db_connection()
         sessao = conn.execute('''
             SELECT s.*, u.usuario, u.email, u.nome, u.admin 
             FROM sessoes s 
             JOIN usuarios u ON s.usuario_id = u.id 
-            WHERE s.token = ? AND s.ativo = 1 AND s.expira_em > datetime('now', 'localtime')
-        ''', (token,)).fetchone()
+            WHERE s.token = ? AND s.ativo = 1 AND s.expira_em > ?
+        ''', (token, agora)).fetchone()
         
         if not sessao:
             conn.close()
             return jsonify(success=False, session_expired=True, error='Sua sessão foi encerrada porque este usuário realizou login em outro dispositivo para evitar saturação do banco de dados.'), 401
         
         try:
-            conn.execute("UPDATE sessoes SET ultima_atividade = datetime('now', 'localtime') WHERE id = ?", (sessao['id'],))
+            conn.execute("UPDATE sessoes SET ultima_atividade = ? WHERE id = ?", (agora, sessao['id']))
             conn.commit()
         except Exception:
             pass
@@ -2913,6 +2928,10 @@ def auth_me():
 def listar_sessoes_activas():
     """Retorna lista de todas as sessoes ativas em tempo real com informacao de IP e site de origem (ex: GitHub Pages gestaofrota)."""
     try:
+        now_dt = datetime.now()
+        agora = now_dt.strftime('%Y-%m-%d %H:%M:%S')
+        cutoff = (now_dt - timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S')
+
         conn = get_db_connection()
         sessoes = conn.execute('''
             SELECT s.id, u.usuario, u.nome, u.email, s.ip_origem, COALESCE(s.origem_site, 'Acesso Direto / Web') as origem_site, 
@@ -2920,10 +2939,10 @@ def listar_sessoes_activas():
             FROM sessoes s 
             JOIN usuarios u ON s.usuario_id = u.id 
             WHERE s.ativo = 1 
-              AND s.expira_em > datetime('now', 'localtime')
-              AND datetime(COALESCE(s.ultima_atividade, s.criado_em), '+2 minutes') >= datetime('now', 'localtime')
+              AND s.expira_em > ?
+              AND COALESCE(s.ultima_atividade, s.criado_em) >= ?
             ORDER BY s.ultima_atividade DESC
-        ''').fetchall()
+        ''', (agora, cutoff)).fetchall()
         conn.close()
         dados = [dict(s) for s in sessoes]
         return jsonify(success=True, data=dados, total=len(dados))
@@ -2934,28 +2953,32 @@ def listar_sessoes_activas():
 def get_api_status():
     """Retorna estatisticas de OS, equipamentos e total de usuarios conectados de forma 100% automatica."""
     try:
+        now_dt = datetime.now()
+        agora = now_dt.strftime('%Y-%m-%d %H:%M:%S')
+        cutoff = (now_dt - timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S')
+
         conn = get_db_connection()
 
         # Atualiza ultima_atividade se o request trouxer token de autenticacao
         token = request.headers.get('Authorization', '').replace('Bearer ', '') or request.args.get('token')
         if token:
             try:
-                conn.execute("UPDATE sessoes SET ultima_atividade = datetime('now', 'localtime') WHERE token = ? AND ativo = 1", (token,))
+                conn.execute("UPDATE sessoes SET ultima_atividade = ? WHERE token = ? AND ativo = 1", (agora, token))
                 conn.commit()
             except Exception:
                 pass
 
-        # Limpeza AUTOMATICA de sessoes inativas ha mais de 2 minutos (ou expiradas)
+        # Limpeza AUTOMATICA de sessoes inativas ha mais de 15 minutos (ou expiradas)
         try:
             conn.execute("""
                 UPDATE sessoes 
                 SET ativo = 0 
                 WHERE ativo = 1 
                   AND (
-                    expira_em <= datetime('now', 'localtime') 
-                    OR datetime(COALESCE(ultima_atividade, criado_em), '+2 minutes') < datetime('now', 'localtime')
+                    expira_em <= ? 
+                    OR COALESCE(ultima_atividade, criado_em) < ?
                   )
-            """)
+            """, (agora, cutoff))
             conn.commit()
         except Exception:
             pass
@@ -2979,9 +3002,9 @@ def get_api_status():
             SELECT COUNT(DISTINCT s.usuario_id) 
             FROM sessoes s 
             WHERE s.ativo = 1 
-              AND s.expira_em > datetime('now', 'localtime')
-              AND datetime(COALESCE(s.ultima_atividade, s.criado_em), '+2 minutes') >= datetime('now', 'localtime')
-        """).fetchone()
+              AND s.expira_em > ?
+              AND COALESCE(s.ultima_atividade, s.criado_em) >= ?
+        """, (agora, cutoff)).fetchone()
         conectados = row_conn[0] if row_conn and row_conn[0] is not None else 0
 
         sessoes_activas = conn.execute("""
@@ -2991,10 +3014,10 @@ def get_api_status():
             FROM sessoes s 
             JOIN usuarios u ON s.usuario_id = u.id 
             WHERE s.ativo = 1 
-              AND s.expira_em > datetime('now', 'localtime')
-              AND datetime(COALESCE(s.ultima_atividade, s.criado_em), '+2 minutes') >= datetime('now', 'localtime')
+              AND s.expira_em > ?
+              AND COALESCE(s.ultima_atividade, s.criado_em) >= ?
             ORDER BY s.ultima_atividade DESC
-        """).fetchall()
+        """, (agora, cutoff)).fetchall()
 
         sessoes_lista = [dict(s) for s in sessoes_activas]
 
