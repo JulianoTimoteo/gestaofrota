@@ -9289,34 +9289,16 @@
                     }
                 }
             } catch (err) {
-                console.warn('Servidor API offline, usando autenticação Standalone/Cloud:', err);
-                const role = 'admin';
-                const token = 'sf_cloud_token_' + Date.now();
-                const storage = keep ? localStorage : sessionStorage;
-                storage.setItem('sf_auth_token', token);
-                storage.setItem('sf_auth_user',  user);
-                storage.setItem('sf_auth_role',  role);
-                authToken = token;
-                userRole  = role;
-                statusEl.textContent = '✅ Login efetuado com sucesso!';
-                statusEl.className   = 'login-status success';
-
+                console.error('Erro de conexão ao DataServer:', err);
+                statusEl.innerHTML = `⚠️ <strong>Falha de Conexão com o DataServer (${API_BASE}):</strong><br>` +
+                                     `<small>O navegador impediu a conexão (Mixed Content HTTPS➔HTTP ou servidor inacessível).<br>` +
+                                     `Acesse via Wi-Fi diretamente no DataServer: <a href="${API_BASE}" target="_blank" style="color:#38bdf8;text-decoration:underline;">${API_BASE}</a> ou clique no botão de IP abaixo para configurar.</small>`;
+                statusEl.className = 'login-status error';
                 if (cardWrapper) {
-                    cardWrapper.classList.remove('state-default', 'state-error');
-                    cardWrapper.classList.add('state-success');
+                    cardWrapper.classList.remove('state-default', 'state-success');
+                    cardWrapper.classList.add('state-error');
                 }
-
-                updateAuthUI();
-                applyRBAC();
-
-                const overlay = document.getElementById('loginOverlay');
-                if (overlay) overlay.classList.add('hidden');
-
-                try {
-                    await carregarDados();
-                } catch (loadErr) {
-                    console.warn('Alerta ao carregar dados pós-login:', loadErr);
-                }
+            }
                 iniciarSyncTimer();
                 iniciarCheckSessaoUnicaTimer();
             } finally {
