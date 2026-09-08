@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0f1e">
+    <title>Gestor Frota · Monitor</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=2026">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026">
+    <link rel="manifest" href="manifest.json?v=2026">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:     #0a0f1e;
+            --card:   rgba(15,23,42,0.9);
+            --border: rgba(99,155,255,0.1);
+            --accent: #0ea5e9;
+            --green:  #10b981;
+            --amber:  #f59e0b;
+            --red:    #ef4444;
+            --text:   #f1f5f9;
+            --muted:  #94a3b8;
+            --low:    #4b5e78;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body {
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            background: var(--bg);
+            background-image:
+                radial-gradient(ellipse 60% 40% at 20% 0%, rgba(14,165,233,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 30% at 80% 100%, rgba(99,102,241,0.06) 0%, transparent 60%);
+            color: var(--text);
+            padding: 8px;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #0e6ea8, #0284c7, #0369a1);
+            padding: 10px 14px;
+            border-radius: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(14,165,233,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .header h1 { font-size: 1rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
+        .status-pill {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: rgba(16,185,129,0.18);
+            border: 1px solid rgba(16,185,129,0.35);
+            color: #34d399;
+            display: flex; align-items: center; gap: 5px;
+            transition: all 0.3s;
+        }
+        .status-pill.offline { background:rgba(239,68,68,0.18); border-color:rgba(239,68,68,0.35); color:#f87171; }
+        .status-dot { width:6px; height:6px; border-radius:50%; background:#34d399; animation: pulse-dot 2s ease-in-out infinite; }
+        .status-pill.offline .status-dot { background:#f87171; animation:none; }
+        @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
+
+        /* CARDS GRID */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px 4px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::after {
+            content:'';position:absolute;top:0;left:0;right:0;height:1px;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);
+        }
+        .card-icon { font-size: 1rem; margin-bottom: 2px; }
+        .card-label { font-size: 0.5rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing:.05em; margin-bottom: 2px; }
+        .card-value { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+        .card-sub { font-size: 0.48rem; color: var(--low); margin-top: 1px; }
+
+        /* PROGRESS BAR */
+        .progress {
+            background: rgba(255,255,255,0.06);
+            height: 4px;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s cubic-bezier(.4,0,.2,1);
+        }
+        .bar-blue   { background: linear-gradient(90deg, #38bdf8, #0284c7); }
+        .bar-green  { background: linear-gradient(90deg, #34d399, #059669); }
+        .bar-amber  { background: linear-gradient(90deg, #fbbf24, #d97706); }
+        .bar-red    { background: linear-gradient(90deg, #f87171, #dc2626); }
+        .bar-purple { background: linear-gradient(90deg, #a78bfa, #6366f1); }
+
+        /* SECTION */
+        .section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 6px;
+            backdrop-filter: blur(8px);
+        }
+        .section-title {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            margin-bottom: 7px;
+        }
+        .tables-list { max-height: 130px; overflow-y: auto; }
+        .table-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.68rem;
+        }
+        .table-row:last-child { border-bottom: none; }
+        .table-name { color: var(--muted); }
+        .table-count {
+            background: rgba(14,165,233,0.15);
+            color: var(--accent);
+            padding: 1px 7px; border-radius: 6px;
+            font-size: 0.62rem; font-weight: 600;
+            border: 1px solid rgba(14,165,233,0.2);
+        }
+
+        /* FOOTER */
+        .footer { display:flex; justify-content:space-between; align-items:center; padding: 6px 0 2px; }
+        .footer-text { font-size: 0.6rem; color: var(--low); }
+        .btn-refresh {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--green));
+            border: none;
+            color: white; font-size: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(14,165,233,0.3);
+            transition: transform .15s, box-shadow .15s;
+        }
+        .btn-refresh:active { transform: scale(.92); }
+        .btn-refresh.spinning { animation: spin .7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-msg {
+            background: rgba(239,68,68,0.12);
+            color: #fca5a5;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.72rem;
+            margin-bottom: 6px;
+            display: none;
+            border: 1px solid rgba(239,68,68,0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🖥️ SimpleFarm DataServer</h1>
+        <div class="status-pill" id="statusPill" onclick="promptChangeServerIp()" style="cursor:pointer;" title="Clique para alterar o IP do DataServer na rede Wi-Fi">
+            <span class="status-dot"></span>
+            <span id="statusText">Conectando...</span>
+        </div>
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+
+    <!-- Linha 1: recursos do sistema -->
+    <div class="cards-grid">
+        <div class="card">
+            <div class="card-icon">💻</div>
+            <div class="card-label">CPU</div>
+            <div class="card-value" id="cpu">--</div>
+            <div class="progress"><div class="progress-bar bar-blue" id="cpuBar" style="width:0%"></div></div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🧠</div>
+            <div class="card-label">RAM</div>
+            <div class="card-value" id="ram">--</div>
+            <div class="progress"><div class="progress-bar bar-green" id="ramBar" style="width:0%"></div></div>
+        </div>
+        <div class="card">
+            <div class="card-icon">💾</div>
+            <div class="card-label">Disco</div>
+            <div class="card-value" id="disk">--</div>
+            <div class="progress"><div class="progress-bar bar-amber" id="diskBar" style="width:0%"></div></div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🔧</div>
+            <div class="card-label">OS Abertas</div>
+            <div class="card-value" id="os" style="color:#f59e0b">--</div>
+            <div class="card-sub">ordens</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🚛</div>
+            <div class="card-label">Equip</div>
+            <div class="card-value" id="equip" style="color:#10b981">--</div>
+            <div class="card-sub">total</div>
+        </div>
+    </div>
+
+    <!-- Linha 2: servidor e sincronização -->
+    <div class="cards-grid">
+        <div class="card">
+            <div class="card-icon">🔄</div>
+            <div class="card-label">Sync</div>
+            <div class="card-value" id="sync" style="font-size:.85rem;color:#10b981">--</div>
+            <div class="card-sub" id="syncInfo">--</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">📊</div>
+            <div class="card-label">Tabelas</div>
+            <div class="card-value" id="tables">--</div>
+            <div class="card-sub" id="dbSize">--</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">⏱️</div>
+            <div class="card-label">Uptime</div>
+            <div class="card-value" id="uptime" style="font-size:.75rem">--</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🖥️</div>
+            <div class="card-label">IP</div>
+            <div class="card-value" id="ip" style="font-size:.65rem">--</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🐍</div>
+            <div class="card-label">Python</div>
+            <div class="card-value" id="python" style="font-size:.75rem">--</div>
+        </div>
+    </div>
+
+    <!-- Tabelas do banco -->
+    <div class="section">
+        <div class="section-title">Tabelas do Banco</div>
+        <div class="tables-list" id="tablesList">
+            <div class="table-row"><span class="table-name">Carregando...</span></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span class="footer-text" id="updateTime">Aguardando...</span>
+        <button class="btn-refresh" id="btnRefresh" onclick="loadData()">🔄</button>
+    </div>
+
+<script>
+    var API = (function() {
+        var params = new URLSearchParams(window.location.search);
+        var pApi = params.get('api') || params.get('server');
+        if (pApi) {
+            var formatted = pApi.trim().startsWith('http') ? pApi.trim() : 'http://' + pApi.trim();
+            try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
+            return formatted;
+        }
+        var saved = null;
+        try { saved = localStorage.getItem('sf_dataserver_api'); } catch(e){}
+        if (saved && (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+            return saved;
+        }
+        if (window.location.protocol === 'file:') {
+            return saved || 'http://192.168.0.17:8000';
+        }
+        if (window.location.port === '3000') {
+            return window.location.protocol + '//' + window.location.hostname + ':8000';
+        }
+        return window.location.origin;
+    })();
+
+    window.promptChangeServerIp = function() {
+        var cur = API || 'http://192.168.0.17:8000';
+        var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://192.168.0.17:8000):", cur);
+        if (res !== null && res.trim() !== '') {
+            var formatted = res.trim().startsWith('http') ? res.trim() : 'http://' + res.trim();
+            try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
+            alert("IP configurado para: " + formatted + "\nA página será recarregada agora.");
+            window.location.reload();
+        }
+    };
+
+    function showError(msg) {
+        var el = document.getElementById('errorMsg');
+        el.textContent = '⚠️ ' + msg;
+        el.style.display = 'block';
+    }
+
+    function barColor(pct) {
+        if (pct > 80) return 'bar-red';
+        if (pct > 60) return 'bar-amber';
+        return null; // keep default
+    }
+
+    function setBar(barId, pct) {
+        var bar = document.getElementById(barId);
+        if (bar) bar.style.width = Math.min(pct, 100) + '%';
+    }
+
+    function loadData() {
+        var btn = document.getElementById('btnRefresh');
+        if (btn) btn.classList.add('spinning');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', API + '/api/system', true);
+        xhr.timeout = 10000;
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState !== 4) return;
+            if (btn) btn.classList.remove('spinning');
+
+            if (xhr.status === 200) {
+                try {
+                    var data = JSON.parse(xhr.responseText);
+                    if (data.success) {
+                        var d = data.data;
+                        document.getElementById('errorMsg').style.display = 'none';
+
+                        document.getElementById('cpu').textContent = d.cpu.percent + '%';
+                        setBar('cpuBar', d.cpu.percent);
+
+                        document.getElementById('ram').textContent = d.memoria.percent + '%';
+                        setBar('ramBar', d.memoria.percent);
+
+                        document.getElementById('disk').textContent = d.disco.percent + '%';
+                        setBar('diskBar', d.disco.percent);
+
+                        document.getElementById('uptime').textContent  = d.servidor.uptime;
+                        document.getElementById('ip').textContent      = d.servidor.ip;
+                        document.getElementById('python').textContent  = d.servidor.python;
+                        document.getElementById('tables').textContent  = d.banco.total_tabelas;
+                        document.getElementById('dbSize').textContent  = d.banco.tamanho_mb + ' MB';
+                        document.getElementById('sync').textContent    = d.sync.running ? 'OK' : 'OFF';
+                        document.getElementById('syncInfo').textContent = d.sync.ciclos + ' ciclos';
+
+                        var statusPill = document.getElementById('statusPill');
+                        var statusText = document.getElementById('statusText');
+                        statusPill.className = 'status-pill';
+                        statusText.textContent = 'Online';
+
+                        var html = '';
+                        d.banco.tabelas.forEach(function(t) {
+                            html += '<div class="table-row"><span class="table-name">' + t.nome + '</span><span class="table-count">' + t.registros + '</span></div>';
+                        });
+                        document.getElementById('tablesList').innerHTML = html || '<div class="table-row"><span class="table-name">Sem tabelas</span></div>';
+
+                        document.getElementById('updateTime').textContent = new Date().toLocaleTimeString('pt-BR');
+                    }
+                } catch(e) {
+                    showError('Erro ao processar: ' + e.message);
+                }
+            } else {
+                showError('Erro HTTP ' + xhr.status);
+                document.getElementById('statusPill').className = 'status-pill offline';
+                document.getElementById('statusText').textContent = 'Offline';
+            }
+        };
+        xhr.onerror = xhr.ontimeout = function() {
+            if (btn) btn.classList.remove('spinning');
+            showError('Sem conexão com o servidor');
+            document.getElementById('statusPill').className = 'status-pill offline';
+            document.getElementById('statusText').textContent = 'Offline';
+        };
+        xhr.send();
+
+        var xhr2 = new XMLHttpRequest();
+        xhr2.open('GET', API + '/api/status', true);
+        xhr2.timeout = 10000;
+        xhr2.onreadystatechange = function() {
+            if (xhr2.readyState !== 4 || xhr2.status !== 200) return;
+            try {
+                var d2 = JSON.parse(xhr2.responseText);
+                if (d2.success) {
+                    document.getElementById('os').textContent    = d2.data.osAbertas;
+                    document.getElementById('equip').textContent = d2.data.totalEquip;
+                }
+            } catch(e) {}
+        };
+        xhr2.send();
+
+        document.getElementById('updateTime').textContent = new Date().toLocaleTimeString('pt-BR');
+    }
+
+    window.onload = function() {
+        loadData();
+        setInterval(loadData, 10000);
+    };
+</script>
+</body>
+</html>

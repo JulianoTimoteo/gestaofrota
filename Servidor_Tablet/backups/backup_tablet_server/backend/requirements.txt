@@ -1,0 +1,28 @@
+# SimpleFarm Integration — Dependências Python
+# Instale com: pip install -r requirements.txt
+#
+# OBS: esta lista foi corrigida para refletir o que backend/app.py realmente usa
+# (o backend é Flask, não FastAPI — a listagem anterior estava desatualizada).
+
+# API Web (backend real do projeto)
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# HTTP e scraping
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+urllib3>=2.0.0
+playwright>=1.40.0
+
+# Monitoramento do sistema (/api/system, /monitor)
+psutil>=5.9.0
+
+# Configuração via .env (opcional, mas recomendado)
+python-dotenv>=1.0.0
+
+# Utilitários
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# Depois de instalar, rode uma vez: playwright install chromium

@@ -346,6 +346,12 @@
         </div>
     </div>
 
+    <!-- Sessões e Origem dos Acessos -->
+    <div class="sec">
+        <div class="stitle">👥 Sessões Ativas em Tempo Real (Origem do Site)</div>
+        <div class="tlist" id="sessList"><div class="trow"><span class="tname">Nenhum usuário logado no momento</span></div></div>
+    </div>
+
     <!-- Tabelas -->
     <div class="sec">
         <div class="stitle">Tabelas do Banco</div>
@@ -693,10 +699,26 @@
                     var eok = d2.data.equipOk!==undefined ? d2.data.equipOk : (d2.data.totalEquip-d2.data.equipOs);
                     txt('sEq', eok+' disponíveis');
 
-                    var uConn = (d2.data.usuariosConectados !== undefined) ? d2.data.usuariosConectados : (d2.data.conectados || 2);
+                    var uConn = (d2.data.usuariosConectados !== undefined) ? d2.data.usuariosConectados : 0;
                     var uTot  = (d2.data.totalUsuarios !== undefined) ? d2.data.totalUsuarios : 3;
                     txt('vUsr', uConn);
                     txt('sUsr', uConn + ' de ' + uTot + ' reg.');
+
+                    var sList = document.getElementById('sessList');
+                    if(sList && d2.data.sessoesAtivas){
+                        if(d2.data.sessoesAtivas.length === 0){
+                            sList.innerHTML = '<div class="trow"><span class="tname">Nenhum usuário logado no momento</span></div>';
+                        } else {
+                            var sHtml = '';
+                            d2.data.sessoesAtivas.forEach(function(s){
+                                sHtml += '<div class="trow">' +
+                                         '<span class="tname">👤 <strong>' + (s.usuario || 'Usuário') + '</strong> (' + (s.nome || s.usuario) + ')</span>' +
+                                         '<span class="pill pok">🟢 ' + (s.origem_site || 'Acesso Direto') + '</span>' +
+                                         '</div>';
+                            });
+                            sList.innerHTML = sHtml;
+                        }
+                    }
                 }
             }catch(e){}
         };

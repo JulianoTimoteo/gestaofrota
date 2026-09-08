@@ -1,5 +1,0 @@
-theme: null
-include:
-  - index.html
-  - auth.js
-  - glass.html
