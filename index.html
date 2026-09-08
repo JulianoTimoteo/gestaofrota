@@ -993,37 +993,43 @@
             border: 1px solid var(--color-gray-200);
         }
 
-        .header-info .logout-btn {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.16) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #ef4444;
+        .logout-btn,
+        .user-menu .logout-btn {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(220, 38, 38, 0.18) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #ef4444 !important;
             cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            padding: 0.45rem 0.9rem;
-            border-radius: 8px;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.82rem !important;
+            font-weight: 700 !important;
+            padding: 0.42rem 0.88rem !important;
+            border-radius: 20px !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 2px 5px rgba(239, 68, 68, 0.06);
+            gap: 0.45rem;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.1);
+            text-decoration: none;
+            outline: none;
         }
 
-        .header-info .logout-btn:hover {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: #ffffff;
-            border-color: #dc2626;
+        .logout-btn:hover,
+        .user-menu .logout-btn:hover {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            color: #ffffff !important;
+            border-color: #dc2626 !important;
             transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
         }
 
-        .header-info .logout-btn i {
-            font-size: 0.95rem;
+        .logout-btn i,
+        .user-menu .logout-btn i {
+            font-size: 0.9rem;
             transition: transform 0.2s ease;
         }
 
-        .header-info .logout-btn:hover i {
-            transform: translateX(3px);
+        .logout-btn:hover i,
+        .user-menu .logout-btn:hover i {
+            transform: translateX(2px);
         }
 
         /* ===== BANNER PWA INSTALAÇÃO NO CELULAR ===== */
@@ -2807,10 +2813,10 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 1. Estado Padrão (Azul Elétrico com Orbe Orbitando Devagar) */
+        /* 1. Estado Padrão (Suave e Elegante) */
         .login-card-wrapper.state-default {
-            box-shadow: 0 12px 45px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.25);
-            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 12px rgba(56, 189, 248, 0.15);
+            border-color: rgba(56, 189, 248, 0.25);
         }
 
         .login-card-wrapper.state-default .comet-track {
@@ -2818,37 +2824,37 @@
                 from 0deg,
                 transparent 0deg,
                 transparent 250deg,
-                rgba(56, 189, 248, 0.12) 285deg,
-                rgba(56, 189, 248, 0.8) 335deg,
+                rgba(56, 189, 248, 0.05) 285deg,
+                rgba(56, 189, 248, 0.3) 335deg,
                 #38bdf8 357deg,
                 #ffffff 360deg
             );
             animation: rotateComet 12s linear infinite;
         }
 
-        /* 2. Estado de Sucesso (Verde Vibrante + Borda Verde Completa) */
+        /* 2. Estado de Sucesso (Borda Verde Suave) */
         .login-card-wrapper.state-success {
-            box-shadow: 0 0 40px rgba(16, 185, 129, 0.75), 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(16, 185, 129, 0.4);
-            border-color: #10b981 !important;
-            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 14px rgba(16, 185, 129, 0.25);
+            border-color: rgba(16, 185, 129, 0.6) !important;
+            transform: scale(1.01);
         }
 
         .login-card-wrapper.state-success .comet-track {
             background: conic-gradient(
                 from 0deg,
-                #10b981 0deg,
-                #34d399 90deg,
-                #10b981 180deg,
-                #6ee7b7 270deg,
+                rgba(16, 185, 129, 0.2) 0deg,
+                rgba(52, 211, 153, 0.4) 90deg,
+                rgba(16, 185, 129, 0.2) 180deg,
+                rgba(110, 231, 183, 0.4) 270deg,
                 #ffffff 360deg
             );
             animation: rotateComet 4s linear infinite;
         }
 
-        /* 3. Estado de Erro (Vermelho Intenso + Borda Vermelha + Continua Orbitando em Vermelho) */
+        /* 3. Estado de Erro (Borda Vermelha Suave) */
         .login-card-wrapper.state-error {
-            box-shadow: 0 0 35px rgba(239, 68, 68, 0.65), 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(239, 68, 68, 0.3);
-            border-color: #ef4444 !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 14px rgba(239, 68, 68, 0.25);
+            border-color: rgba(239, 68, 68, 0.6) !important;
             animation: shakeCard 0.45s ease-in-out;
         }
 
@@ -2857,8 +2863,8 @@
                 from 0deg,
                 transparent 0deg,
                 transparent 240deg,
-                rgba(239, 68, 68, 0.18) 280deg,
-                rgba(239, 68, 68, 0.85) 330deg,
+                rgba(239, 68, 68, 0.08) 280deg,
+                rgba(239, 68, 68, 0.35) 330deg,
                 #ef4444 356deg,
                 #ffffff 360deg
             );
@@ -2919,14 +2925,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="login-field">
-                        <label>Perfil de Acesso</label>
-                        <select id="loginRole" style="width:100%;padding:0.55rem 0.75rem;font-size:0.85rem;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-weight:600;cursor:pointer;">
-                            <option value="auto">Automático (Detectar pelo usuário)</option>
-                            <option value="visualizador">Gerente / Operador (Somente Equipes)</option>
-                            <option value="admin">Administrador (Acesso Total)</option>
-                        </select>
-                    </div>
+
                     <div class="login-field" style="display:flex; align-items:center; gap:0.5rem; text-align:left;">
                         <input type="checkbox" id="keepLogged" style="width:auto;">
                         <label for="keepLogged" style="margin:0; text-transform:none; letter-spacing:0; font-weight:500;">Manter conectado</label>
@@ -9530,21 +9529,23 @@
 
             if (isStaticGitHubPages()) {
                 const userInp = user.toLowerCase();
-                const selectedRole = document.getElementById('loginRole')?.value || 'auto';
-                let role = 'visualizador';
+                const validPass = pass.trim().length >= 3;
+                if (!validPass) {
+                    statusEl.textContent = 'Senha inválida ou em branco';
+                    statusEl.className   = 'login-status error';
+                    if (cardWrapper) { cardWrapper.classList.remove('state-default', 'state-success'); cardWrapper.classList.add('state-error'); }
+                    if (loginBtn) loginBtn.disabled = false;
+                    hideGlobalLoader();
+                    return;
+                }
 
-                if (selectedRole === 'admin') {
+                let role = 'visualizador';
+                if (userInp === 'julianotimoteo' || userInp === 'logistica' || userInp === 'admin' || userInp.includes('master')) {
                     role = 'admin';
-                } else if (selectedRole === 'visualizador') {
-                    role = 'visualizador';
+                } else if (userInp === 'rafaelfarra') {
+                    role = 'operador';
                 } else {
-                    if (userInp === 'julianotimoteo' || userInp === 'logistica' || userInp === 'admin' || userInp.includes('master')) {
-                        role = 'admin';
-                    } else if (userInp === 'rafaelfarra') {
-                        role = 'operador';
-                    } else {
-                        role = 'visualizador';
-                    }
+                    role = 'visualizador';
                 }
 
                 const nameMap = {
@@ -9576,11 +9577,7 @@
                 const overlay = document.getElementById('loginOverlay');
                 if (overlay) overlay.classList.add('hidden');
 
-                try {
-                    await carregarDados();
-                } catch (loadErr) {
-                    console.warn('Alerta ao carregar dados pós-login:', loadErr);
-                }
+                try { await carregarDados(); } catch (loadErr) {}
                 iniciarSyncTimer();
                 if (loginBtn) loginBtn.disabled = false;
                 hideGlobalLoader();
@@ -9600,15 +9597,15 @@
                 const data = await res.json();
 
                 if (res.ok && data.success && data.token) {
-                    const role = data.role || (data.admin ? 'admin' : 'admin');
+                    const serverRole = data.nivel_chave || data.role || (data.admin ? 'admin' : 'visualizador');
                     const storage = keep ? localStorage : sessionStorage;
                     const displayName = data.nome || data.usuario || user;
                     storage.setItem('sf_auth_token', data.token);
                     storage.setItem('sf_auth_user',  data.usuario || user);
                     storage.setItem('sf_auth_name',  displayName);
-                    storage.setItem('sf_auth_role',  role);
+                    storage.setItem('sf_auth_role',  serverRole);
                     authToken = data.token;
-                    userRole  = role;
+                    userRole  = serverRole;
                     statusEl.textContent = '✅ Login efetuado!';
                     statusEl.className   = 'login-status success';
 
@@ -9623,15 +9620,11 @@
                     const overlay = document.getElementById('loginOverlay');
                     if (overlay) overlay.classList.add('hidden');
 
-                    try {
-                        await carregarDados();
-                    } catch (loadErr) {
-                        console.warn('Alerta ao carregar dados pós-login:', loadErr);
-                    }
+                    try { await carregarDados(); } catch (loadErr) {}
                     iniciarSyncTimer();
                     iniciarCheckSessaoUnicaTimer();
                 } else {
-                    statusEl.textContent = data.error || 'Usuário ou senha inválidos';
+                    statusEl.textContent = data.error || 'Usuário ou senha incorretos';
                     statusEl.className   = 'login-status error';
                     if (cardWrapper) {
                         cardWrapper.classList.remove('state-default', 'state-success');
@@ -9639,48 +9632,6 @@
                     }
                 }
             } catch (err) {
-                console.warn('Servidor indisponível ou inacessível no momento, iniciando modo autônomo offline:', err);
-                const userInp = user.toLowerCase();
-                const selectedRole = document.getElementById('loginRole')?.value || 'auto';
-                let role = 'visualizador';
-
-                if (selectedRole === 'admin') {
-                    role = 'admin';
-                } else if (selectedRole === 'visualizador') {
-                    role = 'visualizador';
-                } else {
-                    if (userInp === 'julianotimoteo' || userInp === 'logistica' || userInp === 'admin' || userInp.includes('master')) {
-                        role = 'admin';
-                    } else if (userInp === 'rafaelfarra') {
-                        role = 'operador';
-                    } else {
-                        role = 'visualizador';
-                    }
-                }
-
-                const nameMap = {
-                    'julianotimoteo': 'Juliano Timóteo',
-                    'rafaelfarra': 'Rafael Aparecido Farra',
-                    'logistica': 'Logística Usina Pitangueiras'
-                };
-                const userDisplayName = nameMap[userInp] || user;
-                const token = 'sf_offline_token_' + Date.now();
-                const storage = keep ? localStorage : sessionStorage;
-                storage.setItem('sf_auth_token', token);
-                storage.setItem('sf_auth_user',  user);
-                storage.setItem('sf_auth_name',  userDisplayName);
-                storage.setItem('sf_auth_role',  role);
-                authToken = token;
-                userRole  = role;
-                statusEl.textContent = '✅ Modo Autónomo: Login efetuado!';
-                statusEl.className   = 'login-status success';
-
-                if (cardWrapper) {
-                    cardWrapper.classList.remove('state-default', 'state-error');
-                    cardWrapper.classList.add('state-success');
-                }
-
-                updateAuthUI();
                 applyRBAC();
 
                 const overlay = document.getElementById('loginOverlay');
