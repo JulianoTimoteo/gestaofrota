@@ -940,7 +940,14 @@
                 localStorage.setItem('sf_dataserver_url', fmt);
                 return fmt;
             }
-            return localStorage.getItem('sf_dataserver_url') || (window.location.origin.includes('8000') ? window.location.origin : 'http://172.16.12.36:8000');
+            if (window.location.origin && window.location.origin.startsWith('http')) {
+                if (window.location.port === '8000') return window.location.origin;
+                if (window.location.port === '3000') return window.location.origin.replace(':3000', ':8000');
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    return `${window.location.protocol}//${window.location.hostname}:8000`;
+                }
+            }
+            return localStorage.getItem('sf_dataserver_url') || 'http://172.16.12.36:8000';
         })();
 
         let currentAdminToken = localStorage.getItem('sf_auth_token') || '';

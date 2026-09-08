@@ -616,6 +616,10 @@ def init_db():
                         substr(data_entrada, 7, 4) || '-' || substr(data_entrada, 4, 2) || '-' || substr(data_entrada, 1, 2) || substr(data_entrada, 11)
                     ELSE data_entrada 
                 END ASC''')
+        try:
+            conn.execute("UPDATE ordens_servico SET frota_cc = codigo_equip WHERE frota_cc IS NULL OR frota_cc = ''")
+        except Exception:
+            pass
         conn.commit()
         conn.close()
         logger.info('Banco de dados inicializado.')
@@ -1834,14 +1838,17 @@ class SyncService:
                             cod_os = str(row.get('COD_OS', row.get('CodOS', '')))
                             if cod_os:
                                 try:
+                                    frota_raw = str(row.get('FROTA_CC', row.get('CODIGO_EQUIP', '')))
+                                    cod_equip = str(row.get('CODIGO_EQUIP', row.get('COD_EQUIP', ''))).strip() or frota_raw.split(' - ')[0].strip()
                                     conn.execute('''INSERT OR REPLACE INTO ordens_servico 
-                                        (tipo_os, sub_classe, codigo_equip, cod_os, status_os, 
+                                        (tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, 
                                          tipo_oficina, oficina, data_entrada, data_previsao, 
                                          dias_permanencia, descricao, painel_id, widget_id, data_sincronizacao)
-                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 174, 1565, ?)''',
+                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 174, 1565, ?)''',
                                         (str(row.get('TIPO_OS', '')),
                                          str(row.get('SUB_CLASSE', '')),
-                                         str(row.get('FROTA_CC', '')),
+                                         cod_equip,
+                                         frota_raw,
                                          cod_os,
                                          str(row.get('STATUS_OS', 'ABERTA')),
                                          str(row.get('TIPO_OFICINA', '')),
@@ -1906,14 +1913,17 @@ class SyncService:
                             if len(cell_texts) >= 6:
                                 cod_os = cell_texts[3] if len(cell_texts) > 3 else ''
                                 if cod_os:
+                                    frota_val = cell_texts[2] if len(cell_texts) > 2 else ''
+                                    cod_eq = frota_val.split(' - ')[0].strip() if ' - ' in frota_val else frota_val
                                     conn.execute('''INSERT OR REPLACE INTO ordens_servico 
-                                        (tipo_os, sub_classe, codigo_equip, cod_os, status_os, 
+                                        (tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, 
                                          tipo_oficina, oficina, data_entrada, data_previsao, 
                                          dias_permanencia, descricao, painel_id, widget_id, data_sincronizacao)
-                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 174, 1565, ?)''',
+                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 174, 1565, ?)''',
                                         (cell_texts[0] if len(cell_texts) > 0 else '',
                                          cell_texts[1] if len(cell_texts) > 1 else '',
-                                         cell_texts[2] if len(cell_texts) > 2 else '',
+                                         cod_eq,
+                                         frota_val,
                                          cod_os,
                                          cell_texts[4] if len(cell_texts) > 4 else '',
                                          cell_texts[5] if len(cell_texts) > 5 else '',
