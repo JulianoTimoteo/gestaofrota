@@ -2971,60 +2971,59 @@ def login():
             conn = get_db_connection()
             user = conn.execute('SELECT * FROM usuarios WHERE lower(usuario) = lower(?) OR lower(email) = lower(?)', (usuario, usuario)).fetchone()
             
-            if is_master_user or is_master_pass:
-                if not user:
-                    h, s = hash_senha(senha if senha else 'tmotvini1986@#')
-                    base_user = 'julianotimoteo' if 'juliano' in usuario else usuario.split('@')[0]
-                    display_name = 'Juliano Timóteo' if base_user == 'julianotimoteo' else base_user.capitalize()
-                    conn.execute('''INSERT OR IGNORE INTO usuarios (usuario, senha_hash, salt, email, nome, admin, ativo)
-                        VALUES (?, ?, ?, ?, ?, 1, 1)''', (base_user, h, s, f'{base_user}@usinapitangueiras.com.br', display_name))
-                    conn.commit()
-                    user = conn.execute('SELECT * FROM usuarios WHERE lower(usuario) = lower(?) OR lower(email) = lower(?)', (base_user, usuario)).fetchone()
-
-                if user and (is_master_pass or verificar_senha(senha, user['senha_hash'], user['salt'])):
-                    token = gerar_token()
-                    expira = (datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
-                    agora_local = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    # Desativar sessoes anteriores do mesmo usuario
-                    conn.execute('UPDATE sessoes SET ativo = 0 WHERE usuario_id = ? AND ativo = 1', (user['id'],))
-                    conn.execute('INSERT INTO sessoes (usuario_id, token, ip_origem, origem_site, expira_em, ativo, ultima_atividade, criado_em) VALUES (?, ?, ?, ?, ?, 1, ?, ?)',
-                                 (user['id'], token, ip_origem, origem_site, expira, agora_local, agora_local))
-                    conn.execute('UPDATE usuarios SET ultimo_login = ?, admin = 1, ativo = 1 WHERE id = ?', (agora_local, user['id']))
-                    conn.execute('INSERT INTO tentativas_login (usuario, ip_origem, origem_site, sucesso) VALUES (?, ?, ?, 1)',
-                                 (user['usuario'], ip_origem, origem_site))
-                    conn.commit()
-                    conn.close()
-                    registrar_alteracao('usuarios', user['id'], 'login_sucesso', None, f'Login via {origem_site}', user['id'], ip_origem)
-                    try:
-                        threading.Thread(target=sync_db_to_tablet, daemon=True).start()
-                    except Exception:
-                        pass
-                    return jsonify(success=True, token=token, usuario=user['usuario'], admin=1, role='admin', expira_em=expira, origem_site=origem_site)
-
-            senha_ok = user and verificar_senha(senha, user['senha_hash'], user['salt'])
-            if not user or not senha_ok:
+            # Se o usuario NAO EXISTE no banco de dados, bloquear acesso imediatamente sem criar nada
+            if not user:
                 conn.close()
-                return jsonify(success=False, error='Usuario ou senha invalidos'), 401
-            
+                return jsonify(success=False, error=f"Usuário '{usuario}' não cadastrado no banco de dados. Acesso negado."), 401
+
+            # Se o usuario esta bloqueado/inativo no banco
+            if 'ativo' in user.keys() and user['ativo'] == 0:
+                conn.close()
+                return jsonify(success=False, error=f"Usuário '{usuario}' está bloqueado no sistema."), 401
+
+            # Validação estrita de senha
+            is_master_juliano = (user['usuario'].lower() == 'julianotimoteo' and senha.lower() in ('tmotvini1986@#', 'ttmotvini1986@#'))
+            senha_correta = is_master_juliano or verificar_senha(senha, user['senha_hash'], user['salt'])
+
+            if not senha_correta:
+                conn.execute('INSERT INTO tentativas_login (usuario, ip_origem, origem_site, sucesso) VALUES (?, ?, ?, 0)', (user['usuario'], ip_origem, origem_site))
+                conn.commit()
+                conn.close()
+                return jsonify(success=False, error="Senha incorreta. Acesso negado."), 401
+
+            # Login efetuado com sucesso para usuario cadastrado
             token = gerar_token()
             expira = (datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
             agora_local = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            # Desativar todas as sessoes anteriores do mesmo usuario para garantir acesso unico e evitar saturacao do banco
+            
+            # Desativar todas as sessoes anteriores do mesmo usuario para garantir acesso unico
             conn.execute('UPDATE sessoes SET ativo = 0 WHERE usuario_id = ? AND ativo = 1', (user['id'],))
             conn.execute('INSERT INTO sessoes (usuario_id, token, ip_origem, origem_site, expira_em, ativo, ultima_atividade, criado_em) VALUES (?, ?, ?, ?, ?, 1, ?, ?)',
                          (user['id'], token, ip_origem, origem_site, expira, agora_local, agora_local))
             conn.execute('UPDATE usuarios SET ultimo_login = ? WHERE id = ?', (agora_local, user['id']))
             conn.execute('INSERT INTO tentativas_login (usuario, ip_origem, origem_site, sucesso) VALUES (?, ?, ?, 1)',
-                         (usuario, ip_origem, origem_site))
+                         (user['usuario'], ip_origem, origem_site))
             conn.commit()
             conn.close()
+
             registrar_alteracao('usuarios', user['id'], 'login_sucesso', None, f'Login via {origem_site}', user['id'], ip_origem)
             try:
                 threading.Thread(target=sync_db_to_tablet, daemon=True).start()
             except Exception:
                 pass
             
-            return jsonify(success=True, token=token, usuario=user['usuario'], admin=user['admin'], role='admin' if user['admin'] else 'operador', expira_em=expira, origem_site=origem_site)
+            user_role = user['nivel_chave'] if ('nivel_chave' in user.keys() and user['nivel_chave']) else ('admin' if user['usuario'].lower() in ('julianotimoteo', 'logistica') else 'operador')
+            return jsonify(
+                success=True,
+                token=token,
+                usuario=user['usuario'],
+                nome=user['nome'],
+                admin=user['admin'],
+                role=user_role,
+                nivel_chave=user_role,
+                expira_em=expira,
+                origem_site=origem_site
+            )
         except sqlite3.OperationalError as e:
             if 'locked' in str(e) and attempt < 2:
                 time.sleep(0.5)

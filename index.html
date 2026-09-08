@@ -9529,6 +9529,16 @@
 
             if (isStaticGitHubPages()) {
                 const userInp = user.toLowerCase();
+                const allowedUsers = ['julianotimoteo', 'rafaelfarra', 'logistica'];
+                if (!allowedUsers.includes(userInp)) {
+                    statusEl.textContent = `❌ Usuário '${user}' não cadastrado no banco de dados. Acesso negado.`;
+                    statusEl.className   = 'login-status error';
+                    if (cardWrapper) { cardWrapper.classList.remove('state-default', 'state-success'); cardWrapper.classList.add('state-error'); }
+                    if (loginBtn) loginBtn.disabled = false;
+                    hideGlobalLoader();
+                    return;
+                }
+
                 const validPass = pass.trim().length >= 3;
                 if (!validPass) {
                     statusEl.textContent = 'Senha inválida ou em branco';
@@ -9540,7 +9550,7 @@
                 }
 
                 let role = 'visualizador';
-                if (userInp === 'julianotimoteo' || userInp === 'logistica' || userInp === 'admin' || userInp.includes('master')) {
+                if (userInp === 'julianotimoteo' || userInp === 'logistica') {
                     role = 'admin';
                 } else if (userInp === 'rafaelfarra') {
                     role = 'operador';
