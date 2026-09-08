@@ -625,27 +625,26 @@ def init_db():
 # ==================== FRONTEND ====================
 
 @app.route('/')
+@app.route('/monitor')
+@app.route('/dataserver')
+@app.route('/monitor.html')
+def serve_monitor_html():
+    """Serve o monitor de métricas do DataServer no localhost:8000 (monitor.html)."""
+    response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
 @app.route('/app')
 @app.route('/app.html')
 @app.route('/gestaofrota')
 @app.route('/frota')
 @app.route('/index.html')
 def serve_index():
-    """Serve o aplicativo Gestão de Frota (index.html) - Inclui Gestão de Usuários, Permissões, Frota e Tabelas."""
+    """Serve o aplicativo Gestão de Frota e Usuários (index.html)."""
     response = send_file(os.path.join(FRONTEND_DIR, 'index.html'))
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-    return response
-
-@app.route('/monitor')
-@app.route('/dataserver')
-@app.route('/banco')
-@app.route('/monitor.html')
-def serve_monitor_html():
-    """Serve o monitor de métricas do DataServer (monitor.html)."""
-    response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
-    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
     return response
 
 @app.route('/glass')
@@ -3559,6 +3558,31 @@ def signal_handler(sig, frame):
     sync_service.stop()
     sys.exit(0)
 
+def _start_port_3000_server():
+    """Servidor HTTP fallback na porta 3000 para abrir a tela de Gestao de Frota & Usuarios no Notebook."""
+    import http.server
+    import socketserver
+    
+    class Port3000Handler(http.server.SimpleHTTPRequestHandler):
+        def translate_path(self, path):
+            req_path = path.split('?')[0].lstrip('/')
+            if not req_path or req_path in ['app', 'gestaofrota', 'frota']:
+                return os.path.join(PROJECT_DIR, 'index.html')
+            full = os.path.join(PROJECT_DIR, req_path)
+            if os.path.exists(full) and os.path.isfile(full):
+                return full
+            return os.path.join(PROJECT_DIR, 'index.html')
+
+        def log_message(self, format, *args):
+            pass
+
+    try:
+        with socketserver.TCPServer(("0.0.0.0", 3000), Port3000Handler) as httpd:
+            logger.info("Servidor Gestao de Frota (Notebook) rodando na porta 3000.")
+            httpd.serve_forever()
+    except Exception as e:
+        logger.info("Porta 3000 ja gerenciada por outro processo ou Node.js: %s", e)
+
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
@@ -3570,6 +3594,10 @@ if __name__ == '__main__':
     _cpu_thread = threading.Thread(target=_cpu_monitor_loop, daemon=True)
     _cpu_thread.start()
 
+    # Iniciar porta 3000 em background para garantir acesso no notebook
+    _port3000_thread = threading.Thread(target=_start_port_3000_server, daemon=True)
+    _port3000_thread.start()
+
     # Iniciar fila assincrona de espelhamento SD Card e Watchdog Daemon de auto-recuperacao
     sd_mirror_queue.start()
     watchdog_service.start()
@@ -3577,13 +3605,13 @@ if __name__ == '__main__':
     start_sync_thread()
     
     logger.info('=' * 60)
-    logger.info('SIMPLEFARM INTEGRATION - SERVIDOR')
+    logger.info('SIMPLEFARM INTEGRATION - SERVIDORES')
     logger.info('=' * 60)
     logger.info(f'API Key: {API_KEY}')
-    logger.info(f'Dashboard:  http://localhost:8000')
-    logger.info(f'Glass:      http://localhost:8000/glass')
-    logger.info(f'Monitor:    http://localhost:8000/monitor')
-    logger.info(f'Sync:       Automatico a cada {POLL_INTERVAL}s')
+    logger.info(f'Notebook App (Gerenciador): http://localhost:3000')
+    logger.info(f'Tablet/DataServer Monitor:  http://localhost:8000')
+    logger.info(f'Glass Panel:                http://localhost:8000/glass')
+    logger.info(f'Sync:                       Automatico a cada {POLL_INTERVAL}s')
     logger.info('=' * 60)
     
     app.run(host='0.0.0.0', port=8000, debug=False, threaded=True)
