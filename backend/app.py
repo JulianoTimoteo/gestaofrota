@@ -82,7 +82,7 @@ except ImportError:
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(BASE_DIR)
-FRONTEND_DIR = os.path.join(PROJECT_DIR, 'frontend')
+FRONTEND_DIR = PROJECT_DIR if os.path.exists(os.path.join(PROJECT_DIR, 'index.html')) else os.path.join(PROJECT_DIR, 'frontend')
 DB_PATH = os.environ.get('SF_DB_PATH', os.path.join(PROJECT_DIR, 'meus_banco.db'))
 
 # Tablet SD card database path (primary storage)
@@ -3207,10 +3207,16 @@ def listar_usuarios():
     """Lista todos os usuarios (requer admin)."""
     try:
         conn = get_db_connection()
-        cursor = conn.execute('SELECT id, usuario, email, nome, ativo, admin, ultimo_login, criado_em FROM usuarios ORDER BY usuario')
+        try:
+            cursor = conn.execute('SELECT id, usuario, email, nome, ativo, admin, nivel_chave, ultimo_login, criado_em FROM usuarios ORDER BY id ASC')
+        except Exception:
+            cursor = conn.execute('SELECT id, usuario, email, nome, ativo, admin, ultimo_login, criado_em FROM usuarios ORDER BY id ASC')
         rows = cursor.fetchall()
         conn.close()
         dados = [dict(row) for row in rows]
+        for d in dados:
+            if not d.get('nivel_chave'):
+                d['nivel_chave'] = 'admin' if d.get('admin') == 1 else 'visualizador'
         return jsonify(success=True, data=dados, total=len(dados))
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
@@ -3218,48 +3224,76 @@ def listar_usuarios():
 @app.route('/api/usuarios', methods=['POST'])
 @require_admin
 def criar_usuario():
-    """Cria novo usuario (requer admin)."""
+    """Cria novo usuario no banco de dados."""
     try:
-        data = request.get_json()
-        senha_hash, salt = hash_senha(data.get('senha', ''))
+        data = request.get_json() or {}
+        usuario = (data.get('usuario') or '').strip().lower()
+        if not usuario:
+            return jsonify(success=False, error='Nome de usuario e obrigatorio'), 400
         
+        senha = data.get('senha') or '123456'
+        senha_hash, salt = hash_senha(senha)
+        nome = (data.get('nome') or usuario).strip()
+        email = (data.get('email') or f"{usuario}@usinapitangueiras.com.br").strip()
+        nivel_chave = data.get('nivel_chave') or ('admin' if data.get('admin') == 1 else 'operador')
+        admin_val = 1 if nivel_chave in ['admin', 'analista', 'supervisor'] or data.get('admin') == 1 else 0
+        ativo_val = 1 if data.get('ativo', 1) in [1, '1', True] else 0
+
         conn = get_db_connection()
-        conn.execute('''INSERT INTO usuarios (usuario, senha_hash, salt, email, nome, admin) 
-                        VALUES (?, ?, ?, ?, ?, ?)''',
-                     (data.get('usuario'), senha_hash, salt, data.get('email'), data.get('nome'), data.get('admin', 0)))
+        try:
+            conn.execute("ALTER TABLE usuarios ADD COLUMN nivel_chave TEXT")
+        except Exception:
+            pass
+
+        conn.execute('''INSERT INTO usuarios (usuario, senha_hash, salt, email, nome, admin, ativo, nivel_chave) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                     (usuario, senha_hash, salt, email, nome, admin_val, ativo_val, nivel_chave))
         conn.commit()
         user_id = conn.execute('SELECT last_insert_rowid()').fetchone()[0]
         conn.close()
         
-        return jsonify(success=True, message='Usuario criado', id=user_id)
+        return jsonify(success=True, message=f'Usuario {usuario} criado com sucesso', id=user_id)
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 
 @app.route('/api/usuarios/<int:user_id>', methods=['PUT'])
 @require_admin
 def atualizar_usuario(user_id):
-    """Atualiza usuario (requer admin)."""
+    """Atualiza usuario no banco de dados."""
     try:
-        data = request.get_json()
+        data = request.get_json() or {}
         conn = get_db_connection()
-        
-        # Se forneceu nova senha, atualizar
+        try:
+            conn.execute("ALTER TABLE usuarios ADD COLUMN nivel_chave TEXT")
+        except Exception:
+            pass
+
+        usr_row = conn.execute('SELECT * FROM usuarios WHERE id = ?', (user_id,)).fetchone()
+        if not usr_row:
+            conn.close()
+            return jsonify(success=False, error='Usuario nao encontrado'), 404
+
+        usuario = (data.get('usuario') or usr_row['usuario']).strip().lower()
+        nome = (data.get('nome') or usr_row['nome'] or usuario).strip()
+        email = (data.get('email') or usr_row['email'] or f"{usuario}@usinapitangueiras.com.br").strip()
+        nivel_chave = data.get('nivel_chave') or dict(usr_row).get('nivel_chave') or ('admin' if usr_row['admin'] == 1 else 'operador')
+        admin_val = 1 if nivel_chave in ['admin', 'analista', 'supervisor'] or data.get('admin') == 1 else 0
+        ativo_val = 1 if data.get('ativo', 1) in [1, '1', True] else 0
+
         if data.get('senha'):
             senha_hash, salt = hash_senha(data.get('senha'))
-            conn.execute('''UPDATE usuarios SET usuario=?, senha_hash=?, salt=?, email=?, nome=?, admin=?, ativo=?
+            conn.execute('''UPDATE usuarios SET usuario=?, senha_hash=?, salt=?, email=?, nome=?, admin=?, ativo=?, nivel_chave=?
                             WHERE id=?''',
-                         (data.get('usuario'), senha_hash, salt, data.get('email'), data.get('nome'),
-                          data.get('admin', 0), data.get('ativo', 1), user_id))
+                         (usuario, senha_hash, salt, email, nome, admin_val, ativo_val, nivel_chave, user_id))
         else:
-            conn.execute('''UPDATE usuarios SET usuario=?, email=?, nome=?, admin=?, ativo=?
+            conn.execute('''UPDATE usuarios SET usuario=?, email=?, nome=?, admin=?, ativo=?, nivel_chave=?
                             WHERE id=?''',
-                         (data.get('usuario'), data.get('email'), data.get('nome'),
-                          data.get('admin', 0), data.get('ativo', 1), user_id))
+                         (usuario, email, nome, admin_val, ativo_val, nivel_chave, user_id))
         
         conn.commit()
         conn.close()
         
-        return jsonify(success=True, message='Usuario atualizado')
+        return jsonify(success=True, message=f'Usuario #{user_id} ({usuario}) atualizado com sucesso')
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 

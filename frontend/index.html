@@ -3060,7 +3060,8 @@
                 <button class="tab-btn active" data-subtab="tab-equipamentos"><i class="fas fa-list"></i> Equipamentos</button>
                 <button class="tab-btn" data-subtab="tab-operacoes"><i class="fas fa-tasks"></i> Operações</button>
                 <button class="tab-btn" data-subtab="tab-sync"><i class="fas fa-cloud-upload-alt"></i> Sincronização</button>
-                <button class="tab-btn" data-subtab="tab-usuarios"><i class="fas fa-user-shield"></i> Permissões</button>
+                <button class="tab-btn" data-subtab="tab-usuarios"><i class="fas fa-user-shield"></i> Gestão de Usuários</button>
+                <button class="tab-btn" data-subtab="tab-database"><i class="fas fa-database"></i> Gerenciador de Banco</button>
             </div>
             <div id="adminSubContents">
                 <!-- Equipamentos -->
@@ -3170,12 +3171,13 @@
                     </div>
                 </div>
 
-                <!-- Permissões de Usuários -->
+                <!-- Permissões e Gestão de Usuários -->
                 <div id="tab-usuarios" class="tab-content">
                     <div class="card">
                         <div class="card-header">
-                            <h2><i class="fas fa-user-shield"></i> Níveis de Acesso e Permissões de Usuários</h2>
-                            <div class="flex gap-2">
+                            <h2><i class="fas fa-user-shield"></i> Gestão de Usuários e Permissões</h2>
+                            <div class="flex gap-2" style="align-items:center;">
+                                <button type="button" id="btnOpenAddUser" onclick="openUserCrudModal()" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;padding:0.4rem 0.88rem;font-size:0.82rem;font-weight:600;border-radius:8px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#fff;border:none;cursor:pointer;box-shadow:0 2px 6px rgba(16,185,129,0.3);white-space:nowrap;"><i class="fas fa-user-plus"></i> + Adicionar Usuário</button>
                                 <span class="count-badge" id="totalUsuariosCount">0 usuários</span>
                             </div>
                         </div>
@@ -3187,15 +3189,42 @@
                                         <th>Usuário</th>
                                         <th>Nome</th>
                                         <th>Email</th>
-                                        <th>Nível de Acesso (Cargo)</th>
-                                        <th>Acesso no Sistema</th>
+                                        <th>Perfil / Cargo</th>
                                         <th>Status</th>
                                         <th>Último Login</th>
-                                        <th>Alterar Permissão</th>
+                                        <th style="min-width:140px;">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody id="usuariosTableBody">
-                                    <tr><td colspan="9" class="empty-message">Carregando usuários do banco...</td></tr>
+                                    <tr><td colspan="8" class="empty-message">Carregando usuários do banco...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gerenciador de Banco (Explorador de Tabelas) -->
+                <div id="tab-database" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-database"></i> Gerenciador de Banco de Dados SimpleFarm (SQLite)</h2>
+                            <div class="flex gap-2" style="align-items:center;">
+                                <select id="dbExplorerSelect" onchange="carregarDadosTabelaExplorer()" style="padding:0.4rem 0.8rem;font-size:0.85rem;font-weight:600;border-radius:8px;border:1px solid var(--color-gray-200);background:var(--color-gray-50);color:#000;cursor:pointer;">
+                                    <option value="">Selecione uma tabela...</option>
+                                </select>
+                                <button type="button" onclick="carregarListaTabelasExplorer()" class="btn-primary" style="padding:0.4rem 0.88rem;font-size:0.82rem;font-weight:600;border-radius:8px;background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);color:#fff;border:none;cursor:pointer;"><i class="fas fa-sync-alt"></i> Atualizar Tabelas</button>
+                            </div>
+                        </div>
+                        <div style="margin-bottom:1rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+                            <span id="dbExplorerInfo" style="font-size:0.85rem;font-weight:600;color:var(--color-primary);">Aguardando seleção de tabela...</span>
+                        </div>
+                        <div class="table-wrap" style="max-height:450px;overflow-y:auto;">
+                            <table>
+                                <thead id="dbExplorerThead">
+                                    <tr><th>Selecione uma tabela acima para visualizar os dados</th></tr>
+                                </thead>
+                                <tbody id="dbExplorerTbody">
+                                    <tr><td class="empty-message">Nenhuma tabela selecionada.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -3219,6 +3248,53 @@
             <div class="action-modal-actions">
                 <button class="btn btn-primary" id="osReportModalClose">Fechar</button>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL CADASTRAR / EDITAR USUÁRIO -->
+    <div class="action-modal-overlay" id="modalAddUserOverlay">
+        <div class="action-modal" style="max-width:480px;width:92%;">
+            <h3 id="modalUserTitle"><i class="fas fa-user-shield" style="color:var(--color-primary);"></i> Cadastrar Novo Usuário</h3>
+            <form id="formUserCrud" style="display:flex;flex-direction:column;gap:0.9rem;margin-top:1rem;" onsubmit="salvarUsuarioForm(event)">
+                <input type="hidden" id="crudUserId" value="">
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Nome de Usuário (Login) *</label>
+                    <input type="text" id="crudUserLogin" class="filter-input" placeholder="Ex: julianotimoteo" required style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Nome Completo *</label>
+                    <input type="text" id="crudUserNome" class="filter-input" placeholder="Ex: Juliano Timóteo" required style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">E-mail *</label>
+                    <input type="email" id="crudUserEmail" class="filter-input" placeholder="Ex: julianotimoteo@usinapitangueiras.com.br" required style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Perfil / Nível de Acesso *</label>
+                    <select id="crudUserNivel" class="filter-input" required style="width:100%;cursor:pointer;">
+                        <option value="admin">Administrador (Acesso Total)</option>
+                        <option value="analista">Analista (Acesso Total)</option>
+                        <option value="supervisor">Supervisor (Acesso Total)</option>
+                        <option value="operador">Operador (Somente Equipes)</option>
+                        <option value="visualizador">Visualizador (Somente Equipes)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;" id="lblCrudUserSenha">Senha *</label>
+                    <input type="password" id="crudUserSenha" class="filter-input" placeholder="Digite a senha (mínimo 4 caracteres)" style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Status *</label>
+                    <select id="crudUserAtivo" class="filter-input" required style="width:100%;cursor:pointer;">
+                        <option value="1">Ativo</option>
+                        <option value="0">Inativo</option>
+                    </select>
+                </div>
+                <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:0.5rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeUserCrudModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%);border:none;"><i class="fas fa-save"></i> Salvar Usuário</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -10323,6 +10399,8 @@
             });
             if (subId === 'tab-usuarios') {
                 renderUsuariosList();
+            } else if (subId === 'tab-database') {
+                carregarListaTabelasExplorer();
             }
         }
 
@@ -10349,8 +10427,128 @@
         }
 
         // ================================================================
-        // GESTÃO DE PERMISSÕES DE USUÁRIOS DO BANCO
+        // GESTÃO DE USUÁRIOS DO BANCO DE DADOS (CRUD)
         // ================================================================
+        let currentUsersCache = [];
+
+        window.openUserCrudModal = function(userId = null) {
+            const overlay = document.getElementById('modalAddUserOverlay');
+            const titleEl = document.getElementById('modalUserTitle');
+            const form = document.getElementById('formUserCrud');
+            if (!overlay || !form) return;
+
+            form.reset();
+            document.getElementById('crudUserId').value = '';
+
+            if (userId) {
+                const user = currentUsersCache.find(u => u.id == userId);
+                if (user) {
+                    document.getElementById('crudUserId').value = user.id;
+                    document.getElementById('crudUserLogin').value = user.usuario || '';
+                    document.getElementById('crudUserNome').value = user.nome || '';
+                    document.getElementById('crudUserEmail').value = user.email || '';
+                    document.getElementById('crudUserNivel').value = user.nivel_chave || (user.admin ? 'admin' : 'visualizador');
+                    document.getElementById('crudUserAtivo').value = user.ativo !== 0 ? '1' : '0';
+                    document.getElementById('crudUserSenha').value = '';
+                    document.getElementById('lblCrudUserSenha').textContent = 'Nova Senha (Deixe em branco para manter a atual)';
+                    if (titleEl) titleEl.innerHTML = `<i class="fas fa-user-edit" style="color:var(--color-primary);"></i> Editar Usuário #${user.id} (${user.usuario})`;
+                }
+            } else {
+                document.getElementById('lblCrudUserSenha').textContent = 'Senha *';
+                if (titleEl) titleEl.innerHTML = `<i class="fas fa-user-plus" style="color:var(--color-primary);"></i> Cadastrar Novo Usuário`;
+            }
+            overlay.classList.add('active');
+        };
+
+        window.closeUserCrudModal = function() {
+            const overlay = document.getElementById('modalAddUserOverlay');
+            if (overlay) overlay.classList.remove('active');
+        };
+
+        window.salvarUsuarioForm = async function(event) {
+            event.preventDefault();
+            const userId = document.getElementById('crudUserId').value;
+            const usuario = document.getElementById('crudUserLogin').value.trim();
+            const nome = document.getElementById('crudUserNome').value.trim();
+            const email = document.getElementById('crudUserEmail').value.trim();
+            const nivel_chave = document.getElementById('crudUserNivel').value;
+            const senha = document.getElementById('crudUserSenha').value.trim();
+            const ativo = parseInt(document.getElementById('crudUserAtivo').value, 10);
+
+            if (!usuario || !nome || !email) {
+                alert('Preencha todos os campos obrigatórios (*).');
+                return;
+            }
+
+            if (!userId && !senha) {
+                alert('Informe uma senha inicial para o novo usuário.');
+                return;
+            }
+
+            const payload = {
+                usuario, nome, email, nivel_chave, ativo,
+                admin: ['admin', 'analista', 'supervisor'].includes(nivel_chave) ? 1 : 0
+            };
+            if (senha) payload.senha = senha;
+
+            showGlobalLoader();
+            try {
+                const isEdit = !!userId;
+                const url = isEdit ? `${API_BASE}/api/usuarios/${userId}` : `${API_BASE}/api/usuarios`;
+                const method = isEdit ? 'PUT' : 'POST';
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + authToken
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    alert(result.message || (isEdit ? 'Usuário atualizado com sucesso!' : 'Usuário cadastrado com sucesso!'));
+                    closeUserCrudModal();
+                    renderUsuariosList();
+                } else {
+                    alert('Erro ao salvar usuário: ' + (result.error || 'Erro desconhecido.'));
+                }
+            } catch (err) {
+                alert('Falha na comunicação com o servidor: ' + err.message);
+            } finally {
+                hideGlobalLoader();
+            }
+        };
+
+        window.excluirUsuarioCrud = async function(userId, usuarioNome) {
+            if (usuarioNome === 'julianotimoteo' || userId == 1 || userId == 2) {
+                alert('O usuário Master (' + usuarioNome + ') é protegido e não pode ser excluído.');
+                return;
+            }
+            if (!confirm(`Tem certeza que deseja EXCLUIR permanentemente o usuário #${userId} (${usuarioNome}) do banco de dados?`)) {
+                return;
+            }
+
+            showGlobalLoader();
+            try {
+                const res = await fetch(`${API_BASE}/api/usuarios/${userId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + authToken }
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    alert(`Usuário ${usuarioNome} excluído com sucesso!`);
+                    renderUsuariosList();
+                } else {
+                    alert('Erro ao excluir usuário: ' + (result.error || 'Erro desconhecido.'));
+                }
+            } catch (err) {
+                alert('Erro de conexão: ' + err.message);
+            } finally {
+                hideGlobalLoader();
+            }
+        };
+
         async function renderUsuariosList() {
             const tbody   = document.getElementById('usuariosTableBody');
             const countEl = document.getElementById('totalUsuariosCount');
@@ -10364,10 +10562,9 @@
                     <td>Juliano Timóteo</td>
                     <td style="font-size:0.8rem;color:var(--color-gray-600);">julianotimoteo@usinapitangueiras.com.br</td>
                     <td><span class="badge-equip os-aberta">Administrador</span></td>
-                    <td><span style="font-size:0.8rem;font-weight:600;">Acesso Total (Admin + Equipes)</span></td>
                     <td><span class="badge-equip os-fechada"><i class="fas fa-check-circle"></i> Ativo</span></td>
                     <td style="font-size:0.8rem;color:var(--color-gray-500);">Online agora</td>
-                    <td><span style="font-weight:700;color:var(--color-primary);display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-shield-alt"></i> Master (Protegido)</span></td>
+                    <td><span style="font-weight:700;color:var(--color-primary);"><i class="fas fa-shield-alt"></i> Master Protegido</span></td>
                 </tr>`;
                 return;
             }
@@ -10377,40 +10574,36 @@
                     headers: { Authorization: 'Bearer ' + authToken }
                 });
                 if (!res.ok) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="empty-message">Apenas administradores podem visualizar as permissões.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" class="empty-message">Apenas administradores podem visualizar os usuários do banco.</td></tr>';
                     return;
                 }
                 const result = await res.json();
                 if (result && result.success && Array.isArray(result.data)) {
+                    currentUsersCache = result.data;
                     const users = result.data;
                     if (countEl) countEl.textContent = `${users.length} usuários registrados`;
 
                     const rolesMap = {
-                        'admin': { label: 'Administrador', badge: 'os-aberta', access: 'Acesso Total (Admin + Equipes)' },
-                        'analista': { label: 'Analista', badge: 'team-badge', access: 'Acesso Total (Admin + Equipes)' },
-                        'manager': { label: 'Gerente', badge: 'team-badge', access: 'Somente Equipes' },
-                        'supervisor': { label: 'Supervisor', badge: 'team-badge', access: 'Acesso Total (Admin + Equipes)' },
-                        'leader': { label: 'Líder', badge: 'team-badge', access: 'Acesso Total (Admin + Equipes)' },
-                        'operador': { label: 'Operador', badge: 'os-fechada', access: 'Somente Equipes' },
-                        'visualizador': { label: 'Visualizador', badge: 'os-fechada', access: 'Somente Equipes' }
+                        'admin': { label: 'Administrador', badge: 'os-aberta' },
+                        'analista': { label: 'Analista', badge: 'team-badge' },
+                        'supervisor': { label: 'Supervisor', badge: 'team-badge' },
+                        'operador': { label: 'Operador', badge: 'os-fechada' },
+                        'visualizador': { label: 'Visualizador', badge: 'os-fechada' }
                     };
 
                     tbody.innerHTML = users.map(u => {
-                        const roleInfo = rolesMap[u.nivel_chave] || { label: u.nivel_chave || 'Visualizador', badge: 'os-fechada', access: 'Somente Equipes' };
-                        const isProtectedMaster = (u.usuario === 'julianotimoteo');
-                        const roleSelect = isProtectedMaster
-                            ? `<span style="font-weight:700;color:var(--color-primary);display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-shield-alt"></i> Master (Protegido)</span>`
-                            : `<select class="user-role-select" data-userid="${u.id}" style="padding:0.25rem 0.45rem;font-size:0.78rem;font-weight:600;border-radius:6px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);cursor:pointer;">
-                                <option value="admin" ${u.nivel_chave === 'admin' ? 'selected' : ''}>Administrador (Acesso Total)</option>
-                                <option value="analista" ${u.nivel_chave === 'analista' ? 'selected' : ''}>Analista (Acesso Total)</option>
-                                <option value="supervisor" ${u.nivel_chave === 'supervisor' ? 'selected' : ''}>Supervisor (Acesso Total)</option>
-                                <option value="operador" ${u.nivel_chave === 'operador' ? 'selected' : ''}>Operador (Somente Equipes)</option>
-                                <option value="visualizador" ${u.nivel_chave === 'visualizador' ? 'selected' : ''}>Visualizador (Somente Equipes)</option>
-                               </select>`;
-
+                        const roleInfo = rolesMap[u.nivel_chave] || { label: u.nivel_chave || 'Visualizador', badge: 'os-fechada' };
+                        const isProtectedMaster = (u.usuario === 'julianotimoteo' || u.id == 1 || u.id == 2);
                         const userEmail = u.email || `${u.usuario}@usinapitangueiras.com.br`;
-                        const lastLogin = u.ultimo_login ? u.ultimo_login : 'Nunca acessou';
+                        const lastLogin = u.ultimo_login ? u.ultimo_login : 'Nunca';
                         const statusBadge = u.ativo !== 0 ? '<span class="badge-equip os-fechada"><i class="fas fa-check-circle"></i> Ativo</span>' : '<span class="badge-equip os-aberta">Inativo</span>';
+
+                        const actionButtons = isProtectedMaster
+                            ? `<span style="font-size:0.78rem;font-weight:700;color:var(--color-primary);"><i class="fas fa-shield-alt"></i> Master Protegido</span>`
+                            : `<div style="display:flex;gap:4px;">
+                                <button type="button" onclick="openUserCrudModal(${u.id})" class="btn-sm" style="padding:0.25rem 0.5rem;font-size:0.75rem;font-weight:600;border-radius:6px;background:var(--color-primary);color:#fff;border:none;cursor:pointer;"><i class="fas fa-edit"></i> Editar</button>
+                                <button type="button" onclick="excluirUsuarioCrud(${u.id}, '${u.usuario}')" class="btn-sm" style="padding:0.25rem 0.5rem;font-size:0.75rem;font-weight:600;border-radius:6px;background:#ef4444;color:#fff;border:none;cursor:pointer;"><i class="fas fa-trash-alt"></i> Excluir</button>
+                               </div>`;
 
                         return `<tr>
                             <td><strong>#${u.id}</strong></td>
@@ -10418,48 +10611,104 @@
                             <td>${u.nome || u.usuario}</td>
                             <td style="font-size:0.8rem;color:var(--color-gray-600);">${userEmail}</td>
                             <td><span class="badge-equip ${roleInfo.badge}">${roleInfo.label}</span></td>
-                            <td><span style="font-size:0.8rem;font-weight:600;">${roleInfo.access}</span></td>
                             <td>${statusBadge}</td>
                             <td style="font-size:0.8rem;color:var(--color-gray-500);">${lastLogin}</td>
-                            <td>${roleSelect}</td>
+                            <td>${actionButtons}</td>
                         </tr>`;
                     }).join('');
-
-                    tbody.querySelectorAll('.user-role-select').forEach(select => {
-                        select.addEventListener('change', async function() {
-                            const userId = this.dataset.userid;
-                            const newRole = this.value;
-                            if (!userId || !newRole) return;
-
-                            showGlobalLoader();
-                            try {
-                                const r = await fetch(`${API_BASE}/api/usuarios/${userId}`, {
-                                    method: 'PUT',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'Authorization': `Bearer ${authToken}`
-                                    },
-                                    body: JSON.stringify({ nivel_chave: newRole })
-                                });
-                                const resData = await r.json();
-                                if (r.ok && resData.success) {
-                                    addLog(`👤 Nível do usuário #${userId} alterado para "${newRole}" com sucesso no banco de dados!`, 'success');
-                                    renderUsuariosList();
-                                } else {
-                                    alert(resData.error || 'Erro ao atualizar permissão no banco.');
-                                }
-                            } catch (err) {
-                                alert('Falha ao comunicar com o servidor: ' + err.message);
-                            } finally {
-                                hideGlobalLoader();
-                            }
-                        });
-                    });
                 }
             } catch (e) {
-                tbody.innerHTML = `<tr><td colspan="7" class="empty-message">Erro ao carregar usuários: ${e.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="empty-message">Erro ao carregar usuários: ${e.message}</td></tr>`;
             }
         }
+
+        // ================================================================
+        // GERENCIADOR DE BANCO (EXPLORADOR DE TABELAS SQLITE)
+        // ================================================================
+        let dbTablesListCache = [];
+
+        window.carregarListaTabelasExplorer = async function() {
+            const selectEl = document.getElementById('dbExplorerSelect');
+            const infoEl   = document.getElementById('dbExplorerInfo');
+            if (!selectEl) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/db/tables`, {
+                    headers: { Authorization: 'Bearer ' + authToken }
+                });
+                if (!res.ok) {
+                    if (infoEl) infoEl.textContent = 'Apenas administradores podem visualizar o gerenciador de banco.';
+                    return;
+                }
+                const result = await res.json();
+                if (result && result.success && Array.isArray(result.data)) {
+                    dbTablesListCache = result.data;
+                    let html = '<option value="">-- Selecione uma Tabela do Banco --</option>';
+                    dbTablesListCache.forEach(t => {
+                        html += `<option value="${t.tabela}">${t.tabela} (${t.registros} registros · ${t.colunas ? t.colunas.length : 0} colunas)</option>`;
+                    });
+                    selectEl.innerHTML = html;
+                    if (infoEl) infoEl.textContent = `Total no banco: ${result.data.length} tabelas encontradas. Selecione uma tabela acima.`;
+                }
+            } catch (err) {
+                if (infoEl) infoEl.textContent = 'Erro ao carregar tabelas do banco: ' + err.message;
+            }
+        };
+
+        window.carregarDadosTabelaExplorer = async function() {
+            const tableName = document.getElementById('dbExplorerSelect').value;
+            const infoEl    = document.getElementById('dbExplorerInfo');
+            const theadEl   = document.getElementById('dbExplorerThead');
+            const tbodyEl   = document.getElementById('dbExplorerTbody');
+
+            if (!tableName) {
+                if (infoEl) infoEl.textContent = 'Aguardando seleção de tabela...';
+                theadEl.innerHTML = '<tr><th>Selecione uma tabela acima para visualizar os dados</th></tr>';
+                tbodyEl.innerHTML = '<tr><td class="empty-message">Nenhuma tabela selecionada.</td></tr>';
+                return;
+            }
+
+            if (infoEl) infoEl.textContent = `Carregando registros da tabela "${tableName}"...`;
+            showGlobalLoader();
+
+            try {
+                const res = await fetch(`${API_BASE}/api/db/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + authToken
+                    },
+                    body: JSON.stringify({ query: `SELECT * FROM "${tableName}" LIMIT 100` })
+                });
+                const result = await res.json();
+                if (res.ok && result.success && Array.isArray(result.columns)) {
+                    const cols = result.columns;
+                    const rows = result.data || [];
+
+                    if (infoEl) infoEl.textContent = `Tabela "${tableName}": exibindo ${rows.length} de ${rows.length >= 100 ? '100+' : rows.length} registros (Colunas: ${cols.join(', ')})`;
+
+                    theadEl.innerHTML = `<tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr>`;
+
+                    if (rows.length === 0) {
+                        tbodyEl.innerHTML = `<tr><td colspan="${cols.length}" class="empty-message">Tabela vazia (0 registros).</td></tr>`;
+                    } else {
+                        tbodyEl.innerHTML = rows.map(r => {
+                            return `<tr>${cols.map(c => {
+                                let val = r[c];
+                                if (val === null || val === undefined) val = '<span style="color:#94a3b8;font-style:italic;">NULL</span>';
+                                return `<td style="font-size:0.8rem;">${val}</td>`;
+                            }).join('')}</tr>`;
+                        }).join('');
+                    }
+                } else {
+                    alert('Erro ao consultar tabela: ' + (result.error || 'Erro retornado pela API'));
+                }
+            } catch (err) {
+                alert('Erro ao comunicar com o banco: ' + err.message);
+            } finally {
+                hideGlobalLoader();
+            }
+        };
 
         // ================================================================
         // FILTROS E RENDER DE EQUIPAMENTOS
