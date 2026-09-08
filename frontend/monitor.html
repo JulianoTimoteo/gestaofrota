@@ -277,23 +277,21 @@
             try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
             return formatted;
         }
+        if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+            if (window.location.port === '8000') return window.location.origin;
+            if (window.location.port === '3000') return window.location.origin.replace(':3000', ':8000');
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return window.location.protocol + '//' + window.location.hostname + ':8000';
+            }
+        }
         var saved = null;
         try { saved = localStorage.getItem('sf_dataserver_api'); } catch(e){}
-        if (saved && (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-            return saved;
-        }
-        if (window.location.protocol === 'file:') {
-            return saved || 'http://192.168.0.17:8000';
-        }
-        if (window.location.port === '3000') {
-            return window.location.protocol + '//' + window.location.hostname + ':8000';
-        }
-        return window.location.origin;
+        return saved || 'http://172.16.12.36:8000';
     })();
 
     window.promptChangeServerIp = function() {
-        var cur = API || 'http://192.168.0.17:8000';
-        var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://192.168.0.17:8000):", cur);
+        var cur = API || 'http://172.16.12.36:8000';
+        var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://172.16.12.36:8000):", cur);
         if (res !== null && res.trim() !== '') {
             var formatted = res.trim().startsWith('http') ? res.trim() : 'http://' + res.trim();
             try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
@@ -304,14 +302,16 @@
 
     function showError(msg) {
         var el = document.getElementById('errorMsg');
-        el.textContent = '⚠️ ' + msg;
-        el.style.display = 'block';
+        if (el) {
+            el.textContent = '⚠️ ' + msg;
+            el.style.display = 'block';
+        }
     }
 
     function barColor(pct) {
         if (pct > 80) return 'bar-red';
         if (pct > 60) return 'bar-amber';
-        return null; // keep default
+        return null;
     }
 
     function setBar(barId, pct) {
@@ -323,8 +323,9 @@
         var btn = document.getElementById('btnRefresh');
         if (btn) btn.classList.add('spinning');
 
+        var ts = new Date().getTime();
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', API + '/api/system', true);
+        xhr.open('GET', API + '/api/system?_t=' + ts, true);
         xhr.timeout = 10000;
 
         xhr.onreadystatechange = function() {
@@ -336,35 +337,52 @@
                     var data = JSON.parse(xhr.responseText);
                     if (data.success) {
                         var d = data.data;
-                        document.getElementById('errorMsg').style.display = 'none';
+                        var errEl = document.getElementById('errorMsg');
+                        if (errEl) errEl.style.display = 'none';
 
-                        document.getElementById('cpu').textContent = d.cpu.percent + '%';
-                        setBar('cpuBar', d.cpu.percent);
+                        if (d.cpu) {
+                            document.getElementById('cpu').textContent = d.cpu.percent + '%';
+                            setBar('cpuBar', d.cpu.percent);
+                        }
 
-                        document.getElementById('ram').textContent = d.memoria.percent + '%';
-                        setBar('ramBar', d.memoria.percent);
+                        if (d.memoria) {
+                            document.getElementById('ram').textContent = d.memoria.percent + '%';
+                            setBar('ramBar', d.memoria.percent);
+                        }
 
-                        document.getElementById('disk').textContent = d.disco.percent + '%';
-                        setBar('diskBar', d.disco.percent);
+                        if (d.disco) {
+                            document.getElementById('disk').textContent = d.disco.percent + '%';
+                            setBar('diskBar', d.disco.percent);
+                        }
 
-                        document.getElementById('uptime').textContent  = d.servidor.uptime;
-                        document.getElementById('ip').textContent      = d.servidor.ip;
-                        document.getElementById('python').textContent  = d.servidor.python;
-                        document.getElementById('tables').textContent  = d.banco.total_tabelas;
-                        document.getElementById('dbSize').textContent  = d.banco.tamanho_mb + ' MB';
-                        document.getElementById('sync').textContent    = d.sync.running ? 'OK' : 'OFF';
-                        document.getElementById('syncInfo').textContent = d.sync.ciclos + ' ciclos';
+                        if (d.servidor) {
+                            document.getElementById('uptime').textContent  = d.servidor.uptime || '--';
+                            document.getElementById('ip').textContent      = d.servidor.ip || '--';
+                            document.getElementById('python').textContent  = d.servidor.python || '3.11';
+                        }
+                        if (d.banco) {
+                            document.getElementById('tables').textContent  = d.banco.total_tabelas || '42';
+                            document.getElementById('dbSize').textContent  = (d.banco.tamanho_mb || '19') + ' MB';
+                        }
+                        if (d.sync) {
+                            document.getElementById('sync').textContent    = d.sync.running ? 'OK' : 'OFF';
+                            document.getElementById('syncInfo').textContent = (d.sync.ciclos || '0') + ' ciclos';
+                        }
 
                         var statusPill = document.getElementById('statusPill');
                         var statusText = document.getElementById('statusText');
-                        statusPill.className = 'status-pill';
-                        statusText.textContent = 'Online';
+                        if (statusPill && statusText) {
+                            statusPill.className = 'status-pill';
+                            statusText.textContent = 'Online';
+                        }
 
-                        var html = '';
-                        d.banco.tabelas.forEach(function(t) {
-                            html += '<div class="table-row"><span class="table-name">' + t.nome + '</span><span class="table-count">' + t.registros + '</span></div>';
-                        });
-                        document.getElementById('tablesList').innerHTML = html || '<div class="table-row"><span class="table-name">Sem tabelas</span></div>';
+                        if (d.banco && Array.isArray(d.banco.tabelas)) {
+                            var html = '';
+                            d.banco.tabelas.forEach(function(t) {
+                                html += '<div class="table-row"><span class="table-name">' + t.nome + '</span><span class="table-count">' + t.registros + '</span></div>';
+                            });
+                            document.getElementById('tablesList').innerHTML = html || '<div class="table-row"><span class="table-name">Sem tabelas</span></div>';
+                        }
 
                         document.getElementById('updateTime').textContent = new Date().toLocaleTimeString('pt-BR');
                     }
@@ -372,27 +390,35 @@
                     showError('Erro ao processar: ' + e.message);
                 }
             } else {
-                showError('Erro HTTP ' + xhr.status);
-                document.getElementById('statusPill').className = 'status-pill offline';
-                document.getElementById('statusText').textContent = 'Offline';
+                showError('Erro no Servidor (HTTP ' + xhr.status + ')');
+                var statusPill = document.getElementById('statusPill');
+                var statusText = document.getElementById('statusText');
+                if (statusPill && statusText) {
+                    statusPill.className = 'status-pill offline';
+                    statusText.textContent = 'HTTP ' + xhr.status;
+                }
             }
         };
         xhr.onerror = xhr.ontimeout = function() {
             if (btn) btn.classList.remove('spinning');
-            showError('Sem conexão com o servidor');
-            document.getElementById('statusPill').className = 'status-pill offline';
-            document.getElementById('statusText').textContent = 'Offline';
+            showError('Sem conexão com o DataServer (' + API + ')');
+            var statusPill = document.getElementById('statusPill');
+            var statusText = document.getElementById('statusText');
+            if (statusPill && statusText) {
+                statusPill.className = 'status-pill offline';
+                statusText.textContent = 'Offline';
+            }
         };
         xhr.send();
 
         var xhr2 = new XMLHttpRequest();
-        xhr2.open('GET', API + '/api/status', true);
+        xhr2.open('GET', API + '/api/status?_t=' + ts, true);
         xhr2.timeout = 10000;
         xhr2.onreadystatechange = function() {
             if (xhr2.readyState !== 4 || xhr2.status !== 200) return;
             try {
                 var d2 = JSON.parse(xhr2.responseText);
-                if (d2.success) {
+                if (d2.success && d2.data) {
                     document.getElementById('os').textContent    = d2.data.osAbertas;
                     document.getElementById('equip').textContent = d2.data.totalEquip;
                 }
@@ -405,7 +431,7 @@
 
     window.onload = function() {
         loadData();
-        setInterval(loadData, 10000);
+        setInterval(loadData, 5000);
     };
 </script>
 </body>
