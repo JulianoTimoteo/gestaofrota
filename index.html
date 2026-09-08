@@ -3497,7 +3497,7 @@
         let activeAdminSub   = localStorage.getItem('sf_active_admin_subtab') || 'tab-equipamentos';
         let activeTeam       = localStorage.getItem('sf_active_team')         || null;
 
-        const ADMIN_ROLES = ['admin', 'analista', 'supervisor', 'master', 'operador'];
+        const ADMIN_ROLES = ['admin', 'master'];
 
         // ================================================================
         // EMBEDDED DATASET FOR GITHUB PAGES & STANDALONE OFFLINE MODE
@@ -9538,8 +9538,10 @@
                 } else if (selectedRole === 'visualizador') {
                     role = 'visualizador';
                 } else {
-                    if (userInp === 'julianotimoteo' || userInp === 'admin' || userInp.includes('master')) {
+                    if (userInp === 'julianotimoteo' || userInp === 'logistica' || userInp === 'admin' || userInp.includes('master')) {
                         role = 'admin';
+                    } else if (userInp === 'rafaelfarra') {
+                        role = 'operador';
                     } else {
                         role = 'visualizador';
                     }
@@ -9647,8 +9649,10 @@
                 } else if (selectedRole === 'visualizador') {
                     role = 'visualizador';
                 } else {
-                    if (userInp === 'julianotimoteo' || userInp === 'admin' || userInp.includes('master') || userInp === 'rafaelfarra' || userInp === 'logistica') {
+                    if (userInp === 'julianotimoteo' || userInp === 'logistica' || userInp === 'admin' || userInp.includes('master')) {
                         role = 'admin';
+                    } else if (userInp === 'rafaelfarra') {
+                        role = 'operador';
                     } else {
                         role = 'visualizador';
                     }
@@ -9748,8 +9752,9 @@
                     const d = await res.json();
                     if (d.success) {
                         const curUser = (localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '').toLowerCase();
-                        const isMaster = curUser.includes('juliano') || curUser.includes('rafael') || curUser.includes('logistica') || d.admin == 1;
-                        const newRole  = isMaster ? 'admin' : (d.role || 'admin');
+                        const isMasterAdmin = (curUser.includes('juliano') || curUser.includes('logistica') || d.admin == 1) && !curUser.includes('rafael');
+                        const isGerenteOperador = curUser.includes('rafael');
+                        const newRole  = isMasterAdmin ? 'admin' : (isGerenteOperador ? 'operador' : (d.role || 'visualizador'));
                         localStorage.setItem('sf_auth_role', newRole);
                         sessionStorage.setItem('sf_auth_role', newRole);
                         userRole = newRole;
@@ -10499,16 +10504,22 @@
             const adminTabBtn    = document.querySelector('.tab-btn[data-tab="tab-admin"]');
             const adminTabContent = document.getElementById('tab-admin');
 
-            if (ADMIN_ROLES.includes(userRole)) {
+            const curUser = (localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '').toLowerCase();
+            const isAdminUser = ADMIN_ROLES.includes(userRole) && !curUser.includes('rafael');
+
+            if (isAdminUser) {
                 if (mainTabs)        mainTabs.style.display       = 'inline-flex';
                 if (adminTabBtn)     adminTabBtn.style.display    = '';
                 if (adminTabContent) adminTabContent.style.display = '';
-                switchMainTab(activeMainTab, false);
-                switchAdminSubTab(activeAdminSub, false);
+                document.querySelectorAll('#adminSubTabs > .tab-btn').forEach(btn => btn.style.display = '');
+
+                switchMainTab(activeMainTab || 'tab-admin', false);
+                switchAdminSubTab(activeAdminSub || 'tab-equipamentos', false);
             } else {
-                // Usuário com acesso somente a Equipes: ocultar totalmente as abas principais superiores (#mainTabs)
-                if (mainTabs)        mainTabs.style.display        = 'none';
+                // Usuário Gerente/Operador (ex: Rafael Farra): ocultar totalmente abas de administração e mostrar apenas dados da operação (#tab-equipe)
+                if (adminTabBtn)     adminTabBtn.style.display    = 'none';
                 if (adminTabContent) adminTabContent.style.display = 'none';
+                if (mainTabs)        mainTabs.style.display        = 'none';
                 switchMainTab('tab-equipe', false);
             }
         }
