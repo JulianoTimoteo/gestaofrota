@@ -530,6 +530,7 @@
             max-width: 1600px;
             margin: 0 auto;
             width: 100%;
+            display: none;
         }
 
         /* ===== TIPOGRAPHY ===== */
@@ -1992,17 +1993,17 @@
         .login-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(8px);
+            background: #0f172a !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
-            padding: 1rem;
+            z-index: 999999 !important;
+            padding: 1.5rem;
+            overflow-y: auto;
             animation: fadeIn 0.3s ease-out;
         }
 
-        .login-overlay.hidden { display: none; }
+        .login-overlay.hidden { display: none !important; }
 
         .login-card {
             background: white;
@@ -9323,8 +9324,11 @@
         function updateAuthUI() {
             const overlay   = document.getElementById('loginOverlay');
             const logoutBtn = document.getElementById('logoutBtn');
+            const mainApp   = document.querySelector('.app');
             const token     = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token');
+
             if (overlay)   overlay.classList.toggle('hidden', !!token);
+            if (mainApp)   mainApp.style.display = token ? 'block' : 'none';
             if (logoutBtn) logoutBtn.style.display = token ? 'inline-flex' : 'none';
 
             // Exibe o PRIMEIRO NOME do usuario logado no servidor
