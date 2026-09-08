@@ -2942,6 +2942,7 @@ def login():
             data = request.get_json() or {}
             usuario = (data.get('usuario') or '').strip().lower()
             senha = (data.get('senha') or '').strip()
+            ip_origem = (data.get('ip_origem') or request.headers.get('X-Forwarded-For') or request.remote_addr or '127.0.0.1').split(',')[0].strip()
             raw_origem = (data.get('origem_site') or 
                           request.headers.get('X-Client-Origin') or 
                           request.headers.get('Origin') or 
