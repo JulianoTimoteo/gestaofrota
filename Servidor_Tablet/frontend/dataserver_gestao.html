@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleFarm DataServer Gestão — Console de Administração</title>
+    <link rel="icon" type="image/png" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #111827;
+            --bg-sidebar: #0b1120;
+            --bg-input: #1e293b;
+            --border-color: #1f293d;
+            --border-hover: #3b82f6;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #2563eb;
+            --accent-blue-hover: #1d4ed8;
+            --accent-green: #10b981;
+            --accent-green-hover: #059669;
+            --accent-red: #ef4444;
+            --accent-red-hover: #dc2626;
+            --accent-amber: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* ===== HEADER SUPERIOR ===== */
+        .admin-header {
+            height: 64px;
+            background: #0d1527;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            z-index: 100;
+            position: sticky;
+            top: 0;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .header-brand img {
+            height: 38px;
+            width: auto;
+            border-radius: 6px;
+            background: #fff;
+            padding: 3px 6px;
+        }
+
+        .brand-text h1 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand-badge {
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+            font-size: 0.68rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .server-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .server-status-pill.offline {
+            background: rgba(239, 68, 68, 0.12);
+            color: #f87171;
+            border-color: rgba(248, 113, 113, 0.3);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #34d399;
+            box-shadow: 0 0 8px #34d399;
+        }
+
+        .server-status-pill.offline .status-dot {
+            background: #f87171;
+            box-shadow: 0 0 8px #f87171;
+        }
+
+        .user-profile-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-input);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        /* ===== ESTRUTURA PRINCIPAL (SIDEBAR + CONTEÚDO) ===== */
+        .admin-wrapper {
+            display: flex;
+            flex: 1;
+            min-height: calc(100vh - 64px);
+        }
+
+        /* SIDEBAR */
+        .admin-sidebar {
+            width: 260px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            padding: 1.25rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.5rem 0.75rem 0.25rem 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .sidebar-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.7rem 0.85rem;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            font-weight: 500;
+            text-decoration: none;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .sidebar-nav-btn i {
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            transition: color 0.18s ease;
+        }
+
+        .sidebar-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .sidebar-nav-btn:hover i {
+            color: var(--accent-blue);
+        }
+
+        .sidebar-nav-btn.active {
+            background: var(--accent-blue);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        }
+
+        .sidebar-nav-btn.active i {
+            color: #ffffff;
+        }
+
+        /* ÁREA DE CONTEÚDO */
+        .admin-main {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+            background: var(--bg-dark);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-title h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .page-title p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+
+        /* CARDS E CONTAINERS */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .metric-icon.blue { background: rgba(37, 99, 235, 0.15); color: #60a5fa; }
+        .metric-icon.green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .metric-icon.purple { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+        .metric-icon.amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+
+        .metric-details {
+            flex: 1;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-top: 2px;
+        }
+
+        .admin-panel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-primary);
+        }
+
+        /* TABELAS ADMINISTRATIVAS */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        table.admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        table.admin-table th {
+            background: #0f172a;
+            color: var(--text-secondary);
+            padding: 0.85rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table.admin-table td {
+            padding: 0.85rem 1rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        table.admin-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.admin-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .badge-status.active { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+        .badge-status.inactive { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3); }
+        .badge-status.master { background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.4); }
+
+        /* BOTÕES & ENTRADAS DE FORMULÁRIO */
+        .btn-action {
+            padding: 0.45rem 0.9rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.18s ease;
+        }
+
+        .btn-primary { background: var(--accent-blue); color: #fff; }
+        .btn-primary:hover { background: var(--accent-blue-hover); }
+
+        .btn-success { background: var(--accent-green); color: #fff; }
+        .btn-success:hover { background: var(--accent-green-hover); }
+
+        .btn-danger { background: var(--accent-red); color: #fff; }
+        .btn-danger:hover { background: var(--accent-red-hover); }
+
+        .btn-secondary { background: var(--bg-input); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background: #334155; }
+
+        .form-control {
+            width: 100%;
+            padding: 0.65rem 0.9rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-blue);
+        }
+
+        /* MODAIS */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 560px;
+            padding: 1.75rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* ABA CONTEÚDO DICA / OCULTA */
+        .tab-page {
+            display: none;
+        }
+        .tab-page.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER SUPERIOR -->
+    <header class="admin-header">
+        <div class="header-brand">
+            <img src="logo.png" alt="Usina Pitangueiras" onerror="this.src='apple-touch-icon.png'">
+            <div class="brand-text">
+                <h1>SimpleFarm DataServer Gestão <span class="brand-badge">Console Admin</span></h1>
+            </div>
+        </div>
+        <div class="header-controls">
+            <div class="server-status-pill" id="serverStatusPill" onclick="abrirConfigConexaoModal()" title="Clique para testar conectividade com o DataServer">
+                <span class="status-dot"></span>
+                <span id="serverStatusText">🟢 DataServer Conectado (8000)</span>
+            </div>
+            <div class="user-profile-badge">
+                <i class="fas fa-user-shield" style="color:var(--accent-blue)"></i>
+                <span id="userProfileName">julianotimoteo (Master Admin)</span>
+            </div>
+            <button class="btn-logout" onclick="executarLogoutAdmin()"><i class="fas fa-right-from-bracket"></i> Sair</button>
+        </div>
+    </header>
+
+    <!-- CONTAINER ESTRUTURAL -->
+    <div class="admin-wrapper">
+        
+        <!-- SIDEBAR NAVEGAÇÃO -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-section-label">Painel Principal</div>
+            <button class="sidebar-nav-btn active" data-target="page-overview"><i class="fas fa-chart-pie"></i> Visão Geral</button>
+            <button class="sidebar-nav-btn" data-target="page-users"><i class="fas fa-users-cog"></i> Usuários</button>
+            <button class="sidebar-nav-btn" data-target="page-permissions"><i class="fas fa-shield-alt"></i> Permissões & Níveis</button>
+
+            <div class="sidebar-section-label">Recursos & Banco</div>
+            <button class="sidebar-nav-btn" data-target="page-apikeys"><i class="fas fa-key"></i> Módulo de APIs</button>
+            <button class="sidebar-nav-btn" data-target="page-database"><i class="fas fa-database"></i> Banco de Dados & Tabelas</button>
+            <button class="sidebar-nav-btn" data-target="page-apitester"><i class="fas fa-terminal"></i> API Tester</button>
+
+            <div class="sidebar-section-label">Sistema & Auditoria</div>
+            <button class="sidebar-nav-btn" data-target="page-logs"><i class="fas fa-history"></i> Logs de Auditoria</button>
+            <button class="sidebar-nav-btn" data-target="page-connection"><i class="fas fa-wifi"></i> Conexão & Servidor</button>
+        </aside>
+
+        <!-- ÁREA PRINCIPAL -->
+        <main class="admin-main">
+            
+            <!-- 1. PÁGINA: VISÃO GERAL DO DATASERVER -->
+            <div id="page-overview" class="tab-page active">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2><i class="fas fa-server" style="color:var(--accent-blue)"></i> Visão Geral do SimpleFarm DataServer</h2>
+                        <p>Métricas técnicas, estado do banco de dados SQLite, scraping e atividade em tempo real.</p>
+                    </div>
+                    <button class="btn-action btn-secondary" onclick="carregarVisaoGeral()"><i class="fas fa-sync-alt"></i> Atualizar Métricas</button>
+                </div>
+
+                <div class="card-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon blue"><i class="fas fa-database"></i></div>
+                        <div class="metric-details">
+                            <div class="metric-label">Tabelas no Banco</div>
+                            <div class="metric-val" id="metricTotalTables">42</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon green"><i class="fas fa-users"></i></div>
+                        <div class="metric-details">
+                            <div class="metric-label">Usuários Cadastrados</div>
+                            <div class="metric-val" id="metricTotalUsers">3</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon purple"><i class="fas fa-key"></i></div>
+                        <div class="metric-details">
+                            <div class="metric-label">Chaves de API Ativas</div>
+                            <div class="metric-val" id="metricTotalApis">1</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon amber"><i class="fas fa-microchip"></i></div>
+                        <div class="metric-details">
+                            <div class="metric-label">Uptime do Servidor</div>
+                            <div class="metric-val" id="metricUptime">--</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-panel-card">
+                    <div class="panel-title">
+                        <span><i class="fas fa-info-circle"></i> Informações Técnicas do DataServer</span>
+                        <span class="badge-status active">Ativo & Autônomo</span>
+                    </div>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; font-size:0.85rem;">
+                        <div><strong style="color:var(--text-muted)">Endereço Base:</strong> <br><code id="overviewBaseUrl" style="color:var(--accent-blue)">http://172.16.12.36:8000</code></div>
+                        <div><strong style="color:var(--text-muted)">Banco de Dados:</strong> <br><span id="overviewDbPath">meus_banco.db (SQLite WAL)</span></div>
+                        <div><strong style="color:var(--text-muted)">Scraping / Sync:</strong> <br><span style="color:#34d399">Ativo (Ciclos contínuos)</span></div>
+                        <div><strong style="color:var(--text-muted)">Versão Python:</strong> <br><span id="overviewPython">3.11.9</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. PÁGINA: USUÁRIOS (CRUD COMPLETO) -->
+            <div id="page-users" class="tab-page">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2><i class="fas fa-users-cog" style="color:var(--accent-green)"></i> Gerenciamento de Usuários do Banco</h2>
+                        <p>Criar, editar, bloquear, redefinir senhas e excluir usuários do DataServer.</p>
+                    </div>
+                    <button class="btn-action btn-success" onclick="abrirModalCriarUsuario()"><i class="fas fa-user-plus"></i> + Criar Novo Usuário</button>
+                </div>
+
+                <div class="admin-panel-card">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Usuário (Login)</th>
+                                    <th>Nome Completo</th>
+                                    <th>E-mail</th>
+                                    <th>Nível / Perfil</th>
+                                    <th>Status</th>
+                                    <th>Último Acesso</th>
+                                    <th>Ações Administrativas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableTbody">
+                                <tr><td colspan="8" style="text-align:center;">Carregando usuários do banco...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. PÁGINA: PERMISSÕES & HIERARQUIA -->
+            <div id="page-permissions" class="tab-page">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2><i class="fas fa-shield-alt" style="color:var(--accent-purple)"></i> Matriz de Permissões e Hierarquia</h2>
+                        <p>Definição de níveis de acesso e salvaguarda do usuário Master Administrador Geral.</p>
+                    </div>
+                </div>
+
+                <div class="admin-panel-card">
+                    <div class="panel-title">
+                        <span>👑 Regra de Segurança do Usuário Master</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1rem;">
+                        O usuário <strong>julianotimoteo@usinapitangueiras.com.br</strong> (login: <code>julianotimoteo</code>) é o único **Master Administrador Geral** com nível máximo de controle. O painel impede qualquer tentativa de rebaixamento ou exclusão desta conta.
+                    </p>
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Nível</th>
+                                    <th>Cargo / Perfil</th>
+                                    <th>Permissão no Servidor</th>
+                                    <th>Acesso a Tabelas</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>100</strong></td>
+                                    <td><span class="badge-status master">Master Administrador Geral</span></td>
+                                    <td>Acesso Total (CRUD Banco, APIs, Usuários, Servidor)</td>
+                                    <td>Todas as 42 Tabelas</td>
+                                    <td><span class="badge-status active">Protegido</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>80</strong></td>
+                                    <td>Gerente / Coordenador Geral</td>
+                                    <td>Gestão de Frota, Operações e Consulta de Banco</td>
+                                    <td>Tabelas de Operação e Frota</td>
+                                    <td><span class="badge-status active">Ativo</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>60</strong></td>
+                                    <td>Supervisor de Campo / Oficina</td>
+                                    <td>Abertura/Fechamento de OS e Movimentação de Frota</td>
+                                    <td>Frota e Ordens de Serviço</td>
+                                    <td><span class="badge-status active">Ativo</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>40</strong></td>
+                                    <td>Operador / Técnico</td>
+                                    <td>Apontamentos e Registro de Atividades</td>
+                                    <td>Somente Equipe Vinculada</td>
+                                    <td><span class="badge-status active">Ativo</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. PÁGINA: MÓDULO DE APIS -->
+            <div id="page-apikeys" class="tab-page">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2><i class="fas fa-key" style="color:var(--accent-amber)"></i> Gerenciador & Criador de Chaves de API</h2>
+                        <p>Controle de chaves REST com permissões de tabela para integração com programas futuros.</p>
+                    </div>
+                    <button class="btn-action btn-primary" onclick="abrirModalCriarApiKey()"><i class="fas fa-plus-circle"></i> + Gerar Nova Chave API</button>
+                </div>
+
+                <div class="admin-panel-card">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Programa / Sistema</th>
+                                    <th>Chave de API (Secret Key)</th>
+                                    <th>Permissão</th>
+                                    <th>Status</th>
+                                    <th>Criada em</th>
+                                    <th>Último Uso</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="apiKeysTbody">
+                                <tr><td colspan="8" style="text-align:center;">Carregando chaves de API...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. PÁGINA: BANCO DE DADOS & TABELAS -->
+            <div id="page-database" class="tab-page">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2><i class="fas fa-database" style="color:var(--accent-blue)"></i> Gerenciador de Banco de Dados (SQLite)</h2>
+                        <p>Explorador das 42 tabelas reais, registros, esquema e operações de CRUD em dados.</p>
+                    </div>
+                </div>
+
+                <div class="admin-panel-card">
+                    <div style="display:flex; gap:1rem; align-items:center; margin-bottom:1.25rem; flex-wrap:wrap;">
+                        <select id="dbTableSelect" class="form-control" style="max-width:340px; font-weight:700;" onchange="carregarDadosTabelaSelecionada()">
+                            <option value="">Selecione uma Tabela do Banco...</option>
+                        </select>
+                        <button class="btn-action btn-secondary" onclick="carregarListaTabelasAdmin()"><i class="fas fa-sync-alt"></i> Recarregar Tabelas</button>
+                        <button class="btn-action btn-success" id="btnInsertRecord" style="display:none;" onclick="abrirModalInserirRegistro()"><i class="fas fa-plus"></i> + Inserir Registro nesta Tabela</button>
+                    </div>
+
+                    <div id="tableDetailsHeader" style="margin-bottom:1rem; font-size:0.85rem; color:var(--accent-blue); font-weight:600;">
+                        Selecione uma tabela no menu acima para visualizar a estrutura e os registros reais do SQLite.
+                    </div>
+
+                    <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                        <table class="admin-table">
+                            <thead id="dbExplorerThead">
+                                <tr><th>Conteúdo da Tabela</th></tr>
+                            </thead>
+                            <tbody id="dbExplorerTbody">
+                                <tr><td style="text-align:center;">Aguardando seleção de tabela...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. PÁGINA: API TESTER -->
+            <div id="page-apitester" class="tab-page">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2><i class="fas fa-terminal" style="color:var(--accent-purple)"></i> API Tester — Testador Administrativo REST</h2>
+                        <p>Ferramenta para testar requisições HTTP GET, POST, PUT, DELETE no DataServer.</p>
+                    </div>
+                </div>
+
+                <div class="admin-panel-card">
+                    <form id="formApiTester" onsubmit="executarTesteApi(event)">
+                        <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+                            <select id="testerMethod" class="form-control" style="width:120px; font-weight:700;">
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                            </select>
+                            <input type="text" id="testerEndpoint" class="form-control" placeholder="/api/system ou /api/equipamentos" required>
+                            <button type="submit" class="btn-action btn-primary"><i class="fas fa-paper-plane"></i> Enviar Requisição</button>
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">BODY DA REQUISIÇÃO (JSON / Opcional):</label>
+                            <textarea id="testerBody" class="form-control" style="height:90px; font-family:monospace;" placeholder='{"usuario": "julianotimoteo"}'></textarea>
+                        </div>
+                    </form>
+
+                    <div id="testerResultContainer" style="display:none; margin-top:1.5rem; background:#0f172a; border-radius:var(--radius-md); padding:1.25rem; border:1px solid var(--border-color);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                            <span id="testerStatusBadge" class="badge-status active">HTTP 200 OK</span>
+                            <span id="testerLatency" style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">Tempo: 12ms</span>
+                        </div>
+                        <pre id="testerResponseBody" style="font-family:monospace; font-size:0.8rem; color:#38bdf8; white-space:pre-wrap; word-break:break-all; max-height:300px; overflow-y:auto;"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. PÁGINA: LOGS DE AUDITORIA -->
+            <div id="page-logs" class="tab-page">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2><i class="fas fa-history" style="color:var(--accent-amber)"></i> Logs de Auditoria do Servidor</h2>
+                        <p>Histórico completo de alteração de registros, logins e ações administrativas.</p>
+                    </div>
+                    <button class="btn-action btn-secondary" onclick="carregarLogsAuditoria()"><i class="fas fa-sync-alt"></i> Atualizar Logs</button>
+                </div>
+
+                <div class="admin-panel-card">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tabela</th>
+                                    <th>Ação</th>
+                                    <th>ID Registro</th>
+                                    <th>Responsável</th>
+                                    <th>IP Origem</th>
+                                    <th>Data / Hora</th>
+                                    <th>Detalhes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logsTableTbody">
+                                <tr><td colspan="8" style="text-align:center;">Carregando logs de auditoria...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. PÁGINA: CONEXÃO & CONFIGURAÇÃO DO SERVIDOR -->
+            <div id="page-connection" class="tab-page">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2><i class="fas fa-wifi" style="color:var(--accent-blue)"></i> Configuração de Conexão com o DataServer</h2>
+                        <p>Definição do IP/URL do Tablet ou Servidor Local para acesso administrativo.</p>
+                    </div>
+                </div>
+
+                <div class="admin-panel-card" style="max-width:600px;">
+                    <div class="form-group" style="margin-bottom:1.25rem;">
+                        <label style="display:block; font-size:0.8rem; font-weight:700; margin-bottom:6px;">URL BASE DO DATASERVER (Porta 8000):</label>
+                        <input type="text" id="configServerUrl" class="form-control" placeholder="http://172.16.12.36:8000">
+                    </div>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button class="btn-action btn-primary" onclick="salvarEtestarConexao()"><i class="fas fa-plug"></i> Testar Conectividade & Salvar</button>
+                    </div>
+                    <div id="connectionTestResult" style="margin-top:1rem; font-size:0.88rem; font-weight:600;"></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL DE USUÁRIO (CRIAR / EDITAR) -->
+    <div class="modal-overlay" id="modalUserOverlay">
+        <div class="modal-box">
+            <div class="modal-title">
+                <span id="modalUserTitleHeader"><i class="fas fa-user-plus"></i> Cadastrar Usuário</span>
+                <button onclick="fecharModalUser()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.2rem;"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="formUserAdmin" onsubmit="salvarUsuarioAdminSubmit(event)" style="display:flex; flex-direction:column; gap:1rem;">
+                <input type="hidden" id="formUserId">
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">Nome de Usuário (Login) *</label>
+                    <input type="text" id="formUserLogin" class="form-control" required placeholder="ex: julianotimoteo">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">Nome Completo *</label>
+                    <input type="text" id="formUserNome" class="form-control" required placeholder="ex: Juliano Timóteo">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">E-mail Corporativo *</label>
+                    <input type="email" id="formUserEmail" class="form-control" required placeholder="ex: julianotimoteo@usinapitangueiras.com.br">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">Nível de Acesso / Perfil *</label>
+                    <select id="formUserAdminFlag" class="form-control" required>
+                        <option value="1">Master / Administrador (Acesso Total)</option>
+                        <option value="0">Gerente / Operador (Somente Leitura/Equipes)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;" id="lblFormUserPass">Senha *</label>
+                    <input type="password" id="formUserPass" class="form-control" placeholder="Mínimo 4 caracteres">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-action btn-secondary" onclick="fecharModalUser()">Cancelar</button>
+                    <button type="submit" class="btn-action btn-success"><i class="fas fa-save"></i> Salvar no Banco</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL REDEFINIR SENHA -->
+    <div class="modal-overlay" id="modalResetPassOverlay">
+        <div class="modal-box" style="max-width:420px;">
+            <div class="modal-title">
+                <span><i class="fas fa-key"></i> Redefinir Senha do Usuário</span>
+            </div>
+            <form onsubmit="executarResetSenhaSubmit(event)">
+                <input type="hidden" id="resetPassUserId">
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">Nova Senha Segura *</label>
+                    <input type="password" id="resetPassInput" class="form-control" required placeholder="Mínimo 4 caracteres">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-action btn-secondary" onclick="document.getElementById('modalResetPassOverlay').classList.remove('active')">Cancelar</button>
+                    <button type="submit" class="btn-action btn-primary"><i class="fas fa-check"></i> Redefinir Senha</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- LÓGICA JAVASCRIPT ADMINISTRATIVA DEDICADA -->
+    <script>
+        // URL Base do DataServer
+        let API_SERVER = (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const p = urlParams.get('api') || urlParams.get('server');
+            if (p) {
+                let fmt = p.trim();
+                if (!fmt.startsWith('http://') && !fmt.startsWith('https://')) fmt = 'http://' + fmt;
+                localStorage.setItem('sf_dataserver_url', fmt);
+                return fmt;
+            }
+            return localStorage.getItem('sf_dataserver_url') || (window.location.origin.includes('8000') ? window.location.origin : 'http://172.16.12.36:8000');
+        })();
+
+        let currentAdminToken = localStorage.getItem('sf_auth_token') || '';
+
+        // NAVEGAÇÃO ENTRE ABAS DO SIDEBAR
+        document.querySelectorAll('.sidebar-nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.target;
+                document.querySelectorAll('.sidebar-nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(target).classList.add('active');
+
+                // Trigger ao mudar de aba
+                if (target === 'page-overview') carregarVisaoGeral();
+                else if (target === 'page-users') carregarUsuariosAdmin();
+                else if (target === 'page-apikeys') carregarChavesApiAdmin();
+                else if (target === 'page-database') carregarListaTabelasAdmin();
+                else if (target === 'page-logs') carregarLogsAuditoria();
+            });
+        });
+
+        // 1. VISÃO GERAL
+        async function carregarVisaoGeral() {
+            try {
+                const res = await fetch(`${API_SERVER}/api/system`);
+                if (res.ok) {
+                    const d = await res.json();
+                    if (d.success && d.data) {
+                        document.getElementById('metricTotalTables').textContent = d.data.banco.total_tabelas || '42';
+                        document.getElementById('metricUptime').textContent = d.data.servidor.uptime || '--';
+                        document.getElementById('overviewPython').textContent = d.data.servidor.python || '3.11.9';
+                        document.getElementById('overviewBaseUrl').textContent = API_SERVER;
+                        document.getElementById('serverStatusPill').className = 'server-status-pill';
+                        document.getElementById('serverStatusText').textContent = '🟢 DataServer Conectado (8000)';
+                    }
+                }
+            } catch (e) {
+                document.getElementById('serverStatusPill').className = 'server-status-pill offline';
+                document.getElementById('serverStatusText').textContent = '🔴 DataServer Indisponível';
+            }
+        }
+
+        // 2. USUÁRIOS
+        let cachedAdminUsers = [];
+
+        async function carregarUsuariosAdmin() {
+            const tbody = document.getElementById('usersTableTbody');
+            try {
+                const res = await fetch(`${API_SERVER}/api/usuarios`, {
+                    headers: { 'Authorization': 'Bearer ' + currentAdminToken }
+                });
+                if (!res.ok) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--accent-red);">Erro de permissão ou conexão ao carregar usuários.</td></tr>';
+                    return;
+                }
+                const data = await res.json();
+                if (data.success && Array.isArray(data.data)) {
+                    cachedAdminUsers = data.data;
+                    document.getElementById('metricTotalUsers').textContent = cachedAdminUsers.length;
+                    
+                    tbody.innerHTML = cachedAdminUsers.map(u => {
+                        const isMaster = u.usuario === 'julianotimoteo' || u.email === 'julianotimoteo@usinapitangueiras.com.br';
+                        const roleBadge = isMaster ? '<span class="badge-status master">Master Admin</span>' : (u.admin ? '<span class="badge-status active">Administrador</span>' : '<span class="badge-status inactive">Operador</span>');
+                        const statusBadge = u.ativo == 1 ? '<span class="badge-status active">Ativo</span>' : '<span class="badge-status inactive">Bloqueado</span>';
+                        
+                        const actions = isMaster ? '<span style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">Conta Master Protegida</span>' : `
+                            <button class="btn-action btn-secondary" onclick="abrirModalEditarUsuario(${u.id})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn-action btn-secondary" onclick="abrirModalResetSenha(${u.id})"><i class="fas fa-key"></i> Senha</button>
+                            <button class="btn-action ${u.ativo == 1 ? 'btn-danger' : 'btn-success'}" onclick="alternarStatusUsuario(${u.id}, ${u.ativo == 1 ? 0 : 1})">${u.ativo == 1 ? 'Bloquear' : 'Ativar'}</button>
+                            <button class="btn-action btn-danger" onclick="excluirUsuarioAdmin(${u.id})"><i class="fas fa-trash"></i></button>
+                        `;
+
+                        return `<tr>
+                            <td><strong>#${u.id}</strong></td>
+                            <td><code>${u.usuario}</code></td>
+                            <td><strong>${u.nome || '-'}</strong></td>
+                            <td>${u.email || '-'}</td>
+                            <td>${roleBadge}</td>
+                            <td>${statusBadge}</td>
+                            <td style="font-size:0.78rem;">${u.ultimo_login || '-'}</td>
+                            <td>${actions}</td>
+                        </tr>`;
+                    }).join('');
+                }
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Erro: ${err.message}</td></tr>`;
+            }
+        }
+
+        function abrirModalCriarUsuario() {
+            document.getElementById('modalUserTitleHeader').innerHTML = '<i class="fas fa-user-plus"></i> Cadastrar Novo Usuário';
+            document.getElementById('formUserId').value = '';
+            document.getElementById('formUserLogin').value = '';
+            document.getElementById('formUserNome').value = '';
+            document.getElementById('formUserEmail').value = '';
+            document.getElementById('formUserPass').required = true;
+            document.getElementById('lblFormUserPass').textContent = 'Senha *';
+            document.getElementById('modalUserOverlay').classList.add('active');
+        }
+
+        function abrirModalEditarUsuario(id) {
+            const u = cachedAdminUsers.find(x => x.id == id);
+            if (!u) return;
+            document.getElementById('modalUserTitleHeader').innerHTML = '<i class="fas fa-user-edit"></i> Editar Usuário #' + id;
+            document.getElementById('formUserId').value = u.id;
+            document.getElementById('formUserLogin').value = u.usuario;
+            document.getElementById('formUserNome').value = u.nome || '';
+            document.getElementById('formUserEmail').value = u.email || '';
+            document.getElementById('formUserAdminFlag').value = u.admin ? '1' : '0';
+            document.getElementById('formUserPass').required = false;
+            document.getElementById('lblFormUserPass').textContent = 'Nova Senha (deixe em branco se não desejar alterar)';
+            document.getElementById('modalUserOverlay').classList.add('active');
+        }
+
+        function fecharModalUser() {
+            document.getElementById('modalUserOverlay').classList.remove('active');
+        }
+
+        async function salvarUsuarioAdminSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('formUserId').value;
+            const body = {
+                usuario: document.getElementById('formUserLogin').value.trim(),
+                nome: document.getElementById('formUserNome').value.trim(),
+                email: document.getElementById('formUserEmail').value.trim(),
+                admin: parseInt(document.getElementById('formUserAdminFlag').value),
+                senha: document.getElementById('formUserPass').value
+            };
+
+            const url = id ? `${API_SERVER}/api/usuarios/${id}` : `${API_SERVER}/api/usuarios`;
+            const method = id ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + currentAdminToken },
+                    body: JSON.stringify(body)
+                });
+                const d = await res.json();
+                if (res.ok && d.success) {
+                    fecharModalUser();
+                    carregarUsuariosAdmin();
+                } else {
+                    alert('Erro ao salvar usuário: ' + (d.error || 'Falha'));
+                }
+            } catch (err) {
+                alert('Erro de comunicação: ' + err.message);
+            }
+        }
+
+        async function alternarStatusUsuario(id, novoStatus) {
+            try {
+                const res = await fetch(`${API_SERVER}/api/usuarios/${id}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + currentAdminToken },
+                    body: JSON.stringify({ ativo: novoStatus })
+                });
+                const d = await res.json();
+                if (res.ok && d.success) {
+                    carregarUsuariosAdmin();
+                } else {
+                    alert('Erro: ' + (d.error || 'Falha ao alterar status'));
+                }
+            } catch (e) {
+                alert('Erro: ' + e.message);
+            }
+        }
+
+        function abrirModalResetSenha(id) {
+            document.getElementById('resetPassUserId').value = id;
+            document.getElementById('resetPassInput').value = '';
+            document.getElementById('modalResetPassOverlay').classList.add('active');
+        }
+
+        async function executarResetSenhaSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('resetPassUserId').value;
+            const pass = document.getElementById('resetPassInput').value;
+
+            try {
+                const res = await fetch(`${API_SERVER}/api/usuarios/${id}/reset-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + currentAdminToken },
+                    body: JSON.stringify({ nova_senha: pass })
+                });
+                const d = await res.json();
+                if (res.ok && d.success) {
+                    alert('✅ Senha redefinida com sucesso!');
+                    document.getElementById('modalResetPassOverlay').classList.remove('active');
+                } else {
+                    alert('Erro ao redefinir: ' + (d.error || 'Falha'));
+                }
+            } catch (e) {
+                alert('Erro: ' + e.message);
+            }
+        }
+
+        async function excluirUsuarioAdmin(id) {
+            if (!confirm(`Tem certeza que deseja excluir permanentemente o usuário #${id}?`)) return;
+            try {
+                const res = await fetch(`${API_SERVER}/api/usuarios/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + currentAdminToken }
+                });
+                const d = await res.json();
+                if (res.ok && d.success) {
+                    carregarUsuariosAdmin();
+                } else {
+                    alert('Erro ao excluir: ' + (d.error || 'Falha'));
+                }
+            } catch (e) {
+                alert('Erro: ' + e.message);
+            }
+        }
+
+        // 3. CHAVES DE API
+        async function carregarChavesApiAdmin() {
+            const tbody = document.getElementById('apiKeysTbody');
+            try {
+                const res = await fetch(`${API_SERVER}/api/apikeys`, {
+                    headers: { 'Authorization': 'Bearer ' + currentAdminToken }
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data.success && Array.isArray(data.data)) {
+                    document.getElementById('metricTotalApis').textContent = data.data.filter(x => x.ativo).length;
+                    tbody.innerHTML = data.data.map(k => `
+                        <tr>
+                            <td><strong>#${k.id}</strong></td>
+                            <td><strong>${k.nome_programa}</strong></td>
+                            <td><code>${k.chave_api}</code></td>
+                            <td><span class="badge-status active">${k.permissao}</span></td>
+                            <td>${k.ativo ? '<span class="badge-status active">Ativa</span>' : '<span class="badge-status inactive">Inativa</span>'}</td>
+                            <td style="font-size:0.78rem;">${k.criado_em}</td>
+                            <td style="font-size:0.78rem;">${k.ultimo_uso || 'Nunca'}</td>
+                            <td>
+                                <button class="btn-action btn-danger" onclick="revogarApiKeyAdmin(${k.id})"><i class="fas fa-ban"></i> Revogar</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) {}
+        }
+
+        async function abrirModalCriarApiKey() {
+            const p = prompt("Digite o nome do programa/sistema para conceder chave API:");
+            if (!p || !p.trim()) return;
+            try {
+                const res = await fetch(`${API_SERVER}/api/apikeys`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + currentAdminToken },
+                    body: JSON.stringify({ nome_programa: p.trim(), permissao: 'leitura' })
+                });
+                const d = await res.json();
+                if (res.ok && d.success) {
+                    alert(`🔑 Chave Gerada com Sucesso!\n\nPrograma: ${p}\nChave Secret Key:\n${d.chave_api}`);
+                    carregarChavesApiAdmin();
+                }
+            } catch (e) {
+                alert('Erro: ' + e.message);
+            }
+        }
+
+        async function revogarApiKeyAdmin(id) {
+            if (!confirm(`Revogar chave de API #${id}?`)) return;
+            try {
+                await fetch(`${API_SERVER}/api/apikeys/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + currentAdminToken }
+                });
+                carregarChavesApiAdmin();
+            } catch (e) {}
+        }
+
+        // 4. BANCO DE DADOS & TABELAS
+        async function carregarListaTabelasAdmin() {
+            const sel = document.getElementById('dbTableSelect');
+            try {
+                const res = await fetch(`${API_SERVER}/api/db/tables`, {
+                    headers: { 'Authorization': 'Bearer ' + currentAdminToken }
+                });
+                if (!res.ok) return;
+                const d = await res.json();
+                if (d.success && Array.isArray(d.data)) {
+                    sel.innerHTML = '<option value="">Selecione uma Tabela do Banco...</option>' + 
+                        d.data.map(t => `<option value="${t.tabela}">${t.tabela} (${t.registros} registros)</option>`).join('');
+                }
+            } catch (e) {}
+        }
+
+        async function carregarDadosTabelaSelecionada() {
+            const table = document.getElementById('dbTableSelect').value;
+            const thead = document.getElementById('dbExplorerThead');
+            const tbody = document.getElementById('dbExplorerTbody');
+            const header = document.getElementById('tableDetailsHeader');
+            const btnInsert = document.getElementById('btnInsertRecord');
+
+            if (!table) {
+                header.textContent = 'Selecione uma tabela acima.';
+                btnInsert.style.display = 'none';
+                thead.innerHTML = '<tr><th>Conteúdo da Tabela</th></tr>';
+                tbody.innerHTML = '<tr><td style="text-align:center;">Aguardando seleção...</td></tr>';
+                return;
+            }
+
+            btnInsert.style.display = 'inline-flex';
+            header.textContent = `Visualizando dados da tabela "${table}" (limite 100 registros reais do SQLite)...`;
+
+            try {
+                const res = await fetch(`${API_SERVER}/api/db/query`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + currentAdminToken },
+                    body: JSON.stringify({ query: `SELECT * FROM "${table}" LIMIT 100` })
+                });
+                const d = await res.json();
+                if (res.ok && d.success && Array.isArray(d.columns)) {
+                    const cols = d.columns;
+                    const rows = d.data || [];
+
+                    thead.innerHTML = `<tr>${cols.map(c => `<th>${c}</th>`).join('')}<th>Ações</th></tr>`;
+
+                    if (rows.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="${cols.length + 1}" style="text-align:center; color:var(--text-muted);">Tabela vazia (0 registros).</td></tr>`;
+                    } else {
+                        tbody.innerHTML = rows.map(r => {
+                            const recId = r.id;
+                            const actionCell = recId ? `<button class="btn-action btn-danger" style="padding:2px 6px; font-size:0.7rem;" onclick="deletarRegistroAdmin('${table}', ${recId})"><i class="fas fa-trash"></i> Excluir</button>` : '-';
+                            return `<tr>${cols.map(c => `<td>${r[c] !== null ? r[c] : '<span style="color:var(--text-muted)">NULL</span>'}</td>`).join('')}<td>${actionCell}</td></tr>`;
+                        }).join('');
+                    }
+                }
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="10">Erro: ${e.message}</td></tr>`;
+            }
+        }
+
+        async function deletarRegistroAdmin(table, recId) {
+            if (!confirm(`Confirma a exclusão permanente do registro #${recId} da tabela "${table}"?`)) return;
+            try {
+                const res = await fetch(`${API_SERVER}/api/db/table/${table}/record/${recId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + currentAdminToken }
+                });
+                const d = await res.json();
+                if (res.ok && d.success) {
+                    carregarDadosTabelaSelecionada();
+                } else {
+                    alert('Erro ao excluir: ' + (d.error || 'Falha'));
+                }
+            } catch (e) { alert('Erro: ' + e.message); }
+        }
+
+        // 5. API TESTER
+        async function executarTesteApi(e) {
+            e.preventDefault();
+            const method = document.getElementById('testerMethod').value;
+            const endpoint = document.getElementById('testerEndpoint').value;
+            let body = null;
+            try {
+                const rawBody = document.getElementById('testerBody').value.trim();
+                if (rawBody) body = JSON.parse(rawBody);
+            } catch (err) {
+                alert('JSON do body inválido!');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_SERVER}/api/admin/tester`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + currentAdminToken },
+                    body: JSON.stringify({ method, endpoint, body })
+                });
+                const d = await res.json();
+                if (res.ok && d.success) {
+                    document.getElementById('testerResultContainer').style.display = 'block';
+                    document.getElementById('testerStatusBadge').textContent = `HTTP ${d.status_code}`;
+                    document.getElementById('testerLatency').textContent = `Latência: ${d.elapsed_ms} ms`;
+                    document.getElementById('testerResponseBody').textContent = JSON.stringify(d.data, null, 2);
+                }
+            } catch (err) {
+                alert('Erro: ' + err.message);
+            }
+        }
+
+        // 6. LOGS DE AUDITORIA
+        async function carregarLogsAuditoria() {
+            const tbody = document.getElementById('logsTableTbody');
+            try {
+                const res = await fetch(`${API_SERVER}/api/logs`, {
+                    headers: { 'Authorization': 'Bearer ' + currentAdminToken }
+                });
+                if (!res.ok) return;
+                const d = await res.json();
+                if (d.success && Array.isArray(d.data)) {
+                    tbody.innerHTML = d.data.map(l => `
+                        <tr>
+                            <td><strong>#${l.id}</strong></td>
+                            <td><code>${l.tabela}</code></td>
+                            <td><span class="badge-status active">${l.acao}</span></td>
+                            <td>${l.registro_id || '-'}</td>
+                            <td><strong>${l.usuario_responsavel}</strong></td>
+                            <td><code>${l.ip_origem || '127.0.0.1'}</code></td>
+                            <td style="font-size:0.78rem;">${l.data_alteracao}</td>
+                            <td style="font-size:0.75rem; color:var(--text-muted);">${l.valor_novo || '-'}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) {}
+        }
+
+        // 7. CONEXÃO & LOGOUT
+        function abrirConfigConexaoModal() {
+            document.querySelectorAll('.sidebar-nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+            document.querySelector('[data-target="page-connection"]').classList.add('active');
+            document.getElementById('page-connection').classList.add('active');
+        }
+
+        async function salvarEtestarConexao() {
+            const input = document.getElementById('configServerUrl').value.trim();
+            if (!input) return;
+            let fmt = input.startsWith('http') ? input : 'http://' + input;
+            localStorage.setItem('sf_dataserver_url', fmt);
+            API_SERVER = fmt;
+
+            const resEl = document.getElementById('connectionTestResult');
+            resEl.textContent = 'Testando conexão...';
+            try {
+                const res = await fetch(`${API_SERVER}/api/system`);
+                if (res.ok) {
+                    resEl.innerHTML = '<span style="color:#34d399">🟢 Dataserver Conectado com Sucesso!</span>';
+                    carregarVisaoGeral();
+                } else {
+                    resEl.innerHTML = '<span style="color:#f87171">🔴 Resposta inválida do Servidor (HTTP ' + res.status + ')</span>';
+                }
+            } catch (err) {
+                resEl.innerHTML = '<span style="color:#f87171">🔴 Erro ao conectar no DataServer: ' + err.message + '</span>';
+            }
+        }
+
+        function executarLogoutAdmin() {
+            if (confirm("Encerrar sessão administrativa?")) {
+                localStorage.removeItem('sf_auth_token');
+                window.location.reload();
+            }
+        }
+
+        // INICIALIZAÇÃO DA APLICAÇÃO ADMINISTRATIVA
+        window.onload = function() {
+            document.getElementById('configServerUrl').value = API_SERVER;
+            carregarVisaoGeral();
+        };
+    </script>
+</body>
+</html>

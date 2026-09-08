@@ -631,8 +631,22 @@ def init_db():
 @app.route('/frota')
 @app.route('/index.html')
 def serve_index():
-    """Serve o aplicativo Gerencial de Gestão de Frota, Usuários e Banco de Dados (index.html)."""
+    """Serve o aplicativo Gestão de Frota (index.html)."""
     response = send_file(os.path.join(FRONTEND_DIR, 'index.html'))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
+@app.route('/admin')
+@app.route('/dataserver-gestao')
+@app.route('/dataserver_gestao.html')
+def serve_dataserver_gestao():
+    """Serve o Console Administrativo SimpleFarm DataServer Gestão (dataserver_gestao.html)."""
+    admin_file = os.path.join(PROJECT_DIR, 'dataserver_gestao.html')
+    if not os.path.exists(admin_file):
+        admin_file = os.path.join(FRONTEND_DIR, 'dataserver_gestao.html')
+    response = send_file(admin_file)
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
@@ -658,23 +672,6 @@ def serve_glass():
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
     return response
-
-@app.route('/<path:filename>')
-def serve_static_files(filename):
-    """Serve arquivos estáticos do frontend."""
-    clean = filename.strip('/')
-    if clean in ['glass', 'glass.html']:
-        response = send_file(os.path.join(FRONTEND_DIR, 'glass.html'))
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-        return response
-    if clean in ['monitor', 'dataserver', 'banco', 'monitor.html']:
-        response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-        return response
-    file_path = os.path.join(FRONTEND_DIR, clean)
-    if os.path.exists(file_path) and os.path.isfile(file_path):
-        return send_file(file_path)
-    return send_file(os.path.join(FRONTEND_DIR, 'index.html'))
 
 # ==================== API ENDPOINTS PUBLICOS ====================
 
@@ -3553,6 +3550,207 @@ def executar_query_admin():
             return jsonify(success=True, message=f'Comando executado ({affected} linhas afetadas)', rows_affected=affected)
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/api/db/table/<table_name>/schema', methods=['GET'])
+def obter_schema_tabela(table_name):
+    """Retorna o esquema detalhado da tabela (colunas, tipos, notnull, default, PK, FK)."""
+    try:
+        conn = get_db_connection()
+        col_cursor = conn.execute(f'PRAGMA table_info("{table_name}")')
+        colunas = [dict(c) for c in col_cursor.fetchall()]
+        
+        fk_cursor = conn.execute(f'PRAGMA foreign_key_list("{table_name}")')
+        foreign_keys = [dict(fk) for fk in fk_cursor.fetchall()]
+        
+        idx_cursor = conn.execute(f'PRAGMA index_list("{table_name}")')
+        indexes = [dict(idx) for idx in idx_cursor.fetchall()]
+        
+        conn.close()
+        return jsonify(success=True, tabela=table_name, colunas=colunas, foreign_keys=foreign_keys, indexes=indexes)
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/api/db/table/<table_name>/record', methods=['POST'])
+def inserir_registro_tabela(table_name):
+    """Insere um novo registro na tabela SQLite fornecida."""
+    try:
+        data = request.get_json() or {}
+        if not data:
+            return jsonify(success=False, error='Dados vazios'), 400
+        
+        cols = list(data.keys())
+        placeholders = ', '.join(['?'] * len(cols))
+        col_names = ', '.join([f'"{c}"' for c in cols])
+        vals = [data[c] for c in cols]
+        
+        sql = f'INSERT INTO "{table_name}" ({col_names}) VALUES ({placeholders})'
+        conn = get_db_connection()
+        cursor = conn.execute(sql, vals)
+        conn.commit()
+        last_id = cursor.lastrowid
+        conn.close()
+        
+        registrar_alteracao(table_name, last_id, 'insercao', None, str(data))
+        return jsonify(success=True, message=f'Registro inserido com sucesso na tabela {table_name}', id=last_id)
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/api/db/table/<table_name>/record/<int:rec_id>', methods=['PUT'])
+def atualizar_registro_tabela(table_name, rec_id):
+    """Atualiza um registro na tabela SQLite fornecida pelo ID."""
+    try:
+        data = request.get_json() or {}
+        if not data:
+            return jsonify(success=False, error='Dados vazios'), 400
+        
+        cols = list(data.keys())
+        set_clause = ', '.join([f'"{c}" = ?' for c in cols])
+        vals = [data[c] for c in cols]
+        vals.append(rec_id)
+        
+        sql = f'UPDATE "{table_name}" SET {set_clause} WHERE id = ?'
+        conn = get_db_connection()
+        cursor = conn.execute(sql, vals)
+        conn.commit()
+        conn.close()
+        
+        registrar_alteracao(table_name, rec_id, 'atualizacao', None, str(data))
+        return jsonify(success=True, message=f'Registro #{rec_id} atualizado com sucesso na tabela {table_name}')
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/api/db/table/<table_name>/record/<int:rec_id>', methods=['DELETE'])
+def deletar_registro_tabela(table_name, rec_id):
+    """Exclui um registro da tabela SQLite fornecida com confirmação e auditoria."""
+    try:
+        conn = get_db_connection()
+        conn.execute(f'DELETE FROM "{table_name}" WHERE id = ?', (rec_id,))
+        conn.commit()
+        conn.close()
+        
+        registrar_alteracao(table_name, rec_id, 'exclusao', None, f'Registro deletado de {table_name}')
+        return jsonify(success=True, message=f'Registro #{rec_id} removido da tabela {table_name}')
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/api/usuarios/<int:user_id>/status', methods=['POST'])
+def alterar_status_usuario(user_id):
+    """Bloqueia/desbloqueia ou ativa/desativa um usuario."""
+    try:
+        data = request.get_json() or {}
+        ativo = int(data.get('ativo', 1))
+        conn = get_db_connection()
+        
+        # Protecao do usuario master julianotimoteo
+        user = conn.execute('SELECT usuario FROM usuarios WHERE id = ?', (user_id,)).fetchone()
+        if user and user['usuario'] in ('julianotimoteo', 'julianotimoteo@usinapitangueiras.com.br'):
+            conn.close()
+            return jsonify(success=False, error='O usuario Master julianotimoteo nao pode ser inativado ou bloqueado'), 403
+            
+        conn.execute('UPDATE usuarios SET ativo = ? WHERE id = ?', (ativo, user_id))
+        conn.commit()
+        conn.close()
+        registrar_alteracao('usuarios', user_id, 'alteracao_status', None, f'Ativo={ativo}')
+        return jsonify(success=True, message=f'Status do usuario alterado para {"Ativo" if ativo else "Inativo/Bloqueado"}')
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/api/usuarios/<int:user_id>/reset-password', methods=['POST'])
+def resetar_senha_usuario(user_id):
+    """Redefine a senha de um usuario de forma segura."""
+    try:
+        data = request.get_json() or {}
+        nova_senha = data.get('nova_senha', '').strip()
+        if not nova_senha or len(nova_senha) < 4:
+            return jsonify(success=False, error='Nova senha deve ter no minimo 4 caracteres'), 400
+        
+        h, s = hash_senha(nova_senha)
+        conn = get_db_connection()
+        conn.execute('UPDATE usuarios SET senha_hash = ?, salt = ? WHERE id = ?', (h, s, user_id))
+        conn.commit()
+        conn.close()
+        registrar_alteracao('usuarios', user_id, 'reset_senha', None, 'Senha redefinida pelo administrador')
+        return jsonify(success=True, message='Senha redefinida com sucesso')
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/api/admin/tester', methods=['POST'])
+def executar_teste_api_proxy():
+    """Proxy para testar chamadas HTTP REST administrativas internamente."""
+    import time
+    try:
+        data = request.get_json() or {}
+        endpoint = data.get('endpoint', '').strip()
+        metodo = data.get('method', 'GET').upper()
+        payload = data.get('body')
+        
+        if not endpoint.startswith('/'):
+            endpoint = '/' + endpoint
+            
+        start_time = time.time()
+        url = f'http://127.0.0.1:8000{endpoint}'
+        
+        if metodo == 'GET':
+            resp = requests.get(url, timeout=10)
+        elif metodo == 'POST':
+            resp = requests.post(url, json=payload, timeout=10)
+        elif metodo == 'PUT':
+            resp = requests.put(url, json=payload, timeout=10)
+        elif metodo == 'DELETE':
+            resp = requests.delete(url, timeout=10)
+        else:
+            return jsonify(success=False, error=f'Metodo {metodo} nao suportado'), 400
+            
+        elapsed_ms = int((time.time() - start_time) * 1000)
+        
+        try:
+            body_json = resp.json()
+        except Exception:
+            body_json = resp.text
+            
+        return jsonify(success=True, status_code=resp.status_code, elapsed_ms=elapsed_ms, headers=dict(resp.headers), data=body_json)
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/api/logs', methods=['GET'])
+def listar_logs_auditoria():
+    """Retorna os registros de alteracao e auditoria administrativa."""
+    try:
+        limite = request.args.get('limit', 100, type=int)
+        conn = get_db_connection()
+        cursor = conn.execute('''
+            SELECT ra.id, ra.tabela, ra.registro_id, ra.acao, ra.valor_antigo, ra.valor_novo, ra.ip_origem, ra.data_alteracao,
+                   COALESCE(u.nome, u.usuario, 'Sistema / Admin') as usuario_responsavel
+            FROM registro_alteracoes ra
+            LEFT JOIN usuarios u ON ra.responsavel_id = u.id
+            ORDER BY ra.id DESC
+            LIMIT ?
+        ''', (limite,))
+        rows = cursor.fetchall()
+        conn.close()
+        dados = [dict(row) for row in rows]
+        return jsonify(success=True, data=dados, total=len(dados))
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/<path:filename>')
+def serve_static_files(filename):
+    """Serve arquivos estáticos do frontend."""
+    clean = filename.strip('/')
+    if clean.startswith('api/'):
+        return jsonify(success=False, error=f'Endpoint /{clean} nao encontrado'), 404
+    if clean in ['glass', 'glass.html']:
+        response = send_file(os.path.join(FRONTEND_DIR, 'glass.html'))
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        return response
+    if clean in ['monitor', 'dataserver', 'banco', 'monitor.html']:
+        response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        return response
+    file_path = os.path.join(FRONTEND_DIR, clean)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        return send_file(file_path)
+    return send_file(os.path.join(FRONTEND_DIR, 'index.html'))
 
 sync_service = SyncService()
 
