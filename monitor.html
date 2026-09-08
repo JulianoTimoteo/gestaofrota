@@ -66,14 +66,18 @@
         .status-pill.offline .status-dot { background:#f87171; animation:none; }
         @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
 
-        /* CARDS GRID */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
+        /* CARDS ROW (Side-by-side) */
+        .cards-row {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
             gap: 6px;
             margin-bottom: 6px;
+            width: 100%;
         }
         .card {
+            flex: 1 1 0px;
+            min-width: 0;
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -89,8 +93,22 @@
         }
         .card-icon { font-size: 1rem; margin-bottom: 2px; }
         .card-label { font-size: 0.5rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing:.05em; margin-bottom: 2px; }
-        .card-value { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
-        .card-sub { font-size: 0.48rem; color: var(--low); margin-top: 1px; }
+        .card-value { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-sub { font-size: 0.48rem; color: var(--low); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .btn-action {
+            color: #ffffff;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.25);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-action:hover { background: rgba(255,255,255,0.3); }
 
         /* PROGRESS BAR */
         .progress {
@@ -179,8 +197,8 @@
     <div class="header">
         <h1>🖥️ SimpleFarm DataServer · Gerenciador de Banco</h1>
         <div style="display:flex; align-items:center; gap:0.5rem;">
-            <a href="http://localhost:3000" style="color:#ffffff; background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:8px; font-size:0.75rem; font-weight:600; text-decoration:none;" title="Abrir App Gestão de Frota e Usuários no Notebook (localhost:3000)">🚜 App Gestão Frota (Porta 3000)</a>
-            <a href="/glass" style="color:#ffffff; background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:8px; font-size:0.75rem; font-weight:600; text-decoration:none;" title="Abrir Painel Tablet">📱 Tablet</a>
+            <button class="btn-action" onclick="toggleFullScreen()" title="Alternar Tela Cheia">⛶ Tela Cheia</button>
+            <a href="/glass" class="btn-action" title="Abrir Painel Tablet">📱 Tablet</a>
             <div class="status-pill" id="statusPill" onclick="promptChangeServerIp()" style="cursor:pointer;" title="Clique para alterar o IP do DataServer na rede Wi-Fi">
                 <span class="status-dot"></span>
                 <span id="statusText">Conectando...</span>
@@ -190,8 +208,8 @@
 
     <div class="error-msg" id="errorMsg"></div>
 
-    <!-- Linha 1: recursos do sistema -->
-    <div class="cards-grid">
+    <!-- Linha 1: recursos do sistema (Lado a lado) -->
+    <div class="cards-row">
         <div class="card">
             <div class="card-icon">💻</div>
             <div class="card-label">CPU</div>
@@ -224,13 +242,13 @@
         </div>
     </div>
 
-    <!-- Linha 2: servidor e sincronização -->
-    <div class="cards-grid">
+    <!-- Linha 2: servidor e autocura / sincronização (Lado a lado) -->
+    <div class="cards-row">
         <div class="card">
             <div class="card-icon">🔄</div>
-            <div class="card-label">Sync</div>
-            <div class="card-value" id="sync" style="font-size:.85rem;color:#10b981">--</div>
-            <div class="card-sub" id="syncInfo">--</div>
+            <div class="card-label">Autocura</div>
+            <div class="card-value" id="sync" style="font-size:.85rem;color:#10b981">Ativo</div>
+            <div class="card-sub" id="syncInfo">0 ciclos (60s)</div>
         </div>
         <div class="card">
             <div class="card-icon">📊</div>
@@ -288,6 +306,22 @@
         try { saved = localStorage.getItem('sf_dataserver_api'); } catch(e){}
         return saved || 'http://172.16.12.36:8000';
     })();
+
+    window.toggleFullScreen = function() {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(function(e){});
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(function(e){});
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    };
 
     window.promptChangeServerIp = function() {
         var cur = API || 'http://172.16.12.36:8000';
