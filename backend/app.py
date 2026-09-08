@@ -282,7 +282,7 @@ def require_bearer(f):
 
 # ==================== FLASK APP ====================
 
-app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='')
+app = Flask(__name__, static_folder=None)
 CORS(app)
 
 @app.after_request
@@ -628,17 +628,25 @@ def init_db():
 @app.route('/monitor')
 @app.route('/dataserver')
 @app.route('/banco')
+@app.route('/monitor.html')
 def serve_monitor_html():
     """Serve o arquivo monitor.html (Gerenciador do DataServer / Banco de Dados)."""
-    return send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
+    response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
-@app.route('/app', endpoint='serve_app', strict_slashes=False)
-@app.route('/app.html', endpoint='serve_app_html', strict_slashes=False)
-@app.route('/index.html', endpoint='serve_index_html', strict_slashes=False)
-@app.route('/gestaofrota', endpoint='serve_gestaofrota', strict_slashes=False)
+@app.route('/app')
+@app.route('/app.html')
+@app.route('/gestaofrota')
+@app.route('/frota')
+@app.route('/index.html')
 def serve_index():
     """Serve o aplicativo Gestão de Frota (index.html)."""
-    return send_file(os.path.join(FRONTEND_DIR, 'index.html'))
+    response = send_file(os.path.join(FRONTEND_DIR, 'index.html'))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    return response
 
 @app.route('/glass')
 @app.route('/glass.html')
@@ -648,6 +656,27 @@ def serve_glass():
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
     return response
+
+@app.route('/<path:filename>')
+def serve_static_files(filename):
+    """Serve arquivos estáticos do frontend."""
+    clean = filename.strip('/')
+    if clean in ['app', 'app.html', 'gestaofrota', 'frota', 'index.html']:
+        response = send_file(os.path.join(FRONTEND_DIR, 'index.html'))
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        return response
+    if clean in ['glass', 'glass.html']:
+        response = send_file(os.path.join(FRONTEND_DIR, 'glass.html'))
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        return response
+    if clean in ['monitor', 'dataserver', 'banco', 'monitor.html']:
+        response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        return response
+    file_path = os.path.join(FRONTEND_DIR, clean)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        return send_file(file_path)
+    return send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
 
 # ==================== API ENDPOINTS PUBLICOS ====================
 

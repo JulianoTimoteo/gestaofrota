@@ -1,10 +1,8 @@
-const CACHE_NAME = 'fleet-cache-v2';
+const CACHE_NAME = 'fleet-cache-v4';
 const OFFLINE_URL = './index.html';
 const ASSETS_TO_CACHE = [
-    './',
     './index.html',
     './manifest.json',
-    './auth.js',
     './android-chrome-192x192.png',
     './android-chrome-512x512.png',
     './favicon.ico'
@@ -43,7 +41,14 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    if (event.request.method === 'GET' && !event.request.url.includes('/api/')) {
+    const url = new URL(event.request.url);
+
+    // Nao interceptar a raiz /, /monitor ou chamadas de API (permite abrir o DataServer monitor.html em http://localhost:8000/)
+    if (url.pathname === '/' || url.pathname === '/monitor' || url.pathname === '/dataserver' || url.pathname.startsWith('/api')) {
+        return;
+    }
+
+    if (event.request.method === 'GET') {
         event.respondWith(
             caches.match(event.request).then((cachedResponse) => {
                 if (cachedResponse) {
