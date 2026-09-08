@@ -3353,11 +3353,11 @@
                 <div>
                     <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Perfil / Nível de Acesso *</label>
                     <select id="crudUserNivel" class="filter-input" required style="width:100%;cursor:pointer;">
-                        <option value="admin">Administrador (Acesso Total)</option>
-                        <option value="analista">Analista (Acesso Total)</option>
-                        <option value="supervisor">Supervisor (Acesso Total)</option>
-                        <option value="operador">Operador (Somente Equipes)</option>
-                        <option value="visualizador">Visualizador (Somente Equipes)</option>
+                        <option value="admin">Level 100 — Master Administrador Geral (Acesso Total)</option>
+                        <option value="gerente">Level 80 — Gerente / Coordenador Geral (Gestão & Consulta)</option>
+                        <option value="supervisor">Level 60 — Supervisor de Campo / Oficina (Abertura/Fechamento OS)</option>
+                        <option value="operador">Level 40 — Operador / Técnico (Somente Equipes Vinculadas)</option>
+                        <option value="visualizador">Level 20 — Visualizador (Somente Leitura)</option>
                     </select>
                 </div>
                 <div>
@@ -10682,11 +10682,12 @@
                     if (countEl) countEl.textContent = `${users.length} usuários registrados`;
 
                     const rolesMap = {
-                        'admin': { label: 'Administrador', badge: 'os-aberta' },
-                        'analista': { label: 'Analista', badge: 'team-badge' },
-                        'supervisor': { label: 'Supervisor', badge: 'team-badge' },
-                        'operador': { label: 'Operador', badge: 'os-fechada' },
-                        'visualizador': { label: 'Visualizador', badge: 'os-fechada' }
+                        'master': { label: 'Level 100 · Master Admin', badge: 'os-aberta' },
+                        'admin': { label: 'Level 100 · Master Admin', badge: 'os-aberta' },
+                        'gerente': { label: 'Level 80 · Gerente', badge: 'team-badge' },
+                        'supervisor': { label: 'Level 60 · Supervisor', badge: 'team-badge' },
+                        'operador': { label: 'Level 40 · Operador', badge: 'os-fechada' },
+                        'visualizador': { label: 'Level 20 · Visualizador', badge: 'os-fechada' }
                     };
 
                     tbody.innerHTML = users.map(u => {

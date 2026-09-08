@@ -892,8 +892,11 @@
                 <div>
                     <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">Nível de Acesso / Perfil *</label>
                     <select id="formUserAdminFlag" class="form-control" required>
-                        <option value="1">Master / Administrador (Acesso Total)</option>
-                        <option value="0">Gerente / Operador (Somente Leitura/Equipes)</option>
+                        <option value="admin">Level 100 — Master Administrador Geral (Acesso Total)</option>
+                        <option value="gerente">Level 80 — Gerente / Coordenador Geral (Gestão & Consulta)</option>
+                        <option value="supervisor">Level 60 — Supervisor de Campo / Oficina (Abertura/Fechamento OS)</option>
+                        <option value="operador">Level 40 — Operador / Técnico (Somente Equipes Vinculadas)</option>
+                        <option value="visualizador">Level 20 — Visualizador (Somente Leitura)</option>
                     </select>
                 </div>
                 <div>
@@ -1014,7 +1017,16 @@
                     
                     tbody.innerHTML = cachedAdminUsers.map(u => {
                         const isMaster = u.usuario === 'julianotimoteo' || u.email === 'julianotimoteo@usinapitangueiras.com.br';
-                        const roleBadge = isMaster ? '<span class="badge-status master">Master Admin</span>' : (u.admin ? '<span class="badge-status active">Administrador</span>' : '<span class="badge-status inactive">Operador</span>');
+                        const roleKey = u.nivel_chave || u.role || (u.admin ? 'admin' : 'visualizador');
+                        const roleMap = {
+                            'master': '<span class="badge-status master">Master Admin (100)</span>',
+                            'admin': '<span class="badge-status active">Master Admin (100)</span>',
+                            'gerente': '<span class="badge-status active" style="background:rgba(14,165,233,0.18);color:#38bdf8;border-color:rgba(14,165,233,0.35);">Gerente (80)</span>',
+                            'supervisor': '<span class="badge-status active" style="background:rgba(245,158,11,0.18);color:#fbbf24;border-color:rgba(245,158,11,0.35);">Supervisor (60)</span>',
+                            'operador': '<span class="badge-status inactive" style="background:rgba(99,102,241,0.18);color:#818cf8;border-color:rgba(99,102,241,0.35);">Operador (40)</span>',
+                            'visualizador': '<span class="badge-status inactive">Visualizador (20)</span>'
+                        };
+                        const roleBadge = isMaster ? '<span class="badge-status master">Master Admin (100)</span>' : (roleMap[roleKey] || '<span class="badge-status active">Administrador</span>');
                         const statusBadge = u.ativo == 1 ? '<span class="badge-status active">Ativo</span>' : '<span class="badge-status inactive">Bloqueado</span>';
                         
                         const actions = isMaster ? '<span style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">Conta Master Protegida</span>' : `
@@ -1047,6 +1059,7 @@
             document.getElementById('formUserLogin').value = '';
             document.getElementById('formUserNome').value = '';
             document.getElementById('formUserEmail').value = '';
+            document.getElementById('formUserAdminFlag').value = 'admin';
             document.getElementById('formUserPass').required = true;
             document.getElementById('lblFormUserPass').textContent = 'Senha *';
             document.getElementById('modalUserOverlay').classList.add('active');
@@ -1060,7 +1073,7 @@
             document.getElementById('formUserLogin').value = u.usuario;
             document.getElementById('formUserNome').value = u.nome || '';
             document.getElementById('formUserEmail').value = u.email || '';
-            document.getElementById('formUserAdminFlag').value = u.admin ? '1' : '0';
+            document.getElementById('formUserAdminFlag').value = u.nivel_chave || u.role || (u.admin ? 'admin' : 'visualizador');
             document.getElementById('formUserPass').required = false;
             document.getElementById('lblFormUserPass').textContent = 'Nova Senha (deixe em branco se não desejar alterar)';
             document.getElementById('modalUserOverlay').classList.add('active');
@@ -1073,11 +1086,14 @@
         async function salvarUsuarioAdminSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('formUserId').value;
+            const roleVal = document.getElementById('formUserAdminFlag').value;
             const body = {
                 usuario: document.getElementById('formUserLogin').value.trim(),
                 nome: document.getElementById('formUserNome').value.trim(),
                 email: document.getElementById('formUserEmail').value.trim(),
-                admin: parseInt(document.getElementById('formUserAdminFlag').value),
+                admin: ['admin', 'master', 'gerente', 'supervisor'].includes(roleVal) ? 1 : 0,
+                nivel_chave: roleVal,
+                role: roleVal,
                 senha: document.getElementById('formUserPass').value
             };
 
