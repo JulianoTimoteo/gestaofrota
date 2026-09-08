@@ -625,27 +625,27 @@ def init_db():
 # ==================== FRONTEND ====================
 
 @app.route('/')
-@app.route('/monitor')
-@app.route('/dataserver')
-@app.route('/banco')
-@app.route('/monitor.html')
-def serve_monitor_html():
-    """Serve o arquivo monitor.html (Gerenciador do DataServer / Banco de Dados)."""
-    response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
-    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
-    return response
-
 @app.route('/app')
 @app.route('/app.html')
 @app.route('/gestaofrota')
 @app.route('/frota')
 @app.route('/index.html')
 def serve_index():
-    """Serve o aplicativo Gestão de Frota (index.html)."""
+    """Serve o aplicativo Gestão de Frota (index.html) - Inclui Gestão de Usuários, Permissões, Frota e Tabelas."""
     response = send_file(os.path.join(FRONTEND_DIR, 'index.html'))
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    return response
+
+@app.route('/monitor')
+@app.route('/dataserver')
+@app.route('/banco')
+@app.route('/monitor.html')
+def serve_monitor_html():
+    """Serve o monitor de métricas do DataServer (monitor.html)."""
+    response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
     return response
 
 @app.route('/glass')
@@ -661,10 +661,6 @@ def serve_glass():
 def serve_static_files(filename):
     """Serve arquivos estáticos do frontend."""
     clean = filename.strip('/')
-    if clean in ['app', 'app.html', 'gestaofrota', 'frota', 'index.html']:
-        response = send_file(os.path.join(FRONTEND_DIR, 'index.html'))
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-        return response
     if clean in ['glass', 'glass.html']:
         response = send_file(os.path.join(FRONTEND_DIR, 'glass.html'))
         response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
@@ -676,7 +672,7 @@ def serve_static_files(filename):
     file_path = os.path.join(FRONTEND_DIR, clean)
     if os.path.exists(file_path) and os.path.isfile(file_path):
         return send_file(file_path)
-    return send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
+    return send_file(os.path.join(FRONTEND_DIR, 'index.html'))
 
 # ==================== API ENDPOINTS PUBLICOS ====================
 
