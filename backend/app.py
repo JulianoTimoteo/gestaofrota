@@ -625,26 +625,29 @@ def init_db():
 # ==================== FRONTEND ====================
 
 @app.route('/')
-@app.route('/monitor')
-@app.route('/dataserver')
-@app.route('/monitor.html')
-def serve_monitor_html():
-    """Serve o monitor de métricas do DataServer no localhost:8000 (monitor.html)."""
-    response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
-    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
-    return response
-
 @app.route('/app')
 @app.route('/app.html')
 @app.route('/gestaofrota')
 @app.route('/frota')
 @app.route('/index.html')
 def serve_index():
-    """Serve o aplicativo Gestão de Frota e Usuários (index.html)."""
+    """Serve o aplicativo Gerencial de Gestão de Frota, Usuários e Banco de Dados (index.html)."""
     response = send_file(os.path.join(FRONTEND_DIR, 'index.html'))
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
+@app.route('/tablet')
+@app.route('/monitor')
+@app.route('/dataserver')
+@app.route('/monitor.html')
+def serve_monitor_html():
+    """Serve o monitor de métricas do DataServer do Tablet (monitor.html)."""
+    response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
     return response
 
 @app.route('/glass')

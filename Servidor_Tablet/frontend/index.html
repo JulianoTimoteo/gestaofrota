@@ -3014,6 +3014,9 @@
                         </label>
                     </div>
                     <div class="user-menu" id="userMenu">
+                        <a href="/tablet" target="_blank" class="btn btn-sm btn-outline" style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.35rem 0.75rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none;" title="Abrir Monitor DataServer do Tablet">
+                            <i class="fas fa-tablet-alt" style="color:var(--color-primary);"></i> <span>Painel Tablet</span>
+                        </a>
                         <button id="btnHeaderInstallPwa" class="btn-pwa-header" style="display:none;" title="Instalar aplicativo no celular">
                             <i class="fas fa-mobile-alt"></i> <span>Baixar App</span>
                         </button>
@@ -3062,6 +3065,7 @@
                 <button class="tab-btn" data-subtab="tab-sync"><i class="fas fa-cloud-upload-alt"></i> Sincronização</button>
                 <button class="tab-btn" data-subtab="tab-usuarios"><i class="fas fa-user-shield"></i> Gestão de Usuários</button>
                 <button class="tab-btn" data-subtab="tab-database"><i class="fas fa-database"></i> Gerenciador de Banco</button>
+                <button class="tab-btn" data-subtab="tab-apikeys"><i class="fas fa-key"></i> Gerador de APIs</button>
             </div>
             <div id="adminSubContents">
                 <!-- Equipamentos -->
@@ -3103,7 +3107,7 @@
                 <div id="tab-operacoes" class="tab-content">
                     <div class="card">
                         <div class="card-header">
-                            <h2><i class="fas fa-tasks"></i> Operações Produtivas</h2>
+                            <h2><i class="fas fa-tasks"></i> Operações Produtivas e Grau de Elevação</h2>
                             <div class="flex gap-2">
                                 <button type="button" id="btnOpenAddOper" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;padding:0.4rem 0.88rem;font-size:0.82rem;font-weight:600;border-radius:8px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#fff;border:none;cursor:pointer;box-shadow:0 2px 6px rgba(16,185,129,0.3);white-space:nowrap;"><i class="fas fa-plus-circle"></i> +Operação</button>
                                 <input type="text" class="filter-input" id="filterOperacao" placeholder="Filtrar operação...">
@@ -3227,6 +3231,86 @@
                                     <tr><td class="empty-message">Nenhuma tabela selecionada.</td></tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gerador de APIs e Integrações REST -->
+                <div id="tab-apikeys" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-key"></i> Gerador de Chaves de API & Integrações REST</h2>
+                            <div class="flex gap-2" style="align-items:center;">
+                                <button type="button" onclick="openCreateApiKeyModal()" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;padding:0.4rem 0.88rem;font-size:0.82rem;font-weight:600;border-radius:8px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#fff;border:none;cursor:pointer;box-shadow:0 2px 6px rgba(16,185,129,0.3);white-space:nowrap;"><i class="fas fa-plus-circle"></i> + Gerar Nova Chave API</button>
+                                <button type="button" onclick="carregarChavesApiExplorer()" class="btn-primary" style="padding:0.4rem 0.88rem;font-size:0.82rem;font-weight:600;border-radius:8px;background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);color:#fff;border:none;cursor:pointer;"><i class="fas fa-sync-alt"></i> Atualizar Chaves</button>
+                            </div>
+                        </div>
+                        <div class="table-wrap" style="margin-bottom:1.5rem;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nome do Programa / Sistema</th>
+                                        <th>Chave de API (Secret Key)</th>
+                                        <th>Permissão</th>
+                                        <th>Status</th>
+                                        <th>Criada em</th>
+                                        <th>Último Uso</th>
+                                        <th style="min-width:130px;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="apiKeysTableBody">
+                                    <tr><td colspan="8" class="empty-message">Carregando chaves de API...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- DOCUMENTAÇÃO E TESTADOR INTERATIVO DE ENDPOINTS -->
+                        <div style="border-top:1px solid var(--color-gray-200);padding-top:1.25rem;margin-top:1rem;">
+                            <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;"><i class="fas fa-code" style="color:var(--color-primary);"></i> Endpoints REST Disponíveis para Consulta e Integração</h3>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:1rem;">
+                                <div style="background:var(--color-gray-50);padding:1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                                        <span style="background:#22c55e;color:#fff;font-size:0.68rem;font-weight:700;padding:2px 6px;border-radius:4px;">GET</span>
+                                        <code style="font-size:0.8rem;font-weight:700;">/api/system</code>
+                                    </div>
+                                    <p style="font-size:0.78rem;color:var(--color-gray-600);margin-bottom:0.6rem;">Retorna CPU, RAM, Disco, Uptime do Servidor e total de tabelas.</p>
+                                    <button onclick="testarEndpointApi('/api/system')" class="btn btn-outline btn-sm" style="font-size:0.75rem;width:100%;justify-content:center;"><i class="fas fa-play"></i> Testar Endpoint</button>
+                                </div>
+
+                                <div style="background:var(--color-gray-50);padding:1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                                        <span style="background:#22c55e;color:#fff;font-size:0.68rem;font-weight:700;padding:2px 6px;border-radius:4px;">GET</span>
+                                        <code style="font-size:0.8rem;font-weight:700;">/api/equipamentos</code>
+                                    </div>
+                                    <p style="font-size:0.78rem;color:var(--color-gray-600);margin-bottom:0.6rem;">Lista todos os equipamentos cadastrados da frota com status.</p>
+                                    <button onclick="testarEndpointApi('/api/equipamentos')" class="btn btn-outline btn-sm" style="font-size:0.75rem;width:100%;justify-content:center;"><i class="fas fa-play"></i> Testar Endpoint</button>
+                                </div>
+
+                                <div style="background:var(--color-gray-50);padding:1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                                        <span style="background:#22c55e;color:#fff;font-size:0.68rem;font-weight:700;padding:2px 6px;border-radius:4px;">GET</span>
+                                        <code style="font-size:0.8rem;font-weight:700;">/api/db/tables</code>
+                                    </div>
+                                    <p style="font-size:0.78rem;color:var(--color-gray-600);margin-bottom:0.6rem;">Lista as 42 tabelas do SQLite com contagem de registros e colunas.</p>
+                                    <button onclick="testarEndpointApi('/api/db/tables')" class="btn btn-outline btn-sm" style="font-size:0.75rem;width:100%;justify-content:center;"><i class="fas fa-play"></i> Testar Endpoint</button>
+                                </div>
+
+                                <div style="background:var(--color-gray-50);padding:1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                                        <span style="background:#22c55e;color:#fff;font-size:0.68rem;font-weight:700;padding:2px 6px;border-radius:4px;">GET</span>
+                                        <code style="font-size:0.8rem;font-weight:700;">/api/operacoes</code>
+                                    </div>
+                                    <p style="font-size:0.78rem;color:var(--color-gray-600);margin-bottom:0.6rem;">Retorna a lista completa de operações produtivas e improdutivas.</p>
+                                    <button onclick="testarEndpointApi('/api/operacoes')" class="btn btn-outline btn-sm" style="font-size:0.75rem;width:100%;justify-content:center;"><i class="fas fa-play"></i> Testar Endpoint</button>
+                                </div>
+                            </div>
+
+                            <!-- PAINEL DE RESPOSTA DO TESTADOR -->
+                            <div id="apiTesterResponseBox" style="display:none;margin-top:1rem;background:#0f172a;padding:1rem;border-radius:8px;color:#38bdf8;font-family:monospace;font-size:0.78rem;max-height:260px;overflow-y:auto;">
+                                <div style="font-weight:700;margin-bottom:6px;" id="apiTesterTitle">Resposta HTTP:</div>
+                                <pre id="apiTesterPre" style="margin:0;white-space:pre-wrap;word-break:break-all;"></pre>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -10401,6 +10485,8 @@
                 renderUsuariosList();
             } else if (subId === 'tab-database') {
                 carregarListaTabelasExplorer();
+            } else if (subId === 'tab-apikeys') {
+                carregarChavesApiExplorer();
             }
         }
 
@@ -10707,6 +10793,145 @@
                 alert('Erro ao comunicar com o banco: ' + err.message);
             } finally {
                 hideGlobalLoader();
+            }
+        };
+
+        // ================================================================
+        // GERADOR DE CHAVES DE API & INTEGRAÇÕES REST
+        // ================================================================
+        window.carregarChavesApiExplorer = async function() {
+            const tbodyEl = document.getElementById('apiKeysTableBody');
+            if (!tbodyEl) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/apikeys`, {
+                    headers: { 'Authorization': 'Bearer ' + authToken }
+                });
+                if (!res.ok) {
+                    tbodyEl.innerHTML = '<tr><td colspan="8" class="empty-message">Apenas administradores podem visualizar chaves de API.</td></tr>';
+                    return;
+                }
+                const result = await res.json();
+                if (result && result.success && Array.isArray(result.data)) {
+                    if (result.data.length === 0) {
+                        tbodyEl.innerHTML = '<tr><td colspan="8" class="empty-message">Nenhuma chave de API gerada até o momento. Clique em "+ Gerar Nova Chave API".</td></tr>';
+                    } else {
+                        tbodyEl.innerHTML = result.data.map(k => {
+                            const isAtivo = k.ativo == 1;
+                            const statusBadge = isAtivo ? '<span class="count-badge os-fechada">Ativa</span>' : '<span class="count-badge os-aberta">Inativa</span>';
+                            const actionBtn = isAtivo 
+                                ? `<button class="btn btn-outline btn-sm" style="color:#ef4444;border-color:#ef4444;font-size:0.75rem;" onclick="revogarApiKey(${k.id})"><i class="fas fa-ban"></i> Revogar</button>`
+                                : `<button class="btn btn-outline btn-sm" style="color:#10b981;border-color:#10b981;font-size:0.75rem;" onclick="toggleApiKeyStatus(${k.id}, 1)"><i class="fas fa-check"></i> Reativar</button>`;
+                            return `<tr>
+                                <td><strong>#${k.id}</strong></td>
+                                <td><strong>${k.nome_programa || 'Programa Sem Nome'}</strong></td>
+                                <td><code style="background:var(--color-gray-100);padding:2px 6px;border-radius:4px;font-size:0.78rem;">${k.chave_api || '-'}</code> <button class="btn btn-sm btn-outline" style="padding:2px 6px;font-size:0.7rem;" onclick="navigator.clipboard.writeText('${k.chave_api}')" title="Copiar Chave"><i class="fas fa-copy"></i></button></td>
+                                <td><span class="count-badge" style="background:#e0e7ff;color:#3730a3;">${k.permissao || 'leitura'}</span></td>
+                                <td>${statusBadge}</td>
+                                <td style="font-size:0.78rem;">${k.criado_em || '-'}</td>
+                                <td style="font-size:0.78rem;">${k.ultimo_uso || 'Nunca'}</td>
+                                <td>${actionBtn}</td>
+                            </tr>`;
+                        }).join('');
+                    }
+                }
+            } catch (err) {
+                tbodyEl.innerHTML = `<tr><td colspan="8" class="empty-message">Erro ao carregar chaves de API: ${err.message}</td></tr>`;
+            }
+        };
+
+        window.openCreateApiKeyModal = async function() {
+            const nome = prompt("Digite o nome do programa / sistema para integrar (ex: Sistema SAP, App Tablet, BI):");
+            if (!nome || !nome.trim()) return;
+
+            const permissao = confirm("Deseja conceder permissão de LEITURA E ESCRITA para esta chave?\n\n[OK] = Leitura e Escrita\n[Cancelar] = Somente Leitura") ? 'escrita' : 'leitura';
+
+            showGlobalLoader();
+            try {
+                const res = await fetch(`${API_BASE}/api/apikeys`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + authToken
+                    },
+                    body: JSON.stringify({ nome_programa: nome.trim(), permissao })
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    alert(`🔑 Chave de API Gerada com Sucesso!\n\nNome: ${nome}\nChave Secret Key:\n${result.chave_api}\n\nCopie esta chave e armazene em local seguro!`);
+                    carregarChavesApiExplorer();
+                } else {
+                    alert('Erro ao gerar chave de API: ' + (result.error || 'Falha no servidor'));
+                }
+            } catch (err) {
+                alert('Erro de conexão: ' + err.message);
+            } finally {
+                hideGlobalLoader();
+            }
+        };
+
+        window.revogarApiKey = async function(keyId) {
+            if (!confirm(`Tem certeza que deseja revogar e excluir a chave de API #${keyId}?`)) return;
+            showGlobalLoader();
+            try {
+                const res = await fetch(`${API_BASE}/api/apikeys/${keyId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + authToken }
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    carregarChavesApiExplorer();
+                } else {
+                    alert('Erro ao revogar chave: ' + (result.error || 'Falha'));
+                }
+            } catch (err) {
+                alert('Erro ao revogar: ' + err.message);
+            } finally {
+                hideGlobalLoader();
+            }
+        };
+
+        window.toggleApiKeyStatus = async function(keyId, novoAtivo) {
+            showGlobalLoader();
+            try {
+                const res = await fetch(`${API_BASE}/api/apikeys/${keyId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + authToken
+                    },
+                    body: JSON.stringify({ ativo: novoAtivo, permissao: 'leitura' })
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    carregarChavesApiExplorer();
+                }
+            } catch (err) {
+                alert('Erro: ' + err.message);
+            } finally {
+                hideGlobalLoader();
+            }
+        };
+
+        window.testarEndpointApi = async function(endpoint) {
+            const box = document.getElementById('apiTesterResponseBox');
+            const title = document.getElementById('apiTesterTitle');
+            const pre = document.getElementById('apiTesterPre');
+
+            if (box) box.style.display = 'block';
+            if (title) title.textContent = `Testando ${endpoint}...`;
+            if (pre) pre.textContent = 'Carregando resposta do servidor...';
+
+            try {
+                const res = await fetch(`${API_BASE}${endpoint}`, {
+                    headers: { 'Authorization': 'Bearer ' + authToken }
+                });
+                const data = await res.json().catch(() => ({ status: res.status }));
+                if (title) title.textContent = `HTTP ${res.status} OK - GET ${endpoint}`;
+                if (pre) pre.textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                if (title) title.textContent = `Erro ao testar GET ${endpoint}`;
+                if (pre) pre.textContent = err.message;
             }
         };
 
