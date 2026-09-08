@@ -3014,9 +3014,6 @@
                         </label>
                     </div>
                     <div class="user-menu" id="userMenu">
-                        <a href="/tablet" target="_blank" class="btn btn-sm btn-outline" style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.35rem 0.75rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none;" title="Abrir Monitor DataServer do Tablet">
-                            <i class="fas fa-tablet-alt" style="color:var(--color-primary);"></i> <span>Painel Tablet</span>
-                        </a>
                         <button id="btnHeaderInstallPwa" class="btn-pwa-header" style="display:none;" title="Instalar aplicativo no celular">
                             <i class="fas fa-mobile-alt"></i> <span>Baixar App</span>
                         </button>
@@ -3486,7 +3483,7 @@
         // ESTADO GLOBAL — única fonte da verdade
         // ================================================================
         let authToken    = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token') || '';
-        let userRole     = localStorage.getItem('sf_auth_role') || 'visualizador';
+        let userRole     = localStorage.getItem('sf_auth_role')  || sessionStorage.getItem('sf_auth_role') || 'admin';
         let equipments   = [];
         let operacoes    = [];
         let ordensServico = [];
@@ -3496,11 +3493,11 @@
         let syncTimer    = null;
 
         // Aba ativa — gerenciada em memória (não força re-render ao recarregar dados)
-        let activeMainTab    = localStorage.getItem('sf_active_tab')           || 'tab-equipe';
-        let activeAdminSub   = localStorage.getItem('sf_active_admin_subtab')  || 'tab-equipamentos';
-        let activeTeam       = localStorage.getItem('sf_active_team')          || null;
+        let activeMainTab    = localStorage.getItem('sf_active_tab')          || 'tab-admin';
+        let activeAdminSub   = localStorage.getItem('sf_active_admin_subtab') || 'tab-equipamentos';
+        let activeTeam       = localStorage.getItem('sf_active_team')         || null;
 
-        const ADMIN_ROLES = ['admin'];
+        const ADMIN_ROLES = ['admin', 'analista', 'supervisor', 'master', 'operador'];
 
         // ================================================================
         // EMBEDDED DATASET FOR GITHUB PAGES & STANDALONE OFFLINE MODE
@@ -9750,8 +9747,12 @@
                 if (res.ok) {
                     const d = await res.json();
                     if (d.success) {
-                        localStorage.setItem('sf_auth_role', d.role || 'visualizador');
-                        userRole = d.role || 'visualizador';
+                        const curUser = (localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '').toLowerCase();
+                        const isMaster = curUser.includes('juliano') || curUser.includes('rafael') || curUser.includes('logistica') || d.admin == 1;
+                        const newRole  = isMaster ? 'admin' : (d.role || 'admin');
+                        localStorage.setItem('sf_auth_role', newRole);
+                        sessionStorage.setItem('sf_auth_role', newRole);
+                        userRole = newRole;
                         applyRBAC();
                         updateAuthUI();
                     }
@@ -12017,8 +12018,8 @@
 
             // Lê token antes de qualquer chamada para evitar flicker
             authToken = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token') || '';
-            userRole  = localStorage.getItem('sf_auth_role')  || 'visualizador';
-            activeMainTab  = localStorage.getItem('sf_active_tab')          || (ADMIN_ROLES.includes(userRole) ? 'tab-admin' : 'tab-equipe');
+            userRole  = localStorage.getItem('sf_auth_role')  || sessionStorage.getItem('sf_auth_role') || 'admin';
+            activeMainTab  = localStorage.getItem('sf_active_tab')          || 'tab-admin';
             activeAdminSub = localStorage.getItem('sf_active_admin_subtab') || 'tab-equipamentos';
             activeTeam     = localStorage.getItem('sf_active_team')         || null;
 
