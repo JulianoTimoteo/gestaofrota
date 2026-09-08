@@ -977,14 +977,17 @@
                 if (res.ok) {
                     const d = await res.json();
                     if (d.success && d.data) {
-                        document.getElementById('metricTotalTables').textContent = d.data.banco.total_tabelas || '42';
-                        document.getElementById('metricUptime').textContent = d.data.servidor.uptime || '--';
-                        document.getElementById('overviewPython').textContent = d.data.servidor.python || '3.11.9';
+                        document.getElementById('metricTotalTables').textContent = d.data.banco ? d.data.banco.total_tabelas : '42';
+                        document.getElementById('metricUptime').textContent = d.data.servidor ? d.data.servidor.uptime : '--';
+                        document.getElementById('overviewPython').textContent = d.data.servidor ? d.data.servidor.python : '3.11.9';
                         document.getElementById('overviewBaseUrl').textContent = API_SERVER;
                         document.getElementById('serverStatusPill').className = 'server-status-pill';
                         document.getElementById('serverStatusText').textContent = '🟢 DataServer Conectado (8000)';
+                        return;
                     }
                 }
+                document.getElementById('serverStatusPill').className = 'server-status-pill offline';
+                document.getElementById('serverStatusText').textContent = `🔴 Erro DataServer (HTTP ${res.status})`;
             } catch (e) {
                 document.getElementById('serverStatusPill').className = 'server-status-pill offline';
                 document.getElementById('serverStatusText').textContent = '🔴 DataServer Indisponível';
@@ -1379,13 +1382,18 @@
             try {
                 const res = await fetch(`${API_SERVER}/api/system`);
                 if (res.ok) {
-                    resEl.innerHTML = '<span style="color:#34d399">🟢 Dataserver Conectado com Sucesso!</span>';
-                    carregarVisaoGeral();
-                } else {
-                    resEl.innerHTML = '<span style="color:#f87171">🔴 Resposta inválida do Servidor (HTTP ' + res.status + ')</span>';
+                    const d = await res.json();
+                    if (d.success) {
+                        resEl.innerHTML = '<span style="color:#34d399">🟢 Dataserver Conectado com Sucesso!</span>';
+                        carregarVisaoGeral();
+                        return;
+                    }
                 }
+                resEl.innerHTML = '<span style="color:#f87171">🔴 Erro no Servidor (HTTP ' + res.status + ')</span>';
+                carregarVisaoGeral();
             } catch (err) {
                 resEl.innerHTML = '<span style="color:#f87171">🔴 Erro ao conectar no DataServer: ' + err.message + '</span>';
+                carregarVisaoGeral();
             }
         }
 
