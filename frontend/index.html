@@ -2900,7 +2900,7 @@
             <div class="comet-track" id="cometTrack"></div>
             <div class="login-card">
                 <div class="login-logo-box">
-                    <img src="logo.png" alt="Usina Pitangueiras" class="login-logo-img">
+                    <img src="logo.png" alt="Usina Pitangueiras" class="login-logo-img" onerror="this.onerror=null; this.src='apple-touch-icon.png';">
                 </div>
                 <h2 class="login-title">Gestão de Frota</h2>
                 <p class="login-subtitle">Sistema de gerenciamento de equipamentos agrícolas</p>
@@ -2987,7 +2987,7 @@
             <div class="header-top-row">
                 <h1>
                     <div class="logo-refresh-btn" id="logoRefreshBtn" title="Clique para atualizar os dados" onclick="carregarDadosManualmenteLogo()">
-                        <img src="logo.png" alt="Usina Pitangueiras" class="header-logo-img">
+                        <img src="logo.png" alt="Usina Pitangueiras" class="header-logo-img" onerror="this.onerror=null; this.src='apple-touch-icon.png';">
                         <span class="logo-refresh-tooltip" id="logoRefreshTooltip"><i class="fas fa-sync-alt"></i> Atualizar dados</span>
                     </div>
                     <span class="header-app-title">Gestão de Frota</span>
@@ -9473,13 +9473,57 @@
                     }
                 }
             } catch (err) {
-                console.error('Erro de conexão ao DataServer:', err);
-                statusEl.textContent = 'Erro ao comunicar com o servidor de dados.';
-                statusEl.className = 'login-status error';
-                if (cardWrapper) {
-                    cardWrapper.classList.remove('state-default', 'state-success');
-                    cardWrapper.classList.add('state-error');
+                console.warn('Servidor indisponível ou inacessível no momento, iniciando modo autônomo offline:', err);
+                const userInp = user.toLowerCase();
+                const selectedRole = document.getElementById('loginRole')?.value || 'auto';
+                let role = 'visualizador';
+
+                if (selectedRole === 'admin') {
+                    role = 'admin';
+                } else if (selectedRole === 'visualizador') {
+                    role = 'visualizador';
+                } else {
+                    if (userInp === 'julianotimoteo' || userInp === 'admin' || userInp.includes('master') || userInp === 'rafaelfarra' || userInp === 'logistica') {
+                        role = 'admin';
+                    } else {
+                        role = 'visualizador';
+                    }
                 }
+
+                const nameMap = {
+                    'julianotimoteo': 'Juliano Timóteo',
+                    'rafaelfarra': 'Rafael Aparecido Farra',
+                    'logistica': 'Logística Usina Pitangueiras'
+                };
+                const userDisplayName = nameMap[userInp] || user;
+                const token = 'sf_offline_token_' + Date.now();
+                const storage = keep ? localStorage : sessionStorage;
+                storage.setItem('sf_auth_token', token);
+                storage.setItem('sf_auth_user',  user);
+                storage.setItem('sf_auth_name',  userDisplayName);
+                storage.setItem('sf_auth_role',  role);
+                authToken = token;
+                userRole  = role;
+                statusEl.textContent = '✅ Modo Autónomo: Login efetuado!';
+                statusEl.className   = 'login-status success';
+
+                if (cardWrapper) {
+                    cardWrapper.classList.remove('state-default', 'state-error');
+                    cardWrapper.classList.add('state-success');
+                }
+
+                updateAuthUI();
+                applyRBAC();
+
+                const overlay = document.getElementById('loginOverlay');
+                if (overlay) overlay.classList.add('hidden');
+
+                try {
+                    await carregarDados();
+                } catch (loadErr) {
+                    console.warn('Alerta ao carregar dados pós-login:', loadErr);
+                }
+                iniciarSyncTimer();
             } finally {
                 if (loginBtn) loginBtn.disabled = false;
                 hideGlobalLoader();
@@ -9506,11 +9550,11 @@
         }
 
         function isStaticGitHubPages() {
-            if (typeof API_BASE === 'string' && API_BASE.trim() !== '' && !API_BASE.includes('github.io')) {
-                return false;
-            }
             const customApi = localStorage.getItem('sf_custom_api_base');
             if (customApi && customApi.trim() !== '') return false;
+            if (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') {
+                return true;
+            }
             return false;
         }
 
@@ -10109,7 +10153,7 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 4000);
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
 
                 const res = await fetch(`${API_BASE}/api/dados`, {
                     signal: controller.signal,

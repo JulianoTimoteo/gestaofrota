@@ -644,9 +644,131 @@ def serve_glass():
 
 # ==================== API ENDPOINTS PUBLICOS ====================
 
-@app.route('/health')
-def health():
-    return jsonify(status='ok', timestamp=datetime.now().isoformat())
+def get_admin_config_data():
+    admin_config_file = os.path.join(PROJECT_DIR, 'admin_config.json')
+    if os.path.exists(admin_config_file):
+        try:
+            import json
+            with open(admin_config_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {'customGroups': {}, 'customTypes': {}, 'customOps': {}, 'customOpTeams': {}}
+
+@app.route('/api/config/admin', methods=['GET', 'POST'])
+def api_config_admin():
+    admin_config_file = os.path.join(PROJECT_DIR, 'admin_config.json')
+    if request.method == 'POST':
+        try:
+            data = request.get_json() or {}
+            current = get_admin_config_data()
+            if 'customGroups' in data: current['customGroups'].update(data['customGroups'])
+            if 'customTypes' in data: current['customTypes'].update(data['customTypes'])
+            if 'customOps' in data: current['customOps'].update(data['customOps'])
+            if 'customOpTeams' in data: current['customOpTeams'].update(data['customOpTeams'])
+            current['ultimaAlteracao'] = datetime.now().isoformat()
+            import json
+            with open(admin_config_file, 'w', encoding='utf-8') as f:
+                json.dump(current, f, indent=2, ensure_ascii=False)
+            return jsonify(success=True, data=current)
+        except Exception as exc:
+            return jsonify(success=False, error=str(exc)), 500
+    return jsonify(success=True, data=get_admin_config_data())
+
+@app.route('/api/dados', methods=['GET'])
+def get_api_dados():
+    """Retorna payload consolidado com equipamentos, operacoes, ordensServico e config admin."""
+    try:
+        conn = get_db_connection()
+        
+        # Equipamentos
+        cur_eq = conn.execute("SELECT * FROM equipamentos")
+        equip_rows = [dict(r) for r in cur_eq.fetchall()]
+        
+        # Mapa de OS Abertas por equipamento
+        cur_os_map = conn.execute("SELECT DISTINCT codigo_equip, cod_os FROM ordens_servico WHERE upper(status_os) != 'FECHADA' AND upper(status_os) != 'OK'")
+        os_map = {str(r['codigo_equip']).strip(): r['cod_os'] for r in cur_os_map.fetchall()}
+        
+        equipamentos = []
+        for eq in equip_rows:
+            cod = str(eq.get('codigo') or eq.get('Código') or '').strip()
+            equipamentos.append({
+                'codigo': cod,
+                'descricao': eq.get('descricao') or eq.get('Descrição') or '',
+                'modelo': eq.get('modelo') or eq.get('Modelo') or '',
+                'tipo': eq.get('tipo') or eq.get('Tipo') or 'Trator',
+                'grupo': eq.get('grupo') or eq.get('Grupo') or 'PREPARO',
+                'statusOS': 'Com OS' if cod in os_map else 'OK',
+                'codOS': os_map.get(cod, '-')
+            })
+            
+        # Operações
+        cur_op = conn.execute("SELECT * FROM operacoes")
+        oper_rows = [dict(r) for r in cur_op.fetchall()]
+        operacoes = []
+        for op in oper_rows:
+            operacoes.append({
+                'codigo': str(op.get('codigo') or op.get('Código') or '').strip(),
+                'descricao': op.get('descricao') or op.get('Descrição') or '',
+                'tipoOperacao': op.get('tipo_operacao') or op.get('tipoOperacao') or 'PRODUTIVA',
+                'corporativo': op.get('corporativo') or op.get('Corporativo') or 'PITANGUEIRAS',
+                'grupoOperacao': op.get('grupo_operacao') or op.get('grupoOperacao') or 'Produtivas',
+                'status': op.get('status') or op.get('Status') or 'ATIVO',
+                'equipe': op.get('equipe') or op.get('Equipe') or '',
+                'estado': op.get('estado') or op.get('Estado') or '',
+                'tempoOperacao': op.get('tempo_operacao') or op.get('tempoOperacao') or ''
+            })
+            
+        # Ordens de Serviço
+        cur_os = conn.execute('''
+            SELECT tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, tipo_oficina, oficina,
+                   data_entrada, data_previsao, dias_permanencia, descricao, data_sincronizacao
+            FROM ordens_servico 
+            ORDER BY 
+                CASE 
+                    WHEN data_entrada LIKE '__/__/____%' THEN
+                        substr(data_entrada, 7, 4) || '-' || substr(data_entrada, 4, 2) || '-' || substr(data_entrada, 1, 2) || substr(data_entrada, 11)
+                    ELSE data_entrada 
+                END ASC
+        ''')
+        os_rows = [dict(r) for r in cur_os.fetchall()]
+        ordens_servico = []
+        for r in os_rows:
+            ordens_servico.append({
+                'tipoOS': r['tipo_os'] or 'NORMAL',
+                'subClasse': r['sub_classe'] or '',
+                'codigoEquip': r['codigo_equip'],
+                'frotaCC': r['frota_cc'],
+                'codOS': r['cod_os'],
+                'statusOS': r['status_os'],
+                'tipoOficina': r['tipo_oficina'],
+                'oficina': r['oficina'],
+                'dataEntrada': r['data_entrada'],
+                'dataPrevisao': r['data_previsao'],
+                'diasPermanencia': r['dias_permanencia'],
+                'descricao': r['descricao'],
+                'dataSincronizacao': r['data_sincronizacao']
+            })
+            
+        # Ultima sincronização
+        row_u = conn.execute("SELECT MAX(data_sincronizacao) FROM ordens_servico").fetchone()
+        raw_ultima = row_u[0] if row_u and row_u[0] else None
+        ultima = str(raw_ultima) if raw_ultima else datetime.now().isoformat()
+        
+        conn.close()
+        
+        # Config Admin
+        admin_config = get_admin_config_data()
+                
+        return jsonify(success=True, data={
+            'equipamentos': equipamentos,
+            'operacoes': operacoes,
+            'ordensServico': ordens_servico,
+            'adminConfig': admin_config,
+            'ultimaSincronizacao': ultima
+        })
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
 
 
 

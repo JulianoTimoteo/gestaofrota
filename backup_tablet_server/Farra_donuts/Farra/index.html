@@ -993,23 +993,153 @@
         }
 
         .header-info .logout-btn {
-            background: transparent;
-            border: none;
-            color: inherit;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.16) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
             cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 500;
-            padding: 0.2rem 0.5rem;
-            border-radius: var(--radius-sm);
-            transition: all 0.15s ease;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.45rem 0.9rem;
+            border-radius: 8px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 0.5rem;
+            box-shadow: 0 2px 5px rgba(239, 68, 68, 0.06);
         }
 
         .header-info .logout-btn:hover {
-            color: var(--color-danger);
-            background: var(--color-danger-bg);
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #ffffff;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+        }
+
+        .header-info .logout-btn i {
+            font-size: 0.95rem;
+            transition: transform 0.2s ease;
+        }
+
+        .header-info .logout-btn:hover i {
+            transform: translateX(3px);
+        }
+
+        /* ===== BANNER PWA INSTALAÇÃO NO CELULAR ===== */
+        .pwa-install-banner {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 99999;
+            max-width: 440px;
+            width: calc(100% - 3rem);
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(37, 99, 235, 0.3);
+            animation: pwaSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
+        }
+        .pwa-install-banner.hidden {
+            display: none !important;
+        }
+        @keyframes pwaSlideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .pwa-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+        .pwa-banner-icon img {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            object-fit: cover;
+        }
+        .pwa-banner-text {
+            flex: 1;
+            text-align: left;
+        }
+        .pwa-banner-text h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            color: #ffffff !important;
+        }
+        .pwa-banner-text p {
+            font-size: 0.78rem;
+            color: #94a3b8 !important;
+            line-height: 1.35;
+            margin: 0;
+        }
+        .pwa-banner-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pwa-btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+        .pwa-btn-primary:hover {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            transform: translateY(-1px);
+        }
+        .pwa-btn-close {
+            background: rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+        .pwa-btn-close:hover {
+            background: rgba(239, 68, 68, 0.25);
+            color: #ef4444;
+        }
+
+        .btn-pwa-header {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+            transition: all 0.2s ease;
+        }
+        .btn-pwa-header:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.45);
         }
 
         /* ===== DASHBOARD DONUT CHART ===== */
@@ -2770,7 +2900,7 @@
             <div class="comet-track" id="cometTrack"></div>
             <div class="login-card">
                 <div class="login-logo-box">
-                    <img src="logo.png" alt="Usina Pitangueiras" class="login-logo-img">
+                    <img src="logo.png" alt="Usina Pitangueiras" class="login-logo-img" onerror="this.onerror=null; this.src='apple-touch-icon.png';">
                 </div>
                 <h2 class="login-title">Gestão de Frota</h2>
                 <p class="login-subtitle">Sistema de gerenciamento de equipamentos agrícolas</p>
@@ -2807,17 +2937,57 @@
 
                 </form>
             </div>
+    <!-- BANNER FLUTUANTE PARA INSTALAR COMO APLICATIVO CELULAR (PWA) -->
+    <div id="pwaInstallBanner" class="pwa-install-banner hidden">
+        <div class="pwa-banner-content">
+            <div class="pwa-banner-icon">
+                <img src="android-chrome-192x192.png" alt="Gestão Frota App" onerror="this.src='apple-touch-icon.png'">
+            </div>
+            <div class="pwa-banner-text">
+                <h4>📲 Instalar Aplicativo Gestão de Frota</h4>
+                <p>Instale no seu celular para um uso mais rápido, prático e em tela cheia sem abrir o navegador!</p>
+            </div>
+            <div class="pwa-banner-actions">
+                <button id="btnPwaInstallNow" class="pwa-btn-primary"><i class="fas fa-download"></i> Instalar App</button>
+                <button id="btnPwaDismiss" class="pwa-btn-close" title="Agora Não"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL COM INSTRUÇÕES DE INSTALAÇÃO NO IOS (IPHONE / IPAD) -->
+    <div id="iosInstallModal" class="action-modal-overlay">
+        <div class="action-modal" style="max-width:440px; text-align:center;">
+            <div class="action-modal-header" style="justify-content:center;">
+                <h3>📱 Instalar no iPhone / iPad</h3>
+            </div>
+            <div class="action-modal-body" style="text-align:left; font-size:0.9rem; line-height:1.6;">
+                <p style="margin-bottom:1rem; color:var(--color-gray-700);">Siga estes 3 passos simples para adicionar o <strong>Gestão de Frota</strong> na sua tela de início:</p>
+                <div style="background:var(--color-gray-100); padding:0.85rem; border-radius:10px; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.75rem;">
+                    <span style="font-size:1.4rem; color:var(--color-primary);">1️⃣</span>
+                    <span>Toque no botão <strong>Compartilhar</strong> <i class="fas fa-share-square" style="color:#007aff; font-size:1.1rem;"></i> no menu do Safari.</span>
+                </div>
+                <div style="background:var(--color-gray-100); padding:0.85rem; border-radius:10px; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.75rem;">
+                    <span style="font-size:1.4rem; color:var(--color-primary);">2️⃣</span>
+                    <span>Role a lista e toque em <strong>Adicionar à Tela de Início</strong> <i class="fas fa-plus-square" style="color:#007aff; font-size:1.1rem;"></i>.</span>
+                </div>
+                <div style="background:var(--color-gray-100); padding:0.85rem; border-radius:10px; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.75rem;">
+                    <span style="font-size:1.4rem; color:var(--color-primary);">3️⃣</span>
+                    <span>Toque em <strong>Adicionar</strong> no canto superior direito!</span>
+                </div>
+            </div>
+            <div class="action-modal-footer" style="justify-content:center;">
+                <button class="btn btn-primary" onclick="document.getElementById('iosInstallModal').classList.remove('active')">Entendido</button>
+            </div>
         </div>
     </div>
 
     <div class="app">
         <!-- HEADER UNIFICADO (LIMPO E ESTÁVEL) -->
-        <!-- HEADER UNIFICADO (LIMPO E ESTÁVEL) -->
         <div class="header" id="mainHeader">
             <div class="header-top-row">
                 <h1>
                     <div class="logo-refresh-btn" id="logoRefreshBtn" title="Clique para atualizar os dados" onclick="carregarDadosManualmenteLogo()">
-                        <img src="logo.png" alt="Usina Pitangueiras" class="header-logo-img">
+                        <img src="logo.png" alt="Usina Pitangueiras" class="header-logo-img" onerror="this.onerror=null; this.src='apple-touch-icon.png';">
                         <span class="logo-refresh-tooltip" id="logoRefreshTooltip"><i class="fas fa-sync-alt"></i> Atualizar dados</span>
                     </div>
                     <span class="header-app-title">Gestão de Frota</span>
@@ -2840,11 +3010,17 @@
                         </label>
                     </div>
                     <div class="user-menu" id="userMenu">
-                        <div id="userBadge" style="display:inline-flex; align-items:center; gap:0.35rem;">
-                            <i class="fas fa-user-circle" style="color:var(--color-primary); font-size:1.05em;"></i>
-                            <span id="userRoleBadge">--</span>
+                        <button id="btnHeaderInstallPwa" class="btn-pwa-header" style="display:none;" title="Instalar aplicativo no celular">
+                            <i class="fas fa-mobile-alt"></i> <span>Baixar App</span>
+                        </button>
+                        <div id="userBadge" style="display:inline-flex; align-items:center; gap:0.45rem; background:rgba(37, 99, 235, 0.08); padding:0.4rem 0.8rem; border-radius:20px; border:1px solid rgba(37, 99, 235, 0.15);">
+                            <i class="fas fa-user-circle" style="color:var(--color-primary); font-size:1.15em;"></i>
+                            <span id="userRoleBadge" style="font-weight:600; color:var(--color-gray-900);">--</span>
                         </div>
-                        <button class="logout-btn" id="logoutBtn" style="display:none;"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                        <button class="logout-btn" id="logoutBtn" style="display:none;" title="Encerrar Sessão">
+                            <i class="fas fa-right-from-bracket"></i>
+                            <span>Sair</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -9065,20 +9241,17 @@
             }
             const savedApi = localStorage.getItem('sf_custom_api_base');
             if (savedApi) return savedApi;
-            if (window.location.protocol === 'file:') {
-                return 'http://172.16.12.36:3000';
+            if (window.location.protocol === 'file:' || window.location.hostname.includes('github.io')) {
+                return 'http://172.16.12.36:8000';
             }
-            if (window.location.hostname.includes('github.io')) {
-                return 'https://julianotimoteo.github.io/gestaofrota';
-            }
-            return window.location.origin;
+            return window.location.origin.includes('8000') ? window.location.origin : 'http://172.16.12.36:8000';
         })();
 
         function promptChangeServerIp() {
-            const current = localStorage.getItem('sf_custom_api_base') || API_BASE || 'http://172.16.12.36:3000';
+            const current = localStorage.getItem('sf_custom_api_base') || API_BASE || 'http://172.16.12.36:8000';
             const input = prompt(
-                "IP do Servidor na rede Wi-Fi:\n\n" +
-                "Insira o endereço IP do servidor para conectar o tablet via Wi-Fi sem cabo USB (exemplo: http://172.16.12.36:3000):",
+                "Endereço IP do DataServer (Servidor de Banco de Dados):\n\n" +
+                "Insira o IP do servidor para autenticação e sincronização (exemplo: http://172.16.12.36:8000 ou http://seu-ip:8000):",
                 current
             );
             if (input !== null && input.trim() !== '') {
@@ -9087,10 +9260,17 @@
                     formatted = 'http://' + formatted;
                 }
                 localStorage.setItem('sf_custom_api_base', formatted);
-                alert("IP do Servidor configurado para: " + formatted + "\nA página será recarregada agora.");
+                alert("IP do DataServer configurado para: " + formatted + "\nA página será recarregada agora.");
                 window.location.reload();
             }
         }
+
+        function updateServerIpBadge() {
+            const el = document.getElementById('lblServerIpDisplay');
+            if (el) el.textContent = API_BASE;
+        }
+        document.addEventListener('DOMContentLoaded', updateServerIpBadge);
+        setTimeout(updateServerIpBadge, 300);
 
         // ================================================================
         // TEMA
@@ -9147,12 +9327,15 @@
             if (overlay)   overlay.classList.toggle('hidden', !!token);
             if (logoutBtn) logoutBtn.style.display = token ? 'inline-flex' : 'none';
 
-            // Atualiza badge do role
+            // Exibe o PRIMEIRO NOME do usuario logado no servidor
             const roleBadge = document.getElementById('userRoleBadge');
             if (roleBadge) {
-                const names = { admin:'Admin', analista:'Analista', supervisor:'Supervisor',
-                                manager:'Gerente', leader:'Líder', visualizador:'Visualizador' };
-                roleBadge.textContent = names[userRole] || userRole;
+                const rawName = localStorage.getItem('sf_auth_name') || sessionStorage.getItem('sf_auth_name') || localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || 'Usuário';
+                let firstName = rawName.trim();
+                if (firstName.includes('@')) firstName = firstName.split('@')[0];
+                firstName = firstName.split(' ')[0];
+                firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+                roleBadge.textContent = firstName;
             }
         }
 
@@ -9198,10 +9381,18 @@
                     }
                 }
 
+                const nameMap = {
+                    'julianotimoteo': 'Juliano Timóteo',
+                    'rafaelfarra': 'Rafael Aparecido Farra',
+                    'logistica': 'Logistica Usina Pitangueiras'
+                };
+                const userDisplayName = nameMap[userInp] || user;
+
                 const token = 'sf_cloud_token_' + Date.now();
                 const storage = keep ? localStorage : sessionStorage;
                 storage.setItem('sf_auth_token', token);
                 storage.setItem('sf_auth_user',  user);
+                storage.setItem('sf_auth_name',  userDisplayName);
                 storage.setItem('sf_auth_role',  role);
                 authToken = token;
                 userRole  = role;
@@ -9234,15 +9425,21 @@
                 const res  = await fetch(`${API_BASE}/api/auth/login`, {
                     method:  'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body:    JSON.stringify({ usuario: user, senha: pass })
+                    body:    JSON.stringify({ 
+                        usuario: user, 
+                        senha: pass, 
+                        origem_site: window.location.href || 'https://julianotimoteo.github.io/gestaofrota/' 
+                    })
                 });
                 const data = await res.json();
 
                 if (res.ok && data.success && data.token) {
                     const role = data.role || (data.admin ? 'admin' : 'admin');
                     const storage = keep ? localStorage : sessionStorage;
+                    const displayName = data.nome || data.usuario || user;
                     storage.setItem('sf_auth_token', data.token);
                     storage.setItem('sf_auth_user',  data.usuario || user);
+                    storage.setItem('sf_auth_name',  displayName);
                     storage.setItem('sf_auth_role',  role);
                     authToken = data.token;
                     userRole  = role;
@@ -9276,16 +9473,38 @@
                     }
                 }
             } catch (err) {
-                console.warn('Servidor API offline, usando autenticação Standalone/Cloud:', err);
-                const role = 'admin';
-                const token = 'sf_cloud_token_' + Date.now();
+                console.warn('Servidor indisponível ou inacessível no momento, iniciando modo autônomo offline:', err);
+                const userInp = user.toLowerCase();
+                const selectedRole = document.getElementById('loginRole')?.value || 'auto';
+                let role = 'visualizador';
+
+                if (selectedRole === 'admin') {
+                    role = 'admin';
+                } else if (selectedRole === 'visualizador') {
+                    role = 'visualizador';
+                } else {
+                    if (userInp === 'julianotimoteo' || userInp === 'admin' || userInp.includes('master') || userInp === 'rafaelfarra' || userInp === 'logistica') {
+                        role = 'admin';
+                    } else {
+                        role = 'visualizador';
+                    }
+                }
+
+                const nameMap = {
+                    'julianotimoteo': 'Juliano Timóteo',
+                    'rafaelfarra': 'Rafael Aparecido Farra',
+                    'logistica': 'Logística Usina Pitangueiras'
+                };
+                const userDisplayName = nameMap[userInp] || user;
+                const token = 'sf_offline_token_' + Date.now();
                 const storage = keep ? localStorage : sessionStorage;
                 storage.setItem('sf_auth_token', token);
                 storage.setItem('sf_auth_user',  user);
+                storage.setItem('sf_auth_name',  userDisplayName);
                 storage.setItem('sf_auth_role',  role);
                 authToken = token;
                 userRole  = role;
-                statusEl.textContent = '✅ Login efetuado com sucesso!';
+                statusEl.textContent = '✅ Modo Autónomo: Login efetuado!';
                 statusEl.className   = 'login-status success';
 
                 if (cardWrapper) {
@@ -9305,7 +9524,6 @@
                     console.warn('Alerta ao carregar dados pós-login:', loadErr);
                 }
                 iniciarSyncTimer();
-                iniciarCheckSessaoUnicaTimer();
             } finally {
                 if (loginBtn) loginBtn.disabled = false;
                 hideGlobalLoader();
@@ -9322,7 +9540,7 @@
                     });
                 } catch (e) {}
             }
-            ['sf_auth_token','sf_auth_user','sf_auth_role'].forEach(k => {
+            ['sf_auth_token','sf_auth_user','sf_auth_name','sf_auth_role'].forEach(k => {
                 localStorage.removeItem(k);
                 sessionStorage.removeItem(k);
             });
@@ -9334,7 +9552,10 @@
         function isStaticGitHubPages() {
             const customApi = localStorage.getItem('sf_custom_api_base');
             if (customApi && customApi.trim() !== '') return false;
-            return window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+            if (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') {
+                return true;
+            }
+            return false;
         }
 
         async function checkAuth() {
@@ -9932,7 +10153,7 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 4000);
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
 
                 const res = await fetch(`${API_BASE}/api/dados`, {
                     signal: controller.signal,
@@ -11229,18 +11450,89 @@
         }
 
         // ================================================================
-        // INIT APP
+        // INSTALAÇÃO DO APLICATIVO CELULAR (PWA)
         // ================================================================
-        async function initApp() {
-            // Desregistrar service workers antigos
+        let deferredPwaPrompt = null;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPwaPrompt = e;
+            showPwaInstallPrompt();
+        });
+
+        function isAppInstalled() {
+            return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
+        }
+
+        function showPwaInstallPrompt() {
+            if (isAppInstalled()) return;
+            const dismissed = localStorage.getItem('sf_pwa_dismissed');
+            if (dismissed && (Date.now() - parseInt(dismissed, 10)) < 24 * 3600 * 1000) {
+                const headerBtn = document.getElementById('btnHeaderInstallPwa');
+                if (headerBtn) headerBtn.style.display = 'inline-flex';
+                return;
+            }
+
+            setTimeout(() => {
+                const banner = document.getElementById('pwaInstallBanner');
+                if (banner) banner.classList.remove('hidden');
+                const headerBtn = document.getElementById('btnHeaderInstallPwa');
+                if (headerBtn) headerBtn.style.display = 'inline-flex';
+            }, 1800);
+        }
+
+        async function triggerPwaInstall() {
+            const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+            if (isIOS) {
+                const modal = document.getElementById('iosInstallModal');
+                if (modal) modal.classList.add('active');
+                return;
+            }
+
+            if (deferredPwaPrompt) {
+                deferredPwaPrompt.prompt();
+                const choiceResult = await deferredPwaPrompt.userChoice;
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('Usuário aceitou a instalação do aplicativo!');
+                    dismissPwaBanner();
+                }
+                deferredPwaPrompt = null;
+            } else {
+                alert('📱 Para instalar como App no seu celular:\n\n1. No menu do seu navegador (três pontos no topo ou rodapé)\n2. Selecione "Instalar aplicativo" ou "Adicionar à Tela Inicial".');
+            }
+        }
+
+        function dismissPwaBanner() {
+            const banner = document.getElementById('pwaInstallBanner');
+            if (banner) banner.classList.add('hidden');
+            localStorage.setItem('sf_pwa_dismissed', Date.now().toString());
+        }
+
+        function initPwaInstall() {
+            document.getElementById('btnPwaInstallNow')?.addEventListener('click', triggerPwaInstall);
+            document.getElementById('btnHeaderInstallPwa')?.addEventListener('click', triggerPwaInstall);
+            document.getElementById('btnPwaDismiss')?.addEventListener('click', dismissPwaBanner);
+
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(regs => {
-                    regs.forEach(r => r.unregister());
+                navigator.serviceWorker.register('./sw.js').then(reg => {
+                    console.log('Service Worker PWA registrado:', reg.scope);
+                }).catch(err => {
+                    console.warn('Alerta SW PWA:', err);
                 });
             }
 
+            if (!isAppInstalled()) {
+                showPwaInstallPrompt();
+            }
+        }
+
+        // ================================================================
+        // INIT APP
+        // ================================================================
+        async function initApp() {
             initThemeToggle();
             startRealtimeClock();
+            initPwaInstall();
 
             // Lê token antes de qualquer chamada para evitar flicker
             authToken = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token') || '';
