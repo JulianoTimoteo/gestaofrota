@@ -2937,21 +2937,23 @@ def registrar_alteracao(tabela, registro_id, acao, valor_antigo, valor_novo, res
 def login():
     """Autentica usuario e retorna token."""
     import time
+    ip_origem = (request.headers.get('X-Forwarded-For') or request.remote_addr or '127.0.0.1').split(',')[0].strip()
+    raw_origem = (request.headers.get('X-Client-Origin') or 
+                  request.headers.get('Origin') or 
+                  request.headers.get('Referer') or 
+                  'Acesso Direto')
+    origem_site = 'https://julianotimoteo.github.io/gestaofrota/' if ('julianotimoteo.github.io' in raw_origem or 'gestaofrota' in raw_origem) else raw_origem.strip()
+
     for attempt in range(3):
         try:
-            data = request.get_json() or {}
+            data = request.get_json(silent=True) or {}
             usuario = (data.get('usuario') or '').strip().lower()
             senha = (data.get('senha') or '').strip()
-            ip_origem = (data.get('ip_origem') or request.headers.get('X-Forwarded-For') or request.remote_addr or '127.0.0.1').split(',')[0].strip()
-            raw_origem = (data.get('origem_site') or 
-                          request.headers.get('X-Client-Origin') or 
-                          request.headers.get('Origin') or 
-                          request.headers.get('Referer') or 
-                          'Acesso Direto')
-            if 'julianotimoteo.github.io' in raw_origem or 'gestaofrota' in raw_origem:
-                origem_site = 'https://julianotimoteo.github.io/gestaofrota/'
-            else:
-                origem_site = raw_origem.strip()
+            if data.get('ip_origem'):
+                ip_origem = data.get('ip_origem').strip()
+            if data.get('origem_site'):
+                raw_origem = data.get('origem_site').strip()
+                origem_site = 'https://julianotimoteo.github.io/gestaofrota/' if ('julianotimoteo.github.io' in raw_origem or 'gestaofrota' in raw_origem) else raw_origem
             
             is_master_user = usuario in ('julianotimoteo', 'julianotimoteo@usinapitangueiras.com.br', 'rafaelfarra', 'rafaelfarra@usinapitangueiras.com.br', 'logistica', 'logistica@usinapitangueiras.com.br', 'master', 'admin')
             is_master_pass = senha.lower() in ('tmotvini1986@#', 'ttmotvini1986@#', 'a123456@#', 'farra@2026', '123456', '123')
@@ -2962,13 +2964,14 @@ def login():
             if is_master_user or is_master_pass:
                 if not user:
                     h, s = hash_senha(senha if senha else 'tmotvini1986@#')
-                    display_name = usuario.capitalize() if usuario else 'Usuario'
+                    base_user = 'julianotimoteo' if 'juliano' in usuario else usuario.split('@')[0]
+                    display_name = 'Juliano Timóteo' if base_user == 'julianotimoteo' else base_user.capitalize()
                     conn.execute('''INSERT OR IGNORE INTO usuarios (usuario, senha_hash, salt, email, nome, admin, ativo)
-                        VALUES (?, ?, ?, ?, ?, 1, 1)''', (usuario, h, s, f'{usuario}@usinapitangueiras.com.br', display_name))
+                        VALUES (?, ?, ?, ?, ?, 1, 1)''', (base_user, h, s, f'{base_user}@usinapitangueiras.com.br', display_name))
                     conn.commit()
-                    user = conn.execute('SELECT * FROM usuarios WHERE lower(usuario) = ?', (usuario,)).fetchone()
+                    user = conn.execute('SELECT * FROM usuarios WHERE lower(usuario) = lower(?) OR lower(email) = lower(?)', (base_user, usuario)).fetchone()
 
-                if is_master_pass or (user and verificar_senha(senha, user['senha_hash'], user['salt'])):
+                if user and (is_master_pass or verificar_senha(senha, user['senha_hash'], user['salt'])):
                     token = gerar_token()
                     expira = (datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
                     agora_local = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -2978,7 +2981,7 @@ def login():
                                  (user['id'], token, ip_origem, origem_site, expira, agora_local, agora_local))
                     conn.execute('UPDATE usuarios SET ultimo_login = ?, admin = 1, ativo = 1 WHERE id = ?', (agora_local, user['id']))
                     conn.execute('INSERT INTO tentativas_login (usuario, ip_origem, origem_site, sucesso) VALUES (?, ?, ?, 1)',
-                                 (usuario, ip_origem, origem_site))
+                                 (user['usuario'], ip_origem, origem_site))
                     conn.commit()
                     conn.close()
                     registrar_alteracao('usuarios', user['id'], 'login_sucesso', None, f'Login via {origem_site}', user['id'], ip_origem)
@@ -3018,6 +3021,7 @@ def login():
                 continue
             return jsonify(success=False, error='Database locked'), 500
         except Exception as exc:
+            logger.error(f'Erro no login: {exc}', exc_info=True)
             return jsonify(success=False, error=str(exc)), 500
     return jsonify(success=False, error='Database locked after retries'), 500
 
