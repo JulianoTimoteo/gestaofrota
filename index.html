@@ -9528,10 +9528,15 @@
             showGlobalLoader();
 
             if (isStaticGitHubPages()) {
-                const userInp = user.toLowerCase();
-                const allowedUsers = ['julianotimoteo', 'rafaelfarra', 'logistica'];
-                if (!allowedUsers.includes(userInp)) {
-                    statusEl.textContent = `❌ Usuário '${user}' não cadastrado no banco de dados. Acesso negado.`;
+                const userInp = user.toLowerCase().trim();
+                const allowedAccounts = [
+                    'julianotimoteo', 'julianotimoteo@usinapitangueiras.com.br',
+                    'rafaelfarra', 'rafaelfarra@usinapitangueiras.com.br',
+                    'logistica', 'logistica@usinapitangueiras.com.br'
+                ];
+
+                if (!allowedAccounts.includes(userInp)) {
+                    statusEl.textContent = `❌ Usuário ou e-mail '${user}' não cadastrado no banco de dados. Acesso negado.`;
                     statusEl.className   = 'login-status error';
                     if (cardWrapper) { cardWrapper.classList.remove('state-default', 'state-success'); cardWrapper.classList.add('state-error'); }
                     if (loginBtn) loginBtn.disabled = false;
@@ -9550,9 +9555,9 @@
                 }
 
                 let role = 'visualizador';
-                if (userInp === 'julianotimoteo' || userInp === 'logistica') {
+                if (userInp.includes('juliano') || userInp.includes('logistica')) {
                     role = 'admin';
-                } else if (userInp === 'rafaelfarra') {
+                } else if (userInp.includes('rafael')) {
                     role = 'operador';
                 } else {
                     role = 'visualizador';
@@ -9560,8 +9565,11 @@
 
                 const nameMap = {
                     'julianotimoteo': 'Juliano Timóteo',
+                    'julianotimoteo@usinapitangueiras.com.br': 'Juliano Timóteo',
                     'rafaelfarra': 'Rafael Aparecido Farra',
-                    'logistica': 'Logistica Usina Pitangueiras'
+                    'rafaelfarra@usinapitangueiras.com.br': 'Rafael Aparecido Farra',
+                    'logistica': 'Logística Usina Pitangueiras',
+                    'logistica@usinapitangueiras.com.br': 'Logística Usina Pitangueiras'
                 };
                 const userDisplayName = nameMap[userInp] || user;
 
