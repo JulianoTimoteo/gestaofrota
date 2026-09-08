@@ -625,13 +625,20 @@ def init_db():
 # ==================== FRONTEND ====================
 
 @app.route('/')
-def serve_index():
-    return send_file(os.path.join(FRONTEND_DIR, 'index.html'))
-
 @app.route('/monitor')
+@app.route('/dataserver')
+@app.route('/banco')
 def serve_monitor_html():
-    """Serve o arquivo monitor.html do frontend."""
+    """Serve o arquivo monitor.html (Gerenciador do DataServer / Banco de Dados)."""
     return send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
+
+@app.route('/app', endpoint='serve_app', strict_slashes=False)
+@app.route('/app.html', endpoint='serve_app_html', strict_slashes=False)
+@app.route('/index.html', endpoint='serve_index_html', strict_slashes=False)
+@app.route('/gestaofrota', endpoint='serve_gestaofrota', strict_slashes=False)
+def serve_index():
+    """Serve o aplicativo Gestão de Frota (index.html)."""
+    return send_file(os.path.join(FRONTEND_DIR, 'index.html'))
 
 @app.route('/glass')
 @app.route('/glass.html')
