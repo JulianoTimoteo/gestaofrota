@@ -900,34 +900,6 @@ def get_api_dados():
                 'codOS': os_map.get(cod, '-')
             })
 
-        # Mesclar equipamentos com OS aberta que não estejam na lista cadastrada
-        known_codes = {e['codigo'] for e in equipamentos if e.get('codigo')}
-        for os_obj in ordens_servico:
-            raw_code = os_obj.get('codigoEquip') or os_obj.get('frotaCC')
-            if not raw_code: continue
-            code = str(raw_code).split(' - ')[0].strip()
-            if code and code not in known_codes:
-                known_codes.add(code)
-                desc = str(raw_code).split(' - ')[-1].strip() if ' - ' in str(raw_code) else 'EQUIPAMENTO OS'
-                sub  = str(os_obj.get('subClasse') or '').upper()
-                full_text = f"{desc.upper()} {sub}"
-
-                grp = 'PREPARO'
-                if '14/1' in sub or 'COLHED' in sub or 'COLHED' in full_text or 'COLHEIT' in full_text:
-                    grp = 'COLHEDORA'
-                elif '10/6' in sub or '10/1' in sub or '10/' in sub or 'TRANSPORTE DE CANA' in sub or 'CAVALO MECANICO' in sub or 'CAMINH' in full_text:
-                    grp = 'CAMINHOES'
-
-                equipamentos.append({
-                    'codigo': code,
-                    'descricao': desc,
-                    'modelo': 'SimpleFarm OS',
-                    'tipo': 'Colhedora' if grp == 'COLHEDORA' else ('Caminhão' if grp == 'CAMINHOES' else 'Trator'),
-                    'grupo': grp,
-                    'statusOS': 'Com OS',
-                    'codOS': os_obj.get('codOS') or '-'
-                })
-            
         # 3. Operações
         cur_op = conn.execute("SELECT * FROM operacoes")
         oper_rows = [dict(r) for r in cur_op.fetchall()]
