@@ -102,6 +102,19 @@
                 localStorage.setItem('sf_custom_equip_groups', JSON.stringify(customGroups));
             }
 
+            // Montar set e mapa de equipamentos com OS aberta (apenas OSs ativas presentes em ordensServico)
+            equipamentosComOS = new Set();
+            const eqCodOsMap = {};
+            ordensServico.forEach(os => {
+                const rawCod = os.codigoEquip || os.codigo_equip || os.frotaCC || os.frota_cc || '';
+                const cod = String(rawCod).split(' - ')[0].trim();
+                const codOS = os.codOS || os.cod_os || os.codigoOS || '';
+                if (cod && /^\d+$/.test(cod)) {
+                    equipamentosComOS.add(cod);
+                    if (codOS) eqCodOsMap[cod] = codOS;
+                }
+            });
+
             // Mapa de subClasses das Ordens de Serviço por código de equipamento
             const eqSubClassesMap = {};
             ordensServico.forEach(os => {
@@ -134,6 +147,7 @@
                 const assignedGroup = customGroups[codStr] || autoGroup || 'PREPARO';
                 const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : (VALID_TEAMS.includes(eq.grupo) ? eq.grupo : 'PREPARO');
                 const defaultOp = getTeamDefaultOp(finalGroup);
+                const hasOS = equipamentosComOS.has(codStr);
                 return {
                     codigo:    codStr,
                     descricao: desc,
@@ -142,21 +156,9 @@
                     tipo:      customTypes[codStr] || defaultT,
                     grupo:     finalGroup,
                     operacao:  customOps[codStr] || (eq.operacao ? formatarOp(eq.operacao) : defaultOp),
-                    statusOS:  eq.statusOS  || 'OK',
-                    codOS:     eq.codOS     || ''
+                    statusOS:  hasOS ? 'Com OS' : 'OK',
+                    codOS:     hasOS ? (eqCodOsMap[codStr] || eq.codOS || '') : ''
                 };
-            });
-
-            // Montar set de equipamentos com OS aberta
-            equipamentosComOS = new Set();
-            ordensServico.forEach(os => {
-                const cod = (os.codigoEquip || '').split(' - ')[0].trim();
-                if (cod && /^\d+$/.test(cod)) equipamentosComOS.add(cod);
-            });
-            equipments.forEach(eq => {
-                if ((eq.statusOS || '').toUpperCase() !== 'OK' && eq.codigo) {
-                    equipamentosComOS.add(String(eq.codigo));
-                }
             });
 
             const syncTime = d.ultimaSincronizacao || new Date().toISOString();
