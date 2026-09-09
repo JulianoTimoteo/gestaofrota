@@ -85,12 +85,15 @@
             const logDiv = document.getElementById('apiLog');
             if (!logDiv) return;
             const time  = new Date().toLocaleTimeString('pt-BR');
-            const color = type === 'success' ? '#10b981' :
-                          type === 'error'   ? '#ef4444' :
-                          type === 'warning' ? '#f59e0b' : '#94a3b8';
+            const color = type === 'success' ? '#4ade80' :
+                          type === 'error'   ? '#f87171' :
+                          type === 'warning' ? '#fbbf24' : '#38bdf8';
             const div = document.createElement('div');
             div.style.color = color;
-            div.textContent = `[${time}] ${message}`;
+            div.style.padding = '3px 0';
+            div.style.fontFamily = 'Consolas, Monaco, "Courier New", monospace';
+            div.style.fontSize = '0.78rem';
+            div.innerHTML = `<span style="color:#64748b;font-weight:600;">[${time}]</span> <span style="font-weight:600;">${message}</span>`;
             logDiv.appendChild(div);
             // Manter últimas 50 linhas
             while (logDiv.children.length > 50) logDiv.removeChild(logDiv.firstChild);

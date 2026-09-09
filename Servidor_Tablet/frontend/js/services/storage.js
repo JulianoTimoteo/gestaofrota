@@ -88,3 +88,18 @@
             syncAdminConfigToServer();
         }
 
+        function getCustomEquipStatus() {
+            try {
+                const s = localStorage.getItem('sf_custom_equip_status');
+                if (s) return JSON.parse(s);
+            } catch(e) {}
+            return {};
+        }
+
+        function setCustomEquipStatus(codigo, newStatus) {
+            const custom = getCustomEquipStatus();
+            custom[codigo] = newStatus;
+            localStorage.setItem('sf_custom_equip_status', JSON.stringify(custom));
+            syncAdminConfigToServer();
+        }
+

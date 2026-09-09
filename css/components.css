@@ -436,7 +436,7 @@
             color: white;
             border: none;
             padding: 0.4rem 0.75rem;
-            border-radius: 20px;
+            border-radius: 6px;
             font-size: 0.78rem;
             font-weight: 600;
             cursor: pointer;
@@ -449,8 +449,8 @@
         }
 
         /* ===== BUTTONS (SQUARE ROUNDED) ===== */
-        .btn, .tab-btn, .sub-tab-btn, .team-filter-btn {
-            border-radius: 8px !important;
+        .btn, .tab-btn, .sub-tab-btn, .team-filter-btn, .logout-btn, .btn-pwa-header, .pwa-btn-primary, .team-carousel-btn, .user-menu, #userBadge {
+            border-radius: 6px !important;
         }
 
         .btn {

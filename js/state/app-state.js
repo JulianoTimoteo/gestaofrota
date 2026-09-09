@@ -4,6 +4,7 @@
         let authToken    = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token') || '';
         let userRole     = localStorage.getItem('sf_auth_role')  || sessionStorage.getItem('sf_auth_role') || 'admin';
         let equipments   = [];
+        let allEquipmentsDB = [];
         let operacoes    = [];
         let ordensServico = [];
         let equipamentosComOS = new Set();

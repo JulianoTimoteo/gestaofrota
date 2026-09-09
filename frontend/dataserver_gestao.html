@@ -1065,6 +1065,25 @@
     <!-- LÓGICA JAVASCRIPT ADMINISTRATIVA DEDICADA -->
     <script>
         // URL Base do DataServer
+        let sfSyncChannel = null;
+        try {
+            sfSyncChannel = new BroadcastChannel('sf_autonomous_sync_channel');
+            sfSyncChannel.onmessage = (evt) => {
+                if (evt && evt.data && evt.data.type === 'DATA_CHANGED') {
+                    if (typeof carregarUsuariosAdmin === 'function') carregarUsuariosAdmin();
+                }
+            };
+        } catch (e) {}
+
+        function notifyDataSyncChange(actionType = 'sync') {
+            try {
+                if (sfSyncChannel) {
+                    sfSyncChannel.postMessage({ type: 'DATA_CHANGED', action: actionType, ts: Date.now() });
+                }
+                localStorage.setItem('sf_last_change_ts', Date.now());
+            } catch(e) {}
+        }
+
         let API_SERVER = (function() {
             const urlParams = new URLSearchParams(window.location.search);
             const p = urlParams.get('api') || urlParams.get('server');
@@ -1242,6 +1261,7 @@
                 if (res.ok && d.success) {
                     fecharModalUser();
                     carregarUsuariosAdmin();
+                    notifyDataSyncChange('user_updated');
                 } else {
                     alert('Erro ao salvar usuário: ' + (d.error || 'Falha'));
                 }
@@ -1260,6 +1280,7 @@
                 const d = await res.json();
                 if (res.ok && d.success) {
                     carregarUsuariosAdmin();
+                    notifyDataSyncChange('user_updated');
                 } else {
                     alert('Erro: ' + (d.error || 'Falha ao alterar status'));
                 }
@@ -1307,6 +1328,7 @@
                 const d = await res.json();
                 if (res.ok && d.success) {
                     carregarUsuariosAdmin();
+                    notifyDataSyncChange('user_updated');
                 } else {
                     alert('Erro ao excluir: ' + (d.error || 'Falha'));
                 }

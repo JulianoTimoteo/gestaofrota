@@ -86,11 +86,12 @@
                 return oficina !== 'EXTERNA' && !tipoOs.includes('REPARO');
             });
 
-            const customGroups = getCustomEquipGroups();
-            const customTypes  = getCustomEquipTypes();
-            const customOps    = getCustomEquipOps();
-            const customDescs  = getCustomEquipDescs();
-            const customModels = getCustomEquipModels();
+            const customGroups   = getCustomEquipGroups();
+            const customTypes    = getCustomEquipTypes();
+            const customOps      = getCustomEquipOps();
+            const customDescs    = getCustomEquipDescs();
+            const customModels   = getCustomEquipModels();
+            const customStatuses = getCustomEquipStatus();
 
             const VALID_TEAMS = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
             let customGroupsChanged = false;
@@ -129,7 +130,7 @@
             });
 
             // Mapear equipamentos com tipo limpo e operacao da lista
-            equipments = (d.equipamentos || []).map(eq => {
+            allEquipmentsDB = (d.equipamentos || []).map(eq => {
                 const codStr   = String(eq.codigo || '');
                 const desc     = customDescs[codStr] || eq.descricao || '';
                 const mod      = customModels[codStr] || eq.modelo || '';
@@ -150,18 +151,22 @@
                 const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : (VALID_TEAMS.includes(eq.grupo) ? eq.grupo : 'PREPARO');
                 const defaultOp = getTeamDefaultOp(finalGroup);
                 const hasOS = equipamentosComOS.has(codStr);
+                const stCad = customStatuses[codStr] || eq.status || 'ATIVO';
                 return {
-                    codigo:    codStr,
-                    descricao: desc,
-                    modelo:    mod,
-                    tipoRaw:   rawT,
-                    tipo:      customTypes[codStr] || defaultT,
-                    grupo:     finalGroup,
-                    operacao:  customOps[codStr] || (eq.operacao ? formatarOp(eq.operacao) : defaultOp),
-                    statusOS:  hasOS ? 'Com OS' : 'OK',
-                    codOS:     hasOS ? (eqCodOsMap[codStr] || eq.codOS || '') : ''
+                    codigo:          codStr,
+                    descricao:       desc,
+                    modelo:          mod,
+                    tipoRaw:         rawT,
+                    tipo:            customTypes[codStr] || defaultT,
+                    grupo:           finalGroup,
+                    operacao:        customOps[codStr] || (eq.operacao ? formatarOp(eq.operacao) : defaultOp),
+                    statusOS:        hasOS ? 'Com OS' : 'OK',
+                    codOS:           hasOS ? (eqCodOsMap[codStr] || eq.codOS || '') : '',
+                    statusCadastral: stCad
                 };
             });
+
+            equipments = allEquipmentsDB.filter(eq => (eq.statusCadastral || 'ATIVO').toUpperCase() !== 'INATIVO');
 
             const syncTime = d.ultimaSincronizacao || new Date().toISOString();
             if (isOfflineFallback) {
@@ -276,3 +281,30 @@
         }
 
         // ================================================================
+        // REAL-TIME AUTONOMOUS SYNC CANAL DE TRANSMISSÃO ENTRE ABAS/MÓDULOS
+        // ================================================================
+        let sfSyncChannel = null;
+        try {
+            sfSyncChannel = new BroadcastChannel('sf_autonomous_sync_channel');
+            sfSyncChannel.onmessage = (evt) => {
+                if (evt && evt.data && evt.data.type === 'DATA_CHANGED') {
+                    carregarDados(true);
+                    if (typeof renderUsuariosList === 'function') renderUsuariosList();
+                }
+            };
+        } catch (e) {}
+
+        function notifyDataSyncChange(actionType = 'sync') {
+            try {
+                if (sfSyncChannel) {
+                    sfSyncChannel.postMessage({ type: 'DATA_CHANGED', action: actionType, ts: Date.now() });
+                }
+            } catch(e) {}
+        }
+
+        window.addEventListener('storage', (e) => {
+            if (e.key && (e.key.startsWith('sf_') || e.key.startsWith('custom_'))) {
+                carregarDados(true);
+                if (typeof renderUsuariosList === 'function') renderUsuariosList();
+            }
+        });

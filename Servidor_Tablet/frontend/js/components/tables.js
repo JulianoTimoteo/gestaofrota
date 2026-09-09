@@ -81,6 +81,7 @@
                     alert(result.message || (isEdit ? 'Usuário atualizado com sucesso!' : 'Usuário cadastrado com sucesso!'));
                     closeUserCrudModal();
                     renderUsuariosList();
+                    if (typeof notifyDataSyncChange === 'function') notifyDataSyncChange('user_updated');
                 } else {
                     alert('Erro ao salvar usuário: ' + (result.error || 'Erro desconhecido.'));
                 }
@@ -110,6 +111,7 @@
                 if (res.ok && result.success) {
                     alert(`Usuário ${usuarioNome} excluído com sucesso!`);
                     renderUsuariosList();
+                    if (typeof notifyDataSyncChange === 'function') notifyDataSyncChange('user_deleted');
                 } else {
                     alert('Erro ao excluir usuário: ' + (result.error || 'Erro desconhecido.'));
                 }
