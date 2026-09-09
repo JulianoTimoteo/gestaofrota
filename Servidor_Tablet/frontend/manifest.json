@@ -1,19 +1,40 @@
 {
-  "name": "Your App Name",
-  "short_name": "Your App",
+  "name": "Gestão de Frota - Usina Pitangueiras",
+  "short_name": "Gestão Frota",
+  "description": "Sistema de gerenciamento autônomo de equipamentos agrícolas e frotas da Usina Pitangueiras",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/android-chrome-192x192.png",
+      "src": "img/pitangueiras.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "/android-chrome-512x512.png",
+      "src": "img/pitangueiras.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "shortcuts": [
+    {
+      "name": "Equipamentos",
+      "short_name": "Equipamentos",
+      "description": "Abrir visão de equipamentos",
+      "url": "./index.html?tab=equipamentos"
+    },
+    {
+      "name": "Sincronização",
+      "short_name": "Sync",
+      "description": "Painel de sincronização de dados",
+      "url": "./index.html?tab=sync"
+    }
+  ]
 }

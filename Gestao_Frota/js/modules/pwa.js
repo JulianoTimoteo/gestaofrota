@@ -38,15 +38,23 @@
             }
 
             if (deferredPwaPrompt) {
-                deferredPwaPrompt.prompt();
-                const choiceResult = await deferredPwaPrompt.userChoice;
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('Usuário aceitou a instalação do aplicativo!');
+                try {
+                    deferredPwaPrompt.prompt();
+                    const choiceResult = await deferredPwaPrompt.userChoice;
+                    if (choiceResult && choiceResult.outcome === 'accepted') {
+                        dismissPwaBanner();
+                    }
+                    deferredPwaPrompt = null;
+                } catch(e) {
                     dismissPwaBanner();
                 }
-                deferredPwaPrompt = null;
             } else {
-                alert('📱 Para instalar como App no seu celular:\n\n1. No menu do seu navegador (três pontos no topo ou rodapé)\n2. Selecione "Instalar aplicativo" ou "Adicionar à Tela Inicial".');
+                try {
+                    if (window.installPwaApp) {
+                        window.installPwaApp();
+                    }
+                } catch(e) {}
+                dismissPwaBanner();
             }
         }
 
