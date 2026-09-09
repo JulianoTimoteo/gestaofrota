@@ -74,6 +74,15 @@
                 if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
             });
 
+            // Modal Editar Frota
+            document.getElementById('btnCancelEditEquip')?.addEventListener('click', () => {
+                document.getElementById('modalEditEquipOverlay')?.classList.remove('active');
+            });
+            document.getElementById('formEditEquip')?.addEventListener('submit', submitEditEquip);
+            document.getElementById('modalEditEquipOverlay')?.addEventListener('click', e => {
+                if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
+            });
+
             // Modal Cadastrar Operação Produtiva
             document.getElementById('btnOpenAddOper')?.addEventListener('click', () => {
                 document.getElementById('addOperError').style.display = 'none';

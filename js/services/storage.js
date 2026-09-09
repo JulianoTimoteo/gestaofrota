@@ -58,3 +58,33 @@
             syncAdminConfigToServer();
         }
 
+        function getCustomEquipDescs() {
+            try {
+                const s = localStorage.getItem('sf_custom_equip_descs');
+                if (s) return JSON.parse(s);
+            } catch(e) {}
+            return {};
+        }
+
+        function setCustomEquipDesc(codigo, newDesc) {
+            const custom = getCustomEquipDescs();
+            custom[codigo] = newDesc;
+            localStorage.setItem('sf_custom_equip_descs', JSON.stringify(custom));
+            syncAdminConfigToServer();
+        }
+
+        function getCustomEquipModels() {
+            try {
+                const s = localStorage.getItem('sf_custom_equip_models');
+                if (s) return JSON.parse(s);
+            } catch(e) {}
+            return {};
+        }
+
+        function setCustomEquipModel(codigo, newModel) {
+            const custom = getCustomEquipModels();
+            custom[codigo] = newModel;
+            localStorage.setItem('sf_custom_equip_models', JSON.stringify(custom));
+            syncAdminConfigToServer();
+        }
+

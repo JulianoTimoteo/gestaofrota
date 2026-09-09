@@ -558,12 +558,25 @@
                     <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
                     <td><span class="badge-equip ${statusClass}">${statusLabel}</span> ${osBtn}</td>
                     <td>
-                        <select class="mover-select" data-codigo="${eq.codigo}" style="padding:0.25rem 0.4rem;font-size:0.78rem;border-radius:6px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);cursor:pointer;">
-                            ${moverOptions}
-                        </select>
+                        <div style="display:flex;gap:0.4rem;align-items:center;">
+                            <select class="mover-select" data-codigo="${eq.codigo}" style="padding:0.25rem 0.4rem;font-size:0.78rem;border-radius:6px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);cursor:pointer;">
+                                ${moverOptions}
+                            </select>
+                            <button type="button" class="btn-edit-equip" data-codigo="${eq.codigo}" title="Editar Equipamento / Frota" style="padding:0.25rem 0.5rem;font-size:0.78rem;font-weight:700;border-radius:6px;border:1px solid #3b82f6;background:#eff6ff;color:#1d4ed8;cursor:pointer;display:inline-flex;align-items:center;gap:3px;white-space:nowrap;">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                        </div>
                     </td>
                 </tr>`;
             }).join('');
+
+            // Adicionar evento para Editar Equipamento
+            tbody.querySelectorAll('.btn-edit-equip').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const cod = this.dataset.codigo;
+                    openEditEquipModal(cod);
+                });
+            });
 
             // Adicionar evento para alterar Tipo de equipamento
             tbody.querySelectorAll('.tipo-select').forEach(select => {

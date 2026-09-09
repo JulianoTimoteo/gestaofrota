@@ -168,6 +168,83 @@
             }
         }
 
+        function openEditEquipModal(codStr) {
+            const eq = equipments.find(item => String(item.codigo) === String(codStr));
+            if (!eq) return;
+
+            const modal = document.getElementById('modalEditEquipOverlay');
+            if (!modal) return;
+
+            document.getElementById('editEquipCodigoOriginal').value = eq.codigo || '';
+            document.getElementById('editEquipCodigo').value = eq.codigo || '';
+            document.getElementById('editEquipDescricao').value = eq.descricao || '';
+            document.getElementById('editEquipModelo').value = eq.modelo || '';
+            document.getElementById('editEquipTipo').value = eq.tipo || 'Trator';
+            document.getElementById('editEquipGrupo').value = eq.grupo || 'PREPARO';
+            document.getElementById('editEquipOperacao').value = eq.operacao || '';
+
+            const errEl = document.getElementById('editEquipError');
+            if (errEl) errEl.style.display = 'none';
+
+            modal.classList.add('active');
+        }
+
+        async function submitEditEquip(e) {
+            if (e) e.preventDefault();
+            const codigo    = (document.getElementById('editEquipCodigo')?.value || '').trim();
+            const descricao = (document.getElementById('editEquipDescricao')?.value || '').trim();
+            const modelo    = (document.getElementById('editEquipModelo')?.value || '').trim();
+            const tipo      = (document.getElementById('editEquipTipo')?.value || 'Trator').trim();
+            const grupo     = (document.getElementById('editEquipGrupo')?.value || 'PREPARO').trim();
+            const operacao  = (document.getElementById('editEquipOperacao')?.value || '').trim();
+            const errEl     = document.getElementById('editEquipError');
+
+            if (!codigo || !descricao || !modelo) {
+                if (errEl) { errEl.textContent = 'Por favor, preencha todos os campos obrigatórios.'; errEl.style.display = 'block'; }
+                return;
+            }
+
+            if (errEl) errEl.style.display = 'none';
+            showGlobalLoader();
+
+            try {
+                await fetch(`${API_BASE}/api/equipamentos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ codigo, descricao, modelo, tipo, grupo })
+                });
+            } catch (err) {
+                console.warn('Sync warning:', err);
+            } finally {
+                hideGlobalLoader();
+            }
+
+            const eq = equipments.find(item => String(item.codigo) === String(codigo));
+            if (eq) {
+                eq.descricao = descricao;
+                eq.modelo = modelo;
+                eq.tipo = tipo;
+                eq.grupo = grupo;
+                if (operacao) eq.operacao = operacao;
+
+                setCustomEquipDesc(codigo, descricao);
+                setCustomEquipModel(codigo, modelo);
+                setCustomEquipType(codigo, tipo);
+                setCustomEquipGroup(codigo, grupo);
+                if (operacao) setCustomEquipOp(codigo, operacao);
+            }
+
+            document.getElementById('modalEditEquipOverlay')?.classList.remove('active');
+
+            addLog(`✏️ Equipamento ${codigo} (${descricao}) atualizado com sucesso!`, 'success');
+            renderEquipamentos();
+            renderTeamTabs(false);
+            atualizarStatusGeral();
+        }
+
         async function submitAddOper(e) {
             if (e) e.preventDefault();
             const codigo    = (document.getElementById('addOperCodigo')?.value || '').trim();

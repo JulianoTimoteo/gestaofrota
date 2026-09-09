@@ -89,6 +89,8 @@
             const customGroups = getCustomEquipGroups();
             const customTypes  = getCustomEquipTypes();
             const customOps    = getCustomEquipOps();
+            const customDescs  = getCustomEquipDescs();
+            const customModels = getCustomEquipModels();
 
             const VALID_TEAMS = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
             let customGroupsChanged = false;
@@ -129,8 +131,8 @@
             // Mapear equipamentos com tipo limpo e operacao da lista
             equipments = (d.equipamentos || []).map(eq => {
                 const codStr   = String(eq.codigo || '');
-                const desc     = eq.descricao || '';
-                const mod      = eq.modelo    || '';
+                const desc     = customDescs[codStr] || eq.descricao || '';
+                const mod      = customModels[codStr] || eq.modelo || '';
                 const rawT     = eq.tipo      || '';
                 const defaultT = normalizarTipo(rawT, desc, mod);
 
