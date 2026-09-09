@@ -290,6 +290,316 @@
   "ultimaSincronizacao": "2026-09-05T14:20:00.000Z",
   "equipamentos": [
 {
+      "codigo": "312025",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311925",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311825",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311725",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311625",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311525",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311425",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311325",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311225",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311215",
+      "descricao": "CAMINHAO CANAVIEIRO",
+      "modelo": "PLATAFORMA TREMINHADO",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311125",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311115",
+      "descricao": "CAMINHAO CANAVIEIRO",
+      "modelo": "PLATAFORMA TREMINHADO",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311025",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "311015",
+      "descricao": "CAMINH\u00c3O RODOTREM",
+      "modelo": "CAMINH\u00c3O VOLVO FMX 500",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31925",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31915",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "CAMINH\u00c3O VOLVO FMX 500",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31825",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31815",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "CAMINHAO VOLVO FMX 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31725",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31625",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31615",
+      "descricao": "CAMINHAO CANAVIEIRO",
+      "modelo": "PLATAFORMA TREMINHADO",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31525",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31515",
+      "descricao": "CAMINHAO CANAVIEIRO",
+      "modelo": "PLATAFORMA TREMINHADO",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31425",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31415",
+      "descricao": "CAMINHAO CANAVIEIRO",
+      "modelo": "PLATAFORMA TREMINHADO",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31325",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31316",
+      "descricao": "CAMINHAO CANAVIEIRO",
+      "modelo": "PLATAFORMA TREMINHADO",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31315",
+      "descricao": "CAMINHAO CANAVIEIRO",
+      "modelo": "PLATAFORMA TREMINHADO",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31215",
+      "descricao": "CAMINHAO CANAVIEIRO",
+      "modelo": "PLATAFORMA TREMINHADO",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31125",
+      "descricao": "CAVALO MECANICO",
+      "modelo": "VOLVO FH 540",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "31115",
+      "descricao": "CAMINHAO CANAVIEIRO 540",
+      "modelo": "PLATAFORMA TREMINHADO",
+      "tipo": "Caminh\u00e3o",
+      "grupo": "CAMINHOES",
+      "operacao": "2006 - Transp De Cana Carregado",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
       "codigo": "80116",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8800",
