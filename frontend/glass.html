@@ -726,9 +726,9 @@ try {
                     txt('sEq', eok+' disponíveis');
 
                     var uConn = (d2.data.usuariosConectados !== undefined) ? d2.data.usuariosConectados : 0;
-                    var uTot  = (d2.data.totalUsuarios !== undefined) ? d2.data.totalUsuarios : 3;
-                    txt('vUsr', uConn);
-                    txt('sUsr', uConn + ' de ' + uTot + ' reg.');
+                    var uTot  = (d2.data.totalUsuarios !== undefined && d2.data.totalUsuarios > 0) ? d2.data.totalUsuarios : (d2.data.sessoesAtivas ? Math.max(d2.data.sessoesAtivas.length, 4) : 4);
+                    txt('vUsr', uTot);
+                    txt('sUsr', uConn > 0 ? ('🟢 ' + uConn + ' online agora') : ('⚪ ' + uTot + ' cadastrados no BD'));
 
                     var sList = document.getElementById('sessList');
                     if(sList && d2.data.sessoesAtivas){

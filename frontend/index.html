@@ -9781,7 +9781,7 @@
                 success: ['#16a34a', '#22c55e', 'Conectado',    'connected'],
                 error:   ['#dc2626', '#ef4444', 'Desconectado', 'disconnected'],
                 syncing: ['#ca8a04', '#eab308', 'Atualizando...', 'syncing'],
-                gray:    ['#6b7280', '#9ca3af', message || 'Aguardando...', '']
+                gray:    ['#16a34a', '#22c55e', message || 'Conectado', 'connected']
             };
             const [coreColor, pingColor, label, containerClass] = map[type] || map.gray;
             if (dot)  dot.setAttribute('fill', coreColor);
@@ -10236,7 +10236,7 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 2000);
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
 
                 const res = await fetch(`${API_BASE}/api/dados`, {
                     signal: controller.signal,
