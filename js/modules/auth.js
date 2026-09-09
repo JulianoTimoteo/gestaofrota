@@ -198,14 +198,6 @@
             if (loginBtn) loginBtn.disabled = false;
             hideGlobalLoader();
             return;
-                } catch (loadErr) {
-                    console.warn('Alerta ao carregar dados pós-login:', loadErr);
-                }
-                iniciarSyncTimer();
-            } finally {
-                if (loginBtn) loginBtn.disabled = false;
-                hideGlobalLoader();
-            }
         }
 
         async function doLogout() {
