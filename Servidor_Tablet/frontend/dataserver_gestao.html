@@ -1164,6 +1164,7 @@
                 const data = await res.json();
                 if (data.success && Array.isArray(data.data)) {
                     cachedAdminUsers = data.data;
+                    try { localStorage.setItem('sf_db_usuarios', JSON.stringify(data.data)); } catch(e) {}
                     document.getElementById('metricTotalUsers').textContent = cachedAdminUsers.length;
                     
                     tbody.innerHTML = cachedAdminUsers.map(u => {

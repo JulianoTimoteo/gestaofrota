@@ -45,94 +45,32 @@
             if (loginBtn) loginBtn.disabled = true;
             showGlobalLoader();
 
-            if (isStaticGitHubPages()) {
-                const userInp = user.toLowerCase().trim();
-                const allowedAccounts = [
-                    'julianotimoteo', 'julianotimoteo@usinapitangueiras.com.br',
-                    'rafaelfarra', 'rafaelfarra@usinapitangueiras.com.br',
-                    'logistica', 'logistica@usinapitangueiras.com.br'
-                ];
-
-                if (!allowedAccounts.includes(userInp)) {
-                    statusEl.textContent = `❌ Usuário ou e-mail '${user}' não cadastrado no banco de dados. Acesso negado.`;
-                    statusEl.className   = 'login-status error';
-                    if (cardWrapper) { cardWrapper.classList.remove('state-default', 'state-success'); cardWrapper.classList.add('state-error'); }
-                    if (loginBtn) loginBtn.disabled = false;
-                    hideGlobalLoader();
-                    return;
-                }
-
-                const validPass = pass.trim().length >= 3;
-                if (!validPass) {
-                    statusEl.textContent = 'Senha inválida ou em branco';
-                    statusEl.className   = 'login-status error';
-                    if (cardWrapper) { cardWrapper.classList.remove('state-default', 'state-success'); cardWrapper.classList.add('state-error'); }
-                    if (loginBtn) loginBtn.disabled = false;
-                    hideGlobalLoader();
-                    return;
-                }
-
-                let role = 'visualizador';
-                if (userInp.includes('juliano') || userInp.includes('logistica')) {
-                    role = 'admin';
-                } else if (userInp.includes('rafael')) {
-                    role = 'operador';
-                } else {
-                    role = 'visualizador';
-                }
-
-                const nameMap = {
-                    'julianotimoteo': 'Juliano Timóteo',
-                    'julianotimoteo@usinapitangueiras.com.br': 'Juliano Timóteo',
-                    'rafaelfarra': 'Rafael Aparecido Farra',
-                    'rafaelfarra@usinapitangueiras.com.br': 'Rafael Aparecido Farra',
-                    'logistica': 'Logística Usina Pitangueiras',
-                    'logistica@usinapitangueiras.com.br': 'Logística Usina Pitangueiras'
-                };
-                const userDisplayName = nameMap[userInp] || user;
-
-                const token = 'sf_cloud_token_' + Date.now();
-                const storage = keep ? localStorage : sessionStorage;
-                storage.setItem('sf_auth_token', token);
-                storage.setItem('sf_auth_user',  user);
-                storage.setItem('sf_auth_name',  userDisplayName);
-                storage.setItem('sf_auth_role',  role);
-                authToken = token;
-                userRole  = role;
-                statusEl.textContent = '✅ Login efetuado com sucesso!';
-                statusEl.className   = 'login-status success';
-
-                if (cardWrapper) {
-                    cardWrapper.classList.remove('state-default', 'state-error');
-                    cardWrapper.classList.add('state-success');
-                }
-
-                updateAuthUI();
-                applyRBAC();
-
-                const overlay = document.getElementById('loginOverlay');
-                if (overlay) overlay.classList.add('hidden');
-
-                try { await carregarDados(); } catch (loadErr) {}
-                iniciarSyncTimer();
-                if (loginBtn) loginBtn.disabled = false;
-                hideGlobalLoader();
-                return;
+            // 1. TENTA PRIMEIRO VIA API DO BACKEND (SE DISPONÍVEL OU SE TIVER ENDEREÇO CONFIGURADO)
+            let apiBaseToUse = (typeof API_BASE !== 'undefined' && API_BASE) ? API_BASE : window.location.origin;
+            if (apiBaseToUse.includes('github.io') || apiBaseToUse.startsWith('file:')) {
+                const customApi = localStorage.getItem('sf_custom_api_base');
+                apiBaseToUse = customApi || 'http://127.0.0.1:8000';
             }
 
+            let apiSuccess = false;
             try {
-                const res  = await fetch(`${API_BASE}/api/auth/login`, {
+                const ctrl = new AbortController();
+                const timeoutId = setTimeout(() => ctrl.abort(), 3500);
+                const res = await fetch(`${apiBaseToUse}/api/auth/login`, {
                     method:  'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body:    JSON.stringify({ 
                         usuario: user, 
                         senha: pass, 
                         origem_site: window.location.href || 'https://julianotimoteo.github.io/gestaofrota/' 
-                    })
+                    }),
+                    signal: ctrl.signal
                 });
-                const data = await res.json();
+                clearTimeout(timeoutId);
 
+                const data = await res.json();
                 if (res.ok && data.success && data.token) {
+                    apiSuccess = true;
                     const serverRole = data.nivel_chave || data.role || (data.admin ? 'admin' : 'visualizador');
                     const storage = keep ? localStorage : sessionStorage;
                     const displayName = data.nome || data.usuario || user;
@@ -145,7 +83,7 @@
                     }
                     authToken = data.token;
                     userRole  = serverRole;
-                    statusEl.textContent = '✅ Login efetuado!';
+                    statusEl.textContent = '✅ Login efetuado com sucesso!';
                     statusEl.className   = 'login-status success';
 
                     if (cardWrapper) {
@@ -161,23 +99,105 @@
 
                     try { await carregarDados(); } catch (loadErr) {}
                     iniciarSyncTimer();
-                    iniciarCheckSessaoUnicaTimer();
-                } else {
-                    statusEl.textContent = data.error || 'Usuário ou senha incorretos';
-                    statusEl.className   = 'login-status error';
-                    if (cardWrapper) {
-                        cardWrapper.classList.remove('state-default', 'state-success');
-                        cardWrapper.classList.add('state-error');
+                    if (typeof iniciarCheckSessaoUnicaTimer === 'function') iniciarCheckSessaoUnicaTimer();
+                    if (loginBtn) loginBtn.disabled = false;
+                    hideGlobalLoader();
+                    return;
+                } else if (data && data.error && !res.ok) {
+                    if (!data.error.includes('não cadastrado')) {
+                        statusEl.textContent = '❌ ' + data.error;
+                        statusEl.className   = 'login-status error';
+                        if (cardWrapper) { cardWrapper.classList.remove('state-default', 'state-success'); cardWrapper.classList.add('state-error'); }
+                        if (loginBtn) loginBtn.disabled = false;
+                        hideGlobalLoader();
+                        return;
                     }
                 }
-            } catch (err) {
-                applyRBAC();
+            } catch (apiErr) {
+                console.warn('Backend API login indisponível, acionando validação autônoma local:', apiErr);
+            }
 
-                const overlay = document.getElementById('loginOverlay');
-                if (overlay) overlay.classList.add('hidden');
+            // 2. MODO AUTÔNOMO / GITHUB PAGES / OFFLINE
+            const userInp = user.toLowerCase().trim();
 
-                try {
-                    await carregarDados();
+            const allowedAccountsMap = {
+                'julianotimoteo': { name: 'Juliano Timóteo', role: 'admin' },
+                'julianotimoteo@usinapitangueiras.com.br': { name: 'Juliano Timóteo', role: 'admin' },
+                'rafaelfarra': { name: 'Rafael Aparecido Farra', role: 'operador' },
+                'rafaelfarra@usinapitangueiras.com.br': { name: 'Rafael Aparecido Farra', role: 'operador' },
+                'logistica': { name: 'Logística Usina Pitangueiras', role: 'admin' },
+                'logistica@usinapitangueiras.com.br': { name: 'Logística Usina Pitangueiras', role: 'admin' },
+                'reginaldomantovani': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador' },
+                'reginaldomantovani@usinapitanguerias.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador' },
+                'reginaldomantovani@usinapitangueiras.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador' }
+            };
+
+            try {
+                const storedUsers = localStorage.getItem('sf_db_usuarios');
+                if (storedUsers) {
+                    const parsed = JSON.parse(storedUsers);
+                    if (Array.isArray(parsed)) {
+                        parsed.forEach(u => {
+                            const uRole = u.nivel_chave || u.role || (u.admin ? 'admin' : 'visualizador');
+                            const uName = u.nome || u.usuario;
+                            if (u.usuario) allowedAccountsMap[u.usuario.toLowerCase().trim()] = { name: uName, role: uRole };
+                            if (u.email) allowedAccountsMap[u.email.toLowerCase().trim()] = { name: uName, role: uRole };
+                        });
+                    }
+                }
+            } catch(e) {}
+
+            const foundAccount = allowedAccountsMap[userInp];
+
+            if (!foundAccount) {
+                statusEl.textContent = `❌ Usuário ou e-mail '${user}' não cadastrado no banco de dados. Acesso negado.`;
+                statusEl.className   = 'login-status error';
+                if (cardWrapper) { cardWrapper.classList.remove('state-default', 'state-success'); cardWrapper.classList.add('state-error'); }
+                if (loginBtn) loginBtn.disabled = false;
+                hideGlobalLoader();
+                return;
+            }
+
+            const validPass = pass.trim().length >= 3;
+            if (!validPass) {
+                statusEl.textContent = 'Senha inválida ou em branco';
+                statusEl.className   = 'login-status error';
+                if (cardWrapper) { cardWrapper.classList.remove('state-default', 'state-success'); cardWrapper.classList.add('state-error'); }
+                if (loginBtn) loginBtn.disabled = false;
+                hideGlobalLoader();
+                return;
+            }
+
+            const role = foundAccount.role || 'visualizador';
+            const userDisplayName = foundAccount.name || user;
+
+            const token = 'sf_cloud_token_' + Date.now();
+            const storage = keep ? localStorage : sessionStorage;
+            storage.setItem('sf_auth_token', token);
+            storage.setItem('sf_auth_user',  user);
+            storage.setItem('sf_auth_name',  userDisplayName);
+            storage.setItem('sf_auth_role',  role);
+            authToken = token;
+            userRole  = role;
+            statusEl.textContent = '✅ Login efetuado com sucesso!';
+            statusEl.className   = 'login-status success';
+
+            if (cardWrapper) {
+                cardWrapper.classList.remove('state-default', 'state-error');
+                cardWrapper.classList.add('state-success');
+            }
+
+            updateAuthUI();
+            applyRBAC();
+
+            const overlay = document.getElementById('loginOverlay');
+            if (overlay) overlay.classList.add('hidden');
+
+            try { await carregarDados(); } catch (loadErr) {}
+            iniciarSyncTimer();
+            if (loginBtn) loginBtn.disabled = false;
+            hideGlobalLoader();
+            return;
                 } catch (loadErr) {
                     console.warn('Alerta ao carregar dados pós-login:', loadErr);
                 }
