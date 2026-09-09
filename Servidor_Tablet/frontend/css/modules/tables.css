@@ -162,3 +162,44 @@
             50% { transform: scale(1.25); opacity: 0.7; }
         }
 
+        /* ===== RESPONSIVIDADE MOBILE ===== */
+        @media (max-width: 768px) {
+            .hide-mobile {
+                display: none !important;
+            }
+            
+            .table-wrap {
+                width: 100% !important;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: 0;
+                padding: 0;
+            }
+
+            table {
+                width: 100% !important;
+                font-size: 0.78rem;
+            }
+
+            table th, table td {
+                padding: 0.45rem 0.35rem !important;
+                white-space: normal !important;
+                word-break: break-word;
+            }
+
+            .badge-equip {
+                padding: 0.18rem 0.35rem !important;
+                font-size: 0.7rem !important;
+            }
+
+            .team-filter-bar {
+                padding: 0.25rem !important;
+                gap: 0.2rem !important;
+            }
+
+            .team-filter-btn {
+                padding: 0.3rem 0.5rem !important;
+                font-size: 0.72rem !important;
+            }
+        }
+

@@ -11427,10 +11427,10 @@
                             <thead>
                                 <tr>
                                     <th>Frota</th>
-                                    <th>Descrição</th>
-                                    <th>Modelo</th>
+                                    <th class="hide-mobile">Descrição</th>
+                                    <th class="hide-mobile">Modelo</th>
                                     <th>Equipe Original</th>
-                                    <th>Operação</th>
+                                    <th class="hide-mobile">Operação</th>
                                     <th>Permanência OS ⬇️</th>
                                     <th>Status OS</th>
                                 </tr>
@@ -11442,10 +11442,10 @@
                                 const diasPermText = diasVal > 0 ? `${diasVal.toFixed(1).replace('.', ',')} dias` : '> 24h';
                                 return `<tr>
                                     <td><strong>${eq.codigo || '-'}</strong></td>
-                                    <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
-                                    <td style="font-size:0.8rem;color:var(--color-gray-500);">${eq.modelo || '-'}</td>
+                                    <td class="hide-mobile" style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
+                                    <td class="hide-mobile" style="font-size:0.8rem;color:var(--color-gray-500);">${eq.modelo || '-'}</td>
                                     <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
-                                    <td><span class="badge-equip os-fechada">${eq.operacao || '-'}</span></td>
+                                    <td class="hide-mobile"><span class="badge-equip os-fechada">${eq.operacao || '-'}</span></td>
                                     <td><span class="badge-equip os-aberta" style="font-weight:700;"><i class="fas fa-clock"></i> ${diasPermText}</span></td>
                                     <td><span class="badge-equip os-aberta">Com OS</span> ${osBtn}</td>
                                 </tr>`;
