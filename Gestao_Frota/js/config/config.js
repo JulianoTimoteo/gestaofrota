@@ -289,6 +289,196 @@
 
   "ultimaSincronizacao": "2026-09-05T14:20:00.000Z",
   "equipamentos": [
+{
+      "codigo": "80116",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8800",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80317",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8810",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80224",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 9900",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80719",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8810",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80119",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8810",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80319",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8810",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80419",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8810",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80219",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8810",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80320",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8800",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80316",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8000",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80217",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8810",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80420",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8800",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80422",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 9900",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80322",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 9900",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80122",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 9900",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80124",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 9900",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80519",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8810",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80120",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8800",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
+{
+      "codigo": "80619",
+      "descricao": "COLHEDORA",
+      "modelo": "COLHEDORA CASE 8810",
+      "tipo": "Colhedora",
+      "grupo": "COLHEDORA",
+      "operacao": "4001 - Corte Mecanizado De Cana Crua",
+      "statusOS": "OK",
+      "codOS": ""
+},
     {
       "codigo": "11216",
       "descricao": "TRATOR NEW HOLLAND T7.245",
