@@ -260,7 +260,7 @@
 
 <!-- COUNTDOWN -->
 <div class="cdbar">
-    <span class="cdlbl">Próx. atualização: <strong id="cdtxt">300s (5 min)</strong></span>
+    <span class="cdlbl">Próx. atualização: <strong id="cdtxt">30s</strong></span>
     <div class="cdtrack"><div class="cdfill" id="cdfill" style="width:100%"></div></div>
 </div>
 
@@ -507,7 +507,7 @@ try {
         tryNext(0);
     }
 
-    var INTV   = 300;
+    var INTV   = 30;
     var cd     = INTV;
     var cdTmr  = null;
     var busy   = false;
@@ -790,6 +790,7 @@ try {
     document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'visible') {
             enableScreenWakeLock();
+            doLoad();
         }
     });
 

@@ -714,7 +714,9 @@ def init_db():
 
 def find_frontend_file(filename):
     """Encontra um arquivo de frontend buscando nos diretórios possíveis sem falhar."""
+    frontend_subdir = os.path.join(PROJECT_DIR, 'frontend')
     candidates = [
+        os.path.join(frontend_subdir, filename),
         os.path.join(PROJECT_DIR, filename),
         os.path.join(FRONTEND_DIR, filename),
         os.path.join(BASE_DIR, filename),
