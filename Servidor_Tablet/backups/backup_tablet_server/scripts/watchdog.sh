@@ -54,7 +54,7 @@ while true; do
         echo "[$(date)] [ALERTA] Node.js server (3000) desativado. Reiniciando..." >> "$LOG_DIR/watchdog.log"
         pkill -f "node.*server.js" 2>/dev/null || true
         cd "$INSTALL_DIR"
-        nohup node "Farra_donuts/Farra/server.js" >> "$LOG_DIR/node.log" 2>&1 &
+        nohup node "server.js" >> "$LOG_DIR/node.log" 2>&1 &
         echo "[$(date)] Node.js server reiniciado." >> "$LOG_DIR/watchdog.log"
         sleep 3
     fi

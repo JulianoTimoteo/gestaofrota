@@ -4,6 +4,9 @@ node_modules/
 
 # Segredos - NUNCA commitar
 .env
+.env.local
+.env.production
+.env.*.local
 
 # Banco de dados local (contem dados operacionais, nao codigo)
 *.db
@@ -20,3 +23,17 @@ venv/
 # Logs
 *.log
 logs/
+
+# Debug / scratch
+scratch/
+backups/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.ico
+
+# IDEs
+.vscode/
+.idea/

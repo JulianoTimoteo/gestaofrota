@@ -439,13 +439,24 @@
         .form-control {
             width: 100%;
             padding: 0.65rem 0.9rem;
-            background: var(--bg-input);
+            background: #0f172a;
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
-            color: var(--text-primary);
+            color: #ffffff;
             font-size: 0.85rem;
             outline: none;
             transition: border-color 0.2s ease;
+        }
+
+        /* ESTILOS DE LEITURA E CONTRASTE PARA DROPDOWNS E SELECTS */
+        select, option {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+        }
+
+        select option:hover, select option:focus, select option:checked {
+            background-color: #1e293b !important;
+            color: #ffffff !important;
         }
 
         .form-control:focus {
@@ -644,21 +655,88 @@
                 </div>
             </div>
 
-            <!-- 3. PÁGINA: PERMISSÕES & HIERARQUIA -->
+            <!-- 3. PÁGINA: MATRIZ DINÂMICA DE PERMISSÕES POR USUÁRIO E PLATAFORMA -->
             <div id="page-permissions" class="tab-page">
-                <div class="page-header">
+                <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
                     <div class="page-title">
-                        <h2><i class="fas fa-shield-alt" style="color:var(--accent-purple)"></i> Matriz de Permissões e Hierarquia</h2>
-                        <p>Definição de níveis de acesso e salvaguarda do usuário Master Administrador Geral.</p>
+                        <h2><i class="fas fa-user-shield" style="color:var(--accent-purple)"></i> Matriz Dinâmica de Permissões por Usuário & Plataforma</h2>
+                        <p>Configure quais abas, visões e recursos cada usuário ou aplicação tem acesso sem alterar código.</p>
+                    </div>
+                    <div>
+                        <button type="button" class="btn-action btn-success" onclick="abrirModalNovoRecurso()" style="padding:0.6rem 1.2rem; font-weight:600;">
+                            <i class="fas fa-plus-circle"></i> + Cadastrar Nova Aba / Recurso
+                        </button>
                     </div>
                 </div>
 
+                <!-- SELETORES DE USUÁRIO E PLATAFORMA -->
+                <div class="admin-panel-card" style="margin-bottom:1.5rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1.25rem;">
+                    <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-end;">
+                        <div style="flex:1; min-width:250px;">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color:var(--text-secondary);">
+                                <i class="fas fa-user"></i> Selecione o Usuário:
+                            </label>
+                            <select id="perm-user-select" class="form-control" onchange="carregarMatrizPermissoes()" style="width:100%; padding:0.6rem; border-radius:8px; background:var(--bg-secondary); color:#fff; border:1px solid rgba(255,255,255,0.15);">
+                                <option value="">Carregando usuários...</option>
+                            </select>
+                        </div>
+                        <div style="flex:1; min-width:250px;">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color:var(--text-secondary);">
+                                <i class="fas fa-desktop"></i> Selecione a Aplicação / Plataforma:
+                            </label>
+                            <select id="perm-app-select" class="form-control" onchange="carregarMatrizPermissoes()" style="width:100%; padding:0.6rem; border-radius:8px; background:var(--bg-secondary); color:#fff; border:1px solid rgba(255,255,255,0.15);">
+                                <option value="appweb">AppWeb Gestão de Frota</option>
+                                <option value="dataserver">SimpleFarm DataServer Console</option>
+                                <option value="tablet">Tablet Monitor de Campo</option>
+                                <option value="novas_apps">Novas Aplicações & Módulos</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button type="button" class="btn-action btn-primary" onclick="salvarMatrizPermissoes()" style="padding:0.65rem 1.4rem; font-weight:600; font-size:0.9rem;">
+                                <i class="fas fa-save"></i> Salvar Permissões do Usuário
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="master-user-alert" style="display:none; margin-bottom:1.5rem; padding:1rem 1.25rem; background:rgba(234, 179, 8, 0.12); border:1px solid rgba(234, 179, 8, 0.3); border-radius:10px; color:#fef08a; font-size:0.9rem; align-items:center; gap:0.75rem;">
+                    <i class="fas fa-crown" style="font-size:1.4rem; color:#facc15;"></i>
+                    <div>
+                        <strong id="master-user-alert-title">Conta Master Protegida</strong>: Este usuário possui permissão total permanente para visualizar e operar todas as abas e recursos de todas as plataformas do sistema.
+                    </div>
+                </div>
+
+                <!-- TABELA DA MATRIZ DE PERMISSÕES -->
                 <div class="admin-panel-card">
+                    <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span><i class="fas fa-th-list"></i> Abas & Recursos Disponíveis na Plataforma</span>
+                        <span id="perm-status-badge" class="badge-status active">Carregando...</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px; text-align:center;">Acesso</th>
+                                    <th>Nome da Aba / Recurso</th>
+                                    <th>Código Interno</th>
+                                    <th>Categoria</th>
+                                    <th>Status de Acesso</th>
+                                    <th style="text-align:right;">Ações de Catálogo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="perm-matrix-tbody">
+                                <tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-secondary);">Carregando matriz de permissões...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-panel-card" style="margin-top:1.5rem;">
                     <div class="panel-title">
-                        <span>👑 Regra de Segurança do Usuário Master</span>
+                        <span>👑 Regra de Segurança & Hierarquia dos Níveis</span>
                     </div>
                     <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1rem;">
-                        O usuário <strong>julianotimoteo@usinapitangueiras.com.br</strong> (login: <code>julianotimoteo</code>) é o único **Master Administrador Geral** com nível máximo de controle. O painel impede qualquer tentativa de rebaixamento ou exclusão desta conta.
+                        Os usuários <strong>julianotimoteo</strong> e <strong>logistica</strong> (Nível 100 / Admin) possuem status de <strong>Master Administrador Geral</strong> com nível máximo de controle. O painel protege automaticamente estas contas contra qualquer tentativa de exclusão ou rebaixamento.
                     </p>
                     <div class="table-responsive">
                         <table class="admin-table">
@@ -698,6 +776,13 @@
                                     <td>Operador / Técnico</td>
                                     <td>Apontamentos e Registro de Atividades</td>
                                     <td>Somente Equipe Vinculada</td>
+                                    <td><span class="badge-status active">Ativo</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>20</strong></td>
+                                    <td>Consulta / Somente Leitura</td>
+                                    <td>Visualização Restrita de Apontamentos</td>
+                                    <td>Somente Leitura</td>
                                     <td><span class="badge-status active">Ativo</span></td>
                                 </tr>
                             </tbody>
@@ -892,8 +977,11 @@
                 <div>
                     <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">Nível de Acesso / Perfil *</label>
                     <select id="formUserAdminFlag" class="form-control" required>
-                        <option value="1">Master / Administrador (Acesso Total)</option>
-                        <option value="0">Gerente / Operador (Somente Leitura/Equipes)</option>
+                        <option value="admin">Level 100 — Master Administrador Geral (Acesso Total)</option>
+                        <option value="gerente">Level 80 — Gerente / Coordenador Geral (Gestão & Consulta)</option>
+                        <option value="supervisor">Level 60 — Supervisor de Campo / Oficina (Abertura/Fechamento OS)</option>
+                        <option value="operador">Level 40 — Operador / Técnico (Somente Equipes Vinculadas)</option>
+                        <option value="visualizador">Level 20 — Visualizador (Somente Leitura)</option>
                     </select>
                 </div>
                 <div>
@@ -928,6 +1016,52 @@
         </div>
     </div>
 
+    <!-- MODAL DE CADASTRAR NOVA ABA / RECURSO -->
+    <div class="modal-overlay" id="modalNewResourceOverlay">
+        <div class="modal-box" style="max-width:480px;">
+            <div class="modal-title">
+                <span><i class="fas fa-plus-circle"></i> Cadastrar Nova Aba / Recurso</span>
+                <button type="button" onclick="fecharModalNovoRecurso()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.2rem;"><i class="fas fa-times"></i></button>
+            </div>
+            <form onsubmit="salvarNovoRecursoSubmit(event)" style="display:flex; flex-direction:column; gap:1rem;">
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">Aplicação / Plataforma *</label>
+                    <select id="newResourceApp" class="form-control" required>
+                        <option value="appweb">AppWeb Gestão de Frota</option>
+                        <option value="dataserver">SimpleFarm DataServer Console</option>
+                        <option value="tablet">Tablet Monitor de Campo</option>
+                        <option value="novas_apps">Novas Aplicações & Módulos</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">Código Interno da Aba (Sem Espaços) *</label>
+                    <input type="text" id="newResourceCode" class="form-control" required placeholder="ex: colhedoras, caminhos, irrigacao">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">Nome de Exibição na Aba (Título) *</label>
+                    <input type="text" id="newResourceName" class="form-control" required placeholder="ex: COLHEDORAS, CAMINHÕES, IRRIGAMAIS">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">Categoria / Grupo *</label>
+                    <select id="newResourceCategory" class="form-control" required>
+                        <option value="Operações">Operações</option>
+                        <option value="Administração">Administração</option>
+                        <option value="Relatórios">Relatórios</option>
+                        <option value="Módulos Especiais">Módulos Especiais</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">Ordem de Exibição (Número)</label>
+                    <input type="number" id="newResourceOrder" class="form-control" value="10" min="1">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-action btn-secondary" onclick="fecharModalNovoRecurso()">Cancelar</button>
+                    <button type="submit" class="btn-action btn-success"><i class="fas fa-plus"></i> Cadastrar Recurso</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- LÓGICA JAVASCRIPT ADMINISTRATIVA DEDICADA -->
     <script>
         // URL Base do DataServer
@@ -941,34 +1075,35 @@
                 return fmt;
             }
             if (window.location.origin && window.location.origin.startsWith('http')) {
-                if (window.location.port === '8000') return window.location.origin;
-                if (window.location.port === '3000') return window.location.origin.replace(':3000', ':8000');
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    return `${window.location.protocol}//${window.location.hostname}:8000`;
-                }
+                return window.location.origin;
             }
-            return localStorage.getItem('sf_dataserver_url') || 'http://172.16.12.36:8000';
+            return localStorage.getItem('sf_dataserver_url') || 'http://127.0.0.1:8000';
         })();
 
-        let currentAdminToken = localStorage.getItem('sf_auth_token') || '';
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarVisaoGeral();
 
-        // NAVEGAÇÃO ENTRE ABAS DO SIDEBAR
-        document.querySelectorAll('.sidebar-nav-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const target = btn.dataset.target;
-                document.querySelectorAll('.sidebar-nav-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
-                btn.classList.add('active');
-                document.getElementById(target).classList.add('active');
+            // Navegação de Abas Laterais
+            document.querySelectorAll('.sidebar-nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.dataset.target;
+                    document.querySelectorAll('.sidebar-nav-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(target).classList.add('active');
 
-                // Trigger ao mudar de aba
-                if (target === 'page-overview') carregarVisaoGeral();
-                else if (target === 'page-users') carregarUsuariosAdmin();
-                else if (target === 'page-apikeys') carregarChavesApiAdmin();
-                else if (target === 'page-database') carregarListaTabelasAdmin();
-                else if (target === 'page-logs') carregarLogsAuditoria();
+                    // Trigger ao mudar de aba
+                    if (target === 'page-overview') carregarVisaoGeral();
+                    else if (target === 'page-users') carregarUsuariosAdmin();
+                    else if (target === 'page-permissions') carregarMatrizPermissoes();
+                    else if (target === 'page-apikeys') carregarChavesApiAdmin();
+                    else if (target === 'page-database') carregarListaTabelasAdmin();
+                    else if (target === 'page-logs') carregarLogsAuditoria();
+                });
             });
         });
+
+        let currentAdminToken = localStorage.getItem('sf_auth_token') || '';
 
         // 1. VISÃO GERAL
         async function carregarVisaoGeral() {
@@ -1013,8 +1148,17 @@
                     document.getElementById('metricTotalUsers').textContent = cachedAdminUsers.length;
                     
                     tbody.innerHTML = cachedAdminUsers.map(u => {
-                        const isMaster = u.usuario === 'julianotimoteo' || u.email === 'julianotimoteo@usinapitangueiras.com.br';
-                        const roleBadge = isMaster ? '<span class="badge-status master">Master Admin</span>' : (u.admin ? '<span class="badge-status active">Administrador</span>' : '<span class="badge-status inactive">Operador</span>');
+                        const isMaster = (u.usuario && (u.usuario.toLowerCase() === 'julianotimoteo' || u.usuario.toLowerCase() === 'logistica')) || u.admin === 1 || String(u.nivel_chave).toLowerCase().includes('admin') || String(u.nivel_chave) === '100';
+                        const roleKey = u.nivel_chave || u.role || (u.admin ? 'admin' : 'visualizador');
+                        const roleMap = {
+                            'master': '<span class="badge-status master">Master Admin (100)</span>',
+                            'admin': '<span class="badge-status active">Master Admin (100)</span>',
+                            'gerente': '<span class="badge-status active" style="background:rgba(14,165,233,0.18);color:#38bdf8;border-color:rgba(14,165,233,0.35);">Gerente (80)</span>',
+                            'supervisor': '<span class="badge-status active" style="background:rgba(245,158,11,0.18);color:#fbbf24;border-color:rgba(245,158,11,0.35);">Supervisor (60)</span>',
+                            'operador': '<span class="badge-status inactive" style="background:rgba(99,102,241,0.18);color:#818cf8;border-color:rgba(99,102,241,0.35);">Operador (40)</span>',
+                            'visualizador': '<span class="badge-status inactive">Visualizador (20)</span>'
+                        };
+                        const roleBadge = isMaster ? '<span class="badge-status master">Master Admin (100)</span>' : (roleMap[roleKey] || '<span class="badge-status active">Administrador</span>');
                         const statusBadge = u.ativo == 1 ? '<span class="badge-status active">Ativo</span>' : '<span class="badge-status inactive">Bloqueado</span>';
                         
                         const actions = isMaster ? '<span style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">Conta Master Protegida</span>' : `
@@ -1047,6 +1191,7 @@
             document.getElementById('formUserLogin').value = '';
             document.getElementById('formUserNome').value = '';
             document.getElementById('formUserEmail').value = '';
+            document.getElementById('formUserAdminFlag').value = 'admin';
             document.getElementById('formUserPass').required = true;
             document.getElementById('lblFormUserPass').textContent = 'Senha *';
             document.getElementById('modalUserOverlay').classList.add('active');
@@ -1060,7 +1205,7 @@
             document.getElementById('formUserLogin').value = u.usuario;
             document.getElementById('formUserNome').value = u.nome || '';
             document.getElementById('formUserEmail').value = u.email || '';
-            document.getElementById('formUserAdminFlag').value = u.admin ? '1' : '0';
+            document.getElementById('formUserAdminFlag').value = u.nivel_chave || u.role || (u.admin ? 'admin' : 'visualizador');
             document.getElementById('formUserPass').required = false;
             document.getElementById('lblFormUserPass').textContent = 'Nova Senha (deixe em branco se não desejar alterar)';
             document.getElementById('modalUserOverlay').classList.add('active');
@@ -1073,11 +1218,14 @@
         async function salvarUsuarioAdminSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('formUserId').value;
+            const roleVal = document.getElementById('formUserAdminFlag').value;
             const body = {
                 usuario: document.getElementById('formUserLogin').value.trim(),
                 nome: document.getElementById('formUserNome').value.trim(),
                 email: document.getElementById('formUserEmail').value.trim(),
-                admin: parseInt(document.getElementById('formUserAdminFlag').value),
+                admin: ['admin', 'master', 'gerente', 'supervisor'].includes(roleVal) ? 1 : 0,
+                nivel_chave: roleVal,
+                role: roleVal,
                 senha: document.getElementById('formUserPass').value
             };
 
@@ -1167,7 +1315,242 @@
             }
         }
 
-        // 3. CHAVES DE API
+        // 3. MATRIZ DINÂMICA DE PERMISSÕES POR USUÁRIO E PLATAFORMA
+        let cachedUsuariosPerm = [];
+
+        async function popularSeletorUsuariosPermissoes() {
+            const select = document.getElementById('perm-user-select');
+            if (!select) return;
+            try {
+                const res = await fetch(`${API_SERVER}/api/usuarios`, {
+                    headers: { 'Authorization': 'Bearer ' + currentAdminToken }
+                });
+                if (res.ok) {
+                    const d = await res.json();
+                    if (d.success && Array.isArray(d.data)) {
+                        cachedUsuariosPerm = d.data;
+                        const currentVal = select.value;
+                        select.innerHTML = d.data.map(u => {
+                            const isMasterUser = (u.usuario && (u.usuario.toLowerCase() === 'julianotimoteo' || u.usuario.toLowerCase() === 'logistica')) || u.admin === 1 || String(u.nivel_chave) === '100';
+                            const nivelText = isMasterUser ? 'Master admin' : (u.nivel_chave || 'Operador');
+                            return `<option value="${u.id}">${u.nome || u.usuario} (@${u.usuario}) — Nível ${nivelText}</option>`;
+                        }).join('');
+                        if (currentVal && d.data.some(u => String(u.id) === String(currentVal))) {
+                            select.value = currentVal;
+                        } else if (d.data.length > 0) {
+                            select.value = d.data[0].id;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Erro ao popular usuarios em permissoes:", e);
+            }
+        }
+
+        async function carregarMatrizPermissoes() {
+            const selectUser = document.getElementById('perm-user-select');
+            const selectApp  = document.getElementById('perm-app-select');
+            const tbody      = document.getElementById('perm-matrix-tbody');
+            const alertMaster = document.getElementById('master-user-alert');
+            const statusBadge = document.getElementById('perm-status-badge');
+
+            if (!selectUser || !selectApp || !tbody) return;
+
+            if (cachedUsuariosPerm.length === 0) {
+                await popularSeletorUsuariosPermissoes();
+            }
+
+            const userId = selectUser.value;
+            const appCode = selectApp.value || 'appweb';
+
+            if (!userId) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-secondary);">Nenhum usuário selecionado.</td></tr>';
+                return;
+            }
+
+            const selectedUserObj = cachedUsuariosPerm.find(u => String(u.id) === String(userId));
+            const isMaster = selectedUserObj && (
+                selectedUserObj.usuario.toLowerCase() === 'julianotimoteo' || 
+                selectedUserObj.usuario.toLowerCase() === 'logistica' || 
+                selectedUserObj.admin === 1 || 
+                String(selectedUserObj.nivel_chave).toLowerCase().includes('admin') || 
+                String(selectedUserObj.nivel_chave) === '100'
+            );
+
+            if (alertMaster) {
+                alertMaster.style.display = isMaster ? 'flex' : 'none';
+                const alertTitle = document.getElementById('master-user-alert-title');
+                if (alertTitle && selectedUserObj) {
+                    alertTitle.textContent = `Conta Master Protegida (${selectedUserObj.usuario})`;
+                }
+            }
+
+            if (statusBadge) {
+                statusBadge.textContent = isMaster ? 'Acesso Total Master' : 'Permissões Customizadas';
+                statusBadge.className = isMaster ? 'badge-status master' : 'badge-status active';
+            }
+
+            try {
+                const res = await fetch(`${API_SERVER}/api/permissoes?usuario_id=${userId}&plataforma=${appCode}`);
+                if (res.ok) {
+                    const d = await res.json();
+                    if (d.success && Array.isArray(d.data)) {
+                        if (d.data.length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-secondary);">Nenhum recurso/aba cadastrado para esta aplicação.</td></tr>';
+                            return;
+                        }
+
+                        tbody.innerHTML = d.data.map(r => {
+                            const isChecked = r.permitido === 1;
+                            const disabledAttr = isMaster ? 'disabled' : '';
+                            return `
+                                <tr>
+                                    <td style="text-align:center;">
+                                        <input type="checkbox" class="perm-checkbox" data-recurso="${r.codigo_recurso}" ${isChecked ? 'checked' : ''} ${disabledAttr} style="transform:scale(1.3); cursor:pointer;">
+                                    </td>
+                                    <td><strong>${r.nome_recurso}</strong></td>
+                                    <td><code>${r.codigo_recurso}</code></td>
+                                    <td><span class="badge-status active" style="background:rgba(255,255,255,0.08); color:var(--text-primary);">${r.categoria || 'Geral'}</span></td>
+                                    <td>
+                                        ${isChecked 
+                                            ? '<span style="color:#10b981; font-weight:600;"><i class="fas fa-check-circle"></i> Permitido</span>' 
+                                            : '<span style="color:var(--accent-red); font-weight:600;"><i class="fas fa-ban"></i> Bloqueado</span>'}
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <button type="button" class="btn-action btn-danger" onclick="excluirRecursoCatalogo(${r.id}, '${r.nome_recurso}')" title="Excluir do catálogo">
+                                            <i class="fas fa-trash"></i> Excluir Recurso
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('');
+                        return;
+                    }
+                }
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--accent-red); padding:2rem;">Erro ao carregar permissões do servidor.</td></tr>';
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--accent-red); padding:2rem;">Falha de conexão: ${e.message}</td></tr>`;
+            }
+        }
+
+        async function salvarMatrizPermissoes() {
+            const selectUser = document.getElementById('perm-user-select');
+            const selectApp  = document.getElementById('perm-app-select');
+            if (!selectUser || !selectApp) return;
+
+            const userId = selectUser.value;
+            const appCode = selectApp.value;
+
+            const selectedUserObj = cachedUsuariosPerm.find(u => String(u.id) === String(userId));
+            const isMasterUser = selectedUserObj && (
+                selectedUserObj.usuario.toLowerCase() === 'julianotimoteo' || 
+                selectedUserObj.usuario.toLowerCase() === 'logistica' || 
+                selectedUserObj.admin === 1 || 
+                String(selectedUserObj.nivel_chave).toLowerCase().includes('admin') || 
+                String(selectedUserObj.nivel_chave) === '100'
+            );
+
+            if (isMasterUser) {
+                alert(`O usuário Master / Admin (${selectedUserObj.usuario}) possui acesso total permanente a todas as abas e recursos.`);
+                return;
+            }
+
+            const checkboxes = document.querySelectorAll('.perm-checkbox');
+            const permissoesMap = {};
+            checkboxes.forEach(cb => {
+                const rec = cb.dataset.recurso;
+                if (rec) permissoesMap[rec] = cb.checked ? 1 : 0;
+            });
+
+            try {
+                const res = await fetch(`${API_SERVER}/api/permissoes`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + currentAdminToken
+                    },
+                    body: JSON.stringify({
+                        usuario_id: parseInt(userId),
+                        plataforma_codigo: appCode,
+                        permissoes: permissoesMap
+                    })
+                });
+                const d = await res.json();
+                if (d.success) {
+                    alert(d.message || "Permissões salvas com sucesso!");
+                    carregarMatrizPermissoes();
+                } else {
+                    alert("Erro ao salvar permissões: " + d.error);
+                }
+            } catch (e) {
+                alert("Erro ao conectar ao servidor: " + e.message);
+            }
+        }
+
+        function abrirModalNovoRecurso() {
+            document.getElementById('modalNewResourceOverlay').classList.add('active');
+        }
+
+        function fecharModalNovoRecurso() {
+            document.getElementById('modalNewResourceOverlay').classList.remove('active');
+        }
+
+        async function salvarNovoRecursoSubmit(e) {
+            e.preventDefault();
+            const app = document.getElementById('newResourceApp').value;
+            const code = document.getElementById('newResourceCode').value.trim();
+            const name = document.getElementById('newResourceName').value.trim();
+            const cat = document.getElementById('newResourceCategory').value;
+            const order = document.getElementById('newResourceOrder').value;
+
+            try {
+                const res = await fetch(`${API_SERVER}/api/recursos`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + currentAdminToken
+                    },
+                    body: JSON.stringify({
+                        plataforma_codigo: app,
+                        codigo_recurso: code,
+                        nome_recurso: name,
+                        categoria: cat,
+                        ordem: parseInt(order) || 10
+                    })
+                });
+                const d = await res.json();
+                if (d.success) {
+                    alert(d.message || "Recurso cadastrado com sucesso!");
+                    fecharModalNovoRecurso();
+                    carregarMatrizPermissoes();
+                } else {
+                    alert("Erro ao cadastrar recurso: " + d.error);
+                }
+            } catch (err) {
+                alert("Erro de rede: " + err.message);
+            }
+        }
+
+        async function excluirRecursoCatalogo(id, nome) {
+            if (!confirm(`Deseja realmente excluir a aba/recurso '${nome}' do catálogo?`)) return;
+            try {
+                const res = await fetch(`${API_SERVER}/api/recursos/${id}`, { 
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + currentAdminToken }
+                });
+                const d = await res.json();
+                if (d.success) {
+                    alert(d.message || "Recurso excluído!");
+                    carregarMatrizPermissoes();
+                } else {
+                    alert("Erro: " + d.error);
+                }
+            } catch (e) {
+                alert("Erro de conexão: " + e.message);
+            }
+        }
+
+        // 4. CHAVES DE API
         async function carregarChavesApiAdmin() {
             const tbody = document.getElementById('apiKeysTbody');
             try {

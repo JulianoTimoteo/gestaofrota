@@ -30,7 +30,7 @@ sleep 5
 
 # Inicia Node.js server (porta 3000)
 echo "[$(date)] Iniciando Node.js server (porta 3000)..." >> "$LOG_DIR/node.log"
-nohup node "Farra_donuts/Farra/server.js" >> "$LOG_DIR/node.log" 2>&1 &
+nohup node "server.js" >> "$LOG_DIR/node.log" 2>&1 &
 NODE_PID=$!
 echo "Node.js PID: $NODE_PID"
 

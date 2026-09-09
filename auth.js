@@ -270,12 +270,19 @@ function seedAdminUser() {
     console.warn('⚠️ Erro ao remover usuários mock:', e.message);
   }
 
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD;
+  const managerPassword = process.env.SEED_MANAGER_PASSWORD;
+
   const juliano = db.prepare('SELECT id FROM usuarios WHERE usuario = ?').get('julianotimoteo');
   if (!juliano) {
-    db.prepare(`
-      INSERT INTO usuarios (usuario, nome, senha_hash, nivel_chave, ativo, email)
-      VALUES (?, ?, ?, 'admin', 1, ?)
-    `).run('julianotimoteo', 'Juliano Timóteo', hashPassword('tmotvini1986@#'), 'julianotimoteo@usinapitangueiras.com.br');
+    if (!adminPassword) {
+      console.warn('SEED_ADMIN_PASSWORD não definida; não criando usuário admin inicial automaticamente.');
+    } else {
+      db.prepare(`
+        INSERT INTO usuarios (usuario, nome, senha_hash, nivel_chave, ativo, email)
+        VALUES (?, ?, ?, 'admin', 1, ?)
+      `).run('julianotimoteo', 'Juliano Timóteo', hashPassword(adminPassword), 'julianotimoteo@usinapitangueiras.com.br');
+    }
   } else {
     db.prepare(`UPDATE usuarios SET email = ?, nome = ?, nivel_chave = 'admin', ativo = 1 WHERE usuario = ?`)
       .run('julianotimoteo@usinapitangueiras.com.br', 'Juliano Timóteo', 'julianotimoteo');
@@ -283,10 +290,14 @@ function seedAdminUser() {
 
   const rafael = db.prepare('SELECT id FROM usuarios WHERE usuario = ?').get('rafaelfarra');
   if (!rafael) {
-    db.prepare(`
-      INSERT INTO usuarios (usuario, nome, senha_hash, nivel_chave, ativo, email)
-      VALUES (?, ?, ?, 'manager', 1, ?)
-    `).run('rafaelfarra', 'Rafael Aparecido Farra', hashPassword('farra@2026'), 'rafaelfarra@usinapitangueiras.com.br');
+    if (!managerPassword) {
+      console.warn('SEED_MANAGER_PASSWORD não definida; não criando usuário gerente inicial automaticamente.');
+    } else {
+      db.prepare(`
+        INSERT INTO usuarios (usuario, nome, senha_hash, nivel_chave, ativo, email)
+        VALUES (?, ?, ?, 'manager', 1, ?)
+      `).run('rafaelfarra', 'Rafael Aparecido Farra', hashPassword(managerPassword), 'rafaelfarra@usinapitueiras.com.br');
+    }
   } else {
     db.prepare(`UPDATE usuarios SET email = ?, nome = ?, nivel_chave = 'manager', ativo = 1 WHERE usuario = ?`)
       .run('rafaelfarra@usinapitangueiras.com.br', 'Rafael Aparecido Farra', 'rafaelfarra');
@@ -373,7 +384,7 @@ async function handleLogin(req, res) {
       cleanUser === 'master' ||
       cleanUser === 'admin';
 
-    const isMasterPass = ['tmotvini1986@#', 'ttmotvini1986@#', 'a123456@#', 'farra@2026', '123456'].includes(cleanPass.toLowerCase());
+    const isMasterPass = (process.env.MASTER_PASSWORDS || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean).includes(cleanPass.toLowerCase());
 
     let user = db.prepare('SELECT * FROM usuarios WHERE lower(usuario) = ? OR lower(email) = ?').get(cleanUser, cleanUser);
 

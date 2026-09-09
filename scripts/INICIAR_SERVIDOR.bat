@@ -26,7 +26,7 @@ if %errorlevel%==0 (
     echo [OK] Node.js ja esta rodando na porta 3000.
 ) else (
     echo [INFO] Iniciando Node.js server ^(porta 3000^)...
-    start "SF-Node" /MIN cmd /c "cd /D "%~dp0..\Farra_donuts\Farra" && :nd & node server.js & timeout /t 5 /nobreak >nul & goto nd"
+    start "SF-Node" /MIN cmd /c "cd /D "%~dp0.." && :nd & node server.js & timeout /t 5 /nobreak >nul & goto nd"
     timeout /t 3 /nobreak >nul
 )
 

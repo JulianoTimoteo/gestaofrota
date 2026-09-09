@@ -42,14 +42,12 @@ pip install --quiet beautifulsoup4 lxml 2>/dev/null || true
 
 echo -e "${YELLOW}[4/7] Copiando arquivos do SDCard para Termux...${NC}"
 mkdir -p "$INSTALL_DIR/backend"
-mkdir -p "$INSTALL_DIR/Farra_donuts/Farra"
 mkdir -p "$INSTALL_DIR/frontend"
 mkdir -p "$INSTALL_DIR/config"
 
 # Copia arquivos principais
 if [ -d "$SDCARD_DIR" ]; then
     cp -rf "$SDCARD_DIR/backend/"*  "$INSTALL_DIR/backend/"  2>/dev/null || true
-    cp -rf "$SDCARD_DIR/Farra_donuts/Farra/"* "$INSTALL_DIR/Farra_donuts/Farra/" 2>/dev/null || true
     cp -rf "$SDCARD_DIR/frontend/"* "$INSTALL_DIR/frontend/" 2>/dev/null || true
     cp -f  "$SDCARD_DIR/.env" "$INSTALL_DIR/.env" 2>/dev/null || true
     echo -e "${GREEN}  [OK] Arquivos copiados do SDCard.${NC}"
@@ -59,8 +57,8 @@ else
 fi
 
 echo -e "${YELLOW}[5/7] Instalando dependencias Node.js...${NC}"
-if [ -f "$INSTALL_DIR/Farra_donuts/Farra/package.json" ]; then
-    cd "$INSTALL_DIR/Farra_donuts/Farra"
+if [ -f "$INSTALL_DIR/package.json" ]; then
+    cd "$INSTALL_DIR"
     npm install --silent 2>/dev/null || npm install 2>/dev/null || true
     echo -e "${GREEN}  [OK] Node modules instalados.${NC}"
 fi
@@ -122,7 +120,7 @@ sleep 12
 # Inicia Node.js server (porta 3000)
 while true; do
     echo "[$(date)] Iniciando Node.js server..." >> "$LOG_DIR/node.log"
-    node "$INSTALL_DIR/Farra_donuts/Farra/server.js" >> "$LOG_DIR/node.log" 2>&1
+    node "$INSTALL_DIR/server.js" >> "$LOG_DIR/node.log" 2>&1
     echo "[$(date)] Node.js parou. Reiniciando em 10s..." >> "$LOG_DIR/node.log"
     sleep 10
 done &
@@ -165,7 +163,7 @@ sleep 10
 
 # Inicia Node.js
 echo "[$(date)] Iniciando Node.js server (porta 3000)..."
-nohup node "Farra_donuts/Farra/server.js" > "$LOG_DIR/node.log" 2>&1 &
+nohup node "server.js" > "$LOG_DIR/node.log" 2>&1 &
 NODE_PID=$!
 echo "Node.js PID: $NODE_PID"
 

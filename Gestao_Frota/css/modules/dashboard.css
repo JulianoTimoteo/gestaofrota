@@ -1,0 +1,497 @@
+        /* ===== DASHBOARD DONUT CHART ===== */
+        .fleet-dashboard-card {
+            margin-bottom: 1.25rem;
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-gray-200);
+            box-shadow: var(--shadow-sm);
+            padding: 1.25rem 1.5rem;
+            transition: box-shadow var(--transition-normal);
+        }
+
+        .fleet-dashboard-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .fleet-donut-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .fleet-chart-area {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            flex-shrink: 0;
+        }
+
+        .fleet-chart-area canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .fleet-chart-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+            width: 65%;
+        }
+
+        .fleet-total-value {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: inherit;
+            line-height: 1.2;
+        }
+
+        .fleet-total-label {
+            display: block;
+            font-size: 0.65rem;
+            color: inherit;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.2rem;
+        }
+
+        .fleet-legend-area {
+            flex: 1;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .fleet-legend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition-fast);
+        }
+
+        .fleet-legend-item:hover {
+            background: var(--color-gray-50);
+        }
+
+        .fleet-legend-left {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 600;
+            color: inherit;
+        }
+
+        .fleet-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fleet-dot.green { background: #22c55e; box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2); }
+        .fleet-dot.red { background: #ef4444; box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2); }
+        .fleet-dot.warning { background: #f59e0b; box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2); }
+
+        .fleet-legend-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .fleet-legend-val {
+            font-weight: 700;
+            color: inherit;
+        }
+
+        .fleet-legend-pct {
+            font-size: 0.8rem;
+            color: inherit;
+            width: 36px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .fleet-legend-divider {
+            height: 1px;
+            background: var(--color-gray-200);
+            margin: 0.25rem 0;
+        }
+
+        .fleet-legend-total {
+            font-weight: 700;
+            color: inherit;
+        }
+
+        @media (max-width: 640px) {
+            .fleet-donut-wrapper {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            .fleet-legend-area {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* ===== DONUT CHART GRID & CARD STYLING (MATCHING EXACT IMAGE DESIGN) ===== */
+        .donut-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+            align-items: stretch;
+        }
+
+        .donut-card {
+            width: 100%;
+            min-width: 0;
+            background: white;
+            border: 1px solid var(--color-gray-200);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.25rem;
+            transition: box-shadow var(--transition-normal), border-color var(--transition-normal), transform var(--transition-normal);
+        }
+
+        body.dark-theme .donut-card {
+            background: #172033 !important;
+            border-color: #2a374e !important;
+            color: #ffffff !important;
+        }
+
+        .donut-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .donut-chart-wrapper {
+            width: 130px;
+            height: 130px;
+            min-width: 130px;
+            min-height: 130px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .donut-chart-wrapper svg {
+            transform: rotate(-90deg);
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
+        .donut-ring-track {
+            fill: none;
+            stroke: #f1f5f9;
+        }
+
+        body.dark-theme .donut-ring-track {
+            stroke: #334155;
+        }
+
+        .donut-seg {
+            fill: none;
+            transition: stroke-dasharray 0.8s cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .donut-center {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            pointer-events: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .donut-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--color-gray-900);
+            line-height: 1;
+            margin: 0;
+        }
+
+        body.dark-theme .donut-value {
+            color: #f8fafc;
+        }
+
+        .donut-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--color-gray-500);
+            text-transform: lowercase;
+            margin-top: 3px;
+        }
+
+        body.dark-theme .donut-label {
+            color: #94a3b8;
+        }
+
+        .donut-legend-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 0.5rem;
+            min-width: 160px;
+        }
+
+        .donut-header-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.35rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        body.dark-theme .donut-header-title {
+            color: #64748b;
+        }
+
+        .donut-legend-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .donut-legend-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .donut-legend-left {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .donut-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .donut-legend-name {
+            color: var(--color-gray-700);
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        body.dark-theme .donut-legend-name {
+            color: #cbd5e1;
+        }
+
+        .donut-legend-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-align: right;
+        }
+
+        .donut-val {
+            font-weight: 700;
+            font-size: 0.88rem;
+        }
+
+        .donut-pct {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            min-width: 32px;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        body.dark-theme .donut-pct {
+            color: #64748b;
+        }
+
+        .donut-total-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.4rem;
+            padding-top: 0.45rem;
+            border-top: 1px solid var(--color-gray-200);
+        }
+
+        body.dark-theme .donut-total-row {
+            border-top-color: #334155;
+        }
+
+        .donut-total-label {
+            color: #9ca3af;
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        body.dark-theme .donut-total-label {
+            color: #64748b;
+        }
+
+        .donut-total-val {
+            color: var(--color-gray-800);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        body.dark-theme .donut-total-val {
+            color: #f8fafc;
+        }
+
+        .donut-tooltip {
+            position: absolute;
+            pointer-events: none;
+            background: var(--color-gray-900, #111827);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+            opacity: 0;
+            transform: translate(-50%, -8px);
+            transition: opacity 0.15s ease;
+            z-index: 5;
+            white-space: nowrap;
+        }
+
+        .donut-tooltip.is-visible {
+            opacity: 1;
+            transform: translate(-50%, -12px);
+        }
+
+            /* Donut cards responsive optimization */
+            .donut-card {
+                padding: 0.85rem 0.75rem !important;
+                gap: 0.75rem !important;
+            }
+            .donut-chart-wrapper {
+                width: 110px !important;
+                height: 110px !important;
+                min-width: 110px !important;
+                min-height: 110px !important;
+            }
+            .donut-chart-wrapper .donut-value {
+                font-size: 1.3rem !important;
+            }
+            .donut-chart-wrapper .donut-label {
+                font-size: 0.65rem !important;
+            }
+            .donut-header-title {
+                white-space: normal !important;
+                word-break: break-word !important;
+                font-size: 0.7rem !important;
+                line-height: 1.25 !important;
+            }
+            .donut-legend-area {
+                min-width: 0 !important;
+            }
+            .donut-legend-name, .donut-val, .donut-pct {
+                font-size: 0.78rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.35rem;
+            }
+            .header-left h1 {
+                font-size: 1.05rem;
+            }
+            .header-info span {
+                padding: 0.3rem 0.55rem;
+                font-size: 0.72rem;
+            }
+            .tab-btn, .sub-tab-btn, .team-filter-btn {
+                min-height: 42px;
+                display: inline-flex;
+                align-items: center;
+            }
+            .btn {
+                min-height: 42px;
+                padding: 0.5rem 0.85rem;
+            }
+            .login-card {
+                padding: 1.35rem 1rem;
+                width: 95%;
+                border-radius: 12px;
+            }
+            .action-modal {
+                width: 95% !important;
+                padding: 1rem !important;
+                border-radius: 12px !important;
+            }
+            .sd-popover {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 92vw !important;
+                max-width: 330px !important;
+                max-height: 70vh !important;
+                box-shadow: 0 25px 50px rgba(0,0,0,0.5) !important;
+                border-radius: 12px !important;
+            }
+            .sd-search-box input {
+                font-size: 0.85rem;
+                padding: 0.4rem;
+            }
+            table th, table td {
+                padding: 0.45rem 0.4rem !important;
+                font-size: 0.75rem !important;
+            }
+            .model-grid table td .badge-equip {
+                max-width: 115px !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                white-space: nowrap !important;
+                display: inline-block !important;
+                vertical-align: middle !important;
+                font-size: 0.68rem !important;
+                padding: 0.15rem 0.4rem !important;
+            }
+            .count-badge {
+                font-size: 0.68rem !important;
+                padding: 0.15rem 0.45rem !important;
+            }
+            .header-logo-img {
+                height: 52px !important;
+                max-height: 52px !important;
+                padding: 4px 8px !important;
+            }
+            .footer-note {
+                padding: 0.65rem 0.85rem;
+                font-size: 0.75rem;
+            }
+        }
+

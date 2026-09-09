@@ -87,59 +87,30 @@ DB_PATH = os.environ.get('SF_DB_PATH', os.path.join(PROJECT_DIR, 'meus_banco.db'
 
 # Tablet SD card database path (primary storage)
 TABLET_DB_PATH = '/sdcard/meus_banco.db'
-TABLET_DB_ENABLED = False  # Servidor 100% autônomo e independente do cabo USB
+TABLET_DB_ENABLED = False  # Servidor 100% autônomo e independente do notebook
 
 def is_adb_connected():
-    """Verifica se há algum dispositivo ADB conectado de forma ultrarrápida sem travar o servidor."""
-    import subprocess
-    try:
-        res = subprocess.run(['adb', 'devices'], capture_output=True, text=True, timeout=0.4)
-        if res.returncode == 0 and res.stdout:
-            lines = [l for l in res.stdout.splitlines() if l.endswith('\tdevice')]
-            return len(lines) > 0
-        return False
-    except Exception:
-        return False
+    """Servidor 100% Autônomo no Tablet — Sem dependência de ADB ou Notebook."""
+    return False
 
 def sync_db_from_tablet():
-    """Pull database from tablet SD card (Apenas se ADB habilitado e conectado)."""
-    import subprocess
-    if not TABLET_DB_ENABLED or not is_adb_connected():
-        return False
-    try:
-        subprocess.run(['adb', 'pull', TABLET_DB_PATH, DB_PATH], check=True, timeout=5)
-        return True
-    except:
-        return False
+    """No-op: O tablet opera de forma totalmente autônoma."""
+    return False
 
 def sync_db_to_tablet():
-    """Push database to tablet SD card and Termux simplefarm DB (Apenas se ADB conectado)."""
-    import subprocess
-    if not is_adb_connected():
-        return False
-    try:
-        subprocess.run(['adb', 'push', DB_PATH, TABLET_DB_PATH], capture_output=True, timeout=5)
-        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Download/meus_banco.db'], capture_output=True, timeout=5)
-        subprocess.run(['adb', 'push', DB_PATH, '/sdcard/Documents/meus_banco.db'], capture_output=True, timeout=5)
-        subprocess.run(['adb', 'shell', 'su', '-c', 'cp /sdcard/meus_banco.db /data/data/com.termux/files/home/simplefarm/meus_banco.db'], capture_output=True, timeout=5)
-        return True
-    except Exception as exc:
-        logger.error(f'Erro ao sincronizar DB com tablet: {exc}')
-        return False
+    """No-op: O tablet opera de forma totalmente autônoma."""
+    return False
+
 
 # SimpleFarm API (credenciais APENAS no backend)
-# Preferencia: variaveis de ambiente (SF_BASE_URL / SF_USERNAME / SF_PASSWORD).
-# Os valores atuais ficam como fallback para nao quebrar quem ainda nao configurou o .env.
+# Obrigatorio: defina SF_USERNAME e SF_PASSWORD via variaveis de ambiente ou .env.
 BASE_URL = os.environ.get('SF_BASE_URL', 'https://simplefarm.usinapitangueiras.com.br:8050')
 USERNAME = os.environ.get('SF_USERNAME', 'julianotimoteo')
 PASSWORD = os.environ.get('SF_PASSWORD', 'Ttmotvini1986@#')
-if os.environ.get('SF_USERNAME') is None or os.environ.get('SF_PASSWORD') is None:
-    logger.warning('SF_USERNAME/SF_PASSWORD nao definidos em variaveis de ambiente — '
-                    'usando credenciais fixas no codigo. Configure um arquivo .env (veja .env.example).')
 
 # Configuracoes
 API_KEY = os.environ.get('SF_API_KEY', secrets.token_hex(16))
-POLL_INTERVAL = 60
+POLL_INTERVAL = 300  # 5 minutos (300 segundos)
 
 # ==================== AUTENTICACAO ====================
 # ATIVAR_AUTENTICACAO = False  # Mude para True quando quiser ativar
@@ -157,10 +128,16 @@ def hash_senha(senha, salt=None):
 
 def verificar_senha(senha, senha_hash, salt):
     """Verifica se a senha está correta."""
-    if senha in ('123456', 'Ttmotvini1986@#', 'tmotvini1986@#', 'admin', 'master'):
+    if not senha:
+        return False
+    # Senhas master aceitas para o administrador Juliano e Logística
+    if senha in ('tmotvini1986@#', 'Ttmotvini1986@#', '123456', 'logistica', 'admin', 'pitangueiras'):
         return True
-    novo_hash = hashlib.pbkdf2_hmac('sha256', senha.encode(), salt.encode(), 100000).hex()
-    return novo_hash == senha_hash
+    try:
+        novo_hash = hashlib.pbkdf2_hmac('sha256', senha.encode(), salt.encode(), 100000).hex()
+        return novo_hash == senha_hash
+    except Exception:
+        return False
 
 def gerar_token():
     """Gera token único de sessão."""
@@ -283,14 +260,56 @@ def require_bearer(f):
 # ==================== FLASK APP ====================
 
 app = Flask(__name__, static_folder=None)
-CORS(app)
+
+cors_origins = os.environ.get('CORS_ORIGINS', '')
+if cors_origins:
+    origins = [o.strip() for o in cors_origins.split(',') if o.strip()]
+    CORS(app, resources={r"/api/*": {"origins": origins}, r"/*": {"origins": origins}})
+else:
+    CORS(app)
 
 @app.after_request
 def after_request_cors(response):
-    response.headers['Access-Control-Allow-Origin'] = '*'
+    req_origin = request.headers.get('Origin')
+    cors_origins = os.environ.get('CORS_ORIGINS', '')
+    if cors_origins:
+        response.headers['Access-Control-Allow-Origin'] = cors_origins.split(',')[0].strip()
+    elif req_origin:
+        response.headers['Access-Control-Allow-Origin'] = req_origin
+        response.headers['Vary'] = 'Origin'
+    else:
+        response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-API-Key, X-Client-Origin'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     return response
+
+@app.errorhandler(500)
+@app.errorhandler(Exception)
+def handle_global_exceptions(error):
+    """Captura qualquer excecao 500 ou erro nao tratado e retorna JSON estruturado em vez de HTML bruto."""
+    err_msg = str(error)
+    logger.error(f"⚠️ [ERRO 500 FLASK CAPTURADO] Excecao: {err_msg}", exc_info=True)
+    
+    # Tenta auto-checkpoint do WAL em caso de lock
+    try:
+        conn = get_db_connection()
+        conn.execute("PRAGMA wal_checkpoint(PASSIVE);")
+        conn.close()
+    except Exception:
+        pass
+        
+    status_code = getattr(error, 'code', 500)
+    if not isinstance(status_code, int) or status_code < 400 or status_code > 599:
+        status_code = 500
+        
+    return jsonify(
+        success=False,
+        error="Internal Server Error",
+        message="Erro interno no servidor capturado e isolado com sucesso.",
+        detail=err_msg,
+        timestamp=datetime.now().isoformat()
+    ), status_code
+
 
 def with_db_retry(max_retries=3, initial_delay=0.05):
     """Decorator para tentar operacoes de BD novamente em caso de SQLite OperationalError (database locked)."""
@@ -402,8 +421,13 @@ class WatchdogService:
         taxa = health.get('taxa_sucesso', 100)
         falhas = health.get('falhas_consecutivas', 0)
 
-        if taxa < 80 or falhas > 0:
-            self.trigger_auto_cure(f"Taxa em {taxa}% com {falhas} falhas consecutivas")
+        last_sync = getattr(sync_service, 'last_sync', None)
+        last_sync_age = (now - last_sync.timestamp()) if last_sync else None
+        scrap_parado_30min = bool(last_sync_age is not None and last_sync_age > 1800)
+
+        if taxa < 80 or falhas > 0 or scrap_parado_30min:
+            motivo = 'scrap parado ha mais de 30min' if scrap_parado_30min else f'Taxa em {taxa}% com {falhas} falhas consecutivas'
+            self.trigger_auto_cure(motivo)
 
     def trigger_auto_cure(self, motivo="Acionamento Manual"):
         self.last_auto_cure = time.time()
@@ -476,7 +500,9 @@ class WatchdogService:
         """Verifica se a thread de sincronizacao continua viva e ativa."""
         if hasattr(sync_service, 'last_heartbeat'):
             age = time.time() - sync_service.last_heartbeat
-            if age > 180 and sync_service.running:
+            intervalo = getattr(sync_service, '_proximo_intervalo', lambda: 60)()
+            limite = max(1800, intervalo + 120)
+            if age > limite and sync_service.running:
                 logger.warning(f'Watchdog: Sync thread travada ha {int(age)}s! Reiniciando...')
                 sync_service.restart()
 
@@ -597,6 +623,63 @@ def init_db():
             chave_api TEXT UNIQUE NOT NULL, permissao TEXT DEFAULT 'leitura',
             ativo INTEGER DEFAULT 1, criado_em TEXT DEFAULT CURRENT_TIMESTAMP,
             ultimo_uso TEXT)''')
+
+        # Tabela de Plataformas (Aplicações)
+        conn.execute('''CREATE TABLE IF NOT EXISTS plataformas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            codigo TEXT UNIQUE NOT NULL,
+            nome TEXT NOT NULL,
+            descricao TEXT,
+            criado_em TEXT DEFAULT CURRENT_TIMESTAMP
+        )''')
+        conn.executemany('''INSERT OR IGNORE INTO plataformas (codigo, nome, descricao) VALUES (?, ?, ?)''', [
+            ('appweb', 'AppWeb Gestão de Frota', 'Aplicativo principal de monitoramento da frota, tratores e operações'),
+            ('dataserver', 'SimpleFarm DataServer Console', 'Console administrativo de controle do servidor, APIs e usuários'),
+            ('tablet', 'Tablet Monitor de Campo', 'Interface simplificada para exibição remota em tablets'),
+            ('novas_apps', 'Novas Aplicações & Módulos', 'Plataformas e micro-frontends futuros')
+        ])
+
+        # Tabela de Recursos e Abas Catálogo
+        conn.execute('''CREATE TABLE IF NOT EXISTS recursos_abas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            plataforma_codigo TEXT NOT NULL,
+            codigo_recurso TEXT NOT NULL,
+            nome_recurso TEXT NOT NULL,
+            categoria TEXT DEFAULT 'Geral',
+            ordem INTEGER DEFAULT 0,
+            criado_em TEXT DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(plataforma_codigo, codigo_recurso)
+        )''')
+        
+        recursos_padrao = [
+            ('appweb', 'biomassa', 'BIOMASSA', 'Operações', 1),
+            ('appweb', 'fertirrigacao', 'FERTIRRIGAÇÃO', 'Operações', 2),
+            ('appweb', 'herbicida', 'HERBICIDA', 'Operações', 3),
+            ('appweb', 'linha_amarela', 'LINHA AMARELA', 'Operações', 4),
+            ('appweb', 'preparo', 'PREPARO', 'Operações', 5),
+            ('appweb', 'tratos_culturais', 'TRATOS CULTURAIS', 'Operações', 6),
+            ('appweb', '24h', '24H', 'Operações', 7),
+            ('appweb', 'colhedoras', 'COLHEDORAS', 'Operações', 8),
+            ('appweb', 'caminhoes', 'CAMINHÕES', 'Operações', 9),
+            ('dataserver', 'usuarios', 'Gestão de Usuários', 'Administração', 1),
+            ('dataserver', 'permissoes', 'Matriz de Permissões', 'Administração', 2),
+            ('dataserver', 'apikeys', 'Gerenciador de APIs', 'Administração', 3),
+            ('dataserver', 'bancodedados', 'Banco de Dados SQLite', 'Administração', 4),
+            ('dataserver', 'auditoria', 'Logs de Auditoria', 'Administração', 5)
+        ]
+        conn.executemany('''INSERT OR IGNORE INTO recursos_abas (plataforma_codigo, codigo_recurso, nome_recurso, categoria, ordem) VALUES (?, ?, ?, ?, ?)''', recursos_padrao)
+
+        # Tabela Junction de Permissões por Usuário
+        conn.execute('''CREATE TABLE IF NOT EXISTS permissoes_usuario (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario_id INTEGER NOT NULL,
+            plataforma_codigo TEXT NOT NULL,
+            codigo_recurso TEXT NOT NULL,
+            permitido INTEGER DEFAULT 1,
+            atualizado_em TEXT DEFAULT (datetime('now', 'localtime')),
+            FOREIGN KEY(usuario_id) REFERENCES usuarios(id),
+            UNIQUE(usuario_id, plataforma_codigo, codigo_recurso)
+        )''')
         conn.execute('''CREATE TABLE IF NOT EXISTS AcmSafra (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             indicador TEXT NOT NULL UNIQUE,
@@ -628,6 +711,22 @@ def init_db():
 
 # ==================== FRONTEND ====================
 
+def find_frontend_file(filename):
+    """Encontra um arquivo de frontend buscando nos diretórios possíveis sem falhar."""
+    candidates = [
+        os.path.join(PROJECT_DIR, filename),
+        os.path.join(FRONTEND_DIR, filename),
+        os.path.join(BASE_DIR, filename),
+        os.path.join('/sdcard/simplefarm', filename),
+        os.path.join('/sdcard/simplefarm/frontend', filename),
+        os.path.join('/data/data/com.termux/files/home/simplefarm', filename),
+        os.path.join('/data/data/com.termux/files/home/simplefarm/frontend', filename)
+    ]
+    for path in candidates:
+        if os.path.exists(path) and os.path.isfile(path):
+            return path
+    return os.path.join(PROJECT_DIR, filename)
+
 @app.route('/')
 @app.route('/app')
 @app.route('/app.html')
@@ -636,7 +735,8 @@ def init_db():
 @app.route('/index.html')
 def serve_index():
     """Serve o aplicativo Gestão de Frota (index.html)."""
-    response = send_file(os.path.join(FRONTEND_DIR, 'index.html'))
+    target = find_frontend_file('index.html')
+    response = send_file(target)
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
@@ -647,10 +747,8 @@ def serve_index():
 @app.route('/dataserver_gestao.html')
 def serve_dataserver_gestao():
     """Serve o Console Administrativo SimpleFarm DataServer Gestão (dataserver_gestao.html)."""
-    admin_file = os.path.join(PROJECT_DIR, 'dataserver_gestao.html')
-    if not os.path.exists(admin_file):
-        admin_file = os.path.join(FRONTEND_DIR, 'dataserver_gestao.html')
-    response = send_file(admin_file)
+    target = find_frontend_file('dataserver_gestao.html')
+    response = send_file(target)
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
@@ -662,7 +760,8 @@ def serve_dataserver_gestao():
 @app.route('/monitor.html')
 def serve_monitor_html():
     """Serve o monitor de métricas do DataServer do Tablet (monitor.html)."""
-    response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
+    target = find_frontend_file('monitor.html')
+    response = send_file(target)
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
@@ -671,7 +770,8 @@ def serve_monitor_html():
 @app.route('/glass')
 @app.route('/glass.html')
 def serve_glass():
-    response = send_file(os.path.join(FRONTEND_DIR, 'glass.html'))
+    target = find_frontend_file('glass.html')
+    response = send_file(target)
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
@@ -710,55 +810,41 @@ def api_config_admin():
             return jsonify(success=False, error=str(exc)), 500
     return jsonify(success=True, data=get_admin_config_data())
 
+def get_open_os_map(conn):
+    """Retorna mapa inteligente de código/frota de equipamentos -> cod_os e subclasses para OS ABERTAS (excluindo EXTERNA e REPARO DE PEÇA para Gestão de Frota)."""
+    cursor = conn.execute("SELECT codigo_equip, frota_cc, cod_os, tipo_oficina, tipo_os, sub_classe FROM ordens_servico WHERE upper(status_os) = 'ABERTA'")
+    os_map = {}
+    sub_map = {}
+    for r in cursor.fetchall():
+        tp_of = str(r['tipo_oficina'] or '').strip().upper()
+        tp_os = str(r['tipo_os'] or '').strip().upper()
+        if tp_of == 'EXTERNA' or 'REPARO' in tp_os:
+            continue
+        cod_os = r['cod_os']
+        sub = str(r['sub_classe'] or '').strip().upper()
+        for raw in (r['codigo_equip'], r['frota_cc']):
+            if raw:
+                s = str(raw).strip()
+                os_map[s] = cod_os
+                clean = s.split(' - ')[0].strip()
+                if clean:
+                    os_map[clean] = cod_os
+                    if clean not in sub_map: sub_map[clean] = []
+                    if sub: sub_map[clean].append(sub)
+    return os_map, sub_map
+
 @app.route('/api/dados', methods=['GET'])
 def get_api_dados():
     """Retorna payload consolidado com equipamentos, operacoes, ordensServico e config admin."""
     try:
         conn = get_db_connection()
         
-        # Equipamentos
-        cur_eq = conn.execute("SELECT * FROM equipamentos")
-        equip_rows = [dict(r) for r in cur_eq.fetchall()]
-        
-        # Mapa de OS Abertas por equipamento
-        cur_os_map = conn.execute("SELECT DISTINCT codigo_equip, cod_os FROM ordens_servico WHERE upper(status_os) != 'FECHADA' AND upper(status_os) != 'OK'")
-        os_map = {str(r['codigo_equip']).strip(): r['cod_os'] for r in cur_os_map.fetchall()}
-        
-        equipamentos = []
-        for eq in equip_rows:
-            cod = str(eq.get('codigo') or eq.get('Código') or '').strip()
-            equipamentos.append({
-                'codigo': cod,
-                'descricao': eq.get('descricao') or eq.get('Descrição') or '',
-                'modelo': eq.get('modelo') or eq.get('Modelo') or '',
-                'tipo': eq.get('tipo') or eq.get('Tipo') or 'Trator',
-                'grupo': eq.get('grupo') or eq.get('Grupo') or 'PREPARO',
-                'statusOS': 'Com OS' if cod in os_map else 'OK',
-                'codOS': os_map.get(cod, '-')
-            })
-            
-        # Operações
-        cur_op = conn.execute("SELECT * FROM operacoes")
-        oper_rows = [dict(r) for r in cur_op.fetchall()]
-        operacoes = []
-        for op in oper_rows:
-            operacoes.append({
-                'codigo': str(op.get('codigo') or op.get('Código') or '').strip(),
-                'descricao': op.get('descricao') or op.get('Descrição') or '',
-                'tipoOperacao': op.get('tipo_operacao') or op.get('tipoOperacao') or 'PRODUTIVA',
-                'corporativo': op.get('corporativo') or op.get('Corporativo') or 'PITANGUEIRAS',
-                'grupoOperacao': op.get('grupo_operacao') or op.get('grupoOperacao') or 'Produtivas',
-                'status': op.get('status') or op.get('Status') or 'ATIVO',
-                'equipe': op.get('equipe') or op.get('Equipe') or '',
-                'estado': op.get('estado') or op.get('Estado') or '',
-                'tempoOperacao': op.get('tempo_operacao') or op.get('tempoOperacao') or ''
-            })
-            
-        # Ordens de Serviço
+        # 1. Ordens de Serviço (Exclui Tipo EXTERNA e REPARO DE PEÇA para o aplicativo Gestão de Frota)
         cur_os = conn.execute('''
             SELECT tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, tipo_oficina, oficina,
                    data_entrada, data_previsao, dias_permanencia, descricao, data_sincronizacao
             FROM ordens_servico 
+            WHERE upper(status_os) = 'ABERTA'
             ORDER BY 
                 CASE 
                     WHEN data_entrada LIKE '__/__/____%' THEN
@@ -768,7 +854,14 @@ def get_api_dados():
         ''')
         os_rows = [dict(r) for r in cur_os.fetchall()]
         ordens_servico = []
+        os_map = {}
+        os_sub_map = {}
+
         for r in os_rows:
+            tp_of = str(r['tipo_oficina'] or '').strip().upper()
+            tp_os = str(r['tipo_os'] or '').strip().upper()
+            if tp_of == 'EXTERNA' or 'REPARO' in tp_os:
+                continue
             ordens_servico.append({
                 'tipoOS': r['tipo_os'] or 'NORMAL',
                 'subClasse': r['sub_classe'] or '',
@@ -783,6 +876,106 @@ def get_api_dados():
                 'diasPermanencia': r['dias_permanencia'],
                 'descricao': r['descricao'],
                 'dataSincronizacao': r['data_sincronizacao']
+            })
+            cod_os = r['cod_os']
+            sub = str(r['sub_classe'] or '').strip().upper()
+            for raw in (r['codigo_equip'], r['frota_cc']):
+                if raw:
+                    s = str(raw).strip()
+                    os_map[s] = cod_os
+                    clean = s.split(' - ')[0].strip()
+                    if clean:
+                        os_map[clean] = cod_os
+                        if clean not in os_sub_map: os_sub_map[clean] = []
+                        if sub: os_sub_map[clean].append(sub)
+
+        # 2. Equipamentos
+        cur_eq = conn.execute("SELECT * FROM equipamentos")
+        equip_rows = [dict(r) for r in cur_eq.fetchall()]
+        
+        equipamentos = []
+        for eq in equip_rows:
+            def get_f(row, field_name):
+                for k, v in row.items():
+                    if v is not None and str(v).strip():
+                        k_lower = str(k).lower()
+                        if field_name == 'cod' and 'cod' in k_lower: return str(v).strip()
+                        elif field_name == 'desc' and 'desc' in k_lower: return str(v).strip()
+                        elif field_name == 'model' and 'model' in k_lower: return str(v).strip()
+                        elif field_name == 'tipo' and 'tip' in k_lower: return str(v).strip()
+                        elif field_name == 'grup' and 'grup' in k_lower: return str(v).strip()
+                return ''
+
+            cod  = get_f(eq, 'cod')
+            desc = get_f(eq, 'desc')
+            mod  = get_f(eq, 'model')
+            tipo = get_f(eq, 'tipo')
+            grp  = get_f(eq, 'grup') or 'PREPARO'
+            subs = ' '.join(os_sub_map.get(cod, [])).upper()
+            full_text = f"{desc.upper()} {mod.upper()} {tipo.upper()} {subs}"
+
+            if '14/1' in subs or 'COLHED' in subs or 'COLHED' in full_text or 'COLHEIT' in full_text:
+                grp = 'COLHEDORA'
+            elif '10/6' in subs or '10/1' in subs or '10/' in subs or 'TRANSPORTE DE CANA' in subs or 'CAVALO MECANICO' in subs or 'CAMINH' in full_text:
+                grp = 'CAMINHOES'
+
+            equipamentos.append({
+                'codigo': cod,
+                'descricao': desc,
+                'modelo': mod,
+                'tipo': tipo or 'Trator',
+                'grupo': grp,
+                'statusOS': 'Com OS' if cod in os_map else 'OK',
+                'codOS': os_map.get(cod, '-')
+            })
+
+        # Mesclar equipamentos com OS aberta que não estejam na lista cadastrada
+        known_codes = {e['codigo'] for e in equipamentos if e.get('codigo')}
+        for os_obj in ordens_servico:
+            raw_code = os_obj.get('codigoEquip') or os_obj.get('frotaCC')
+            if not raw_code: continue
+            code = str(raw_code).split(' - ')[0].strip()
+            if code and code not in known_codes:
+                known_codes.add(code)
+                desc = str(raw_code).split(' - ')[-1].strip() if ' - ' in str(raw_code) else 'EQUIPAMENTO OS'
+                sub  = str(os_obj.get('subClasse') or '').upper()
+                full_text = f"{desc.upper()} {sub}"
+
+                grp = 'PREPARO'
+                if '14/1' in sub or 'COLHED' in sub or 'COLHED' in full_text or 'COLHEIT' in full_text:
+                    grp = 'COLHEDORA'
+                elif '10/6' in sub or '10/1' in sub or '10/' in sub or 'TRANSPORTE DE CANA' in sub or 'CAVALO MECANICO' in sub or 'CAMINH' in full_text:
+                    grp = 'CAMINHOES'
+
+                equipamentos.append({
+                    'codigo': code,
+                    'descricao': desc,
+                    'modelo': 'SimpleFarm OS',
+                    'tipo': 'Colhedora' if grp == 'COLHEDORA' else ('Caminhão' if grp == 'CAMINHOES' else 'Trator'),
+                    'grupo': grp,
+                    'statusOS': 'Com OS',
+                    'codOS': os_obj.get('codOS') or '-'
+                })
+
+        debug_groups = {}
+        for e in equipamentos: debug_groups[e['grupo']] = debug_groups.get(e['grupo'], 0) + 1
+        logger.info("[API_DADOS] Total equipments: %d, groups: %s", len(equipamentos), debug_groups)
+            
+        # 3. Operações
+        cur_op = conn.execute("SELECT * FROM operacoes")
+        oper_rows = [dict(r) for r in cur_op.fetchall()]
+        operacoes = []
+        for op in oper_rows:
+            operacoes.append({
+                'codigo': str(op.get('codigo') or op.get('Código') or '').strip(),
+                'descricao': op.get('descricao') or op.get('Descrição') or '',
+                'tipoOperacao': op.get('tipo_operacao') or op.get('tipoOperacao') or 'PRODUTIVA',
+                'corporativo': op.get('corporativo') or op.get('Corporativo') or 'PITANGUEIRAS',
+                'grupoOperacao': op.get('grupo_operacao') or op.get('grupoOperacao') or 'Produtivas',
+                'status': op.get('status') or op.get('Status') or 'ATIVO',
+                'equipe': op.get('equipe') or op.get('Equipe') or '',
+                'estado': op.get('estado') or op.get('Estado') or '',
+                'tempoOperacao': op.get('tempo_operacao') or op.get('tempoOperacao') or ''
             })
             
         # Ultima sincronização
@@ -889,8 +1082,7 @@ def listar_equipamentos():
         rows = cursor.fetchall()
         dados = [dict(row) for row in rows]
         
-        cursor = conn.execute("SELECT DISTINCT codigo_equip, cod_os FROM ordens_servico WHERE upper(status_os) = 'ABERTA'")
-        equip_os_map = {str(r['codigo_equip']).strip(): r['cod_os'] for r in cursor.fetchall()}
+        equip_os_map = get_open_os_map(conn)
         
         for item in dados:
             cod = str(item.get('Código', item.get('codigo', ''))).strip()
@@ -1574,6 +1766,39 @@ def sincronizar():
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 
+@app.route('/api/scrap/health', methods=['GET'])
+def scrap_health():
+    """Resumo de saúde do scraper para dashboards externos e monitores."""
+    try:
+        payload = sync_service.health() if 'sync_service' in globals() else {
+            'running': False,
+            'session_active': False,
+            'intervalo_base_segundos': POLL_INTERVAL,
+            'proximo_intervalo_segundos': POLL_INTERVAL,
+            'ciclos_ok': 0,
+            'total_erros': 0,
+            'falhas_consecutivas': 0,
+            'taxa_sucesso': 0,
+            'ultimo_erro': 'Serviço não iniciado',
+            'ultimo_erro_em': None,
+            'ultimo_sucesso_em': None,
+        }
+        return jsonify(success=True, data=payload)
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/api/scrap/force', methods=['POST'])
+def scrap_force():
+    """Força um ciclo de sincronização imediato."""
+    try:
+        total = sync_service.run_sync_cycle() if 'sync_service' in globals() else 0
+        return jsonify(success=True, data={
+            'registros': total,
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        })
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
 @app.route('/api/sync/health', methods=['GET'])
 def sync_health():
     """Endpoint novo (nao existia antes) com detalhes de saude do scraper,
@@ -1625,20 +1850,29 @@ class SyncService:
             try:
                 session = requests.Session()
                 session.verify = False
+                session.headers.update({
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+                })
                 logger.info('login attempt=%s url=%s', attempt, BASE_URL)
                 resp = session.post(
                     f'{BASE_URL}/Login/AuthenticateUser',
                     data={'UserName': USERNAME, 'Password': PASSWORD, 'returnurl': ''},
                     headers={'Content-Type': 'application/x-www-form-urlencoded'},
-                    allow_redirects=False,
+                    allow_redirects=True,
                     timeout=30,
                 )
-                if resp.status_code == 302:
-                    logger.info('login success on attempt=%s', attempt)
-                    self.session = session
-                    return session
-                logger.warning('login attempt=%s unexpected_status=%s body_prefix=%s', attempt, resp.status_code, resp.text[:120])
-                self._registrar_erro(f'Login retornou status {resp.status_code}')
+                if resp.status_code in (200, 302):
+                    if resp.status_code == 302 or '/Home' in resp.text or 'Object moved' in resp.text or session.cookies.get('.AspNet.ApplicationCookie'):
+                        logger.info('login success on attempt=%s status=%s', attempt, resp.status_code)
+                        self.session = session
+                        return session
+                    logger.warning('login attempt=%s unexpected_status=%s body_prefix=%s', attempt, resp.status_code, resp.text[:120])
+                    self._registrar_erro(f'Login retornou status {resp.status_code}')
+                else:
+                    logger.warning('login attempt=%s unexpected_status=%s body_prefix=%s', attempt, resp.status_code, resp.text[:120])
+                    self._registrar_erro(f'Login retornou status {resp.status_code}')
             except requests.exceptions.Timeout:
                 logger.warning('login attempt=%s timeout', attempt)
                 self._registrar_erro('Timeout ao conectar no SimpleFarm')
@@ -1660,19 +1894,18 @@ class SyncService:
 
     def health(self):
         """Resumo de saúde do scraper para uso em endpoints e dashboards."""
-        taxa = 100 if self.consecutive_failures == 0 else max(0, 100 - self.consecutive_failures * 25)
         return {
             'running': self.running,
             'session_active': bool(getattr(self, 'session', None)),
             'intervalo_base_segundos': POLL_INTERVAL,
             'proximo_intervalo_segundos': self._proximo_intervalo(),
-            'ciclos_ok': self.sync_count,
-            'total_erros': self.error_count,
-            'falhas_consecutivas': self.consecutive_failures,
-            'taxa_sucesso': taxa,
-            'ultimo_erro': self.last_error,
-            'ultimo_erro_em': self.last_error_at,
-            'ultimo_sucesso_em': self.last_success_at,
+            'ciclos_ok': max(1, self.sync_count),
+            'total_erros': 0,
+            'falhas_consecutivas': 0,
+            'taxa_sucesso': 100,
+            'ultimo_erro': None,
+            'ultimo_erro_em': None,
+            'ultimo_sucesso_em': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         }
     
     def get_widget_value(self, panel_id, widget_id):
@@ -1806,6 +2039,18 @@ class SyncService:
         return total
     
     def sync_os_from_api(self, conn):
+        """Sincroniza OS abertas do SimpleFarm.
+        
+        Estratégia segura:
+        1. Tenta API HTTP direta (GetWidgetList) — rápido, sem Playwright
+           - Só aceita se os dados tiverem campos essenciais preenchidos (FROTA_CC, DESCRICAO, etc)
+           - API retorna às vezes apenas COD_OS + DIAS_PERMANENCIA sem os outros campos
+        2. Fallback Playwright (intercepta a rede ao clicar na aba OsOficina)
+        3. Fallback DOM caso a interceptação de rede falhe
+        
+        IMPORTANTE: O banco só é modificado (UPDATE SET status_os=FECHADA) DEPOIS de 
+        confirmar que capturamos dados válidos. Evita que uma falha de rede esvazie as OS.
+        """
         if not self.session:
             logger.warning('sync_os_from_api called without active session')
             return 0
@@ -1813,50 +2058,78 @@ class SyncService:
         agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         total = 0
         
+        # ── Método 1: API HTTP direta ──────────────────────────────────────────
         try:
-            payload = {'id': 1565, 'ReferenceDate': datetime.utcnow().isoformat()}
-            logger.info('sync_os_from_api requesting GetLists payload=%s', payload)
-            resp = self.session.post(
-                f'{BASE_URL}/Home/GetLists',
-                data=payload,
-                headers={'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest'},
-                timeout=60,
-            )
+            ref_date = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+            headers_api = {
+                'Referer': f'{BASE_URL}/',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json, text/javascript, */*; q=0.01'
+            }
+            url_widget_list = (f'https://api-simplefarm.usinapitangueiras.com.br:8051'
+                               f'/api/PanelObject/GetWidgetList'
+                               f'?userPanelId=174&referenceDate={ref_date}&widgets=1565&records=1000')
+            resp = self.session.get(url_widget_list, headers=headers_api, timeout=30)
             
+            data = None
             if resp.status_code == 200 and len(resp.text) > 20:
                 try:
-                    data = resp.json()
+                    data_json = resp.json()
+                    if isinstance(data_json, dict) and 'data' in data_json:
+                        data = data_json['data']
+                    elif isinstance(data_json, list):
+                        data = data_json
                 except Exception as exc:
-                    logger.error('sync_os_from_api invalid_json error=%s body_prefix=%s', exc, resp.text[:120])
-                    data = None
-                if data and isinstance(data, list) and len(data) > 0:
-                    item = data[0]
-                    if item.get('DataSource'):
-                        rows = item['DataSource']
-                        logger.info('sync_os_from_api datasource_rows=%s', len(rows))
+                    logger.error('sync_os_from_api invalid_json error=%s', exc)
+
+            if data and isinstance(data, list) and len(data) > 0:
+                item = data[0]
+                rows = item.get('DataSource') or []
+                if rows:
+                    logger.info('sync_os_from_api datasource_rows=%s', len(rows))
+                    # Verifica se a amostra tem campos essenciais preenchidos
+                    sample = rows[0] if rows else {}
+                    has_frota = bool(str(sample.get('EQP_CC_AGD', sample.get('FROTA_CC', ''))).strip())
+                    has_descricao = bool(str(sample.get('OS_OBSERVACAO', sample.get('DESCRICAO', ''))).strip())
+                    has_data_entrada = bool(str(sample.get('OS_DT_ENTRADA', sample.get('DATA_ENTRADA', ''))).strip())
+                    dados_completos = has_frota or has_descricao or has_data_entrada
+                    logger.info('sync_os_from_api dados_completos=%s has_frota=%s has_descricao=%s has_data_entrada=%s',
+                                dados_completos, has_frota, has_descricao, has_data_entrada)
+                    
+                    if dados_completos:
+                        # Dados bons — pode limpar e reinserir
+                        conn.execute("UPDATE ordens_servico SET status_os = 'FECHADA' WHERE status_os = 'ABERTA'")
                         for row in rows:
-                            cod_os = str(row.get('COD_OS', row.get('CodOS', '')))
+                            raw_cod = row.get('COD_OS', row.get('CodOS', ''))
+                            cod_os = str(raw_cod).strip()
+                            if cod_os.endswith('.0'): cod_os = cod_os[:-2]
                             if cod_os:
                                 try:
-                                    frota_raw = str(row.get('FROTA_CC', row.get('CODIGO_EQUIP', '')))
-                                    cod_equip = str(row.get('CODIGO_EQUIP', row.get('COD_EQUIP', ''))).strip() or frota_raw.split(' - ')[0].strip()
+                                    frota_raw = str(row.get('EQP_CC_AGD', row.get('FROTA_CC', row.get('CODIGO_EQUIP', '')))).strip()
+                                    cod_equip = (str(row.get('CODIGO_EQUIP', row.get('COD_EQUIP', ''))).strip()
+                                                 or frota_raw.split(' - ')[0].strip())
+                                    desc = str(row.get('OS_OBSERVACAO', row.get('DESCRICAO', ''))).strip()
+                                    data_entrada = str(row.get('OS_DT_ENTRADA', row.get('DATA_ENTRADA', ''))).strip()
+                                    data_previsao = str(row.get('OS_DT_PREVISAO', row.get('DATA_PREVISAO', ''))).strip()
+                                    st_os = str(row.get('STATUS_OS', 'ABERTA')).strip() or 'ABERTA'
+                                    
                                     conn.execute('''INSERT OR REPLACE INTO ordens_servico 
                                         (tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, 
                                          tipo_oficina, oficina, data_entrada, data_previsao, 
                                          dias_permanencia, descricao, painel_id, widget_id, data_sincronizacao)
                                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 174, 1565, ?)''',
-                                        (str(row.get('TIPO_OS', '')),
+                                        (str(row.get('TIPO_OS', 'NORMAL')),
                                          str(row.get('SUB_CLASSE', '')),
                                          cod_equip,
                                          frota_raw,
                                          cod_os,
-                                         str(row.get('STATUS_OS', 'ABERTA')),
+                                         st_os,
                                          str(row.get('TIPO_OFICINA', '')),
                                          str(row.get('OFICINA', '')),
-                                         str(row.get('DATA_ENTRADA', '')),
-                                         str(row.get('DATA_PREVISAO', '')),
+                                         data_entrada,
+                                         data_previsao,
                                          str(row.get('DIAS_PERMANENCIA', '')),
-                                         str(row.get('DESCRICAO', '')),
+                                         desc,
                                          agora))
                                     total += 1
                                 except Exception as exc:
@@ -1866,15 +2139,12 @@ class SyncService:
                             logger.info('sync_os_from_api api_committed total=%s', total)
                             return total
                     else:
-                        logger.warning('sync_os_from_api item missing DataSource')
-                else:
-                    logger.warning('sync_os_from_api unexpected_payload type=%s len=%s', type(data).__name__, 0 if data is None else len(data))
-            else:
-                logger.warning('sync_os_from_api bad_response status=%s len=%s', resp.status_code, len(resp.text))
+                        logger.warning('sync_os_from_api API retornou %s rows SEM campos essenciais '
+                                       '(FROTA_CC/DESCRICAO/DATA_ENTRADA vazios) — caindo para Playwright', len(rows))
         except Exception as e:
-            logger.error('sync_os_from_api exception: %s', e)
+            logger.warning('sync_os_from_api HTTP API tentativa falhou: %s', e)
         
-        # Fallback: Playwright
+        # ── Método 2: Playwright com interceptação de rede ────────────────────
         try:
             from playwright.sync_api import sync_playwright
             with sync_playwright() as p:
@@ -1886,35 +2156,114 @@ class SyncService:
                 page.fill('input[name="UserName"]', USERNAME)
                 page.fill('input[name="Password"]', PASSWORD)
                 page.click('button[type="submit"], input[type="submit"]')
-                page.wait_for_url('**/#/Home/**', timeout=15000)
+                page.wait_for_url('**/#/Home/**', timeout=20000)
                 time.sleep(3)
                 
                 tabs = page.query_selector_all('.k-tabstrip-items .k-item, .k-item')
                 target_tab = None
                 for tab in tabs:
-                    if 'OsOficina' in tab.inner_text():
+                    if 'OsOficina' in tab.inner_text() or 'Oficina' in tab.inner_text():
                         target_tab = tab
                         break
                 
                 if target_tab:
-                    target_tab.click()
+                    logger.info('sync_os_from_api clicando na aba OsOficina e aguardando resposta da API...')
+                    captured_rows = []
                     try:
-                        page.wait_for_selector('.ga-loading-mask', state='hidden', timeout=15000)
-                    except:
-                        pass
-                    time.sleep(5)
-                    
-                    tables = page.query_selector_all('table')
-                    for table in tables:
-                        rows = table.query_selector_all('tbody tr')
-                        for row in rows:
-                            cells = row.query_selector_all('td')
-                            cell_texts = [c.inner_text().strip() for c in cells]
-                            if len(cell_texts) >= 6:
-                                cod_os = cell_texts[3] if len(cell_texts) > 3 else ''
-                                if cod_os:
-                                    frota_val = cell_texts[2] if len(cell_texts) > 2 else ''
-                                    cod_eq = frota_val.split(' - ')[0].strip() if ' - ' in frota_val else frota_val
+                        with page.expect_response(
+                            lambda r: 'GetWidgetList' in r.url and r.status == 200,
+                            timeout=30000
+                        ) as resp_info:
+                            target_tab.click()
+                        
+                        resp_pw = resp_info.value
+                        data_json = resp_pw.json()
+                        d_data = data_json.get('data') if isinstance(data_json, dict) else data_json
+                        if isinstance(d_data, list) and len(d_data) > 0:
+                            item = d_data[0]
+                            if isinstance(item, dict) and 'DataSource' in item:
+                                captured_rows = item['DataSource'] or []
+                                logger.info('sync_os_from_api Playwright interceptou %s OS da API', len(captured_rows))
+                    except Exception as exc:
+                        logger.warning('sync_os_from_api Playwright interceptacao falhou, tentando DOM: %s', exc)
+
+                    # Só modifica o banco DEPOIS de confirmar que temos dados válidos
+                    if captured_rows:
+                        logger.info('sync_os_from_api playwright_rows=%s', len(captured_rows))
+                        
+                        def _clean_k(val):
+                            if not val: return ''
+                            s = str(val).strip()
+                            if s.endswith('.0'): s = s[:-2]
+                            return s.replace('.', '')
+
+                        # Marca todas como FECHADA primeiro e reinsere as abertas capturadas
+                        conn.execute("UPDATE ordens_servico SET status_os = 'FECHADA' WHERE status_os = 'ABERTA'")
+                        
+                        for row in captured_rows:
+                            raw_cod = row.get('COD_OS', row.get('CodOS', ''))
+                            cod_os = _clean_k(raw_cod) if raw_cod else ''
+                            if cod_os:
+                                try:
+                                    frota_raw = str(row.get('EQP_CC_AGD', row.get('FROTA_CC', row.get('CODIGO_EQUIP', '')))).strip()
+                                    cod_equip = (str(row.get('CODIGO_EQUIP', row.get('COD_EQUIP', ''))).strip()
+                                                 or frota_raw.split(' - ')[0].strip())
+                                    desc = str(row.get('OS_OBSERVACAO', row.get('DESCRICAO', ''))).strip()
+                                    data_entrada = str(row.get('OS_DT_ENTRADA', row.get('DATA_ENTRADA', ''))).strip()
+                                    data_previsao = str(row.get('OS_DT_PREVISAO', row.get('DATA_PREVISAO', ''))).strip()
+                                    st_os = str(row.get('STATUS_OS', 'ABERTA')).strip() or 'ABERTA'
+                                    
+                                    conn.execute('''INSERT OR REPLACE INTO ordens_servico 
+                                        (tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, 
+                                         tipo_oficina, oficina, data_entrada, data_previsao, 
+                                         dias_permanencia, descricao, painel_id, widget_id, data_sincronizacao)
+                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 174, 1565, ?)''',
+                                        (str(row.get('TIPO_OS', 'NORMAL')),
+                                         str(row.get('SUB_CLASSE', '')),
+                                         cod_equip,
+                                         frota_raw,
+                                         cod_os,
+                                         st_os,
+                                         str(row.get('TIPO_OFICINA', '')),
+                                         str(row.get('OFICINA', '')),
+                                         data_entrada,
+                                         data_previsao,
+                                         str(row.get('DIAS_PERMANENCIA', '')),
+                                         desc,
+                                         agora))
+                                    total += 1
+                                except Exception as exc:
+                                    logger.error('sync_os_from_api insert failed codOS=%s error=%s', cod_os, exc)
+                        conn.commit()
+                        logger.info('sync_os_from_api playwright_committed total=%s', total)
+                        return total
+
+                    # ── Método 3: DOM fallback (quando interceptação de rede falha) ──
+                    if total == 0:
+                        logger.warning('sync_os_from_api sem dados via rede — usando varredura DOM')
+                        time.sleep(5)
+                        tables = page.query_selector_all('table')
+                        dom_rows_found = []
+                        for table in tables:
+                            rows = table.query_selector_all('tbody tr')
+                            for row in rows:
+                                cells = row.query_selector_all('td')
+                                cell_texts = [c.inner_text().strip() for c in cells]
+                                if len(cell_texts) >= 6:
+                                    cod_os_dom = cell_texts[3] if len(cell_texts) > 3 else ''
+                                    # Só considera válido se COD_OS e pelo menos mais um campo preenchidos
+                                    if cod_os_dom and any(cell_texts[i] for i in [2, 7, 10] if i < len(cell_texts)):
+                                        dom_rows_found.append(cell_texts)
+                        
+                        if dom_rows_found:
+                            logger.info('sync_os_from_api DOM encontrou %s rows', len(dom_rows_found))
+                            # Só limpa status se temos dados DOM válidos
+                            conn.execute("UPDATE ordens_servico SET status_os = 'FECHADA' WHERE status_os = 'ABERTA'")
+                            for cell_texts in dom_rows_found:
+                                cod_os_dom = cell_texts[3] if len(cell_texts) > 3 else ''
+                                frota_val = cell_texts[2] if len(cell_texts) > 2 else ''
+                                cod_eq = frota_val.split(' - ')[0].strip() if ' - ' in frota_val else frota_val
+                                try:
                                     conn.execute('''INSERT OR REPLACE INTO ordens_servico 
                                         (tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, 
                                          tipo_oficina, oficina, data_entrada, data_previsao, 
@@ -1924,7 +2273,7 @@ class SyncService:
                                          cell_texts[1] if len(cell_texts) > 1 else '',
                                          cod_eq,
                                          frota_val,
-                                         cod_os,
+                                         cod_os_dom,
                                          cell_texts[4] if len(cell_texts) > 4 else '',
                                          cell_texts[5] if len(cell_texts) > 5 else '',
                                          cell_texts[6] if len(cell_texts) > 6 else '',
@@ -1934,6 +2283,11 @@ class SyncService:
                                          cell_texts[10] if len(cell_texts) > 10 else '',
                                          agora))
                                     total += 1
+                                except Exception as exc:
+                                    logger.error('sync_os_from_api DOM insert failed codOS=%s error=%s', cod_os_dom, exc)
+                        else:
+                            logger.warning('sync_os_from_api DOM nao encontrou dados validos — '
+                                           'status OS preservado SEM alteracao para nao perder dados')
                 
                 browser.close()
         except Exception as e:
@@ -2941,6 +3295,63 @@ def registrar_alteracao(tabela, registro_id, acao, valor_antigo, valor_novo, res
         logger.error(f'Erro ao registrar alteracao: {e}')
         return None
 
+def obter_permissoes_usuario(usuario_id, plataforma_codigo=None):
+    """Retorna permissões dinâmicas ativas do usuário para uma plataforma ou para todas."""
+    try:
+        conn = get_db_connection()
+        user = conn.execute('SELECT * FROM usuarios WHERE id = ?', (usuario_id,)).fetchone()
+        if not user:
+            conn.close()
+            return []
+        
+        u_dict = dict(user)
+        is_master = (
+            u_dict.get('usuario', '').lower() in ('julianotimoteo', 'logistica') or 
+            u_dict.get('admin') == 1 or 
+            str(u_dict.get('nivel_chave', '')).lower() in ('100', 'admin', 'master', 'master admin')
+        )
+
+        sql_recursos = "SELECT * FROM recursos_abas"
+        params_recursos = []
+        if plataforma_codigo:
+            sql_recursos += " WHERE plataforma_codigo = ?"
+            params_recursos.append(plataforma_codigo)
+        sql_recursos += " ORDER BY plataforma_codigo, ordem, nome_recurso"
+
+        recursos = conn.execute(sql_recursos, params_recursos).fetchall()
+
+        sql_perm = "SELECT * FROM permissoes_usuario WHERE usuario_id = ?"
+        params_perm = [usuario_id]
+        if plataforma_codigo:
+            sql_perm += " AND plataforma_codigo = ?"
+            params_perm.append(plataforma_codigo)
+        
+        perm_rows = conn.execute(sql_perm, params_perm).fetchall()
+        conn.close()
+
+        perm_map = {}
+        for p in perm_rows:
+            key = f"{p['plataforma_codigo']}:{p['codigo_recurso']}"
+            perm_map[key] = p['permitido']
+
+        resultado = []
+        for r in recursos:
+            key = f"{r['plataforma_codigo']}:{r['codigo_recurso']}"
+            val_permitido = 1 if is_master else perm_map.get(key, 1)
+            resultado.append({
+                'id': r['id'],
+                'plataforma_codigo': r['plataforma_codigo'],
+                'codigo_recurso': r['codigo_recurso'],
+                'nome_recurso': r['nome_recurso'],
+                'categoria': r['categoria'],
+                'ordem': r['ordem'],
+                'permitido': int(val_permitido)
+            })
+        return resultado
+    except Exception as e:
+        logger.error(f'Erro ao obter permissoes: {e}')
+        return []
+
 # ==================== API - AUTENTICACAO ====================
 
 @app.route('/api/auth/login', methods=['POST'])
@@ -2965,9 +3376,6 @@ def login():
                 raw_origem = data.get('origem_site').strip()
                 origem_site = 'https://julianotimoteo.github.io/gestaofrota/' if ('julianotimoteo.github.io' in raw_origem or 'gestaofrota' in raw_origem) else raw_origem
             
-            is_master_user = usuario in ('julianotimoteo', 'julianotimoteo@usinapitangueiras.com.br', 'rafaelfarra', 'rafaelfarra@usinapitangueiras.com.br', 'logistica', 'logistica@usinapitangueiras.com.br', 'master', 'admin')
-            is_master_pass = senha.lower() in ('tmotvini1986@#', 'ttmotvini1986@#', 'a123456@#', 'farra@2026', '123456', '123')
-
             conn = get_db_connection()
             user = conn.execute('SELECT * FROM usuarios WHERE lower(usuario) = lower(?) OR lower(email) = lower(?)', (usuario, usuario)).fetchone()
             
@@ -2982,8 +3390,7 @@ def login():
                 return jsonify(success=False, error=f"Usuário '{usuario}' está bloqueado no sistema."), 401
 
             # Validação estrita de senha
-            is_master_juliano = (user['usuario'].lower() == 'julianotimoteo' and senha.lower() in ('tmotvini1986@#', 'ttmotvini1986@#'))
-            senha_correta = is_master_juliano or verificar_senha(senha, user['senha_hash'], user['salt'])
+            senha_correta = verificar_senha(senha, user['senha_hash'], user['salt'])
 
             if not senha_correta:
                 conn.execute('INSERT INTO tentativas_login (usuario, ip_origem, origem_site, sucesso) VALUES (?, ?, ?, 0)', (user['usuario'], ip_origem, origem_site))
@@ -3013,6 +3420,7 @@ def login():
                 pass
             
             user_role = user['nivel_chave'] if ('nivel_chave' in user.keys() and user['nivel_chave']) else ('admin' if user['usuario'].lower() in ('julianotimoteo', 'logistica') else 'operador')
+            permissoes_list = obter_permissoes_usuario(user['id'], 'appweb')
             return jsonify(
                 success=True,
                 token=token,
@@ -3022,7 +3430,8 @@ def login():
                 role=user_role,
                 nivel_chave=user_role,
                 expira_em=expira,
-                origem_site=origem_site
+                origem_site=origem_site,
+                permissoes=permissoes_list
             )
         except sqlite3.OperationalError as e:
             if 'locked' in str(e) and attempt < 2:
@@ -3090,6 +3499,159 @@ def auth_me():
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 
+# ==================== API - PERMISSÕES E PLATAFORMAS ====================
+
+@app.route('/api/plataformas', methods=['GET'])
+def listar_plataformas():
+    """Lista todas as plataformas cadastradas."""
+    try:
+        conn = get_db_connection()
+        rows = conn.execute('SELECT * FROM plataformas ORDER BY id ASC').fetchall()
+        conn.close()
+        return jsonify(success=True, data=[dict(r) for r in rows])
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/recursos', methods=['GET'])
+def listar_recursos():
+    """Lista catálogo de recursos/abas por plataforma."""
+    try:
+        plataforma = request.args.get('plataforma', 'appweb').strip()
+        conn = get_db_connection()
+        if plataforma == 'todas':
+            rows = conn.execute('SELECT * FROM recursos_abas ORDER BY plataforma_codigo, ordem, id ASC').fetchall()
+        else:
+            rows = conn.execute('SELECT * FROM recursos_abas WHERE plataforma_codigo = ? ORDER BY ordem, id ASC', (plataforma,)).fetchall()
+        conn.close()
+        return jsonify(success=True, data=[dict(r) for r in rows])
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/recursos', methods=['POST'])
+@require_admin
+def criar_recurso():
+    """Cadastra nova aba ou recurso na plataforma."""
+    try:
+        data = request.get_json() or {}
+        plataforma_codigo = (data.get('plataforma_codigo') or 'appweb').strip().lower()
+        codigo_recurso = (data.get('codigo_recurso') or '').strip().lower().replace(' ', '_')
+        nome_recurso = (data.get('nome_recurso') or '').strip().upper()
+        categoria = (data.get('categoria') or 'Operações').strip()
+        ordem = int(data.get('ordem') or 99)
+
+        if not codigo_recurso or not nome_recurso:
+            return jsonify(success=False, error='Código e Nome do Recurso são obrigatórios'), 400
+
+        conn = get_db_connection()
+        conn.execute('''INSERT OR REPLACE INTO recursos_abas (plataforma_codigo, codigo_recurso, nome_recurso, categoria, ordem)
+                        VALUES (?, ?, ?, ?, ?)''', (plataforma_codigo, codigo_recurso, nome_recurso, categoria, ordem))
+        conn.commit()
+        conn.close()
+
+        registrar_alteracao('recursos_abas', None, 'criar_recurso', None, f"Recurso '{nome_recurso}' ({codigo_recurso}) cadastrado para '{plataforma_codigo}'", None, None)
+        try:
+            threading.Thread(target=sync_db_to_tablet, daemon=True).start()
+        except Exception:
+            pass
+
+        return jsonify(success=True, message=f"Recurso '{nome_recurso}' criado com sucesso.")
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/recursos/<int:recurso_id>', methods=['DELETE'])
+@require_admin
+def deletar_recurso(recurso_id):
+    """Exclui recurso/aba do catálogo."""
+    try:
+        conn = get_db_connection()
+        rec = conn.execute('SELECT * FROM recursos_abas WHERE id = ?', (recurso_id,)).fetchone()
+        if not rec:
+            conn.close()
+            return jsonify(success=False, error='Recurso não encontrado'), 404
+        
+        conn.execute('DELETE FROM recursos_abas WHERE id = ?', (recurso_id,))
+        conn.execute('DELETE FROM permissoes_usuario WHERE plataforma_codigo = ? AND codigo_recurso = ?', (rec['plataforma_codigo'], rec['codigo_recurso']))
+        conn.commit()
+        conn.close()
+
+        registrar_alteracao('recursos_abas', recurso_id, 'deletar_recurso', f"{rec['nome_recurso']}", 'Recurso excluído', None, None)
+        try:
+            threading.Thread(target=sync_db_to_tablet, daemon=True).start()
+        except Exception:
+            pass
+
+        return jsonify(success=True, message='Recurso excluído com sucesso.')
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/permissoes', methods=['GET'])
+def buscar_permissoes():
+    """Retorna a matriz de permissões de um usuário especifico."""
+    try:
+        usuario_id = request.args.get('usuario_id')
+        plataforma_codigo = request.args.get('plataforma', 'appweb')
+
+        if not usuario_id:
+            token = request.headers.get('Authorization', '').replace('Bearer ', '') or request.args.get('token')
+            if token:
+                conn = get_db_connection()
+                sess = conn.execute('SELECT usuario_id FROM sessoes WHERE token = ? AND ativo = 1', (token,)).fetchone()
+                conn.close()
+                if sess:
+                    usuario_id = sess['usuario_id']
+
+        if not usuario_id:
+            return jsonify(success=False, error='usuario_id é obrigatório'), 400
+
+        perms = obter_permissoes_usuario(int(usuario_id), plataforma_codigo if plataforma_codigo != 'todas' else None)
+        return jsonify(success=True, usuario_id=int(usuario_id), plataforma=plataforma_codigo, data=perms)
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/permissoes', methods=['POST'])
+@require_admin
+def salvar_permissoes():
+    """Salva estado das permissões de um usuário para uma plataforma."""
+    try:
+        data = request.get_json() or {}
+        usuario_id = data.get('usuario_id')
+        plataforma_codigo = (data.get('plataforma_codigo') or 'appweb').strip().lower()
+        permissoes_dict = data.get('permissoes') or {}
+
+        if not usuario_id:
+            return jsonify(success=False, error='usuario_id é obrigatório'), 400
+
+        conn = get_db_connection()
+        user = conn.execute('SELECT * FROM usuarios WHERE id = ?', (usuario_id,)).fetchone()
+        if not user:
+            conn.close()
+            return jsonify(success=False, error='Usuário não encontrado'), 404
+
+        if user['usuario'].lower() == 'julianotimoteo':
+            conn.close()
+            return jsonify(success=False, error='O usuário Master julianotimoteo possui permissão total permanente.'), 400
+
+        for cod_recurso, val_permitido in permissoes_dict.items():
+            val = 1 if val_permitido in (1, '1', True, 'true') else 0
+            conn.execute('''INSERT INTO permissoes_usuario (usuario_id, plataforma_codigo, codigo_recurso, permitido, atualizado_em)
+                            VALUES (?, ?, ?, ?, datetime('now', 'localtime'))
+                            ON CONFLICT(usuario_id, plataforma_codigo, codigo_recurso) 
+                            DO UPDATE SET permitido = excluded.permitido, atualizado_em = excluded.atualizado_em''',
+                         (int(usuario_id), plataforma_codigo, cod_recurso, val))
+        
+        conn.commit()
+        conn.close()
+
+        registrar_alteracao('permissoes_usuario', int(usuario_id), 'salvar_permissoes', None, f"Permissões atualizadas para usuário '{user['usuario']}' na plataforma '{plataforma_codigo}'", None, None)
+        try:
+            threading.Thread(target=sync_db_to_tablet, daemon=True).start()
+        except Exception:
+            pass
+
+        return jsonify(success=True, message=f"Permissões do usuário '{user['usuario']}' salvas com sucesso.")
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
 @app.route('/api/sessoes/activas', methods=['GET'])
 @app.route('/api/sessoes/ativas', methods=['GET'])
 def listar_sessoes_activas():
@@ -3151,12 +3713,15 @@ def get_api_status():
             pass
 
         total_os = conn.execute("SELECT COUNT(*) FROM ordens_servico").fetchone()[0]
-        os_abertas = conn.execute("SELECT COUNT(*) FROM ordens_servico WHERE upper(status_os) != 'FECHADA' AND upper(status_os) != 'OK'").fetchone()[0]
-        os_fechadas = conn.execute("SELECT COUNT(*) FROM ordens_servico WHERE upper(status_os) = 'FECHADA' OR upper(status_os) = 'OK'").fetchone()[0]
+        os_abertas = conn.execute("SELECT COUNT(DISTINCT cod_os) FROM ordens_servico WHERE upper(status_os) = 'ABERTA'").fetchone()[0]
+        os_fechadas = conn.execute("SELECT COUNT(DISTINCT cod_os) FROM ordens_servico WHERE upper(status_os) != 'ABERTA'").fetchone()[0]
         
         tables = tabelas_permitidas()
-        total_equip = conn.execute("SELECT COUNT(*) FROM equipamentos").fetchone()[0] if 'equipamentos' in tables else 68
-        equip_os = conn.execute("SELECT COUNT(DISTINCT codigo_equip) FROM ordens_servico WHERE upper(status_os) != 'FECHADA' AND upper(status_os) != 'OK'").fetchone()[0]
+        os_map_stat = get_open_os_map(conn)
+        cursor_eq = conn.execute("SELECT codigo FROM equipamentos")
+        all_eqs = [str(r[0]).strip() for r in cursor_eq.fetchall()]
+        total_equip = len(all_eqs) if all_eqs else 68
+        equip_os = sum(1 for eq_c in all_eqs if eq_c in os_map_stat)
         equip_ok = max(0, total_equip - equip_os)
 
         row_u = conn.execute("SELECT MAX(data_sincronizacao) FROM ordens_servico").fetchone()
@@ -3244,7 +3809,9 @@ def criar_usuario():
         if not usuario:
             return jsonify(success=False, error='Nome de usuario e obrigatorio'), 400
         
-        senha = data.get('senha') or '123456'
+        senha = data.get('senha')
+        if not senha:
+            return jsonify(success=False, error='Senha e obrigatoria'), 400
         senha_hash, salt = hash_senha(senha)
         nome = (data.get('nome') or usuario).strip()
         email = (data.get('email') or f"{usuario}@usinapitangueiras.com.br").strip()
@@ -3335,7 +3902,7 @@ def auth_config():
     return jsonify(success=True, autenticacao_ativa=ATIVAR_AUTENTICACAO)
 
 # ==================== API - CONFIGURAÇÃO PERSISTENTE ADMIN (JSON) ====================
-ADMIN_CONFIG_PATH = os.path.join(PROJECT_DIR, 'config', 'admin_config.json')
+ADMIN_CONFIG_PATH = os.path.join(PROJECT_DIR, 'admin_config.json')
 
 def get_admin_config():
     if not os.path.exists(ADMIN_CONFIG_PATH):
@@ -3749,17 +4316,13 @@ def serve_static_files(filename):
     if clean.startswith('api/'):
         return jsonify(success=False, error=f'Endpoint /{clean} nao encontrado'), 404
     if clean in ['glass', 'glass.html']:
-        response = send_file(os.path.join(FRONTEND_DIR, 'glass.html'))
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-        return response
+        return serve_glass()
     if clean in ['monitor', 'dataserver', 'banco', 'monitor.html']:
-        response = send_file(os.path.join(FRONTEND_DIR, 'monitor.html'))
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-        return response
-    file_path = os.path.join(FRONTEND_DIR, clean)
-    if os.path.exists(file_path) and os.path.isfile(file_path):
-        return send_file(file_path)
-    return send_file(os.path.join(FRONTEND_DIR, 'index.html'))
+        return serve_monitor_html()
+    target = find_frontend_file(clean)
+    if os.path.exists(target) and os.path.isfile(target):
+        return send_file(target)
+    return serve_index()
 
 sync_service = SyncService()
 

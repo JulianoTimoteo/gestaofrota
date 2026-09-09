@@ -1,0 +1,28 @@
+        /* ===== TOUCH SCROLL FOR ALL TABS & FILTER BARS ===== */
+        .tabs, .sub-tabs, .nav-tabs, .sub-nav-tabs, .team-filter-bar, #equipeSubTabs, #adminSubTabs, #mainTabs, #equipTeamFilter {
+            display: flex;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            flex-wrap: nowrap !important;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 4px;
+        }
+        .tabs::-webkit-scrollbar, .sub-tabs::-webkit-scrollbar, .nav-tabs::-webkit-scrollbar, .sub-nav-tabs::-webkit-scrollbar, .team-filter-bar::-webkit-scrollbar,
+        #equipeSubTabs::-webkit-scrollbar, #adminSubTabs::-webkit-scrollbar, #mainTabs::-webkit-scrollbar, #equipTeamFilter::-webkit-scrollbar {
+            display: none !important;
+        }
+        .tab-btn, .sub-tab-btn, .team-filter-btn {
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .sub-tab-btn.active, .team-filter-btn.active {
+            background: #2563eb !important;
+            color: #ffffff !important;
+            border: 2px solid #60a5fa !important;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.4) !important;
+            font-weight: 700 !important;
+        }
+

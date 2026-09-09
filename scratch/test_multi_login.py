@@ -1,19 +1,27 @@
 import requests
 import json
 import time
+import os
 
 BASE_URL = 'http://localhost:8000'
+USERNAME_JULIANO = os.environ.get('SF_USERNAME', '')
+PASSWORD_JULIANO = os.environ.get('SF_PASSWORD', '')
+USERNAME_RAFAEL = os.environ.get('SF_USERNAME_2', USERNAME_JULIANO)
+PASSWORD_RAFAEL = os.environ.get('SF_PASSWORD_2', PASSWORD_JULIANO)
+
+if not USERNAME_JULIANO or not PASSWORD_JULIANO:
+    raise SystemExit('Defina SF_USERNAME e SF_PASSWORD via variaveis de ambiente antes de executar este script.')
 
 print("=== INICIANDO TESTE DE MULTI-USUARIOS CONECTADOS ===")
 
 # 1. Login julianotimoteo
-r1 = requests.post(f'{BASE_URL}/api/auth/login', json={'usuario': 'julianotimoteo', 'senha': 'tmotvini1986@#'})
+r1 = requests.post(f'{BASE_URL}/api/auth/login', json={'usuario': USERNAME_JULIANO, 'senha': PASSWORD_JULIANO})
 res1 = r1.json()
 print("1. Login julianotimoteo:", res1.get('success'), "User:", res1.get('usuario'))
 token1 = res1.get('token')
 
 # 2. Login rafaelfarra
-r2 = requests.post(f'{BASE_URL}/api/auth/login', json={'usuario': 'rafaelfarra', 'senha': 'tmotvini1986@#'})
+r2 = requests.post(f'{BASE_URL}/api/auth/login', json={'usuario': USERNAME_RAFAEL, 'senha': PASSWORD_RAFAEL})
 res2 = r2.json()
 print("2. Login rafaelfarra:", res2.get('success'), "User:", res2.get('usuario'))
 token2 = res2.get('token')

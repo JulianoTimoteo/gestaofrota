@@ -1,0 +1,139 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        html, body {
+            overflow-x: hidden;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #000000;
+            min-height: 100vh;
+            padding: 0.75rem;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ===== MODO CLARO: SEM TEXTO CINZA & BORDAS NOS BOTÕES ===== */
+        body:not(.dark-theme) h1, body:not(.dark-theme) h2, body:not(.dark-theme) h3,
+        body:not(.dark-theme) p, body:not(.dark-theme) span, body:not(.dark-theme) div,
+        body:not(.dark-theme) label, body:not(.dark-theme) td, body:not(.dark-theme) th,
+        body:not(.dark-theme) .fleet-total-label, body:not(.dark-theme) .fleet-legend-pct,
+        body:not(.dark-theme) .fleet-legend-left, body:not(.dark-theme) .header-info .status,
+        body:not(.dark-theme) .header-info .datetime, body:not(.dark-theme) .header-info .counter,
+        body:not(.dark-theme) .header-info .counter strong, body:not(.dark-theme) .fleet-legend-val,
+        body:not(.dark-theme) .empty-message, body:not(.dark-theme) .count-badge {
+            color: #000000 !important;
+        }
+
+        body:not(.dark-theme) table th {
+            background: #f1f5f9 !important;
+            color: #000000 !important;
+            font-weight: 600 !important;
+            border-bottom-color: #cbd5e1 !important;
+        }
+
+        /* ===== MODO ESCURO: SEM TEXTO CINZA (TUDO BRANCO) & BORDAS SUAVES ===== */
+        body.dark-theme {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+            color: #ffffff !important;
+            --color-gray-50: #1e293b;
+            --color-gray-100: #334155;
+            --color-gray-200: #475569;
+            --color-gray-300: #ffffff;
+            --color-gray-400: #ffffff;
+            --color-gray-500: #ffffff;
+            --color-gray-600: #ffffff;
+            --color-gray-700: #ffffff;
+            --color-gray-800: #ffffff;
+            --color-gray-900: #ffffff;
+        }
+
+        body.dark-theme .header,
+        body.dark-theme .card,
+        body.dark-theme .login-card,
+        body.dark-theme .action-modal,
+        body.dark-theme .donut-card,
+        body.dark-theme .fleet-dashboard-card,
+        body.dark-theme .footer-note {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme h1, body.dark-theme h2, body.dark-theme h3,
+        body.dark-theme p, body.dark-theme span, body.dark-theme div,
+        body.dark-theme label, body.dark-theme td, body.dark-theme th,
+        body.dark-theme .fleet-total-value, body.dark-theme .donut-value,
+        body.dark-theme .fleet-total-label, body.dark-theme .fleet-legend-pct,
+        body.dark-theme .fleet-legend-left, body.dark-theme .header-info .status,
+        body.dark-theme .header-info .datetime, body.dark-theme .header-info .counter,
+        body.dark-theme .header-info .counter strong, body.dark-theme .fleet-legend-val,
+        body.dark-theme .empty-message, body.dark-theme .count-badge {
+            color: #ffffff !important;
+        }
+
+        /* EXCEÇÃO DE SEGURANÇA: ELEMENTOS COM FUNDO VERDE/CLARO DEVEM TER TEXTO PRETO NO MODO ESCURO */
+        body.dark-theme .sd-trigger,
+        body.dark-theme .sd-trigger *,
+        body.dark-theme .sd-label,
+        body.dark-theme .badge-equip.os-fechada,
+        body.dark-theme .badge-equip.os-aberta,
+        body.dark-theme .badge-equip.team-badge,
+        body.dark-theme .pill-green,
+        body.dark-theme .pill-red,
+        body.dark-theme .pill-amber,
+        body.dark-theme .pill-blue,
+        body:not(.dark-theme) .sd-trigger,
+        body:not(.dark-theme) .sd-trigger *,
+        body:not(.dark-theme) .sd-label,
+        body:not(.dark-theme) .badge-equip.os-fechada,
+        body:not(.dark-theme) .badge-equip.os-aberta,
+        body:not(.dark-theme) .badge-equip.team-badge,
+        body:not(.dark-theme) .pill-green,
+        body:not(.dark-theme) .pill-red,
+        body:not(.dark-theme) .pill-amber,
+        body:not(.dark-theme) .pill-blue {
+            color: #000000 !important;
+            font-weight: 500 !important;
+        }
+
+        body.dark-theme table th {
+            background: #0f172a !important;
+            color: #ffffff !important;
+            border-bottom-color: #334155 !important;
+        }
+
+        body.dark-theme table td {
+            border-bottom-color: #334155 !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme table tr:hover td {
+            background: #334155 !important;
+        }
+
+        body.dark-theme input,
+        body.dark-theme select {
+            background: #0f172a !important;
+            color: #ffffff !important;
+            border-color: #475569 !important;
+        }
+
+        body.dark-theme .tabs {
+            background: #0f172a !important;
+            border: 1px solid rgba(255,255,255,0.15) !important;
+        }
+
+        body.dark-theme .team-filter-bar {
+            background: #0f172a !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+

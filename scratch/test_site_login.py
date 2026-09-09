@@ -1,19 +1,27 @@
 import requests
+import os
 
 base_url = 'http://localhost:8000'
+USERNAME_JULIANO = os.environ.get('SF_USERNAME', '')
+PASSWORD_JULIANO = os.environ.get('SF_PASSWORD', '')
+USERNAME_RAFAEL = os.environ.get('SF_USERNAME_2', USERNAME_JULIANO)
+PASSWORD_RAFAEL = os.environ.get('SF_PASSWORD_2', PASSWORD_JULIANO)
+
+if not USERNAME_JULIANO or not PASSWORD_JULIANO:
+    raise SystemExit('Defina SF_USERNAME e SF_PASSWORD via variaveis de ambiente antes de executar este script.')
 
 print("=== Testando Login vindo do site GitHub Pages gestaofrota ===")
 
 # 1. Login julianotimoteo de https://julianotimoteo.github.io/gestaofrota/
 res1 = requests.post(f"{base_url}/api/auth/login", 
                      headers={"Origin": "https://julianotimoteo.github.io"},
-                     json={"usuario": "julianotimoteo", "senha": "tmotvini1986@#", "origem_site": "https://julianotimoteo.github.io/gestaofrota/"})
+                     json={"usuario": USERNAME_JULIANO, "senha": PASSWORD_JULIANO, "origem_site": "https://julianotimoteo.github.io/gestaofrota/"})
 print("Login Juliano:", res1.status_code, res1.json())
 
 # 2. Login rafaelfarra de https://julianotimoteo.github.io/gestaofrota/
 res2 = requests.post(f"{base_url}/api/auth/login", 
                      headers={"Origin": "https://julianotimoteo.github.io"},
-                     json={"usuario": "rafaelfarra", "senha": "farra@2026", "origem_site": "https://julianotimoteo.github.io/gestaofrota/"})
+                     json={"usuario": USERNAME_RAFAEL, "senha": PASSWORD_RAFAEL, "origem_site": "https://julianotimoteo.github.io/gestaofrota/"})
 print("Login Rafael:", res2.status_code, res2.json())
 
 # 3. Status da API

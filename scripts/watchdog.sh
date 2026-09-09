@@ -37,13 +37,13 @@ while true; do
             sleep 2
         done
         sleep 2
-        am start -S -a android.intent.action.VIEW -d http://127.0.0.1:8000/glass 2>/dev/null &
+        am start -n com.android.browser/.BrowserActivity -a android.intent.action.VIEW -d http://127.0.0.1:8000/glass 2>/dev/null &
         (sleep 4; input tap 955 245 2>/dev/null) &
         FIRST_RUN=0
     elif [ "$FIRST_RUN" -eq 1 ]; then
         echo "[$(date)] Python backend pronto na inicialização. Abrindo tela glass..." >> "$LOG_DIR/watchdog.log"
         sleep 2
-        am start -S -a android.intent.action.VIEW -d http://127.0.0.1:8000/glass 2>/dev/null &
+        am start -n com.android.browser/.BrowserActivity -a android.intent.action.VIEW -d http://127.0.0.1:8000/glass 2>/dev/null &
         (sleep 4; input tap 955 245 2>/dev/null) &
         FIRST_RUN=0
     fi
@@ -54,7 +54,7 @@ while true; do
         echo "[$(date)] [ALERTA] Node.js server (3000) desativado. Reiniciando..." >> "$LOG_DIR/watchdog.log"
         pkill -f "node.*server.js" 2>/dev/null || true
         cd "$INSTALL_DIR"
-        nohup node "Farra_donuts/Farra/server.js" >> "$LOG_DIR/node.log" 2>&1 &
+        nohup node "server.js" >> "$LOG_DIR/node.log" 2>&1 &
         echo "[$(date)] Node.js server reiniciado." >> "$LOG_DIR/watchdog.log"
         sleep 3
     fi

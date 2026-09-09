@@ -5,10 +5,6 @@
         "url_dashboard": "/#/Home/Main",
         "url_api": "/Home/GetWidgetValue"
     },
-    "credentials": {
-        "username": "julianotimoteo",
-        "password": "Ttmotvini1986@#"
-    },
     "widgets": {
         "caminhoes_ativos": { "panel_id": 67, "widget_id": 497, "name": "Caminhões Ativos", "unit": "Un" },
         "caminhoes_indo": { "panel_id": 67, "widget_id": 498, "name": "Caminhões Indo", "unit": "Un" },

@@ -48,7 +48,7 @@ echo.
 echo ===================================================
 echo  Node.js Server — %date% %time%
 echo ===================================================
-node "Farra_donuts\Farra\server.js"
+node server.js
 echo.
 echo [AVISO] Node.js parou. Reiniciando em 5 segundos...
 timeout /t 5 /nobreak >nul

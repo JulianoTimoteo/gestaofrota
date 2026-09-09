@@ -46,9 +46,9 @@ echo [OK] Python encontrado.
 
 REM --- Instala pacotes Node.js se necessario ---
 echo [3/4] Verificando dependencias Node.js (node_modules)...
-if not exist "..\Farra_donuts\Farra\node_modules" (
+if not exist "..\node_modules" (
     echo Instalando pacotes Node.js...
-    cd /D "..\Farra_donuts\Farra"
+    cd /D "%~dp0.."
     npm install --silent
     cd /D "%~dp0"
 )
