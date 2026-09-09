@@ -3,603 +3,602 @@
         // ================================================================
         const EMBEDDED_INITIAL_DATA = {
   "adminConfig": {
-  "customGroups": {},
-  "customTypes": {},
-  "customOps": {
-    "11216": "1061 - Enfardamento De Biomassa",
-    "11116": "1061 - Enfardamento De Biomassa",
-    "11218": "1024 - Enleiramento De Biomassa",
-    "11118": "1024 - Enleiramento De Biomassa",
-    "11321": "5003 - Recolhimento de Biomassa",
-    "11426": "1068 - Aplicacao De Vinhaca Localizada",
-    "311517": "3083 - Transporte de Vinhaca Carreg",
-    "31617": "3083 - Transporte de Vinhaca Carreg",
-    "33": "1040 - Trajeto Auxiliar de operação",
-    "11616": "1068 - Aplicacao De Vinhaca Localizada",
-    "11626": "1068 - Aplicacao De Vinhaca Localizada",
-    "311217": "3083 - Transporte de Vinhaca Carreg",
-    "11226": "1068 - Aplicacao De Vinhaca Localizada",
-    "11316": "1068 - Aplicacao De Vinhaca Localizada",
-    "11326": "1068 - Aplicacao De Vinhaca Localizada",
-    "31717": "3083 - Transporte de Vinhaca Carreg",
-    "91": "4018 - Aplic Vinhaca Canal",
-    "435": "4018 - Aplic Vinhaca Canal",
-    "48": "1040 - Trajeto Auxiliar de operação",
-    "11126": "1068 - Aplicacao De Vinhaca Localizada",
-    "11526": "1068 - Aplicacao De Vinhaca Localizada",
-    "311317": "4018 - Aplic Vinhaca Canal",
-    "20123": "4018 - Aplic Vinhaca Canal",
-    "311117": "3083 - Transporte de Vinhaca Carreg",
-    "31319": "3083 - Transporte de Vinhaca Carreg",
-    "32": "4018 - Aplic Vinhaca Canal",
-    "311417": "3083 - Transporte de Vinhaca Carreg",
-    "34": "4018 - Aplic Vinhaca Canal",
-    "532": "1040 - Trajeto Auxiliar de operação",
-    "535": "1040 - Trajeto Auxiliar de operação",
-    "537": "1040 - Trajeto Auxiliar de operação",
-    "533": "1040 - Trajeto Auxiliar de operação"
-},
-  "customOpTeams": {
-    "3025": "PREPARO",
-    "3003": "PREPARO",
-    "3004": "PREPARO",
-    "3005": "PREPARO",
-    "3006": "PREPARO",
-    "3007": "PREPARO",
-    "3008": "PREPARO",
-    "3010": "PREPARO",
-    "3011": "PREPARO",
-    "3012": "TRATOS CULTURAIS",
-    "3013": "TRATOS CULTURAIS",
-    "3014": "PREPARO",
-    "3015": "PREPARO",
-    "3016": "PREPARO",
-    "3017": "PREPARO",
-    "3018": "PREPARO",
-    "3020": "PREPARO",
-    "3021": "BIOMASSA",
-    "3022": "PREPARO",
-    "3023": "PREPARO",
-    "3026": "PREPARO",
-    "3028": "PREPARO",
-    "3030": "PREPARO",
-    "3032": "PREPARO",
-    "3033": "PREPARO",
-    "4001": "BIOMASSA",
-    "4002": "BIOMASSA",
-    "3036": "PREPARO",
-    "3037": "PREPARO",
-    "3038": "PREPARO",
-    "3043": "PREPARO",
-    "3044": "PREPARO",
-    "3046": "PREPARO",
-    "3047": "BIOMASSA",
-    "3002": "PREPARO",
-    "3034": "PREPARO",
-    "3048": "PREPARO",
-    "3050": "PREPARO",
-    "3057": "PREPARO",
-    "3058": "PREPARO",
-    "3060": "BIOMASSA",
-    "4005": "PREPARO",
-    "4008": "BIOMASSA",
-    "4009": "BIOMASSA",
-    "4011": "BIOMASSA",
-    "4012": "BIOMASSA",
-    "4014": "BIOMASSA",
-    "2007": "BIOMASSA",
-    "2031": "BIOMASSA",
-    "2032": "BIOMASSA",
-    "3052": "PREPARO",
-    "3053": "BIOMASSA",
-    "3054": "BIOMASSA",
-    "3055": "BIOMASSA",
-    "3009": "PREPARO",
-    "3040": "PREPARO",
-    "3041": "PREPARO",
-    "3061": "PREPARO",
-    "1043": "BIOMASSA",
-    "3001": "PREPARO",
-    "3039": "PREPARO",
-    "3065": "PREPARO",
-    "3068": "PREPARO",
-    "3062": "PREPARO",
-    "3064": "PREPARO",
-    "3067": "LINHA AMARELA",
-    "3069": "PREPARO",
-    "3070": "PREPARO",
-    "1001": "PREPARO",
-    "1002": "LINHA AMARELA",
-    "1003": "LINHA AMARELA",
-    "1005": "LINHA AMARELA",
-    "1006": "TRATOS CULTURAIS",
-    "1015": "PREPARO",
-    "1020": "PREPARO",
-    "1027": "FERTIRRIGACAO",
-    "1028": "FERTIRRIGACAO",
-    "1052": "BIOMASSA",
-    "1008": "TRATOS CULTURAIS",
-    "1009": "TRATOS CULTURAIS",
-    "1011": "PREPARO",
-    "1012": "HERBICIDA",
-    "1023": "PREPARO",
-    "1029": "FERTIRRIGACAO",
-    "1034": "FERTIRRIGACAO",
-    "1040": "PREPARO",
-    "1055": "PREPARO",
-    "1058": "PREPARO",
-    "1032": "HERBICIDA",
-    "1014": "PREPARO",
-    "1024": "BIOMASSA",
-    "1025": "PREPARO",
-    "1026": "FERTIRRIGACAO",
-    "1051": "PREPARO",
-    "1063": "PREPARO",
-    "1031": "HERBICIDA",
-    "3071": "PREPARO",
-    "1016": "PREPARO",
-    "1018": "PREPARO",
-    "1041": "TRATOS CULTURAIS",
-    "1042": "LINHA AMARELA",
-    "1053": "PREPARO",
-    "1056": "LINHA AMARELA",
-    "1061": "BIOMASSA",
-    "1062": "PREPARO",
-    "3063": "FERTIRRIGACAO",
-    "1068": "FERTIRRIGACAO",
-    "5001": "HERBICIDA",
-    "1072": "FERTIRRIGACAO",
-    "5006": "FERTIRRIGACAO",
-    "3072": "PREPARO",
-    "3066": "BIOMASSA",
-    "5003": "HERBICIDA",
-    "5005": "HERBICIDA",
-    "1245": "LINHA AMARELA",
-    "5002": "PREPARO",
-    "3073": "PREPARO",
-    "4899": "PREPARO",
-    "1073": "HERBICIDA",
-    "1071": "FERTIRRIGACAO",
-    "1070": "FERTIRRIGACAO",
-    "3076": "PREPARO",
-    "1074": "TRATOS CULTURAIS",
-    "3074": "PREPARO",
-    "6001": "PREPARO",
-    "6002": "PREPARO",
-    "6004": "FERTIRRIGACAO",
-    "3075": "PREPARO",
-    "3077": "PREPARO",
-    "3081": "PREPARO",
-    "3078": "PREPARO",
-    "1046": "TRATOS CULTURAIS",
-    "1080": "PREPARO",
-    "3080": "PREPARO",
-    "1076": "FERTIRRIGACAO",
-    "3082": "PREPARO",
-    "1085": "PREPARO",
-    "1086": "LINHA AMARELA",
-    "1088": "PREPARO",
-    "1089": "FERTIRRIGACAO",
-    "3029": "PREPARO",
-    "3000": "PREPARO",
-    "1035": "PREPARO",
-    "1036": "PREPARO",
-    "4017": "FERTIRRIGACAO",
-    "4018": "FERTIRRIGACAO",
-    "4020": "FERTIRRIGACAO",
-    "3085": "PREPARO",
-    "2019": "PREPARO",
-    "2023": "PREPARO",
-    "1082": "FERTIRRIGACAO",
-    "6005": "FERTIRRIGACAO",
-    "3088": "PREPARO",
-    "1083": "LINHA AMARELA",
-    "4015": "BIOMASSA",
-    "1090": "HERBICIDA",
-    "1092": "FERTIRRIGACAO",
-    "4019": "FERTIRRIGACAO",
-    "3084": "FERTIRRIGACAO",
-    "3086": "PREPARO",
-    "2020": "FERTIRRIGACAO",
-    "2022": "PREPARO",
-    "2018": "FERTIRRIGACAO",
-    "2024": "PREPARO",
-    "1094": "FERTIRRIGACAO",
-    "3087": "FERTIRRIGACAO",
-    "1091": "HERBICIDA",
-    "4021": "BIOMASSA",
-    "4023": "PREPARO",
-    "1044": "TRATOS CULTURAIS",
-    "3089": "TRATOS CULTURAIS",
-    "3090": "PREPARO",
-    "4024": "FERTIRRIGACAO",
-    "1064": "HERBICIDA",
-    "3091": "PREPARO",
-    "3092": "PREPARO",
-    "1096": "TRATOS CULTURAIS",
-    "1095": "PREPARO",
-    "3094": "PREPARO",
-    "2017": "PREPARO",
-    "2042": "FERTIRRIGACAO",
-    "1038": "PREPARO",
-    "3093": "PREPARO",
-    "3095": "PREPARO",
-    "3096": "PREPARO",
-    "3097": "PREPARO",
-    "1105": "HERBICIDA",
-    "3024": "PREPARO",
-    "3027": "PREPARO",
-    "3031": "PREPARO",
-    "4003": "BIOMASSA",
-    "2006": "BIOMASSA",
-    "3042": "PREPARO",
-    "3045": "PREPARO",
-    "4007": "PREPARO",
-    "3035": "PREPARO",
-    "3056": "PREPARO",
-    "3059": "PREPARO",
-    "4006": "BIOMASSA",
-    "4010": "BIOMASSA",
-    "4013": "BIOMASSA",
-    "2030": "BIOMASSA",
-    "3051": "BIOMASSA",
-    "1004": "PREPARO",
-    "1007": "TRATOS CULTURAIS",
-    "1022": "TRATOS CULTURAIS",
-    "1033": "FERTIRRIGACAO",
-    "1069": "PREPARO",
-    "1010": "TRATOS CULTURAIS",
-    "1019": "PREPARO",
-    "1039": "PREPARO",
-    "1054": "HERBICIDA",
-    "1060": "BIOMASSA",
-    "1017": "PREPARO",
-    "1049": "PREPARO",
-    "1059": "PREPARO",
-    "1013": "PREPARO",
-    "1030": "FERTIRRIGACAO",
-    "1048": "TRATOS CULTURAIS",
-    "1057": "PREPARO",
-    "2026": "PREPARO",
-    "2040": "TRATOS CULTURAIS",
-    "6003": "FERTIRRIGACAO",
-    "1081": "TRATOS CULTURAIS",
-    "3079": "PREPARO",
-    "1078": "HERBICIDA",
-    "1050": "FERTIRRIGACAO",
-    "1047": "TRATOS CULTURAIS",
-    "1102": "FERTIRRIGACAO",
-    "1084": "FERTIRRIGACAO",
-    "1087": "PREPARO",
-    "1079": "HERBICIDA",
-    "1021": "PREPARO",
-    "4016": "BIOMASSA",
-    "3083": "FERTIRRIGACAO",
-    "2021": "PREPARO",
-    "4022": "BIOMASSA",
-    "1037": "TRATOS CULTURAIS",
-    "1107": "HERBICIDA",
-    "1045": "TRATOS CULTURAIS",
-    "3049": "BIOMASSA",
-    "3019": "PREPARO",
-    "9999": "PREPARO"
+    "customGroups": {},
+    "customTypes": {},
+    "customOps": {
+      "11216": "1061 - Enfardamento De Biomassa",
+      "11116": "1061 - Enfardamento De Biomassa",
+      "11218": "1024 - Enleiramento De Biomassa",
+      "11118": "1024 - Enleiramento De Biomassa",
+      "11321": "5003 - Recolhimento de Biomassa",
+      "11426": "1068 - Aplicacao De Vinhaca Localizada",
+      "311517": "3083 - Transporte de Vinhaca Carreg",
+      "31617": "3083 - Transporte de Vinhaca Carreg",
+      "33": "1040 - Trajeto Auxiliar de operação",
+      "11616": "1068 - Aplicacao De Vinhaca Localizada",
+      "11626": "1068 - Aplicacao De Vinhaca Localizada",
+      "311217": "3083 - Transporte de Vinhaca Carreg",
+      "11226": "1068 - Aplicacao De Vinhaca Localizada",
+      "11316": "1068 - Aplicacao De Vinhaca Localizada",
+      "11326": "1068 - Aplicacao De Vinhaca Localizada",
+      "31717": "3083 - Transporte de Vinhaca Carreg",
+      "91": "4018 - Aplic Vinhaca Canal",
+      "435": "4018 - Aplic Vinhaca Canal",
+      "48": "1040 - Trajeto Auxiliar de operação",
+      "11126": "1068 - Aplicacao De Vinhaca Localizada",
+      "11526": "1068 - Aplicacao De Vinhaca Localizada",
+      "311317": "4018 - Aplic Vinhaca Canal",
+      "20123": "4018 - Aplic Vinhaca Canal",
+      "311117": "3083 - Transporte de Vinhaca Carreg",
+      "31319": "3083 - Transporte de Vinhaca Carreg",
+      "32": "4018 - Aplic Vinhaca Canal",
+      "311417": "3083 - Transporte de Vinhaca Carreg",
+      "34": "4018 - Aplic Vinhaca Canal",
+      "532": "1040 - Trajeto Auxiliar de operação",
+      "535": "1040 - Trajeto Auxiliar de operação",
+      "537": "1040 - Trajeto Auxiliar de operação",
+      "533": "1040 - Trajeto Auxiliar de operação"
+    },
+    "customOpTeams": {
+      "3025": "PREPARO",
+      "3003": "PREPARO",
+      "3004": "PREPARO",
+      "3005": "PREPARO",
+      "3006": "PREPARO",
+      "3007": "PREPARO",
+      "3008": "PREPARO",
+      "3010": "PREPARO",
+      "3011": "PREPARO",
+      "3012": "TRATOS CULTURAIS",
+      "3013": "TRATOS CULTURAIS",
+      "3014": "PREPARO",
+      "3015": "PREPARO",
+      "3016": "PREPARO",
+      "3017": "PREPARO",
+      "3018": "PREPARO",
+      "3020": "PREPARO",
+      "3021": "BIOMASSA",
+      "3022": "PREPARO",
+      "3023": "PREPARO",
+      "3026": "PREPARO",
+      "3028": "PREPARO",
+      "3030": "PREPARO",
+      "3032": "PREPARO",
+      "3033": "PREPARO",
+      "4001": "BIOMASSA",
+      "4002": "BIOMASSA",
+      "3036": "PREPARO",
+      "3037": "PREPARO",
+      "3038": "PREPARO",
+      "3043": "PREPARO",
+      "3044": "PREPARO",
+      "3046": "PREPARO",
+      "3047": "BIOMASSA",
+      "3002": "PREPARO",
+      "3034": "PREPARO",
+      "3048": "PREPARO",
+      "3050": "PREPARO",
+      "3057": "PREPARO",
+      "3058": "PREPARO",
+      "3060": "BIOMASSA",
+      "4005": "PREPARO",
+      "4008": "BIOMASSA",
+      "4009": "BIOMASSA",
+      "4011": "BIOMASSA",
+      "4012": "BIOMASSA",
+      "4014": "BIOMASSA",
+      "2007": "BIOMASSA",
+      "2031": "BIOMASSA",
+      "2032": "BIOMASSA",
+      "3052": "PREPARO",
+      "3053": "BIOMASSA",
+      "3054": "BIOMASSA",
+      "3055": "BIOMASSA",
+      "3009": "PREPARO",
+      "3040": "PREPARO",
+      "3041": "PREPARO",
+      "3061": "PREPARO",
+      "1043": "BIOMASSA",
+      "3001": "PREPARO",
+      "3039": "PREPARO",
+      "3065": "PREPARO",
+      "3068": "PREPARO",
+      "3062": "PREPARO",
+      "3064": "PREPARO",
+      "3067": "LINHA AMARELA",
+      "3069": "PREPARO",
+      "3070": "PREPARO",
+      "1001": "PREPARO",
+      "1002": "LINHA AMARELA",
+      "1003": "LINHA AMARELA",
+      "1005": "LINHA AMARELA",
+      "1006": "TRATOS CULTURAIS",
+      "1015": "PREPARO",
+      "1020": "PREPARO",
+      "1027": "FERTIRRIGACAO",
+      "1028": "FERTIRRIGACAO",
+      "1052": "BIOMASSA",
+      "1008": "TRATOS CULTURAIS",
+      "1009": "TRATOS CULTURAIS",
+      "1011": "PREPARO",
+      "1012": "HERBICIDA",
+      "1023": "PREPARO",
+      "1029": "FERTIRRIGACAO",
+      "1034": "FERTIRRIGACAO",
+      "1040": "PREPARO",
+      "1055": "PREPARO",
+      "1058": "PREPARO",
+      "1032": "HERBICIDA",
+      "1014": "PREPARO",
+      "1024": "BIOMASSA",
+      "1025": "PREPARO",
+      "1026": "FERTIRRIGACAO",
+      "1051": "PREPARO",
+      "1063": "PREPARO",
+      "1031": "HERBICIDA",
+      "3071": "PREPARO",
+      "1016": "PREPARO",
+      "1018": "PREPARO",
+      "1041": "TRATOS CULTURAIS",
+      "1042": "LINHA AMARELA",
+      "1053": "PREPARO",
+      "1056": "LINHA AMARELA",
+      "1061": "BIOMASSA",
+      "1062": "PREPARO",
+      "3063": "FERTIRRIGACAO",
+      "1068": "FERTIRRIGACAO",
+      "5001": "HERBICIDA",
+      "1072": "FERTIRRIGACAO",
+      "5006": "FERTIRRIGACAO",
+      "3072": "PREPARO",
+      "3066": "BIOMASSA",
+      "5003": "HERBICIDA",
+      "5005": "HERBICIDA",
+      "1245": "LINHA AMARELA",
+      "5002": "PREPARO",
+      "3073": "PREPARO",
+      "4899": "PREPARO",
+      "1073": "HERBICIDA",
+      "1071": "FERTIRRIGACAO",
+      "1070": "FERTIRRIGACAO",
+      "3076": "PREPARO",
+      "1074": "TRATOS CULTURAIS",
+      "3074": "PREPARO",
+      "6001": "PREPARO",
+      "6002": "PREPARO",
+      "6004": "FERTIRRIGACAO",
+      "3075": "PREPARO",
+      "3077": "PREPARO",
+      "3081": "PREPARO",
+      "3078": "PREPARO",
+      "1046": "TRATOS CULTURAIS",
+      "1080": "PREPARO",
+      "3080": "PREPARO",
+      "1076": "FERTIRRIGACAO",
+      "3082": "PREPARO",
+      "1085": "PREPARO",
+      "1086": "LINHA AMARELA",
+      "1088": "PREPARO",
+      "1089": "FERTIRRIGACAO",
+      "3029": "PREPARO",
+      "3000": "PREPARO",
+      "1035": "PREPARO",
+      "1036": "PREPARO",
+      "4017": "FERTIRRIGACAO",
+      "4018": "FERTIRRIGACAO",
+      "4020": "FERTIRRIGACAO",
+      "3085": "PREPARO",
+      "2019": "PREPARO",
+      "2023": "PREPARO",
+      "1082": "FERTIRRIGACAO",
+      "6005": "FERTIRRIGACAO",
+      "3088": "PREPARO",
+      "1083": "LINHA AMARELA",
+      "4015": "BIOMASSA",
+      "1090": "HERBICIDA",
+      "1092": "FERTIRRIGACAO",
+      "4019": "FERTIRRIGACAO",
+      "3084": "FERTIRRIGACAO",
+      "3086": "PREPARO",
+      "2020": "FERTIRRIGACAO",
+      "2022": "PREPARO",
+      "2018": "FERTIRRIGACAO",
+      "2024": "PREPARO",
+      "1094": "FERTIRRIGACAO",
+      "3087": "FERTIRRIGACAO",
+      "1091": "HERBICIDA",
+      "4021": "BIOMASSA",
+      "4023": "PREPARO",
+      "1044": "TRATOS CULTURAIS",
+      "3089": "TRATOS CULTURAIS",
+      "3090": "PREPARO",
+      "4024": "FERTIRRIGACAO",
+      "1064": "HERBICIDA",
+      "3091": "PREPARO",
+      "3092": "PREPARO",
+      "1096": "TRATOS CULTURAIS",
+      "1095": "PREPARO",
+      "3094": "PREPARO",
+      "2017": "PREPARO",
+      "2042": "FERTIRRIGACAO",
+      "1038": "PREPARO",
+      "3093": "PREPARO",
+      "3095": "PREPARO",
+      "3096": "PREPARO",
+      "3097": "PREPARO",
+      "1105": "HERBICIDA",
+      "3024": "PREPARO",
+      "3027": "PREPARO",
+      "3031": "PREPARO",
+      "4003": "BIOMASSA",
+      "2006": "BIOMASSA",
+      "3042": "PREPARO",
+      "3045": "PREPARO",
+      "4007": "PREPARO",
+      "3035": "PREPARO",
+      "3056": "PREPARO",
+      "3059": "PREPARO",
+      "4006": "BIOMASSA",
+      "4010": "BIOMASSA",
+      "4013": "BIOMASSA",
+      "2030": "BIOMASSA",
+      "3051": "BIOMASSA",
+      "1004": "PREPARO",
+      "1007": "TRATOS CULTURAIS",
+      "1022": "TRATOS CULTURAIS",
+      "1033": "FERTIRRIGACAO",
+      "1069": "PREPARO",
+      "1010": "TRATOS CULTURAIS",
+      "1019": "PREPARO",
+      "1039": "PREPARO",
+      "1054": "HERBICIDA",
+      "1060": "BIOMASSA",
+      "1017": "PREPARO",
+      "1049": "PREPARO",
+      "1059": "PREPARO",
+      "1013": "PREPARO",
+      "1030": "FERTIRRIGACAO",
+      "1048": "TRATOS CULTURAIS",
+      "1057": "PREPARO",
+      "2026": "PREPARO",
+      "2040": "TRATOS CULTURAIS",
+      "6003": "FERTIRRIGACAO",
+      "1081": "TRATOS CULTURAIS",
+      "3079": "PREPARO",
+      "1078": "HERBICIDA",
+      "1050": "FERTIRRIGACAO",
+      "1047": "TRATOS CULTURAIS",
+      "1102": "FERTIRRIGACAO",
+      "1084": "FERTIRRIGACAO",
+      "1087": "PREPARO",
+      "1079": "HERBICIDA",
+      "1021": "PREPARO",
+      "4016": "BIOMASSA",
+      "3083": "FERTIRRIGACAO",
+      "2021": "PREPARO",
+      "4022": "BIOMASSA",
+      "1037": "TRATOS CULTURAIS",
+      "1107": "HERBICIDA",
+      "1045": "TRATOS CULTURAIS",
+      "3049": "BIOMASSA",
+      "3019": "PREPARO",
+      "9999": "PREPARO"
+    },
+    "ultimaAlteracao": "2026-09-05T15:32:00.000Z"
   },
-  "ultimaAlteracao": "2026-09-05T15:32:00.000Z"
-},
-
   "ultimaSincronizacao": "2026-09-05T14:20:00.000Z",
   "equipamentos": [
-{
+    {
       "codigo": "312025",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311925",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311825",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311725",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311625",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311525",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311425",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311325",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311225",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311215",
       "descricao": "CAMINHAO CANAVIEIRO",
       "modelo": "PLATAFORMA TREMINHADO",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311125",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311115",
       "descricao": "CAMINHAO CANAVIEIRO",
       "modelo": "PLATAFORMA TREMINHADO",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311025",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "311015",
-      "descricao": "CAMINH\u00c3O RODOTREM",
-      "modelo": "CAMINH\u00c3O VOLVO FMX 500",
-      "tipo": "Caminh\u00e3o",
+      "descricao": "CAMINHÃO RODOTREM",
+      "modelo": "CAMINHÃO VOLVO FMX 500",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31925",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31915",
       "descricao": "CAVALO MECANICO",
-      "modelo": "CAMINH\u00c3O VOLVO FMX 500",
-      "tipo": "Caminh\u00e3o",
+      "modelo": "CAMINHÃO VOLVO FMX 500",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31825",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31815",
       "descricao": "CAVALO MECANICO",
       "modelo": "CAMINHAO VOLVO FMX 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31725",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31625",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31615",
       "descricao": "CAMINHAO CANAVIEIRO",
       "modelo": "PLATAFORMA TREMINHADO",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31525",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31515",
       "descricao": "CAMINHAO CANAVIEIRO",
       "modelo": "PLATAFORMA TREMINHADO",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31425",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31415",
       "descricao": "CAMINHAO CANAVIEIRO",
       "modelo": "PLATAFORMA TREMINHADO",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31325",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31316",
       "descricao": "CAMINHAO CANAVIEIRO",
       "modelo": "PLATAFORMA TREMINHADO",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31315",
       "descricao": "CAMINHAO CANAVIEIRO",
       "modelo": "PLATAFORMA TREMINHADO",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31215",
       "descricao": "CAMINHAO CANAVIEIRO",
       "modelo": "PLATAFORMA TREMINHADO",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31125",
       "descricao": "CAVALO MECANICO",
       "modelo": "VOLVO FH 540",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "31115",
       "descricao": "CAMINHAO CANAVIEIRO 540",
       "modelo": "PLATAFORMA TREMINHADO",
-      "tipo": "Caminh\u00e3o",
+      "tipo": "Caminhão",
       "grupo": "CAMINHOES",
       "operacao": "2006 - Transp De Cana Carregado",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80116",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8800",
@@ -608,8 +607,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80317",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8810",
@@ -618,8 +617,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80224",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 9900",
@@ -628,8 +627,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80719",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8810",
@@ -638,8 +637,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80119",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8810",
@@ -648,8 +647,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80319",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8810",
@@ -658,8 +657,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80419",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8810",
@@ -668,8 +667,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80219",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8810",
@@ -678,8 +677,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80320",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8800",
@@ -688,8 +687,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80316",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8000",
@@ -698,8 +697,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80217",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8810",
@@ -708,8 +707,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80420",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8800",
@@ -718,8 +717,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80422",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 9900",
@@ -728,8 +727,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80322",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 9900",
@@ -738,8 +737,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80122",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 9900",
@@ -748,8 +747,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80124",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 9900",
@@ -758,8 +757,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80519",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8810",
@@ -768,8 +767,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80120",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8800",
@@ -778,8 +777,8 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
-{
+    },
+    {
       "codigo": "80619",
       "descricao": "COLHEDORA",
       "modelo": "COLHEDORA CASE 8810",
@@ -788,7 +787,7 @@
       "operacao": "4001 - Corte Mecanizado De Cana Crua",
       "statusOS": "OK",
       "codOS": ""
-},
+    },
     {
       "codigo": "11216",
       "descricao": "TRATOR NEW HOLLAND T7.245",
@@ -1400,6 +1399,2193 @@
       "grupo": "FERTIRRIGACAO",
       "statusOS": "Com OS",
       "codOS": "764.578"
+    },
+    {
+      "codigo": "3025",
+      "descricao": "Manutencao Eletrica",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3003",
+      "descricao": "Aguardando Caminhão",
+      "tipoOperacao": "FALTA DE CAMINHÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3004",
+      "descricao": "Aguardando Comboio",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3005",
+      "descricao": "Aguardando Ordem",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3006",
+      "descricao": "Aguardando Prancha",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3007",
+      "descricao": "Troca De Turno",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3008",
+      "descricao": "Condicoes Climaticas",
+      "tipoOperacao": "CLIMA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3010",
+      "descricao": "Lavagem Lubrificacao",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3011",
+      "descricao": "Equipamento Encalhado",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3012",
+      "descricao": "Mudanca De Area C Prancha",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3013",
+      "descricao": "Mudanca De Area Rodando",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3014",
+      "descricao": "Troca De Implemento",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3015",
+      "descricao": "Parada Da Usina",
+      "tipoOperacao": "USINA PARADA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3016",
+      "descricao": "Parada Operador",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3017",
+      "descricao": "Parada Refeicao",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3018",
+      "descricao": "Patio De Cana",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3020",
+      "descricao": "Manutencao Borracharia",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3021",
+      "descricao": "Aguardando Transbordo",
+      "tipoOperacao": "FALTA DE TRANSBORDO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3022",
+      "descricao": "Aguardando Eletrecista",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3023",
+      "descricao": "Aguardando Mecanico",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3026",
+      "descricao": "Manutencao Hidraulica",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3028",
+      "descricao": "Pátio Oficina",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3030",
+      "descricao": "Aguardando Mecanico Terceiros",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3032",
+      "descricao": "Aguardando Guincho",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3033",
+      "descricao": "Aguardando Carregamento",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4001",
+      "descricao": "Corte Mecanizado De Cana Crua",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4002",
+      "descricao": "Corte Mecanizado De Cana Queimada",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3036",
+      "descricao": "Aguard. Bombeiro",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3037",
+      "descricao": "Falta Operador",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3038",
+      "descricao": "Sem Apontamento",
+      "tipoOperacao": "SEM APONTAMENTO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3043",
+      "descricao": "Computador De Bordo Desligado",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3044",
+      "descricao": "Gps Invalido",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3046",
+      "descricao": "Equipamento Inativo",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3047",
+      "descricao": "Aguardando Manobra Transbordo",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3002",
+      "descricao": "Verificacao / Check List",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3034",
+      "descricao": "Aguard. Manut. Ar Condicionado",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3048",
+      "descricao": "Aguardando Para Descarregar",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3050",
+      "descricao": "Transb. Colhedora Parada",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3057",
+      "descricao": "Fila Abastecimento",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3058",
+      "descricao": "Pedagio",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3060",
+      "descricao": "Batendo Pneu",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4005",
+      "descricao": "Auto Deslocamento",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4008",
+      "descricao": "Manobra Transbordo",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4009",
+      "descricao": "Deslocamento Carregado",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4011",
+      "descricao": "Transbordo Carregando Cana",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4012",
+      "descricao": "Transbordando Carga",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4014",
+      "descricao": "Fila Unica De Transbordo",
+      "tipoOperacao": "FILA NA LAVOURA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2007",
+      "descricao": "Transp De Cana Vazio",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2031",
+      "descricao": "Caminhao Fila Balanca",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2032",
+      "descricao": "Balanca Entrada",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3052",
+      "descricao": "Caminhao Aguard Carregamento",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3053",
+      "descricao": "Furador",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3054",
+      "descricao": "Mesa",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3055",
+      "descricao": "Balanca Saida",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3009",
+      "descricao": "Manutencao Oficina",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3040",
+      "descricao": "Manut. Preventiva - Oficina",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3041",
+      "descricao": "Indeterminado",
+      "tipoOperacao": "INDETERMINADO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Indeterminado",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3061",
+      "descricao": "Aguardando Colhedora",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1043",
+      "descricao": "Corte Mecanizado De Mudas",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3001",
+      "descricao": "Abastecimento",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3039",
+      "descricao": "Manut. Preventiva",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3065",
+      "descricao": "Troca de Óleo",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3068",
+      "descricao": "Caminhão Reserva - Aguardando Ordens",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3062",
+      "descricao": "Enlonamento - Desenlonamento",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3064",
+      "descricao": "Saída Manutenção - Aguard. Motorista",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3067",
+      "descricao": "Estrada Obstruída",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3069",
+      "descricao": "Revisão Concessionária",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3070",
+      "descricao": "Catando Cana",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1001",
+      "descricao": "Terraceamento",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1002",
+      "descricao": "Terraplanagem",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1003",
+      "descricao": "Conservacao De Estradas",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1005",
+      "descricao": "Sistematizacao",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1006",
+      "descricao": "Arranquio De Citrus",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1015",
+      "descricao": "Gradagem Niveladora",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1020",
+      "descricao": "Quebra De Lombo",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1027",
+      "descricao": "Adubação Área",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1028",
+      "descricao": "Aplicacao De Calcario",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1052",
+      "descricao": "Tracao  Recolhimento De Biomassa",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1008",
+      "descricao": "Arranquio De Citrus Cleopatra",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1009",
+      "descricao": "Arranquio De Citrumelo",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1011",
+      "descricao": "Aração",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1012",
+      "descricao": "Aração Com Defensivos",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1023",
+      "descricao": "Cobrição De Cana",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1029",
+      "descricao": "Aplicação De Gesso",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1034",
+      "descricao": "Aplicação De Compostagem",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1040",
+      "descricao": "Trajeto Auxiliar de operação",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1055",
+      "descricao": "Carregando - Terra - Bagaco - Outros",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1058",
+      "descricao": "Aceiro Tratorizado",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1032",
+      "descricao": "Aplicação de Inseticida",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1014",
+      "descricao": "Gradagem Intermediaria",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1024",
+      "descricao": "Enleiramento De Biomassa",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1025",
+      "descricao": "Arranquio De Toco  Diversos",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1026",
+      "descricao": "Aplicacao De Fosfato",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1051",
+      "descricao": "Tração Para Terceiros",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1063",
+      "descricao": "Apoio Pa Carregadeira",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1031",
+      "descricao": "Aplicação de Herbicida",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3071",
+      "descricao": "Colhedora Disponiveis",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1016",
+      "descricao": "Subsolagem",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1018",
+      "descricao": "Sulcação",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1041",
+      "descricao": "Roçadeira",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1042",
+      "descricao": "Rolo Compactador",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1053",
+      "descricao": "Carreg Cana  Carga E Descarg",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1056",
+      "descricao": "Pa Aterro De Estradas Outros",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1061",
+      "descricao": "Enfardamento De Biomassa",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1062",
+      "descricao": "Prest Servico Usina  Maquina",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3063",
+      "descricao": "Abastecimento De Insumos",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1068",
+      "descricao": "Aplicacao De Vinhaca Localizada",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "5001",
+      "descricao": "Preparando calda de pulverização",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1072",
+      "descricao": "Deslocamento Vazio Vinhaca",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "5006",
+      "descricao": "Abastecimento Vinhaca",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3072",
+      "descricao": "Sem Operacao",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3066",
+      "descricao": "Aguardando Enfardamento",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "5003",
+      "descricao": "Recolhimento de Biomassa",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "5005",
+      "descricao": "Abastecimento de insumos",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1245",
+      "descricao": "Estrada Obstruida",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "5002",
+      "descricao": "Aguardando irrigacao",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3073",
+      "descricao": "Limpeza De Implemento",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4899",
+      "descricao": "Instalacao e manutencao  GPS",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1073",
+      "descricao": "Apl inseticida em profundidade",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1071",
+      "descricao": "Aplicação Mista - Correção Solo",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1070",
+      "descricao": "Aplicacao Mista De Produtos",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3076",
+      "descricao": "Manutencao Cordinha",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1074",
+      "descricao": "Descarregamento de Muda",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3074",
+      "descricao": "Calibração de GPS",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "6001",
+      "descricao": "Transporte Vazio Apoio",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "6002",
+      "descricao": "Transporte Carregado Apoio",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "6004",
+      "descricao": "Caminhão Descarregando Vinhaça",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3075",
+      "descricao": "Aguardando Enleiramento",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3077",
+      "descricao": "Manutenção Solinftec",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3081",
+      "descricao": "Aguardando Manutencao Implemento",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3078",
+      "descricao": "Aguardando Liberação de Área",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1046",
+      "descricao": "Plantio de Cereais",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1080",
+      "descricao": "Mapeamento Agrícola",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3080",
+      "descricao": "Aguardando Locacao",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1076",
+      "descricao": "plantio de torta",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3082",
+      "descricao": "Manutencao Implemento",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1085",
+      "descricao": "Carregamento Insumos",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1086",
+      "descricao": "Limpeza De Area",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1088",
+      "descricao": "Apoio Safra",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1089",
+      "descricao": "Amontoando Torta",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3029",
+      "descricao": "Patio De Tratores",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3000",
+      "descricao": "Patio Barracao De Adubo",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1035",
+      "descricao": "Oficina Externa Barretos",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1036",
+      "descricao": "Oficina Externa Ribeirao Preto",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4017",
+      "descricao": "Aplic Vinhaca Caminhao",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4018",
+      "descricao": "Aplic Vinhaca Canal",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4020",
+      "descricao": "Montagem-Desmontagem Linha Vinhaca",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3085",
+      "descricao": "Aguard Encher Canal",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2019",
+      "descricao": "Trans Terra Ou Cascalho",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2023",
+      "descricao": "Aguard Pa",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1082",
+      "descricao": "Carregamento de torta",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "6005",
+      "descricao": "Desc Parcial",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3088",
+      "descricao": "Embarcado Em Manutencao",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1083",
+      "descricao": "Carregamento Caminhao De Terra",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4015",
+      "descricao": "Manobra Meio De Rua",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1090",
+      "descricao": "Repasse Aplic Herbicida",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1092",
+      "descricao": "Aplic Vinhaca Com Fertilizante",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4019",
+      "descricao": "Aguard Mont Linha Vinhaca",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3084",
+      "descricao": "Transporte de Vinhaca Henriquecida",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3086",
+      "descricao": "Problemas na Casa de Bomba",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2020",
+      "descricao": "Transp  Gesso Calcario",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2022",
+      "descricao": "Transporte De Silo",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2018",
+      "descricao": "Transp  Fertilizante",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2024",
+      "descricao": "Descarregando",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1094",
+      "descricao": "Aplicacao de Fertilizante Liquido",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3087",
+      "descricao": "Carregando",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1091",
+      "descricao": "Catacao Quimica",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4021",
+      "descricao": "Embarcando - Carregado",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4023",
+      "descricao": "Aguardando Liberar Equipamento",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1044",
+      "descricao": "Plantio Mecanizado",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3089",
+      "descricao": "Aguardando Muda",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3090",
+      "descricao": "Cruzamento Perigoso",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4024",
+      "descricao": "Limpeza de Canal",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1064",
+      "descricao": "Aplicacao de Fungicida",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3091",
+      "descricao": "Aguardando Locacao",
+      "tipoOperacao": "AGUARDANDO ALOCAÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3092",
+      "descricao": "Aguardando Carreta",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1096",
+      "descricao": "PRE PLANTIO INCORPORADO",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1095",
+      "descricao": "Vigiando Cereais",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3094",
+      "descricao": "Descarregando - Deslocamento Vazio",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2017",
+      "descricao": "Basculante Para Terceiro",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2042",
+      "descricao": "Transporte De Torta",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1038",
+      "descricao": "Oficina Nonino Bebedouro",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3093",
+      "descricao": "Aguardando Projeto",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3095",
+      "descricao": "CARREGANDO AR",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3096",
+      "descricao": "REGULAR IMPLEMENTO",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3097",
+      "descricao": "ELETRO IMA",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1105",
+      "descricao": "APLI HERBICIDA EM CARREADOR",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3024",
+      "descricao": "Aguardando Pecas",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3027",
+      "descricao": "Manutencao Mecanica",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3031",
+      "descricao": "Manutencao Mecanica Terceiros",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4003",
+      "descricao": "Tracao Transbordo",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2006",
+      "descricao": "Transp De Cana Carregado",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3042",
+      "descricao": "Troca De Facas - Corte Base",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3045",
+      "descricao": "Sem Gprs",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4007",
+      "descricao": "Embuchamento Rolo / Cesto",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3035",
+      "descricao": "Manut. Ar Condicionado",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3056",
+      "descricao": "Engate Ou Desengate De Reboque",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3059",
+      "descricao": "Batendo Pneus",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4006",
+      "descricao": "Manobra Colhedora",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4010",
+      "descricao": "Deslocamento Vazio",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4013",
+      "descricao": "Pesagem Balanca",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2030",
+      "descricao": "Dentro Da Usina",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3051",
+      "descricao": "Caminhao Carregando",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1004",
+      "descricao": "Curva Em Nivel",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1007",
+      "descricao": "Arranquio De Citrus Densidade",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1022",
+      "descricao": "Cultivo",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1033",
+      "descricao": "Aplicacao De Torta De Filtro",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1069",
+      "descricao": "Manobra TPL",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1010",
+      "descricao": "Queima De Citrus",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1019",
+      "descricao": "Destruição De Soqueira  Sph",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1039",
+      "descricao": "Compostagem",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1054",
+      "descricao": "Carreg Adubos / Herbicidas / Diversos",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1060",
+      "descricao": "Perfurador De Solo",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1017",
+      "descricao": "FIM DA MANUTENCAO",
+      "tipoOperacao": "OUTROS",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1049",
+      "descricao": "Tração",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1059",
+      "descricao": "Pa Bagaço De Cana Usina",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "INATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1013",
+      "descricao": "Gradagem Aradora",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1030",
+      "descricao": "Aplicação Fertilizante Foliar",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1048",
+      "descricao": "Serviços Curral",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1057",
+      "descricao": "Esparramação De Cinzas",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2026",
+      "descricao": "Serviços Gerais de Transporte",
+      "tipoOperacao": "AUXILIAR",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2040",
+      "descricao": "Carregando Cana Muda",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "6003",
+      "descricao": "Caminhão Carregando Vinhaça",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1081",
+      "descricao": "Canterizador de Cana",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3079",
+      "descricao": "Aguardando Tração",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1078",
+      "descricao": "Segunda Aplicacao de Herbicida",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1050",
+      "descricao": "Tracao Motobomba",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1047",
+      "descricao": "Silagem",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1102",
+      "descricao": "SEGUNDA  APLICACAO DE VINHACA LOCALIZADA",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1084",
+      "descricao": "Carregamento Torta",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1087",
+      "descricao": "Limpeza De Industria",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1079",
+      "descricao": "Dessecacao",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1021",
+      "descricao": "Patio Oficina",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4016",
+      "descricao": "Manobra De Fim De Rua",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3083",
+      "descricao": "Transporte de Vinhaca Carreg",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "2021",
+      "descricao": "Carreg Bagaco De Cana",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "4022",
+      "descricao": "Desembarcando - Vazio",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1037",
+      "descricao": "Oficina Coopercitrus",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1107",
+      "descricao": "APLICACAO VIA DRENCH",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "GERAL",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "1045",
+      "descricao": "CINTURANDO",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3049",
+      "descricao": "Transbordo Alocado",
+      "tipoOperacao": "IMPRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Improdutivas",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "3019",
+      "descricao": "Aguardando Manutenção Borracharia",
+      "tipoOperacao": "MANUTENÇÃO",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Manutenção",
+      "status": "ATIVO",
+      "equipe": "BIOMASSA"
+    },
+    {
+      "codigo": "9999",
+      "descricao": "OPERAÇÃO TESTE PRODUTIVA",
+      "tipoOperacao": "PRODUTIVA",
+      "corporativo": "PITANGUEIRAS",
+      "grupoOperacao": "Produtivas",
+      "status": "ATIVO",
+      "equipe": "PREPARO"
     }
   ],
   "ordensServico": [
