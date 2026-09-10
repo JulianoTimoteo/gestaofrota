@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <script>
+        (function() {
+            var APP_VER = '2026_v17_force_cache_flush';
+            var saved = localStorage.getItem('sf_app_version');
+            if (saved !== APP_VER) {
+                localStorage.setItem('sf_app_version', APP_VER);
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(function(regs) {
+                        for (var r of regs) r.unregister();
+                    });
+                }
+                if (window.caches) {
+                    caches.keys().then(function(names) {
+                        for (var n of names) caches.delete(n);
+                    });
+                }
+            }
+        })();
+    </script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -9456,7 +9475,7 @@
             document.getElementById('btnPwaDismiss')?.addEventListener('click', dismissPwaBanner);
 
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js').then(reg => {
+                navigator.serviceWorker.register('./sw.js?v=17').then(reg => {
                     reg.update();
                     console.log('Service Worker PWA registrado:', reg.scope);
                 }).catch(err => {
