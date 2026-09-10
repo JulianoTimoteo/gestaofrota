@@ -7949,12 +7949,12 @@
             }
         }
 
+                // ================================================================
+        // SYNC TIMER (15 segundos - silencioso em todos os dispositivos)
         // ================================================================
-        // SYNC TIMER (10 MINUTOS — totalmente silencioso e não intrusivo)
-        // ================================================================
-                        function iniciarSyncTimer() {
+        function iniciarSyncTimer() {
             if (syncTimer) clearInterval(syncTimer);
-            const QUINZE_SEGUNDOS = 15 * 1000; // Auto-update a cada 15 segundos em qualquer dispositivo
+            const QUINZE_SEGUNDOS = 15 * 1000;
             syncTimer = setInterval(async () => {
                 if (isSyncing) return;
                 isSyncing = true;
@@ -7963,10 +7963,6 @@
                 } catch(e) {}
                 isSyncing = false;
             }, QUINZE_SEGUNDOS);
-        } catch(e) {}
-                isSyncing = false;
-            }, QUINZE_SEGUNDOS);
-        }, UM_MINUTO);
         }
 
         var singleSessionTimer = null;
