@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fleet-cache-v15';
+const CACHE_NAME = 'fleet-cache-v16';
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();
@@ -21,7 +21,6 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // Don't intercept API requests, websockets or endpoints
     if (url.pathname.startsWith('/api') || url.pathname.includes('/api/')) {
         return;
     }
