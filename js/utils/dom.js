@@ -82,20 +82,24 @@
         // LOG
         // ================================================================
         function addLog(message, type = 'info') {
-            const logDiv = document.getElementById('apiLog');
+            const logDiv = document.getElementById('logContainer') || document.getElementById('apiLog');
             if (!logDiv) return;
             const time  = new Date().toLocaleTimeString('pt-BR');
-            const color = type === 'success' ? '#4ade80' :
-                          type === 'error'   ? '#f87171' :
-                          type === 'warning' ? '#fbbf24' : '#38bdf8';
+            const isDark = document.body.classList.contains('dark-theme');
+            
+            let timeColor = isDark ? '#94a3b8' : '#475569';
+            let textColor = isDark ? '#ffffff' : '#0f172a';
+            if (type === 'success') textColor = isDark ? '#4ade80' : '#166534';
+            if (type === 'error')   textColor = isDark ? '#f87171' : '#991b1b';
+            if (type === 'warning') textColor = isDark ? '#fbbf24' : '#92400e';
+
             const div = document.createElement('div');
-            div.style.color = color;
+            div.style.color = textColor;
             div.style.padding = '3px 0';
             div.style.fontFamily = 'Consolas, Monaco, "Courier New", monospace';
             div.style.fontSize = '0.78rem';
-            div.innerHTML = `<span style="color:#64748b;font-weight:600;">[${time}]</span> <span style="font-weight:600;">${message}</span>`;
+            div.innerHTML = `<span style="color:${timeColor};font-weight:600;">[${time}]</span> <span style="font-weight:600;">${message}</span>`;
             logDiv.appendChild(div);
-            // Manter últimas 50 linhas
             while (logDiv.children.length > 50) logDiv.removeChild(logDiv.firstChild);
             logDiv.scrollTop = logDiv.scrollHeight;
         }
@@ -124,38 +128,46 @@
         // ================================================================
         function switchMainTab(tabId, persist = true) {
             if (!tabId) return;
-            activeMainTab = tabId;
+            const cleanId = tabId.replace(/^tab-/, '');
+            activeMainTab = cleanId;
             if (persist) {
-                localStorage.setItem('sf_active_tab', tabId);
-                sessionStorage.setItem('sf_active_tab', tabId);
+                localStorage.setItem('sf_active_tab', cleanId);
+                sessionStorage.setItem('sf_active_tab', cleanId);
             }
             document.querySelectorAll('#mainTabs > .tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.tab === tabId);
+                const bTab = (btn.dataset.tab || '').replace(/^tab-/, '');
+                btn.classList.toggle('active', bTab === cleanId);
             });
-            document.querySelectorAll('#tab-admin, #tab-equipe').forEach(el => {
-                el.classList.toggle('active', el.id === tabId);
+            document.querySelectorAll('.tab-content-section').forEach(el => {
+                const sectionTarget = `${cleanId}Section`;
+                const isMatch = el.id === sectionTarget || el.id === cleanId || el.id === `tab-${cleanId}`;
+                el.style.display = isMatch ? 'block' : 'none';
+                el.classList.toggle('active', isMatch);
             });
         }
 
         function switchAdminSubTab(subId, persist = true) {
             if (!subId) return;
-            activeAdminSub = subId;
+            const cleanSub = subId.replace(/^tab-/, '');
+            activeAdminSub = cleanSub;
             if (persist) {
-                localStorage.setItem('sf_active_admin_subtab', subId);
-                sessionStorage.setItem('sf_active_admin_subtab', subId);
+                localStorage.setItem('sf_active_admin_subtab', cleanSub);
+                sessionStorage.setItem('sf_active_admin_subtab', cleanSub);
             }
-            document.querySelectorAll('#adminSubTabs > .tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.subtab === subId);
+            document.querySelectorAll('#adminSubTabs > .sub-tab-btn, #adminSubTabs > .tab-btn').forEach(btn => {
+                const bSub = (btn.dataset.subtab || '').replace(/^tab-/, '');
+                btn.classList.toggle('active', bSub === cleanSub);
             });
-            document.querySelectorAll('#adminSubContents > .tab-content').forEach(el => {
-                el.classList.toggle('active', el.id === subId);
+            document.querySelectorAll('.admin-sub-panel').forEach(el => {
+                const panelTarget = `${cleanSub}Panel`;
+                const isMatch = el.id === panelTarget || el.id === cleanSub || el.id === `tab-${cleanSub}`;
+                el.style.display = isMatch ? 'block' : 'none';
+                el.classList.toggle('active', isMatch);
             });
-            if (subId === 'tab-usuarios') {
+            if (cleanSub === 'usuarios' || cleanSub === 'tab-usuarios') {
                 renderUsuariosList();
-            } else if (subId === 'tab-database') {
+            } else if (cleanSub === 'database' || cleanSub === 'tab-database') {
                 carregarListaTabelasExplorer();
-            } else if (subId === 'tab-apikeys') {
-                carregarChavesApiExplorer();
             }
         }
 
@@ -168,9 +180,21 @@
             const adminTabContent = document.getElementById('tab-admin');
 
             const curUser = (localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '').toLowerCase();
-            const isAdminUser = ADMIN_ROLES.includes(userRole) && !curUser.includes('rafael');
+            const curRole = (localStorage.getItem('sf_auth_role') || sessionStorage.getItem('sf_auth_role') || userRole || '').toLowerCase();
 
-            if (isAdminUser) {
+            const isMasterAdmin = (
+                curUser === 'julianotimoteo' ||
+                curUser === 'logistica' ||
+                curUser === 'admin' ||
+                curRole === 'master' ||
+                curRole === 'admin' ||
+                curRole === '100' ||
+                curRole === '80' ||
+                curRole === 'gerente' ||
+                ADMIN_ROLES.includes(curRole)
+            ) && !curUser.includes('rafael');
+
+            if (isMasterAdmin) {
                 if (mainTabs)        mainTabs.style.display       = 'inline-flex';
                 if (adminTabBtn)     adminTabBtn.style.display    = '';
                 if (adminTabContent) adminTabContent.style.display = '';
@@ -179,7 +203,7 @@
                 switchMainTab(activeMainTab || 'tab-admin', false);
                 switchAdminSubTab(activeAdminSub || 'tab-equipamentos', false);
             } else {
-                // Usuário Gerente/Operador (ex: Rafael Farra): ocultar totalmente abas de administração e mostrar apenas dados da operação (#tab-equipe)
+                // Usuário Operador / Leitura (ex: Rafael Farra): ocultar totalmente abas de administração e mostrar apenas dados da operação (#tab-equipe)
                 if (adminTabBtn)     adminTabBtn.style.display    = 'none';
                 if (adminTabContent) adminTabContent.style.display = 'none';
                 if (mainTabs)        mainTabs.style.display        = 'none';

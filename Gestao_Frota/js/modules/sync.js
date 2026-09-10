@@ -1,15 +1,15 @@
-        // SYNC TIMER (10 MINUTOS — totalmente silencioso e não intrusivo)
+        // SYNC TIMER (5 MINUTOS — 300 SEGUNDOS)
         // ================================================================
         function iniciarSyncTimer() {
             if (syncTimer) clearInterval(syncTimer);
-            const DEZ_MINUTOS = 10 * 60 * 1000; // 10 minutos (600.000 ms)
+            const CINCO_MINUTOS = 5 * 60 * 1000; // 5 minutos (300.000 ms)
             syncTimer = setInterval(async () => {
                 if (!authToken || isSyncing) return;
                 isSyncing = true;
-                addLog('🔄 Sincronização automática em segundo plano (ciclo 10 min)...', 'info');
+                addLog('🔄 Sincronização automática em segundo plano (ciclo 5 min)...', 'info');
                 await carregarDados(true); // background = true
                 isSyncing = false;
-            }, DEZ_MINUTOS);
+            }, CINCO_MINUTOS);
         }
 
         var singleSessionTimer = null;

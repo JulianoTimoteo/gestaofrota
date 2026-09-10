@@ -1,0 +1,205 @@
+        /* ===== TABLES ===== */
+        .table-wrap {
+            border-radius: 8px;
+            border: 1px solid var(--color-gray-200);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: auto;
+        }
+
+        table th {
+            text-align: left;
+            padding: 0.65rem 1rem;
+            font-weight: 600;
+            color: var(--color-gray-600);
+            border-bottom: 2px solid var(--color-gray-200);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            background: #fafbfc;
+        }
+
+        table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--color-gray-100);
+            vertical-align: middle;
+            color: var(--color-gray-700);
+        }
+
+        table tr:hover td {
+            background: var(--color-gray-50);
+        }
+
+        /* ===== SUB TABS (Team filters) ===== */
+        .sub-tabs {
+            display: flex;
+            gap: 0.2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--color-gray-200);
+        }
+
+        .sub-tab-btn {
+            padding: 0.4rem 1rem;
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            font-size: 0.75rem;
+            color: var(--color-gray-500);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .sub-tab-btn:hover {
+            background: var(--color-gray-200);
+            color: var(--color-gray-800);
+        }
+
+        .sub-tab-btn.active {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .sub-tab-btn .count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.02rem 0.4rem;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            margin-left: 0.2rem;
+        }
+
+        .team-filter-bar {
+            display: flex;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background: var(--color-gray-50);
+            border-radius: 8px;
+            border: 1px solid var(--color-gray-200);
+        }
+
+        .team-filter-btn {
+            padding: 0.35rem 0.9rem;
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            font-size: 0.8rem;
+            color: var(--color-gray-500);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .team-filter-btn:hover {
+            background: white;
+            color: var(--color-gray-800);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .team-filter-btn.active {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .team-filter-btn .count {
+            background: rgba(0, 0, 0, 0.08);
+            padding: 0.05rem 0.4rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* ===== ABA VERMELHA 24H ⚠️ ===== */
+        .sub-tab-btn.btn-24h-alert,
+        .team-filter-btn.btn-24h-alert {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid #f87171 !important;
+            font-weight: 600 !important;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4) !important;
+        }
+
+        .sub-tab-btn.btn-24h-alert:hover,
+        .team-filter-btn.btn-24h-alert:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+            border-color: #ef4444 !important;
+            color: #ffffff !important;
+        }
+
+        .sub-tab-btn.btn-24h-alert.active,
+        .team-filter-btn.btn-24h-alert.active {
+            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%) !important;
+            border: 1px solid #fca5a5 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.75) !important;
+        }
+
+        .sub-tab-btn.btn-24h-alert .count,
+        .team-filter-btn.btn-24h-alert .count {
+            background: rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .pulse-icon {
+            animation: pulseWarning 1.5s infinite ease-in-out;
+            color: #fef08a !important;
+            margin-left: 2px;
+        }
+
+        @keyframes pulseWarning {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.25); opacity: 0.7; }
+        }
+
+        /* ===== RESPONSIVIDADE MOBILE ===== */
+        @media (max-width: 768px) {
+            .hide-mobile {
+                display: none !important;
+            }
+            
+            .table-wrap {
+                width: 100% !important;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: 0;
+                padding: 0;
+            }
+
+            table {
+                width: 100% !important;
+                font-size: 0.78rem;
+            }
+
+            table th, table td {
+                padding: 0.45rem 0.35rem !important;
+                white-space: normal !important;
+                word-break: break-word;
+            }
+
+            .badge-equip {
+                padding: 0.18rem 0.35rem !important;
+                font-size: 0.7rem !important;
+            }
+
+            .team-filter-bar {
+                padding: 0.25rem !important;
+                gap: 0.2rem !important;
+            }
+
+            .team-filter-btn {
+                padding: 0.3rem 0.5rem !important;
+                font-size: 0.72rem !important;
+            }
+        }
+

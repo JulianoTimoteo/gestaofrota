@@ -96,6 +96,15 @@
                 if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
             });
 
+            // Modal Editar Operação Produtiva
+            document.getElementById('btnCancelEditOper')?.addEventListener('click', () => {
+                document.getElementById('modalEditOperOverlay')?.classList.remove('active');
+            });
+            document.getElementById('formEditOper')?.addEventListener('submit', submitEditOper);
+            document.getElementById('modalEditOperOverlay')?.addEventListener('click', e => {
+                if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
+            });
+
             // Delegação para botão OS e centralização automática de abas (qualquer lugar)
             document.addEventListener('click', e => {
                 const osBtn = e.target.closest('.os-info-btn');

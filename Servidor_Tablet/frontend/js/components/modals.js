@@ -311,4 +311,122 @@
             }
         }
 
+        async function toggleInativarEquip(codStr) {
+            const eq = equipments.find(item => String(item.codigo) === String(codStr));
+            if (!eq) return;
+
+            if (!confirm(`Deseja realmente INATIVAR o equipamento ${eq.codigo} (${eq.descricao})?`)) {
+                return;
+            }
+
+            setCustomEquipStatus(eq.codigo, 'INATIVO');
+
+            try {
+                await fetch(`${API_BASE}/api/equipamentos/${eq.codigo}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ status: 'INATIVO' })
+                }).catch(() => null);
+            } catch(e) {}
+
+            equipments = equipments.filter(item => String(item.codigo) !== String(codStr));
+
+            addLog(`🚫 Equipamento ${eq.codigo} (${eq.descricao}) foi inativado com sucesso!`, 'info');
+            renderEquipamentos();
+            renderTeamTabs(false);
+            atualizarStatusGeral();
+        }
+
+        function openEditOperModal(codStr) {
+            const op = operacoes.find(item => String(item.codigo) === String(codStr));
+            if (!op) return;
+
+            const modal = document.getElementById('modalEditOperOverlay');
+            if (!modal) return;
+
+            document.getElementById('editOperCodigoOriginal').value = op.codigo || '';
+            document.getElementById('editOperCodigo').value = op.codigo || '';
+            document.getElementById('editOperDescricao').value = op.descricao || '';
+            document.getElementById('editOperEquipe').value = getOpTeam(op) || '-';
+
+            const errEl = document.getElementById('editOperError');
+            if (errEl) errEl.style.display = 'none';
+
+            modal.classList.add('active');
+        }
+
+        async function submitEditOper(e) {
+            if (e) e.preventDefault();
+            const codigo    = (document.getElementById('editOperCodigo')?.value || '').trim();
+            const descricao = (document.getElementById('editOperDescricao')?.value || '').trim();
+            const equipe    = (document.getElementById('editOperEquipe')?.value || '-').trim();
+            const errEl     = document.getElementById('editOperError');
+
+            if (!codigo || !descricao) {
+                if (errEl) { errEl.textContent = 'Por favor, preencha a Descrição da operação.'; errEl.style.display = 'block'; }
+                return;
+            }
+
+            if (errEl) errEl.style.display = 'none';
+            showGlobalLoader();
+
+            try {
+                await fetch(`${API_BASE}/api/operacoes/${codigo}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ descricao, equipe: equipe === '-' ? '' : equipe })
+                }).catch(() => null);
+            } catch (err) {
+                console.warn('Sync warning:', err);
+            } finally {
+                hideGlobalLoader();
+            }
+
+            const op = operacoes.find(item => String(item.codigo) === String(codigo));
+            if (op) {
+                op.descricao = descricao;
+                op.equipe = equipe === '-' ? '' : equipe;
+                setCustomOpTeam(codigo, equipe === '-' ? '' : equipe);
+            }
+
+            document.getElementById('modalEditOperOverlay')?.classList.remove('active');
+
+            addLog(`✏️ Operação ${codigo} (${descricao}) atualizada com sucesso!`, 'success');
+            renderOperacoes();
+            renderTeamTabs(false);
+            atualizarStatusGeral();
+        }
+
+        async function excluirOperacao(codStr) {
+            const op = operacoes.find(item => String(item.codigo) === String(codStr));
+            const desc = op ? op.descricao : codStr;
+
+            if (!confirm(`Tem certeza que deseja EXCLUIR a operação ${codStr} (${desc})?`)) {
+                return;
+            }
+
+            showGlobalLoader();
+            try {
+                await fetch(`${API_BASE}/api/operacoes/${codStr}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                }).catch(() => null);
+            } catch(e) {} finally {
+                hideGlobalLoader();
+            }
+
+            operacoes = operacoes.filter(item => String(item.codigo) !== String(codStr));
+
+            addLog(`🗑️ Operação Produtiva ${codStr} (${desc}) foi excluída!`, 'warning');
+            renderOperacoes();
+            renderTeamTabs(false);
+            atualizarStatusGeral();
+        }
+
         // ================================================================

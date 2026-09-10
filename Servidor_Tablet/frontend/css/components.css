@@ -754,3 +754,47 @@
             text-align: center;
         }
 
+        /* ===== CONSOLE DE LOGS / SINCRONIZAÇÃO (FUNDO BRANCO NO MODO CLARO) ===== */
+        .log-panel-card {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+
+        .log-container-box {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 8px;
+            padding: 0.75rem;
+            max-height: 250px;
+            overflow-y: auto;
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        body:not(.dark-theme) .log-panel-card h3,
+        body:not(.dark-theme) .log-panel-card i {
+            color: #000000 !important;
+        }
+
+        body.dark-theme .log-panel-card {
+            background: #1e293b !important;
+            color: #ffffff !important;
+            border-color: #334155 !important;
+        }
+
+        body.dark-theme .log-panel-card h3,
+        body.dark-theme .log-panel-card i {
+            color: #ffffff !important;
+        }
+
+        body.dark-theme .log-container-box {
+            background: #0f172a !important;
+            color: #ffffff !important;
+            border-color: #334155 !important;
+        }
+

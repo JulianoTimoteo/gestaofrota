@@ -34,6 +34,21 @@
             return 'Outros';
         }
 
+        function normalizarNomeEquipe(nome) {
+            if (!nome) return 'PREPARO';
+            const clean = String(nome).toUpperCase().trim()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            if (clean.includes('COLHED') || clean.includes('COLHEIT')) return 'COLHEDORA';
+            if (clean.includes('CAMINH') || clean.includes('CAVALO')) return 'CAMINHOES';
+            if (clean.includes('BIOMASS')) return 'BIOMASSA';
+            if (clean.includes('FERT')) return 'FERTIRRIGACAO';
+            if (clean.includes('HERB')) return 'HERBICIDA';
+            if (clean.includes('AMAREL')) return 'LINHA AMARELA';
+            if (clean.includes('PREPAR')) return 'PREPARO';
+            if (clean.includes('TRATO')) return 'TRATOS CULTURAIS';
+            return clean;
+        }
+
         async function syncAdminConfigToServer() {
             if (isStaticGitHubPages()) return;
             const payload = {

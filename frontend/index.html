@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for (let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+            if (window.caches) {
+                caches.keys().then(function(names) {
+                    for (let name of names) caches.delete(name);
+                });
+            }
+        }
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Frota - SimpleFarm</title>
@@ -836,7 +851,7 @@
             align-items: center;
             gap: 8px;
             padding: 4px 12px;
-            border-radius: 9999px;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 0.83rem;
             line-height: 1.2;
@@ -993,7 +1008,7 @@
             border: 1px solid var(--color-gray-200);
         }
 
-        .header-info .logout-btn {
+        .logout-btn {
             background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.16) 100%);
             border: 1px solid rgba(239, 68, 68, 0.3);
             color: #ef4444;
@@ -1005,11 +1020,11 @@
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.45rem;
             box-shadow: 0 2px 5px rgba(239, 68, 68, 0.06);
         }
 
-        .header-info .logout-btn:hover {
+        .logout-btn:hover {
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: #ffffff;
             border-color: #dc2626;
@@ -1017,16 +1032,16 @@
             box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
         }
 
-        .header-info .logout-btn i {
+        .logout-btn i {
             font-size: 0.95rem;
             transition: transform 0.2s ease;
         }
 
-        .header-info .logout-btn:hover i {
+        .logout-btn:hover i {
             transform: translateX(3px);
         }
 
-        /* ===== BANNER PWA INSTALAÇÃO NO CELULAR ===== */
+        /* ===== BANNER PWA INSTALAÇÃO NO CELULAR ===== */LAÇÃO NO CELULAR ===== */
         .pwa-install-banner {
             position: fixed;
             bottom: 1.5rem;
@@ -1131,7 +1146,7 @@
             color: white;
             border: none;
             padding: 0.4rem 0.75rem;
-            border-radius: 20px;
+            border-radius: 8px;
             font-size: 0.78rem;
             font-weight: 600;
             cursor: pointer;
@@ -2882,6 +2897,27 @@
             max-width: 100% !important;
             box-sizing: border-box !important;
         }
+    
+        /* ===== LOGS SINCRONIZAÇÃO: CLARO (FUNDO BRANCO + TEXTO PRETO) & ESCURO ===== */
+        body:not(.dark-theme) .api-log,
+        body:not(.dark-theme) #apiLog,
+        body:not(.dark-theme) #apiLog div,
+        body:not(.dark-theme) #apiLog span,
+        body:not(.dark-theme) #apiLog p {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border-color: #cbd5e1 !important;
+        }
+        body.dark-theme .api-log,
+        body.dark-theme #apiLog,
+        body.dark-theme #apiLog div,
+        body.dark-theme #apiLog span,
+        body.dark-theme #apiLog p {
+            background: #0f172a !important;
+            color: #94a3b8 !important;
+            border-color: #334155 !important;
+        }
+
     </style>
 </head>
 <body>
@@ -2919,14 +2955,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="login-field">
-                        <label>Perfil de Acesso</label>
-                        <select id="loginRole" style="width:100%;padding:0.55rem 0.75rem;font-size:0.85rem;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-weight:600;cursor:pointer;">
-                            <option value="auto">Automático (Detectar pelo usuário)</option>
-                            <option value="visualizador">Gerente / Operador (Somente Equipes)</option>
-                            <option value="admin">Administrador (Acesso Total)</option>
-                        </select>
-                    </div>
+                    <input type="hidden" id="loginRole" value="auto">
                     <div class="login-field" style="display:flex; align-items:center; gap:0.5rem; text-align:left;">
                         <input type="checkbox" id="keepLogged" style="width:auto;">
                         <label for="keepLogged" style="margin:0; text-transform:none; letter-spacing:0; font-weight:500;">Manter conectado</label>
@@ -3017,7 +3046,7 @@
                         <button id="btnHeaderInstallPwa" class="btn-pwa-header" style="display:none;" title="Instalar aplicativo no celular">
                             <i class="fas fa-mobile-alt"></i> <span>Baixar App</span>
                         </button>
-                        <div id="userBadge" style="display:inline-flex; align-items:center; gap:0.45rem; background:rgba(37, 99, 235, 0.08); padding:0.4rem 0.8rem; border-radius:20px; border:1px solid rgba(37, 99, 235, 0.15);">
+                        <div id="userBadge" style="display:inline-flex; align-items:center; gap:0.45rem; background:rgba(37, 99, 235, 0.08); padding:0.4rem 0.8rem; border-radius:8px; border:1px solid rgba(37, 99, 235, 0.15);">
                             <i class="fas fa-user-circle" style="color:var(--color-primary); font-size:1.15em;"></i>
                             <span id="userRoleBadge" style="font-weight:600; color:var(--color-gray-900);">--</span>
                         </div>
@@ -3060,8 +3089,6 @@
                 <button class="tab-btn active" data-subtab="tab-equipamentos"><i class="fas fa-list"></i> Equipamentos</button>
                 <button class="tab-btn" data-subtab="tab-operacoes"><i class="fas fa-tasks"></i> Operações</button>
                 <button class="tab-btn" data-subtab="tab-sync"><i class="fas fa-cloud-upload-alt"></i> Sincronização</button>
-                <button class="tab-btn" data-subtab="tab-usuarios"><i class="fas fa-user-shield"></i> Gestão de Usuários</button>
-                <button class="tab-btn" data-subtab="tab-database"><i class="fas fa-database"></i> Gerenciador de Banco</button>
             </div>
             <div id="adminSubContents">
                 <!-- Equipamentos -->
@@ -3088,6 +3115,7 @@
                                         <th>Equipe</th>
                                         <th>Status OS</th>
                                         <th style="min-width:130px;">Mover</th>
+                                        <th style="min-width:150px;">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody id="equipTableBody">
@@ -3121,6 +3149,7 @@
                                         <th>Grupo</th>
                                         <th>Status</th>
                                         <th>Equipe</th>
+                                        <th style="min-width:150px;">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody id="operTableBody">
@@ -3140,9 +3169,6 @@
                                 <span class="count-badge" id="syncStatus" style="background:#dcfce7;color:#166534;">● Ativa</span>
                                 <button class="btn btn-outline btn-sm" id="syncNowBtn">
                                     <i class="fas fa-redo"></i> Sincronizar Agora
-                                </button>
-                                <button class="btn btn-sm" id="autoCureBtn" onclick="executarAutoCureManualmente()" style="background:linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);color:#fff;border:none;font-weight:600;border-radius:6px;padding:0.35rem 0.75rem;cursor:pointer;" title="Acionar Algoritmo de Auto-Correção do Servidor">
-                                    <i class="fas fa-shield-alt"></i> Auto-Cure 🛡️
                                 </button>
                             </div>
                         </div>
@@ -3167,67 +3193,7 @@
                         <div style="font-size:0.78rem;color:var(--color-gray-500);margin-bottom:0.75rem;">
                             <i class="fas fa-clock"></i> Próxima atualização automática em <strong>5 minutos</strong> · Fonte: API SimpleFarm (porta 8000)
                         </div>
-                        <div class="api-log" id="apiLog" style="background:#0f172a;padding:0.8rem;border-radius:8px;color:#94a3b8;font-family:monospace;font-size:0.75rem;max-height:280px;overflow-y:auto;"></div>
-                    </div>
-                </div>
-
-                <!-- Permissões e Gestão de Usuários -->
-                <div id="tab-usuarios" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2><i class="fas fa-user-shield"></i> Gestão de Usuários e Permissões</h2>
-                            <div class="flex gap-2" style="align-items:center;">
-                                <button type="button" id="btnOpenAddUser" onclick="openUserCrudModal()" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;padding:0.4rem 0.88rem;font-size:0.82rem;font-weight:600;border-radius:8px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#fff;border:none;cursor:pointer;box-shadow:0 2px 6px rgba(16,185,129,0.3);white-space:nowrap;"><i class="fas fa-user-plus"></i> + Adicionar Usuário</button>
-                                <span class="count-badge" id="totalUsuariosCount">0 usuários</span>
-                            </div>
-                        </div>
-                        <div class="table-wrap">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Usuário</th>
-                                        <th>Nome</th>
-                                        <th>Email</th>
-                                        <th>Perfil / Cargo</th>
-                                        <th>Status</th>
-                                        <th>Último Login</th>
-                                        <th style="min-width:140px;">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="usuariosTableBody">
-                                    <tr><td colspan="8" class="empty-message">Carregando usuários do banco...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gerenciador de Banco (Explorador de Tabelas) -->
-                <div id="tab-database" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2><i class="fas fa-database"></i> Gerenciador de Banco de Dados SimpleFarm (SQLite)</h2>
-                            <div class="flex gap-2" style="align-items:center;">
-                                <select id="dbExplorerSelect" onchange="carregarDadosTabelaExplorer()" style="padding:0.4rem 0.8rem;font-size:0.85rem;font-weight:600;border-radius:8px;border:1px solid var(--color-gray-200);background:var(--color-gray-50);color:#000;cursor:pointer;">
-                                    <option value="">Selecione uma tabela...</option>
-                                </select>
-                                <button type="button" onclick="carregarListaTabelasExplorer()" class="btn-primary" style="padding:0.4rem 0.88rem;font-size:0.82rem;font-weight:600;border-radius:8px;background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);color:#fff;border:none;cursor:pointer;"><i class="fas fa-sync-alt"></i> Atualizar Tabelas</button>
-                            </div>
-                        </div>
-                        <div style="margin-bottom:1rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
-                            <span id="dbExplorerInfo" style="font-size:0.85rem;font-weight:600;color:var(--color-primary);">Aguardando seleção de tabela...</span>
-                        </div>
-                        <div class="table-wrap" style="max-height:450px;overflow-y:auto;">
-                            <table>
-                                <thead id="dbExplorerThead">
-                                    <tr><th>Selecione uma tabela acima para visualizar os dados</th></tr>
-                                </thead>
-                                <tbody id="dbExplorerTbody">
-                                    <tr><td class="empty-message">Nenhuma tabela selecionada.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <div class="api-log" id="apiLog" style="padding:0.8rem;border-radius:8px;font-family:monospace;font-size:0.75rem;max-height:280px;overflow-y:auto;"></div>
                     </div>
                 </div>
             </div>
@@ -3267,7 +3233,7 @@
                 </div>
                 <div>
                     <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">E-mail *</label>
-                    <input type="email" id="crudUserEmail" class="filter-input" placeholder="Ex: julianotimoteo@usinapitangueiras.com.br" required style="width:100%;">
+                    <input type="email" id="crudUserEmail" class="filter-input" placeholder="Ex: julianotimoteo@usinapitangueiras.com.br" required style="width:100%;" autocomplete="username">
                 </div>
                 <div>
                     <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Perfil / Nível de Acesso *</label>
@@ -3281,7 +3247,7 @@
                 </div>
                 <div>
                     <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;" id="lblCrudUserSenha">Senha *</label>
-                    <input type="password" id="crudUserSenha" class="filter-input" placeholder="Digite a senha (mínimo 4 caracteres)" style="width:100%;">
+                    <input type="password" id="crudUserSenha" class="filter-input" placeholder="Digite a senha (mínimo 4 caracteres)" style="width:100%;" autocomplete="new-password">
                 </div>
                 <div>
                     <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Status *</label>
@@ -3411,12 +3377,42 @@
         let isSyncing    = false;
         let syncTimer    = null;
 
+        // PAGINATION STATE
+        let currentPageAdmin = 1;
+        let currentPageEquipes = 1;
+        let currentPageOperacoes = 1;
+        const ITEMS_PER_PAGE = 10;
+
+        function generatePaginationHTML(currentPage, totalItems, itemsPerPage, functionName, extraArg = '') {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            if (totalPages <= 1) return '';
+            
+            let html = '<div class="pagination-controls" style="display:flex; justify-content:center; align-items:center; gap:1rem; margin-top:1rem; padding:1rem;">';
+            
+            if (currentPage > 1) {
+                html += '<button type="button" onclick="' + functionName + '(' + (extraArg ? `'${extraArg}', ` : '') + (currentPage - 1) + ')" style="padding:0.4rem 0.8rem; border-radius:8px; background:white; border:1px solid var(--color-gray-200); cursor:pointer; font-weight:600; color:var(--color-primary);">Anterior</button>';
+            } else {
+                html += '<button type="button" disabled style="padding:0.4rem 0.8rem; border-radius:8px; background:var(--color-gray-50); color:var(--color-gray-400); border:1px solid var(--color-gray-200); cursor:not-allowed; font-weight:600;">Anterior</button>';
+            }
+            
+            html += '<span style="font-weight:600; font-size:0.9rem;">Página ' + currentPage + ' de ' + totalPages + '</span>';
+            
+            if (currentPage < totalPages) {
+                html += '<button type="button" onclick="' + functionName + '(' + (extraArg ? `'${extraArg}', ` : '') + (currentPage + 1) + ')" style="padding:0.4rem 0.8rem; border-radius:8px; background:white; border:1px solid var(--color-gray-200); cursor:pointer; font-weight:600; color:var(--color-primary);">Próximo</button>';
+            } else {
+                html += '<button type="button" disabled style="padding:0.4rem 0.8rem; border-radius:8px; background:var(--color-gray-50); color:var(--color-gray-400); border:1px solid var(--color-gray-200); cursor:not-allowed; font-weight:600;">Próximo</button>';
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
         // Aba ativa — gerenciada em memória (não força re-render ao recarregar dados)
         let activeMainTab    = localStorage.getItem('sf_active_tab')           || 'tab-equipe';
         let activeAdminSub   = localStorage.getItem('sf_active_admin_subtab')  || 'tab-equipamentos';
         let activeTeam       = localStorage.getItem('sf_active_team')          || null;
 
-        const ADMIN_ROLES = ['admin'];
+        const ADMIN_ROLES = ['admin', 'master', '100', '80', 'gerente', 'coordenador', 'supervisor', 'logistica'];
 
         // ================================================================
         // EMBEDDED DATASET FOR GITHUB PAGES & STANDALONE OFFLINE MODE
@@ -9308,6 +9304,21 @@
         // ================================================================
         // API BASE (Suporte a Wi-Fi, IP Dinâmico e modo GitHub Pages / Cloud)
         // ================================================================
+        
+        // Auto-Unregister old Service Workers to prevent stale HTML cache
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for (let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+        // Force valid admin subtab
+        const savedSub = localStorage.getItem('sf_active_admin_subtab');
+        if (savedSub === 'tab-usuarios' || savedSub === 'tab-database') {
+            localStorage.setItem('sf_active_admin_subtab', 'tab-equipamentos');
+        }
+
         const API_BASE = (function() {
             const urlParams = new URLSearchParams(window.location.search);
             const paramApi = urlParams.get('api') || urlParams.get('server');
@@ -9322,16 +9333,16 @@
             const savedApi = localStorage.getItem('sf_custom_api_base');
             if (savedApi) return savedApi;
             if (window.location.protocol === 'file:' || window.location.hostname.includes('github.io')) {
-                return 'http://172.16.12.36:8000';
+                return 'http://127.0.0.1:8000';
             }
-            return window.location.origin.includes('8000') ? window.location.origin : 'http://172.16.12.36:8000';
+            return window.location.origin.includes('8000') ? window.location.origin : 'http://127.0.0.1:8000';
         })();
 
         function promptChangeServerIp() {
-            const current = localStorage.getItem('sf_custom_api_base') || API_BASE || 'http://172.16.12.36:8000';
+            const current = localStorage.getItem('sf_custom_api_base') || API_BASE || 'http://127.0.0.1:8000';
             const input = prompt(
                 "Endereço IP do DataServer (Servidor de Banco de Dados):\n\n" +
-                "Insira o IP do servidor para autenticação e sincronização (exemplo: http://172.16.12.36:8000 ou http://seu-ip:8000):",
+                "Insira o IP do servidor para autenticação e sincronização (exemplo: http://127.0.0.1:8000 ou http://seu-ip:8000):",
                 current
             );
             if (input !== null && input.trim() !== '') {
@@ -9802,6 +9813,10 @@
         }
 
         function atualizarStatusGeral(teamFilter = null) {
+            if (activeMainTab !== 'tab-equipe') {
+                teamFilter = null;
+            }
+
             const osAbertasEl = document.getElementById('osAbertasCount');
             const equipOkEl   = document.getElementById('equipOkCount');
             const equipOsEl   = document.getElementById('equipOsCount');
@@ -9842,7 +9857,7 @@
             'Outros'
         ];
 
-        function normalizarTipo(tipoRaw, descRaw = '', modeloRaw = '') {
+                function normalizarTipo(tipoRaw, descRaw = '', modeloRaw = '') {
             const text = `${tipoRaw || ''} ${descRaw || ''} ${modeloRaw || ''}`.toUpperCase();
             if (text.includes('MOTOBOMBA') || text.includes('MOTO BOMBA') || text.includes('BOMBA')) return 'Motobomba';
             if (text.includes('TRATOR')) return 'Trator';
@@ -10087,11 +10102,23 @@
             operacoes     = d.operacoes     || [];
             ordensServico = d.ordensServico || [];
 
+            // Filtrar operações que foram excluídas localmente (proteção contra dados de cache ou sync)
+            const deletedOps = JSON.parse(localStorage.getItem('sf_deleted_ops') || '[]');
+            if (deletedOps.length > 0) {
+                operacoes = operacoes.filter(op => !deletedOps.includes(String(op.codigo)));
+                // Se os dados vieram da API real (não fallback offline), limpar a lista de deletados
+                // pois o banco já reflete as exclusões permanentes
+                if (!isOfflineFallback) {
+                    localStorage.removeItem('sf_deleted_ops');
+                }
+            }
+
+
             const customGroups = getCustomEquipGroups();
             const customTypes  = getCustomEquipTypes();
             const customOps    = getCustomEquipOps();
 
-            const VALID_TEAMS = ['BIOMASSA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
+            const VALID_TEAMS = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
             let customGroupsChanged = false;
             Object.keys(customGroups).forEach(k => {
                 if (customGroups[k] && !VALID_TEAMS.includes(customGroups[k])) {
@@ -10110,8 +10137,9 @@
                 const mod      = eq.modelo    || '';
                 const rawT     = eq.tipo      || '';
                 const defaultT = normalizarTipo(rawT, desc, mod);
-                const assignedGroup = customGroups[codStr] || eq.grupo || 'PREPARO';
-                const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : (VALID_TEAMS.includes(eq.grupo) ? eq.grupo : 'PREPARO');
+                const rawGrp   = (eq.grupo || '').trim();
+                const assignedGroup = customGroups[codStr] || rawGrp || 'PREPARO';
+                const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : (VALID_TEAMS.includes(rawGrp) ? rawGrp : 'PREPARO');
                 const defaultOp = getTeamDefaultOp(finalGroup);
                 return {
                     codigo:    codStr,
@@ -10236,7 +10264,7 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
 
                 const res = await fetch(`${API_BASE}/api/dados`, {
                     signal: controller.signal,
@@ -10299,14 +10327,14 @@
         // ================================================================
         function iniciarSyncTimer() {
             if (syncTimer) clearInterval(syncTimer);
-            const DEZ_MINUTOS = 10 * 60 * 1000; // 10 minutos (600.000 ms)
+            const UM_MINUTO = 30 * 1000; // 30 segundos
             syncTimer = setInterval(async () => {
                 if (!authToken || isSyncing) return;
                 isSyncing = true;
-                addLog('🔄 Sincronização automática em segundo plano (ciclo 10 min)...', 'info');
+                addLog('🔄 Sincronização automática em segundo plano (ciclo 30 seg)...', 'info');
                 await carregarDados(true); // background = true
                 isSyncing = false;
-            }, DEZ_MINUTOS);
+            }, UM_MINUTO);
         }
 
         var singleSessionTimer = null;
@@ -10382,10 +10410,14 @@
             document.querySelectorAll('#tab-admin, #tab-equipe').forEach(el => {
                 el.classList.toggle('active', el.id === tabId);
             });
+            atualizarStatusGeral(tabId === 'tab-equipe' ? (activeTeam === '24h⚠️' ? null : activeTeam) : null);
         }
 
         function switchAdminSubTab(subId, persist = true) {
-            if (!subId) return;
+            const validSubTabs = ['tab-equipamentos', 'tab-operacoes', 'tab-sync'];
+            if (!subId || !validSubTabs.includes(subId)) {
+                subId = 'tab-equipamentos';
+            }
             activeAdminSub = subId;
             if (persist) {
                 localStorage.setItem('sf_active_admin_subtab', subId);
@@ -10397,11 +10429,6 @@
             document.querySelectorAll('#adminSubContents > .tab-content').forEach(el => {
                 el.classList.toggle('active', el.id === subId);
             });
-            if (subId === 'tab-usuarios') {
-                renderUsuariosList();
-            } else if (subId === 'tab-database') {
-                carregarListaTabelasExplorer();
-            }
         }
 
         // ================================================================
@@ -10411,8 +10438,10 @@
             const mainTabs       = document.getElementById('mainTabs');
             const adminTabBtn    = document.querySelector('.tab-btn[data-tab="tab-admin"]');
             const adminTabContent = document.getElementById('tab-admin');
+            const curUser = (localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '').toLowerCase();
+            const isMasterAdmin = (curUser === 'julianotimoteo' || curUser === 'logistica' || curUser === 'admin' || ADMIN_ROLES.includes(userRole));
 
-            if (ADMIN_ROLES.includes(userRole)) {
+            if (isMasterAdmin) {
                 if (mainTabs)        mainTabs.style.display       = 'inline-flex';
                 if (adminTabBtn)     adminTabBtn.style.display    = '';
                 if (adminTabContent) adminTabContent.style.display = '';
@@ -10549,7 +10578,8 @@
             }
         };
 
-        async function renderUsuariosList() {
+        async function renderUsuariosList(page = 1) {
+            currentPageAdmin = page;
             const tbody   = document.getElementById('usuariosTableBody');
             const countEl = document.getElementById('totalUsuariosCount');
             if (!tbody) return;
@@ -10591,7 +10621,10 @@
                         'visualizador': { label: 'Visualizador', badge: 'os-fechada' }
                     };
 
-                    tbody.innerHTML = users.map(u => {
+                    const startIndex = (currentPageAdmin - 1) * ITEMS_PER_PAGE;
+                    const paginatedUsers = users.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+                    tbody.innerHTML = paginatedUsers.map(u => {
                         const roleInfo = rolesMap[u.nivel_chave] || { label: u.nivel_chave || 'Visualizador', badge: 'os-fechada' };
                         const isProtectedMaster = (u.usuario === 'julianotimoteo' || u.id == 1 || u.id == 2);
                         const userEmail = u.email || `${u.usuario}@usinapitangueiras.com.br`;
@@ -10616,7 +10649,12 @@
                             <td>${actionButtons}</td>
                         </tr>`;
                     }).join('');
+                    
+                    if (users.length > ITEMS_PER_PAGE) {
+                        tbody.innerHTML += `<tr><td colspan="8">${generatePaginationHTML(currentPageAdmin, users.length, ITEMS_PER_PAGE, 'renderUsuariosList')}</td></tr>`;
+                    }
                 }
+
             } catch (e) {
                 tbody.innerHTML = `<tr><td colspan="8" class="empty-message">Erro ao carregar usuários: ${e.message}</td></tr>`;
             }
@@ -10714,7 +10752,7 @@
         // FILTROS E RENDER DE EQUIPAMENTOS
         // ================================================================
         function getEquipesDisponiveis() {
-            const standardTeams = ['BIOMASSA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
+            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
             const extraTeams = equipments.map(eq => eq.grupo).filter(g => g && !standardTeams.includes(g));
             return [...new Set([...standardTeams, ...extraTeams])].sort();
         }
@@ -10752,7 +10790,7 @@
                 return;
             }
 
-            const standardTeams = ['BIOMASSA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
+            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
             const allTeams = [...new Set([...standardTeams, ...getEquipesDisponiveis()])].sort();
 
             // Tipos para a lista suspensa
@@ -10825,6 +10863,12 @@
                         <select class="mover-select" data-codigo="${eq.codigo}" style="padding:0.25rem 0.4rem;font-size:0.78rem;border-radius:6px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);cursor:pointer;">
                             ${moverOptions}
                         </select>
+                    </td>
+                    <td>
+                        <div style="display:flex;gap:0.35rem;align-items:center;">
+                            <button type="button" class="btn btn-sm btn-outline" onclick="openEditEquipModal('${eq.codigo}')" title="Editar Equipamento" style="padding:0.2rem 0.45rem;font-size:0.75rem;"><i class="fas fa-edit"></i> Editar</button>
+                            <button type="button" class="btn btn-sm ${eq.statusInativo ? 'btn-success' : 'btn-danger'}" onclick="toggleInativarEquip('${eq.codigo}')" style="padding:0.2rem 0.45rem;font-size:0.75rem;border:none;">${eq.statusInativo ? '<i class="fas fa-check-circle"></i> Ativar' : '<i class="fas fa-ban"></i> Inativar'}</button>
+                        </div>
                     </td>
                 </tr>`;
             }).join('');
@@ -10925,7 +10969,8 @@
             if (tableWrap && savedScroll > 0) tableWrap.scrollTop = savedScroll;
         }
 
-        function renderOperacoes() {
+        function renderOperacoes(page = 1) {
+            currentPageOperacoes = page;
             const tbody   = document.getElementById('operTableBody');
             const countEl = document.getElementById('totalOperCount');
             const filter  = (document.getElementById('filterOperacao')?.value || '').trim().toLowerCase();
@@ -10985,6 +11030,12 @@
                             </select>
                         </div>
                     </td>
+                    <td>
+                        <div style="display:flex;gap:0.35rem;align-items:center;">
+                            <button type="button" class="btn btn-sm btn-outline" onclick="openEditOperModal('${op.codigo}')" title="Editar Operação" style="padding:0.2rem 0.45rem;font-size:0.75rem;"><i class="fas fa-edit"></i> Editar</button>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="excluirOperacao('${op.codigo}')" title="Excluir Operação" style="padding:0.2rem 0.45rem;font-size:0.75rem;background:#ef4444;border:none;color:#fff;"><i class="fas fa-trash-alt"></i> Excluir</button>
+                        </div>
+                    </td>
                 </tr>`;
             }).join('');
 
@@ -11027,7 +11078,12 @@
                 return `<circle class="donut-seg" cx="60" cy="60" r="${radius}"
                     stroke="${seg.color}" stroke-width="13" fill="none"
                     stroke-dasharray="${dash}" stroke-dashoffset="${off}"></circle>`;
+                </tr>;
             }).join('');
+            
+            if (dados.length > ITEMS_PER_PAGE) {
+                tbody.innerHTML += <tr><td colspan="8"></td></tr>;
+            }
 
             const legend = segs.map(seg => `
                 <div class="donut-legend-row">
@@ -11395,7 +11451,8 @@
             atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
         }
 
-        function renderTeamTabContent(team) {
+        function renderTeamTabContent(team, page = 1) {
+            currentPageEquipes = page;
             const content = document.getElementById('equipeSubContents');
             if (!content) return;
 
@@ -11456,6 +11513,7 @@
                 </div>`;
 
                 content.innerHTML = html;
+                if (eqs24h.length > ITEMS_PER_PAGE) content.innerHTML += generatePaginationHTML(currentPageEquipes, eqs24h.length, ITEMS_PER_PAGE, "renderTeamTabContent", team);
 
                 content.querySelectorAll('.os-info-btn').forEach(btn => {
                     btn.addEventListener('click', () => openOsReportModal(btn.dataset.frota));
@@ -11808,6 +11866,152 @@
                 checkAuth(); // valida token em background, sem bloquear
             }
         }
+
+        
+        // ================================================================
+        // MODAIS DE EDIÇÃO DE EQUIPAMENTO E OPERAÇÃO & INATIVAR / EXCLUIR
+        // ================================================================
+        window.openEditEquipModal = function(cod) {
+            const eq = equipments.find(e => String(e.codigo) === String(cod));
+            if (!eq) return;
+            document.getElementById('editEquipCodigo').value = eq.codigo || '';
+            document.getElementById('editEquipDescricao').value = eq.descricao || '';
+            document.getElementById('editEquipModelo').value = eq.modelo || '';
+            document.getElementById('editEquipTipo').value = eq.tipo || 'Trator';
+            document.getElementById('editEquipGrupo').value = eq.grupo || 'PREPARO';
+            document.getElementById('editEquipStatus').value = eq.statusInativo ? 'INATIVO' : 'ATIVO';
+            document.getElementById('modalEditEquipOverlay').classList.add('active');
+        };
+
+        window.toggleInativarEquip = function(cod) {
+            const eq = equipments.find(e => String(e.codigo) === String(cod));
+            if (!eq) return;
+            eq.statusInativo = !eq.statusInativo;
+            const statusTxt = eq.statusInativo ? 'INATIVO' : 'ATIVO';
+            const inativos = JSON.parse(localStorage.getItem('sf_inativo_equips') || '{}');
+            inativos[String(cod)] = eq.statusInativo;
+            localStorage.setItem('sf_inativo_equips', JSON.stringify(inativos));
+            addLog(`⚙️ Equipamento ${cod} marcado como ${statusTxt}`, eq.statusInativo ? 'warning' : 'success');
+            renderEquipamentos();
+            renderTeamTabs(false);
+            atualizarStatusGeral();
+        };
+
+        window.openEditOperModal = function(cod) {
+            const op = operacoes.find(o => String(o.codigo) === String(cod));
+            if (!op) return;
+            document.getElementById('editOperCodigo').value = op.codigo || '';
+            document.getElementById('editOperDescricao').value = op.descricao || '';
+            document.getElementById('editOperEquipe').value = getOpTeam(op) !== '-' ? getOpTeam(op) : '';
+            document.getElementById('editOperStatus').value = op.status || 'ATIVO';
+            document.getElementById('modalEditOperOverlay').classList.add('active');
+        };
+
+        window.excluirOperacao = async function(cod) {
+            if (!cod) return;
+            if (!confirm(`Tem certeza que deseja excluir a operação ${cod}?`)) return;
+
+            // Tenta excluir permanentemente no banco via API
+            if (authToken) {
+                try {
+                    const res = await fetch(`${API_BASE}/api/operacoes/${cod}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok && res.status !== 404) {
+                        // Só falha se não for 404 (já inexistente no banco é ok)
+                        addLog(`⚠️ Falha ao excluir operação ${cod} no servidor: ${data.error || res.status}`, 'error');
+                        return; // NÃO remove localmente se falhou no servidor
+                    }
+                } catch (netErr) {
+                    // Sem servidor (offline): remove só localmente com marcação
+                    addLog(`⚠️ Servidor offline — operação ${cod} marcada para exclusão local.`, 'warning');
+                }
+            }
+
+            // Remove do array em memória
+            operacoes = operacoes.filter(o => String(o.codigo) !== String(cod));
+
+            // Guarda no localStorage para filtrar caso dados offline sejam carregados
+            const deletedOps = JSON.parse(localStorage.getItem('sf_deleted_ops') || '[]');
+            if (!deletedOps.includes(String(cod))) {
+                deletedOps.push(String(cod));
+                localStorage.setItem('sf_deleted_ops', JSON.stringify(deletedOps));
+            }
+
+            addLog(`🗑️ Operação ${cod} excluída com sucesso!`, 'warning');
+            renderOperacoes();
+            renderTeamTabs(false);
+            atualizarStatusGeral();
+        };
+
+
+        document.getElementById('formEditEquip')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const cod = document.getElementById('editEquipCodigo').value;
+            const desc = document.getElementById('editEquipDescricao').value;
+            const mod = document.getElementById('editEquipModelo').value;
+            const tipo = document.getElementById('editEquipTipo').value;
+            const grupo = document.getElementById('editEquipGrupo').value;
+            const status = document.getElementById('editEquipStatus').value;
+
+            const eq = equipments.find(e => String(e.codigo) === String(cod));
+            if (eq) {
+                eq.descricao = desc;
+                eq.modelo = mod;
+                eq.tipo = tipo;
+                eq.grupo = grupo;
+                eq.statusInativo = (status === 'INATIVO');
+
+                setCustomEquipType(cod, tipo);
+                setCustomEquipGroup(cod, grupo);
+
+                const inativos = JSON.parse(localStorage.getItem('sf_inativo_equips') || '{}');
+                inativos[String(cod)] = eq.statusInativo;
+                localStorage.setItem('sf_inativo_equips', JSON.stringify(inativos));
+            }
+            document.getElementById('modalEditEquipOverlay').classList.remove('active');
+            addLog(`✏️ Equipamento ${cod} atualizado com sucesso!`, 'success');
+            renderEquipamentos();
+            renderTeamTabs(false);
+            atualizarStatusGeral();
+        });
+
+        document.getElementById('formEditOper')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const cod = document.getElementById('editOperCodigo').value;
+            const desc = document.getElementById('editOperDescricao').value;
+            const eq = document.getElementById('editOperEquipe').value;
+            const st = document.getElementById('editOperStatus').value;
+
+            const op = operacoes.find(o => String(o.codigo) === String(cod));
+            if (op) {
+                op.descricao = desc;
+                op.status = st;
+                if (eq) {
+                    setCustomOpTeam(cod, eq);
+                    op.equipe = eq;
+                } else {
+                    setCustomOpTeam(cod, '-');
+                    op.equipe = '';
+                }
+            }
+            document.getElementById('modalEditOperOverlay').classList.remove('active');
+            addLog(`✏️ Operação ${cod} atualizada com sucesso!`, 'success');
+            renderOperacoes();
+            renderTeamTabs(false);
+            atualizarStatusGeral();
+        });
+
+
+        
+        window.selectTeam = function(targetTeam) {
+            if (!targetTeam) return;
+            activeTeam = targetTeam;
+            localStorage.setItem('sf_active_team', activeTeam);
+            renderTeamTabs(false);
+        };
 
         initApp();
     </script>

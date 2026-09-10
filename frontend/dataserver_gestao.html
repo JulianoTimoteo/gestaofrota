@@ -1093,6 +1093,9 @@
                 localStorage.setItem('sf_dataserver_url', fmt);
                 return fmt;
             }
+            if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+                return 'http://127.0.0.1:8000';
+            }
             if (window.location.origin && window.location.origin.startsWith('http')) {
                 return window.location.origin;
             }

@@ -428,7 +428,8 @@
         // ================================================================
         function getEquipesDisponiveis() {
             const currentUser = (localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '').toLowerCase();
-            const isMaster = currentUser === 'julianotimoteo' || userRole === 'master' || userRole === 'admin' || userRole === '100';
+            const role = (localStorage.getItem('sf_auth_role') || sessionStorage.getItem('sf_auth_role') || '').toLowerCase();
+            const isMaster = currentUser === 'julianotimoteo' || currentUser === 'logistica' || currentUser === 'admin' || role === 'master' || role === 'admin' || role === '100' || role === '80' || role === 'gerente' || !localStorage.getItem('sf_auth_perms');
 
             const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
             const extraTeams = equipments.map(eq => eq.grupo).filter(g => g && !standardTeams.includes(g));
@@ -450,7 +451,12 @@
                         allTeams = allTeams.filter(team => {
                             let tClean = team.toLowerCase().replace(/\s+/g, '').replace(/_/g, '');
                             let tUpper = team.toUpperCase();
-                            return allowedCodes.includes(tClean) || allowedNames.includes(tUpper);
+
+                            // Normalizar singular/plural (colhedora/colhedoras, caminhoes/caminhões)
+                            let isColhedoraMatch = (tClean.includes('colhedor') && allowedCodes.some(c => c.includes('colhedor')));
+                            let isCaminhaoMatch = (tClean.includes('caminh') && allowedCodes.some(c => c.includes('caminh')));
+
+                            return isColhedoraMatch || isCaminhaoMatch || allowedCodes.includes(tClean) || allowedNames.includes(tUpper);
                         });
                     }
                 } catch(e) {}
@@ -567,6 +573,9 @@
                             <button type="button" class="btn-edit-equip" data-codigo="${eq.codigo}" title="Editar Equipamento / Frota" style="padding:0.25rem 0.5rem;font-size:0.78rem;font-weight:700;border-radius:6px;border:1px solid #3b82f6;background:#eff6ff;color:#1d4ed8;cursor:pointer;display:inline-flex;align-items:center;gap:3px;white-space:nowrap;">
                                 <i class="fas fa-edit"></i> Editar
                             </button>
+                            <button type="button" class="btn-inativar-equip" data-codigo="${eq.codigo}" title="Inativar Equipamento" style="padding:0.25rem 0.5rem;font-size:0.78rem;font-weight:700;border-radius:6px;border:1px solid #ef4444;background:#fee2e2;color:#b91c1c;cursor:pointer;display:inline-flex;align-items:center;gap:3px;white-space:nowrap;">
+                                <i class="fas fa-ban"></i> Inativar
+                            </button>
                         </div>
                     </td>
                 </tr>`;
@@ -577,6 +586,14 @@
                 btn.addEventListener('click', function() {
                     const cod = this.dataset.codigo;
                     openEditEquipModal(cod);
+                });
+            });
+
+            // Adicionar evento para Inativar Equipamento
+            tbody.querySelectorAll('.btn-inativar-equip').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const cod = this.dataset.codigo;
+                    toggleInativarEquip(cod);
                 });
             });
 
@@ -734,10 +751,32 @@
                             <select class="op-equipe-select" data-codigo="${op.codigo}" style="padding:0.2rem 0.4rem;font-size:0.75rem;border-radius:6px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);cursor:pointer;">
                                 ${moverOptions}
                             </select>
+                            <button type="button" class="btn-edit-oper" data-codigo="${op.codigo}" title="Editar Operação" style="padding:0.2rem 0.45rem;font-size:0.75rem;font-weight:700;border-radius:6px;border:1px solid #3b82f6;background:#eff6ff;color:#1d4ed8;cursor:pointer;display:inline-flex;align-items:center;gap:3px;white-space:nowrap;">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button type="button" class="btn-delete-oper" data-codigo="${op.codigo}" title="Excluir Operação" style="padding:0.2rem 0.45rem;font-size:0.75rem;font-weight:700;border-radius:6px;border:1px solid #ef4444;background:#fee2e2;color:#b91c1c;cursor:pointer;display:inline-flex;align-items:center;gap:3px;white-space:nowrap;">
+                                <i class="fas fa-trash-alt"></i> Excluir
+                            </button>
                         </div>
                     </td>
                 </tr>`;
             }).join('');
+
+            // Adicionar evento para Editar Operação
+            tbody.querySelectorAll('.btn-edit-oper').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const cod = this.dataset.codigo;
+                    openEditOperModal(cod);
+                });
+            });
+
+            // Adicionar evento para Excluir Operação
+            tbody.querySelectorAll('.btn-delete-oper').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const cod = this.dataset.codigo;
+                    excluirOperacao(cod);
+                });
+            });
 
             // Adicionar evento para alterar Equipe da Operação
             tbody.querySelectorAll('.op-equipe-select').forEach(select => {

@@ -66,14 +66,18 @@
         .status-pill.offline .status-dot { background:#f87171; animation:none; }
         @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
 
-        /* CARDS GRID */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
+        /* CARDS ROW (Side-by-side) */
+        .cards-row {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
             gap: 6px;
             margin-bottom: 6px;
+            width: 100%;
         }
         .card {
+            flex: 1 1 0px;
+            min-width: 0;
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -89,8 +93,22 @@
         }
         .card-icon { font-size: 1rem; margin-bottom: 2px; }
         .card-label { font-size: 0.5rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing:.05em; margin-bottom: 2px; }
-        .card-value { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
-        .card-sub { font-size: 0.48rem; color: var(--low); margin-top: 1px; }
+        .card-value { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-sub { font-size: 0.48rem; color: var(--low); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .btn-action {
+            color: #ffffff;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.25);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-action:hover { background: rgba(255,255,255,0.3); }
 
         /* PROGRESS BAR */
         .progress {
@@ -163,6 +181,23 @@
         .btn-refresh.spinning { animation: spin .7s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        .refresh-progress-container {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .refresh-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #0ea5e9, #10b981, #38bdf8);
+            box-shadow: 0 0 12px rgba(14, 165, 233, 0.7);
+            transition: width 0.2s linear;
+        }
+
         .error-msg {
             background: rgba(239,68,68,0.12);
             color: #fca5a5;
@@ -179,8 +214,8 @@
     <div class="header">
         <h1>🖥️ SimpleFarm DataServer · Gerenciador de Banco</h1>
         <div style="display:flex; align-items:center; gap:0.5rem;">
-            <a href="http://localhost:3000" style="color:#ffffff; background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:8px; font-size:0.75rem; font-weight:600; text-decoration:none;" title="Abrir App Gestão de Frota e Usuários no Notebook (localhost:3000)">🚜 App Gestão Frota (Porta 3000)</a>
-            <a href="/glass" style="color:#ffffff; background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:8px; font-size:0.75rem; font-weight:600; text-decoration:none;" title="Abrir Painel Tablet">📱 Tablet</a>
+            <button class="btn-action" onclick="toggleFullScreen()" title="Alternar Tela Cheia">⛶ Tela Cheia</button>
+            <a href="/glass" class="btn-action" title="Abrir Painel Tablet">📱 Tablet</a>
             <div class="status-pill" id="statusPill" onclick="promptChangeServerIp()" style="cursor:pointer;" title="Clique para alterar o IP do DataServer na rede Wi-Fi">
                 <span class="status-dot"></span>
                 <span id="statusText">Conectando...</span>
@@ -188,10 +223,15 @@
         </div>
     </div>
 
+    <!-- Barra de Progresso Animada 60 Segundos -->
+    <div class="refresh-progress-container" title="Atualização automática em 60 segundos">
+        <div class="refresh-progress-bar" id="refreshProgressBar"></div>
+    </div>
+
     <div class="error-msg" id="errorMsg"></div>
 
-    <!-- Linha 1: recursos do sistema -->
-    <div class="cards-grid">
+    <!-- Linha 1: recursos do sistema (Lado a lado) -->
+    <div class="cards-row">
         <div class="card">
             <div class="card-icon">💻</div>
             <div class="card-label">CPU</div>
@@ -199,7 +239,7 @@
             <div class="progress"><div class="progress-bar bar-blue" id="cpuBar" style="width:0%"></div></div>
         </div>
         <div class="card">
-            <div class="card-icon">🧠</div>
+            <div class="card-icon">💾</div>
             <div class="card-label">RAM</div>
             <div class="card-value" id="ram">--</div>
             <div class="progress"><div class="progress-bar bar-green" id="ramBar" style="width:0%"></div></div>
@@ -224,13 +264,13 @@
         </div>
     </div>
 
-    <!-- Linha 2: servidor e sincronização -->
-    <div class="cards-grid">
+    <!-- Linha 2: servidor e autocura / sincronização (Lado a lado) -->
+    <div class="cards-row">
         <div class="card">
             <div class="card-icon">🔄</div>
-            <div class="card-label">Sync</div>
-            <div class="card-value" id="sync" style="font-size:.85rem;color:#10b981">--</div>
-            <div class="card-sub" id="syncInfo">--</div>
+            <div class="card-label">Autocura</div>
+            <div class="card-value" id="sync" style="font-size:.85rem;color:#10b981">Ativo</div>
+            <div class="card-sub" id="syncInfo">0 ciclos (60s)</div>
         </div>
         <div class="card">
             <div class="card-icon">📊</div>
@@ -286,12 +326,28 @@
         }
         var saved = null;
         try { saved = localStorage.getItem('sf_dataserver_api'); } catch(e){}
-        return saved || 'http://172.16.12.36:8000';
+        return saved || 'http://127.0.0.1:8000';
     })();
 
+    window.toggleFullScreen = function() {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(function(e){});
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(function(e){});
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    };
+
     window.promptChangeServerIp = function() {
-        var cur = API || 'http://172.16.12.36:8000';
-        var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://172.16.12.36:8000):", cur);
+        var cur = API || 'http://127.0.0.1:8000';
+        var res = prompt("IP do DataServer na rede Wi-Fi / Localhost (ex: http://127.0.0.1:8000):", cur);
         if (res !== null && res.trim() !== '') {
             var formatted = res.trim().startsWith('http') ? res.trim() : 'http://' + res.trim();
             try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
@@ -320,6 +376,10 @@
     }
 
     function loadData() {
+        lastRefreshTime = Date.now();
+        var pBar = document.getElementById('refreshProgressBar');
+        if (pBar) pBar.style.width = '0%';
+
         var btn = document.getElementById('btnRefresh');
         if (btn) btn.classList.add('spinning');
 
@@ -429,9 +489,25 @@
         document.getElementById('updateTime').textContent = new Date().toLocaleTimeString('pt-BR');
     }
 
+    var REFRESH_INTERVAL = 60000; // 60 segundos
+    var lastRefreshTime = Date.now();
+
+    function updateProgressBar() {
+        var elapsed = Date.now() - lastRefreshTime;
+        var pct = Math.min((elapsed / REFRESH_INTERVAL) * 100, 100);
+        var bar = document.getElementById('refreshProgressBar');
+        if (bar) bar.style.width = pct.toFixed(1) + '%';
+
+        if (elapsed >= REFRESH_INTERVAL) {
+            lastRefreshTime = Date.now();
+            if (bar) bar.style.width = '0%';
+            loadData();
+        }
+    }
+
     window.onload = function() {
         loadData();
-        setInterval(loadData, 5000);
+        setInterval(updateProgressBar, 200);
     };
 </script>
 </body>

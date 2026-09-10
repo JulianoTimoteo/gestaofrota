@@ -1,7 +1,7 @@
         // ================================================================
         // EMBEDDED DATASET FOR GITHUB PAGES & STANDALONE OFFLINE MODE
         // ================================================================
-        const EMBEDDED_INITIAL_DATA = {
+        var EMBEDDED_INITIAL_DATA = {
   "adminConfig": {
     "customGroups": {},
     "customTypes": {},

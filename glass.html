@@ -260,8 +260,14 @@
 
 <!-- COUNTDOWN -->
 <div class="cdbar">
-    <span class="cdlbl">Próx. atualização: <strong id="cdtxt">300s (5 min)</strong></span>
+    <span class="cdlbl">Próx. atualização: <strong id="cdtxt">15s</strong></span>
     <div class="cdtrack"><div class="cdfill" id="cdfill" style="width:100%"></div></div>
+</div>
+
+<!-- SCRAPER STATUS BAR -->
+<div class="cdbar" style="margin-bottom: 10px;">
+    <span class="cdlbl">Scraper API: <strong id="scrtxt">Verificando...</strong></span>
+    <div class="cdtrack" style="background:rgba(255,255,255,.05);"><div class="cdfill" id="scrfill" style="width:100%; background:var(--mid); transition: background 0.5s;"></div></div>
 </div>
 
 <!-- TABS -->
@@ -507,7 +513,7 @@ try {
         tryNext(0);
     }
 
-    var INTV   = 300;
+    var INTV   = 15;
     var cd     = INTV;
     var cdTmr  = null;
     var busy   = false;
@@ -633,9 +639,9 @@ try {
 
         log('doLoad start api=' + API);
 
-        /* /api/system */
+        var t = new Date().getTime();
         var x = new XMLHttpRequest();
-        x.open('GET', API+'/api/system', true);
+        x.open('GET', API+'/api/system?_t='+t, true);
         x.timeout = 10000;
         x.onreadystatechange = function() {
             if (x.readyState !== 4) return;
@@ -691,6 +697,23 @@ try {
                         txt('scLErr', r.sync.ultimo_erro||'Nenhum');
                         txt('scLOk',  r.sync.ultimo_sucesso_em||'Nunca');
                         txt('scNext', (r.sync.proximo_intervalo_segundos||INTV)+'s');
+                        
+                        var sf = document.getElementById('scrfill');
+                        if (r.sync.running) {
+                            txt('scrtxt', 'Rodando (Extraindo...)');
+                            if(sf) sf.style.background = 'linear-gradient(90deg, #ef4444, #f59e0b)'; // Red to orange animation feeling
+                        } else {
+                            if (r.sync.falhas_consecutivas > 0) {
+                                txt('scrtxt', 'Falha! (' + r.sync.falhas_consecutivas + ' erros)');
+                                if(sf) sf.style.background = '#ef4444'; // Red
+                            } else if (r.sync.ciclos > 0) {
+                                txt('scrtxt', 'Sucesso OK');
+                                if(sf) sf.style.background = '#10b981'; // Green
+                            } else {
+                                txt('scrtxt', 'Aguardando 1º ciclo...');
+                                if(sf) sf.style.background = 'var(--mid)'; // Gray
+                            }
+                        }
                     }
                 } catch(e){ showErr('Resposta do servidor: '+e.message); online(true); }
             } else if (x.status === 500) {
@@ -713,7 +736,7 @@ try {
 
         /* /api/status */
         var x2 = new XMLHttpRequest();
-        x2.open('GET', API+'/api/status', true); x2.timeout=10000;
+        x2.open('GET', API+'/api/status?_t='+t, true); x2.timeout=10000;
         x2.onreadystatechange = function(){
             if(x2.readyState!==4||x2.status!==200) return;
             try{
@@ -752,7 +775,7 @@ try {
 
         /* /api/sync/health */
         var x3 = new XMLHttpRequest();
-        x3.open('GET', API+'/api/sync/health', true); x3.timeout=10000;
+        x3.open('GET', API+'/api/sync/health?_t='+t, true); x3.timeout=10000;
         x3.onreadystatechange = function(){
             if(x3.readyState!==4||x3.status!==200) return;
             try{

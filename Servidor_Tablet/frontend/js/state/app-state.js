@@ -17,5 +17,5 @@
         let activeAdminSub   = localStorage.getItem('sf_active_admin_subtab') || 'tab-equipamentos';
         let activeTeam       = localStorage.getItem('sf_active_team')         || null;
 
-        const ADMIN_ROLES = ['admin', 'master'];
+        const ADMIN_ROLES = ['admin', 'master', '100', '80', 'gerente', 'coordenador', 'supervisor'];
 

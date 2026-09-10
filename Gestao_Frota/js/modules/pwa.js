@@ -49,6 +49,7 @@
                     dismissPwaBanner();
                 }
             } else {
+                // Tenta acionar a instalação nativa/atalho diretamente sem telas intermediárias
                 try {
                     if (window.installPwaApp) {
                         window.installPwaApp();

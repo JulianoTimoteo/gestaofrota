@@ -145,10 +145,13 @@
                     autoGroup = 'COLHEDORA';
                 } else if (osSubs.includes('10/6') || osSubs.includes('10/1') || osSubs.includes('10/') || osSubs.includes('TRANSPORTE DE CANA') || osSubs.includes('CAVALO MECANICO') || fullText.includes('CAMINH')) {
                     autoGroup = 'CAMINHOES';
+                } else if (eq.grupo) {
+                    autoGroup = normalizarNomeEquipe(eq.grupo);
                 }
 
-                const assignedGroup = customGroups[codStr] || autoGroup || 'PREPARO';
-                const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : (VALID_TEAMS.includes(eq.grupo) ? eq.grupo : 'PREPARO');
+                const rawAssigned = customGroups[codStr] || autoGroup || eq.grupo || 'PREPARO';
+                const assignedGroup = normalizarNomeEquipe(rawAssigned);
+                const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : 'PREPARO';
                 const defaultOp = getTeamDefaultOp(finalGroup);
                 const hasOS = equipamentosComOS.has(codStr);
                 const stCad = customStatuses[codStr] || eq.status || 'ATIVO';
@@ -205,9 +208,13 @@
         async function carregarAdminConfigDoServidor() {
             if (isStaticGitHubPages()) return;
             try {
+                const ctrl = new AbortController();
+                const t = setTimeout(() => ctrl.abort(), 2000);
                 const res = await fetch(`${API_BASE}/api/config/admin`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
+                    headers: { 'Authorization': `Bearer ${authToken}` },
+                    signal: ctrl.signal
                 }).catch(() => null);
+                clearTimeout(t);
                 if (res && res.ok) {
                     const data = await res.json().catch(() => null);
                     if (data && data.success && data.data) {
@@ -249,7 +256,7 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 30000);
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
 
                 const res = await fetch(`${API_BASE}/api/dados?_t=${Date.now()}`, {
                     signal: controller.signal,
@@ -257,19 +264,36 @@
                         'Content-Type':  'application/json',
                         'Authorization': `Bearer ${authToken}`
                     }
-                });
+                }).catch(() => null);
 
                 clearTimeout(timeoutId);
 
                 if (res && res.ok) {
-                    const result = await res.json();
+                    const result = await res.json().catch(() => null);
                     if (result && result.success && result.data) {
                         processarPayloadDados(result.data, false, isBackground);
                         setConnectionStatus('online');
                         return;
                     }
                 }
-                setConnectionStatus('offline');
+
+                // Fallback instantâneo em caso de offline/unreachable
+                let cachedData = null;
+                try {
+                    const str = localStorage.getItem('sf_cached_data');
+                    if (str) cachedData = JSON.parse(str);
+                } catch (e) {}
+
+                const embeddedData = (typeof EMBEDDED_INITIAL_DATA !== 'undefined' && EMBEDDED_INITIAL_DATA) ? EMBEDDED_INITIAL_DATA : (window.EMBEDDED_INITIAL_DATA || null);
+                const embeddedLength = (embeddedData && embeddedData.equipamentos) ? embeddedData.equipamentos.length : 0;
+                const cachedLength = (cachedData && cachedData.equipamentos) ? cachedData.equipamentos.length : 0;
+                const fallbackData = (cachedData && cachedLength >= embeddedLength) ? cachedData : embeddedData;
+
+                if (fallbackData) {
+                    processarPayloadDados(fallbackData, true, isBackground);
+                } else {
+                    setConnectionStatus('offline');
+                }
             } catch (error) {
                 console.error('Erro ao conectar com DataServer /api/dados:', error);
                 setConnectionStatus('offline');

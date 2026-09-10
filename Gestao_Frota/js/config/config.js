@@ -1,7 +1,7 @@
         // ================================================================
         // EMBEDDED DATASET FOR GITHUB PAGES & STANDALONE OFFLINE MODE
         // ================================================================
-        const EMBEDDED_INITIAL_DATA = {
+        var EMBEDDED_INITIAL_DATA = {
   "adminConfig": {
     "customGroups": {},
     "customTypes": {},
@@ -8630,7 +8630,7 @@
             const current = localStorage.getItem('sf_custom_api_base') || API_BASE || 'http://127.0.0.1:8000';
             const input = prompt(
                 "Endereço IP do DataServer (Servidor de Banco de Dados):\n\n" +
-                "Insira o IP do servidor para autenticação e sincronização (exemplo: http://172.16.12.36:8000 ou http://seu-ip:8000):",
+                "Insira o IP do servidor para autenticação e sincronização (exemplo: http://127.0.0.1:8000 ou http://seu-ip:8000):",
                 current
             );
             if (input !== null && input.trim() !== '') {

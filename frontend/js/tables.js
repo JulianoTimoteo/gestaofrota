@@ -429,7 +429,7 @@
         function getEquipesDisponiveis() {
             const currentUser = (localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '').toLowerCase();
             const role = (localStorage.getItem('sf_auth_role') || sessionStorage.getItem('sf_auth_role') || '').toLowerCase();
-            const isMaster = currentUser === 'julianotimoteo' || currentUser === 'logistica' || currentUser === 'admin' || role === 'master' || role === 'admin' || role === '100' || role === '80' || role === 'gerente' || !localStorage.getItem('sf_auth_perms');
+            const isMaster = currentUser === 'julianotimoteo' || currentUser === 'admin' || role === 'master' || role === 'admin' || role === '100' || !localStorage.getItem('sf_auth_perms');
 
             const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
             const extraTeams = equipments.map(eq => eq.grupo).filter(g => g && !standardTeams.includes(g));

@@ -1,0 +1,436 @@
+        /* ===== LOGIN OVERLAY ===== */
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0f172a !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999999 !important;
+            padding: 1.5rem;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .login-overlay.hidden { display: none !important; }
+
+        .login-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: var(--shadow-xl);
+            text-align: center;
+            border: 1px solid var(--color-gray-200);
+        }
+
+        .login-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--color-gray-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .login-card p {
+            font-size: 0.875rem;
+            color: var(--color-gray-500);
+            margin-bottom: 1.5rem;
+        }
+
+        .login-field {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .login-field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-gray-600);
+            margin-bottom: 0.35rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .login-field input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--color-gray-300);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            background: white;
+            color: var(--color-gray-800);
+        }
+
+        .login-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.25rem;
+        }
+
+        .login-status {
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            min-height: 1.3rem;
+            font-weight: 500;
+        }
+
+        .login-status.info { color: var(--color-primary); }
+        .login-status.success { color: var(--color-success-text); }
+        .login-status.error { color: var(--color-danger); }
+
+        /* ===== ACTION MODAL ===== */
+        .action-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 900;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+
+        .action-modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .action-modal {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: var(--shadow-xl);
+            margin: auto;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .action-modal h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--color-gray-900);
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--color-gray-100);
+        }
+
+        .action-modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-gray-100);
+        }
+
+        /* ===== OS REPORT MODAL STYLING ===== */
+        .os-report-card {
+            background: var(--color-gray-50);
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-gray-200);
+            transition: all var(--transition-fast);
+        }
+
+        body.dark-theme .os-report-card {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        .os-report-meta {
+            font-size: 0.82rem;
+            color: var(--color-gray-600);
+            margin-bottom: 0.3rem;
+        }
+
+        body.dark-theme .os-report-meta {
+            color: #94a3b8 !important;
+        }
+
+        .os-report-desc {
+            font-size: 0.82rem;
+            color: var(--color-gray-800);
+            background: white;
+            padding: 0.55rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--color-gray-200);
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+
+        body.dark-theme .os-report-desc {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+
+        body.dark-theme .action-modal {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        body.dark-theme .action-modal h3 {
+            color: #f8fafc !important;
+            border-bottom-color: #334155 !important;
+        }
+
+        body.dark-theme .action-modal-actions {
+            border-top-color: #334155 !important;
+        }
+
+        body.dark-theme .btn-secondary {
+            background: #334155 !important;
+            border-color: #475569 !important;
+            color: #f8fafc !important;
+        }
+
+        body.dark-theme .btn-secondary:hover:not(:disabled) {
+            background: #475569 !important;
+            border-color: #64748b !important;
+            color: #ffffff !important;
+        }
+
+        /* ===== GLOBAL LOADER OVERLAY ===== */
+        .global-loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(8px);
+            z-index: 999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .global-loader-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .center-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        .loader-circle-9 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75px;
+            height: 75px;
+            background: transparent;
+            border: 3px solid #3c3c3c;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 80px;
+            font-family: sans-serif;
+            font-size: 10px;
+            color: #00eaff;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .loader-circle-9:before {
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-top: 3px solid #00eaff;
+            border-right: 3px solid #00eaff;
+            border-radius: 50%;
+            animation: animateC 2s linear infinite;
+        }
+
+        .loader-circle-9 span {
+            display: block;
+            position: absolute;
+            top: calc(50% - 2px);
+            left: 50%;
+            width: 50%;
+            height: 4px;
+            background: transparent;
+            transform-origin: left;
+            animation: animate 2s linear infinite;
+        }
+
+        .loader-circle-9 span:before {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #00eaff;
+            top: -6px;
+            right: -8px;
+            box-shadow: 0 0 20px #00eaff;
+        }
+
+        @keyframes animateC {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes animate {
+            0% {
+                transform: rotate(45deg);
+            }
+            100% {
+                transform: rotate(405deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== COMET ORB & DYNAMIC BORDER EFFECT AROUND LOGIN CARD ===== */
+        .login-card-wrapper {
+            position: relative;
+            padding: 3px;
+            border-radius: 22px;
+            overflow: hidden;
+            max-width: 440px;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0 auto;
+            display: block;
+            transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 2px solid transparent;
+        }
+
+        .comet-track {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 250deg,
+                rgba(56, 189, 248, 0.12) 285deg,
+                rgba(56, 189, 248, 0.8) 335deg,
+                #38bdf8 357deg,
+                #ffffff 360deg
+            );
+            animation: rotateComet 12s linear infinite;
+            pointer-events: none;
+            transition: background 0.6s ease;
+        }
+
+        @keyframes rotateComet {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 1. Estado Padrão (Suave e Elegante) */
+        .login-card-wrapper.state-default {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 12px rgba(56, 189, 248, 0.15);
+            border-color: rgba(56, 189, 248, 0.25);
+        }
+
+        .login-card-wrapper.state-default .comet-track {
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 250deg,
+                rgba(56, 189, 248, 0.05) 285deg,
+                rgba(56, 189, 248, 0.3) 335deg,
+                #38bdf8 357deg,
+                #ffffff 360deg
+            );
+            animation: rotateComet 12s linear infinite;
+        }
+
+        /* 2. Estado de Sucesso (Borda Verde Suave) */
+        .login-card-wrapper.state-success {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 14px rgba(16, 185, 129, 0.25);
+            border-color: rgba(16, 185, 129, 0.6) !important;
+            transform: scale(1.01);
+        }
+
+        .login-card-wrapper.state-success .comet-track {
+            background: conic-gradient(
+                from 0deg,
+                rgba(16, 185, 129, 0.2) 0deg,
+                rgba(52, 211, 153, 0.4) 90deg,
+                rgba(16, 185, 129, 0.2) 180deg,
+                rgba(110, 231, 183, 0.4) 270deg,
+                #ffffff 360deg
+            );
+            animation: rotateComet 4s linear infinite;
+        }
+
+        /* 3. Estado de Erro (Borda Vermelha Suave) */
+        .login-card-wrapper.state-error {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 14px rgba(239, 68, 68, 0.25);
+            border-color: rgba(239, 68, 68, 0.6) !important;
+            animation: shakeCard 0.45s ease-in-out;
+        }
+
+        .login-card-wrapper.state-error .comet-track {
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 240deg,
+                rgba(239, 68, 68, 0.08) 280deg,
+                rgba(239, 68, 68, 0.35) 330deg,
+                #ef4444 356deg,
+                #ffffff 360deg
+            );
+            animation: rotateComet 10s linear infinite;
+        }
+
+        @keyframes shakeCard {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-9px); }
+            40% { transform: translateX(9px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 2;
+            border-radius: 19px !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }

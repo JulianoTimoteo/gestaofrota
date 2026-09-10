@@ -1,6 +1,30 @@
 {
-  "customGroups": {},
-  "customTypes": {},
+  "customGroups": {
+    "11216": "BIOMASSA",
+    "311517": "FERTIRRIGACAO",
+    "31617": "FERTIRRIGACAO",
+    "33": "FERTIRRIGACAO",
+    "311217": "FERTIRRIGACAO",
+    "31717": "FERTIRRIGACAO",
+    "311317": "FERTIRRIGACAO",
+    "311117": "FERTIRRIGACAO",
+    "31319": "FERTIRRIGACAO",
+    "32": "FERTIRRIGACAO",
+    "311417": "FERTIRRIGACAO"
+  },
+  "customTypes": {
+    "313": "Pá carregadeira",
+    "329": "Pá carregadeira",
+    "527": "Motoniveladora",
+    "543": "Pá carregadeira",
+    "50116": "Motoniveladora",
+    "50118": "Motoniveladora",
+    "60116": "Pá carregadeira",
+    "60118": "Pá carregadeira",
+    "60120": "Pá carregadeira",
+    "60121": "Pá carregadeira",
+    "60126": "Pá carregadeira"
+  },
   "customOps": {
     "11216": "1061 - Enfardamento De Biomassa",
     "11116": "1061 - Enfardamento De Biomassa",
@@ -33,7 +57,12 @@
     "532": "1040 - Trajeto Auxiliar de operação",
     "535": "1040 - Trajeto Auxiliar de operação",
     "537": "1040 - Trajeto Auxiliar de operação",
-    "533": "1040 - Trajeto Auxiliar de operação"
+    "533": "1040 - Trajeto Auxiliar de operação",
+    "80116": "4001 - Corte Mecanizado De Cana Crua",
+    "80317": "4001 - Corte Mecanizado De Cana Crua",
+    "80224": "4001 - Corte Mecanizado De Cana Crua",
+    "80719": "4001 - Corte Mecanizado De Cana Crua",
+    "80119": "4001 - Corte Mecanizado De Cana Crua"
   },
   "customOpTeams": {
     "3025": "PREPARO",
@@ -61,8 +90,8 @@
     "3030": "PREPARO",
     "3032": "PREPARO",
     "3033": "PREPARO",
-    "4001": "BIOMASSA",
-    "4002": "BIOMASSA",
+    "4001": "COLHEDORA",
+    "4002": "COLHEDORA",
     "3036": "PREPARO",
     "3037": "PREPARO",
     "3038": "PREPARO",
@@ -183,7 +212,7 @@
     "4017": "FERTIRRIGACAO",
     "4018": "FERTIRRIGACAO",
     "4020": "FERTIRRIGACAO",
-    "3085": "PREPARO",
+    "3085": "-",
     "2019": "PREPARO",
     "2023": "PREPARO",
     "1082": "FERTIRRIGACAO",
@@ -265,7 +294,7 @@
     "1050": "FERTIRRIGACAO",
     "1047": "TRATOS CULTURAIS",
     "1102": "FERTIRRIGACAO",
-    "1084": "FERTIRRIGACAO",
+    "1084": "-",
     "1087": "PREPARO",
     "1079": "HERBICIDA",
     "1021": "PREPARO",
@@ -275,10 +304,10 @@
     "4022": "BIOMASSA",
     "1037": "TRATOS CULTURAIS",
     "1107": "HERBICIDA",
-    "1045": "TRATOS CULTURAIS",
+    "1045": "PREPARO",
     "3049": "BIOMASSA",
     "3019": "PREPARO",
     "9999": "PREPARO"
   },
-  "ultimaAlteracao": "2026-09-05T15:32:00.000Z"
+  "ultimaAlteracao": "2026-09-10T14:04:40.001164"
 }
