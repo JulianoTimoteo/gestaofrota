@@ -2547,6 +2547,60 @@
             }
         }
 
+
+        /* ===== MOBILE CELULAR - MELHORIAS (768px) ===== */
+        @media (max-width: 768px) {
+            /* Aba 24h: esconder col 2 e col 3 no celular */
+            .table-24h th:nth-child(2),
+            .table-24h td:nth-child(2),
+            .table-24h th:nth-child(3),
+            .table-24h td:nth-child(3) { display: none !important; }
+
+            /* Header: Baixar App - so icone, sem texto */
+            #btnHeaderInstallPwa span { display: none !important; }
+            #btnHeaderInstallPwa {
+                padding: 0.45rem 0.6rem !important;
+                min-width: 36px !important;
+                gap: 0 !important;
+            }
+
+            /* Header: Sair - so icone, sem texto */
+            .logout-btn span { display: none !important; }
+            .logout-btn {
+                padding: 0.45rem 0.6rem !important;
+                min-width: 36px !important;
+                gap: 0 !important;
+            }
+
+            /* Header: nome usuario - so primeira letra (avatar) */
+            #userRoleBadge {
+                font-size: 0 !important;
+                overflow: hidden !important;
+                width: 1.1rem !important;
+                max-width: 1.1rem !important;
+                display: inline-block !important;
+                text-align: center !important;
+            }
+            #userRoleBadge::first-letter {
+                font-size: 0.9rem !important;
+            }
+            #userBadge {
+                padding: 0.3rem 0.5rem !important;
+                gap: 0.3rem !important;
+            }
+
+            /* Admin Equipamentos/Operacoes: paginacao centralizada */
+            .pagination-controls {
+                justify-content: center !important;
+                width: 100% !important;
+                flex-wrap: wrap !important;
+            }
+            td > .pagination-controls {
+                display: flex !important;
+                justify-content: center !important;
+            }
+        }
+
         @media (max-width: 480px) {
             body {
                 padding: 0.35rem;
@@ -9124,12 +9178,12 @@
                         <span class="count-badge os-aberta">${eqs24h.length} em OS crítica</span>
                     </div>
                     <div class="table-wrap">
-                        <table>
+                        <table class="table-24h">
                             <thead>
                                 <tr>
                                     <th>Frota</th>
-                                    <th>Equipe Original</th>
-                                    <th class="hide-mobile">Operação</th>
+                                    <th>Equipe</th>
+                                    <th>Operação</th>
                                     <th>Detalhes da OS ⬇️</th>
                                 </tr>
                             </thead>
@@ -9140,12 +9194,9 @@
                                 const diasPermText = diasVal > 0 ? `${diasVal.toFixed(1).replace('.', ',')} dias` : '> 24h';
                                 return `<tr>
                                     <td><strong>${eq.codigo || '-'}</strong></td>
-                                    <td class="hide-mobile" style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
-                                    <td class="hide-mobile" style="font-size:0.8rem;color:var(--color-gray-500);">${eq.modelo || '-'}</td>
                                     <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
-                                    <td class="hide-mobile"><span class="badge-equip os-fechada">${eq.operacao || '-'}</span></td>
-                                    <td><span class="badge-equip os-aberta" style="font-weight:700;"><i class="fas fa-clock"></i> ${diasPermText}</span></td>
-                                    <td><span class="badge-equip os-aberta">Com OS</span> ${osBtn}</td>
+                                    <td><span class="badge-equip os-fechada" style="font-size:0.75rem;">${eq.operacao || '-'}</span></td>
+                                    <td><span class="badge-equip os-aberta" style="font-weight:700;"><i class="fas fa-clock"></i> ${diasPermText}</span> ${osBtn}</td>
                                 </tr>`;
                             }).join('') +
                             `</tbody>
