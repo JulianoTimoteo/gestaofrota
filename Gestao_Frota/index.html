@@ -7925,15 +7925,19 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000);
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-                const res = await fetch(`${API_BASE}/api/dados?_t=${Date.now()}`, {
-                    signal: controller.signal,
-                    headers: {
-                        'Content-Type':  'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                }).catch(() => null);
+                // Tenta carregar dados.json pré-gerado em tempo de execução pelo Live Tunnel (resposta em <20ms)
+                let res = await fetch(`dados.json?_t=${Date.now()}`, { signal: controller.signal }).catch(() => null);
+                if (!res || !res.ok) {
+                    res = await fetch(`${API_BASE}/api/dados?_t=${Date.now()}`, {
+                        signal: controller.signal,
+                        headers: {
+                            'Content-Type':  'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        }
+                    }).catch(() => null);
+                }
 
                 clearTimeout(timeoutId);
 

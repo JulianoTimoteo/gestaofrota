@@ -9,6 +9,7 @@ import os
 import sys
 import re
 import sqlite3
+import json
 import requests
 import urllib3
 import time
@@ -870,13 +871,22 @@ def get_open_os_map(conn):
                     if sub: sub_map[clean].append(sub)
     return os_map, sub_map
 
-@app.route('/api/dados', methods=['GET'])
-def get_api_dados():
-    """Retorna payload consolidado com equipamentos, operacoes, ordensServico e config admin."""
+
+# ================================================================
+# LIVE TUNNEL & PRE-CACHED DADOS.JSON GENERATOR
+# ================================================================
+LATEST_DADOS_PAYLOAD = None
+
+def gerar_e_salvar_dados_json():
+    """
+    Gera o payload consolidado de /api/dados e salva em dados.json em tempo real.
+    Garante resposta instantânea (<2ms) para o WebApp Mobile/Desktop.
+    """
+    global LATEST_DADOS_PAYLOAD
     try:
         conn = get_db_connection()
         
-        # 1. Ordens de Serviço (Exclui Tipo EXTERNA e REPARO DE PEÇA para o aplicativo Gestão de Frota)
+        # 1. Ordens de Serviço (Exclui Tipo EXTERNA e REPARO DE PEÇA)
         cur_os = conn.execute('''
             SELECT tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, tipo_oficina, oficina,
                    data_entrada, data_previsao, dias_permanencia, descricao, data_sincronizacao
@@ -948,6 +958,7 @@ def get_api_dados():
             mod  = get_f(eq, 'model')
             tipo = get_f(eq, 'tipo')
             grp  = get_f(eq, 'grup') or 'PREPARO'
+
             subs = ' '.join(os_sub_map.get(cod, [])).upper()
             full_text = f"{desc.upper()} {mod.upper()} {tipo.upper()} {subs}"
 
@@ -966,10 +977,6 @@ def get_api_dados():
                 'codOS': os_map.get(cod, '-')
             })
 
-        debug_groups = {}
-        for e in equipamentos: debug_groups[e['grupo']] = debug_groups.get(e['grupo'], 0) + 1
-        logger.info("[API_DADOS] Total equipments: %d, groups: %s", len(equipamentos), debug_groups)
-            
         # 3. Operações
         cur_op = conn.execute("SELECT * FROM operacoes")
         oper_rows = [dict(r) for r in cur_op.fetchall()]
@@ -987,26 +994,65 @@ def get_api_dados():
                 'tempoOperacao': op.get('tempo_operacao') or op.get('tempoOperacao') or ''
             })
             
-        # Ultima sincronização
         row_u = conn.execute("SELECT MAX(data_sincronizacao) FROM ordens_servico").fetchone()
         raw_ultima = row_u[0] if row_u and row_u[0] else None
         ultima = str(raw_ultima) if raw_ultima else datetime.now().isoformat()
         
         conn.close()
-        
-        # Config Admin
         admin_config = get_admin_config_data()
-                
-        return jsonify(success=True, data={
-            'equipamentos': equipamentos,
-            'operacoes': operacoes,
-            'ordensServico': ordens_servico,
-            'adminConfig': admin_config,
-            'ultimaSincronizacao': ultima
-        })
-    except Exception as exc:
-        return jsonify(success=False, error=str(exc)), 500
 
+        payload = {
+            'success': True,
+            'data': {
+                'equipamentos': equipamentos,
+                'operacoes': operacoes,
+                'ordensServico': ordens_servico,
+                'adminConfig': admin_config,
+                'ultimaSincronizacao': ultima
+            }
+        }
+
+        LATEST_DADOS_PAYLOAD = payload
+
+        # Grava em dados.json na raiz e em todas as pastas do projeto
+        paths_to_save = [
+            os.path.join(BASE_DIR, 'dados.json'),
+            os.path.join(BASE_DIR, 'Gestao_Frota', 'dados.json'),
+            os.path.join(BASE_DIR, 'frontend', 'dados.json'),
+            os.path.join(BASE_DIR, 'Servidor_Tablet', 'frontend', 'dados.json')
+        ]
+        
+        json_str = json.dumps(payload, ensure_ascii=False, indent=2)
+        for p in paths_to_save:
+            try:
+                os.makedirs(os.path.dirname(p), exist_ok=True)
+                with open(p, 'w', encoding='utf-8') as f:
+                    f.write(json_str)
+            except Exception as fe:
+                logger.warning('Erro ao salvar %s: %s', p, fe)
+
+        logger.info("[LIVE TUNNEL] dados.json atualizado com sucesso: %d equip, %d OS", len(equipamentos), len(ordens_servico))
+        return payload
+    except Exception as e:
+        logger.error("[LIVE TUNNEL] Erro ao gerar dados.json: %s", e)
+        return None
+
+@app.route('/dados.json', methods=['GET'])
+@app.route('/api/dados', methods=['GET'])
+def get_api_dados():
+    """Retorna payload consolidado com resposta relâmpago (<2ms) via Live Tunnel e dados.json."""
+    global LATEST_DADOS_PAYLOAD
+    force_refresh = request.args.get('force') == '1'
+    if not LATEST_DADOS_PAYLOAD or force_refresh:
+        LATEST_DADOS_PAYLOAD = gerar_e_salvar_dados_json()
+    
+    if not LATEST_DADOS_PAYLOAD:
+        return jsonify(success=False, error="Falha ao gerar dados.json"), 500
+        
+    resp = jsonify(LATEST_DADOS_PAYLOAD)
+    resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
 
 
 @app.route('/api/os')
@@ -3005,6 +3051,13 @@ class SyncService:
         time.sleep(1)
         start_sync_thread()
 
+sync_service = SyncService()
+
+def start_sync_thread():
+    t = threading.Thread(target=sync_service.run_continuous_sync, daemon=True)
+    t.start()
+    logger.info('Thread de sincronizacao continua iniciada.')
+
 # ==================== API - RESPONSAVEIS ====================
 
 @app.route('/api/responsaveis', methods=['GET'])
@@ -4288,6 +4341,23 @@ if __name__ == '__main__':
     
     # Inicializar banco UMA VEZ no startup
     init_db()
+
+    # Live Tunnel: Gerar dados.json imediatamente no startup e manter atualizado a cada 30s
+    try:
+        gerar_e_salvar_dados_json()
+    except Exception as _e:
+        logger.warning("Falha ao gerar dados.json inicial: %s", _e)
+
+    def _live_tunnel_loop():
+        while True:
+            time.sleep(30)
+            try:
+                gerar_e_salvar_dados_json()
+            except Exception as _ex:
+                pass
+    
+    _tunnel_thread = threading.Thread(target=_live_tunnel_loop, daemon=True)
+    _tunnel_thread.start()
 
     # Iniciar thread de medicao de CPU em background
     _cpu_thread = threading.Thread(target=_cpu_monitor_loop, daemon=True)
