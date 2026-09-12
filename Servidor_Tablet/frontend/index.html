@@ -7127,63 +7127,38 @@
             if (loginBtn) loginBtn.disabled = true;
             showGlobalLoader();
 
-            if (isStaticGitHubPages()) {
-                const userInp = user.toLowerCase();
-                const selectedRole = document.getElementById('loginRole')?.value || 'auto';
-                let role = 'visualizador';
+            // Mapeamento estrito de contas cadastradas previamente no sistema
+            const userInp = user.toLowerCase().trim();
+            const allowedAccountsMap = {
+                'julianotimoteo': { name: 'Juliano Timóteo', role: 'admin' },
+                'julianotimoteo@usinapitangueiras.com.br': { name: 'Juliano Timóteo', role: 'admin' },
+                'logistica': { name: 'Logística Usina Pitangueiras', role: 'admin' },
+                'logistica@usinapitangueiras.com.br': { name: 'Logística Usina Pitangueiras', role: 'admin' },
+                'admin': { name: 'Administrador Geral', role: 'admin' },
+                'rafaelfarra': { name: 'Rafael Aparecido Farra', role: 'operador' },
+                'rafaelfarra@usinapitangueiras.com.br': { name: 'Rafael Aparecido Farra', role: 'operador' },
+                'reginaldomantovani': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador' },
+                'reginaldomantovani@usinapitanguerias.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador' },
+                'reginaldomantovani@usinapitangueiras.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador' }
+            };
 
-                if (selectedRole === 'admin') {
-                    role = 'admin';
-                } else if (selectedRole === 'visualizador') {
-                    role = 'visualizador';
-                } else {
-                    if (userInp === 'julianotimoteo' || userInp === 'admin' || userInp.includes('master')) {
-                        role = 'admin';
-                    } else {
-                        role = 'visualizador';
+            // Inclui usuários dinâmicos vindos do banco via cache local, se existirem
+            try {
+                const storedUsers = localStorage.getItem('sf_db_usuarios');
+                if (storedUsers) {
+                    const parsed = JSON.parse(storedUsers);
+                    if (Array.isArray(parsed)) {
+                        parsed.forEach(u => {
+                            const uRole = u.nivel_chave || u.role || (u.admin ? 'admin' : 'visualizador');
+                            const uName = u.nome || u.usuario;
+                            if (u.usuario) allowedAccountsMap[u.usuario.toLowerCase().trim()] = { name: uName, role: uRole };
+                            if (u.email) allowedAccountsMap[u.email.toLowerCase().trim()] = { name: uName, role: uRole };
+                        });
                     }
                 }
+            } catch(e) {}
 
-                const nameMap = {
-                    'julianotimoteo': 'Juliano Timóteo',
-                    'rafaelfarra': 'Rafael Aparecido Farra',
-                    'logistica': 'Logistica Usina Pitangueiras'
-                };
-                const userDisplayName = nameMap[userInp] || user;
-
-                const token = 'sf_cloud_token_' + Date.now();
-                const storage = keep ? localStorage : sessionStorage;
-                storage.setItem('sf_auth_token', token);
-                storage.setItem('sf_auth_user',  user);
-                storage.setItem('sf_auth_name',  userDisplayName);
-                storage.setItem('sf_auth_role',  role);
-                authToken = token;
-                userRole  = role;
-                statusEl.textContent = '✅ Login efetuado com sucesso!';
-                statusEl.className   = 'login-status success';
-
-                if (cardWrapper) {
-                    cardWrapper.classList.remove('state-default', 'state-error');
-                    cardWrapper.classList.add('state-success');
-                }
-
-                updateAuthUI();
-                applyRBAC();
-
-                const overlay = document.getElementById('loginOverlay');
-                if (overlay) overlay.classList.add('hidden');
-
-                try {
-                    await carregarDados();
-                } catch (loadErr) {
-                    console.warn('Alerta ao carregar dados pós-login:', loadErr);
-                }
-                iniciarSyncTimer();
-                if (loginBtn) loginBtn.disabled = false;
-                hideGlobalLoader();
-                return;
-            }
-
+            // 1. TENTA PRIMEIRO A REQUISIÇÃO PARA O BANCO VIA BACKEND API
             try {
                 const res  = await fetch(`${API_BASE}/api/auth/login`, {
                     method:  'POST',
@@ -7197,11 +7172,12 @@
                 const data = await res.json();
 
                 if (res.ok && data.success && data.token) {
-                    const role = data.role || (data.admin ? 'admin' : 'admin');
+                    const isMaster = (userInp === 'julianotimoteo' || userInp === 'logistica' || userInp === 'admin' || userInp.includes('logistica'));
+                    const role = isMaster ? 'admin' : (data.role || (data.admin ? 'admin' : 'visualizador'));
                     const storage = keep ? localStorage : sessionStorage;
-                    const displayName = data.nome || data.usuario || user;
+                    const displayName = data.nome || data.usuario || (allowedAccountsMap[userInp]?.name) || user;
                     storage.setItem('sf_auth_token', data.token);
-                    storage.setItem('sf_auth_user',  data.usuario || user);
+                    storage.setItem('sf_auth_user',  data.usuario || userInp);
                     storage.setItem('sf_auth_name',  displayName);
                     storage.setItem('sf_auth_role',  role);
                     authToken = data.token;
@@ -7226,71 +7202,74 @@
                         console.warn('Alerta ao carregar dados pós-login:', loadErr);
                     }
                     iniciarSyncTimer();
-                    iniciarCheckSessaoUnicaTimer();
-                } else {
-                    statusEl.textContent = data.error || 'Usuário ou senha inválidos';
+                    if (typeof iniciarCheckSessaoUnicaTimer === 'function') iniciarCheckSessaoUnicaTimer();
+                    if (loginBtn) loginBtn.disabled = false;
+                    hideGlobalLoader();
+                    return;
+                } else if (data && data.error && !res.ok) {
+                    statusEl.textContent = '❌ ' + (data.error || 'Acesso negado.');
                     statusEl.className   = 'login-status error';
                     if (cardWrapper) {
                         cardWrapper.classList.remove('state-default', 'state-success');
                         cardWrapper.classList.add('state-error');
                     }
+                    if (loginBtn) loginBtn.disabled = false;
+                    hideGlobalLoader();
+                    return;
                 }
             } catch (err) {
-                console.warn('Servidor indisponível ou inacessível no momento, iniciando modo autônomo offline:', err);
-                const userInp = user.toLowerCase();
-                const selectedRole = document.getElementById('loginRole')?.value || 'auto';
-                let role = 'visualizador';
+                console.warn('API indisponível, validando usuário no cadastro local:', err);
+            }
 
-                if (selectedRole === 'admin') {
-                    role = 'admin';
-                } else if (selectedRole === 'visualizador') {
-                    role = 'visualizador';
-                } else {
-                    if (userInp === 'julianotimoteo' || userInp === 'admin' || userInp.includes('master') || userInp === 'rafaelfarra' || userInp === 'logistica') {
-                        role = 'admin';
-                    } else {
-                        role = 'visualizador';
-                    }
-                }
+            // 2. VALIDAÇÃO LOCAL/OFFLINE PARA HOSPEDAGEM ESTÁTICA (GITHUB PAGES OU QUANDO API INDISPONÍVEL)
+            const foundAccount = allowedAccountsMap[userInp];
 
-                const nameMap = {
-                    'julianotimoteo': 'Juliano Timóteo',
-                    'rafaelfarra': 'Rafael Aparecido Farra',
-                    'logistica': 'Logística Usina Pitangueiras'
-                };
-                const userDisplayName = nameMap[userInp] || user;
-                const token = 'sf_offline_token_' + Date.now();
-                const storage = keep ? localStorage : sessionStorage;
-                storage.setItem('sf_auth_token', token);
-                storage.setItem('sf_auth_user',  user);
-                storage.setItem('sf_auth_name',  userDisplayName);
-                storage.setItem('sf_auth_role',  role);
-                authToken = token;
-                userRole  = role;
-                statusEl.textContent = '✅ Modo Autónomo: Login efetuado!';
-                statusEl.className   = 'login-status success';
-
+            if (!foundAccount) {
+                statusEl.textContent = `❌ Usuário '${user}' não cadastrado no sistema. Acesso negado.`;
+                statusEl.className   = 'login-status error';
                 if (cardWrapper) {
-                    cardWrapper.classList.remove('state-default', 'state-error');
-                    cardWrapper.classList.add('state-success');
+                    cardWrapper.classList.remove('state-default', 'state-success');
+                    cardWrapper.classList.add('state-error');
                 }
-
-                updateAuthUI();
-                applyRBAC();
-
-                const overlay = document.getElementById('loginOverlay');
-                if (overlay) overlay.classList.add('hidden');
-
-                try {
-                    await carregarDados();
-                } catch (loadErr) {
-                    console.warn('Alerta ao carregar dados pós-login:', loadErr);
-                }
-                iniciarSyncTimer();
-            } finally {
                 if (loginBtn) loginBtn.disabled = false;
                 hideGlobalLoader();
+                return;
             }
+
+            // Se for usuário cadastrado, faz login em modo autônomo
+            const isMaster = (userInp === 'julianotimoteo' || userInp === 'logistica' || userInp === 'admin' || userInp.includes('logistica'));
+            const role = isMaster ? 'admin' : (foundAccount.role || 'visualizador');
+            const userDisplayName = foundAccount.name || user;
+            const token = 'sf_offline_token_' + Date.now();
+            const storage = keep ? localStorage : sessionStorage;
+            storage.setItem('sf_auth_token', token);
+            storage.setItem('sf_auth_user',  userInp);
+            storage.setItem('sf_auth_name',  userDisplayName);
+            storage.setItem('sf_auth_role',  role);
+            authToken = token;
+            userRole  = role;
+            statusEl.textContent = '✅ Login efetuado com sucesso!';
+            statusEl.className   = 'login-status success';
+
+            if (cardWrapper) {
+                cardWrapper.classList.remove('state-default', 'state-error');
+                cardWrapper.classList.add('state-success');
+            }
+
+            updateAuthUI();
+            applyRBAC();
+
+            const overlay = document.getElementById('loginOverlay');
+            if (overlay) overlay.classList.add('hidden');
+
+            try {
+                await carregarDados();
+            } catch (loadErr) {
+                console.warn('Alerta ao carregar dados pós-login:', loadErr);
+            }
+            iniciarSyncTimer();
+            if (loginBtn) loginBtn.disabled = false;
+            hideGlobalLoader();
         }
 
         async function doLogout() {
@@ -8106,14 +8085,15 @@
             const adminTabContent = document.getElementById('tab-admin');
 
             const rawUser = localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '';
-            const curUser = (typeof rawUser === 'string' ? rawUser : '').toLowerCase();
-            const curRole = (localStorage.getItem('sf_auth_role') || sessionStorage.getItem('sf_auth_role') || userRole || '').toLowerCase();
+            const curUser = (typeof rawUser === 'string' ? rawUser : '').toLowerCase().trim();
+            const curRole = (localStorage.getItem('sf_auth_role') || sessionStorage.getItem('sf_auth_role') || userRole || '').toLowerCase().trim();
 
             const isMasterAdmin = (
                 curUser === 'julianotimoteo' ||
                 curUser === 'logistica' ||
                 curUser === 'admin' ||
                 curUser.includes('juliano') ||
+                curUser.includes('logistica') ||
                 curRole === 'master' ||
                 curRole === 'admin' ||
                 curRole === '100' ||
