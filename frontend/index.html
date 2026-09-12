@@ -2994,7 +2994,7 @@
 </head>
 <body>
     <!-- GLOBAL LOADER OVERLAY -->
-    <div class="global-loader-overlay" id="globalLoaderOverlay">
+    <div class="global-loader-overlay active" id="globalLoaderOverlay">
         <div class="center-body">
             <div class="loader-circle-9">
                 Aguarde...
@@ -7907,6 +7907,11 @@
         }
 
         async function carregarDados(isBackground = false) {
+            if (!isBackground) {
+                setConnectionStatus('syncing');
+                showGlobalLoader();
+            }
+
             if (!authToken) {
                 authToken = 'sf_standalone_session_token';
                 localStorage.setItem('sf_auth_token', authToken);
@@ -7914,11 +7919,6 @@
             }
 
             await carregarAdminConfigDoServidor();
-
-            if (!isBackground) {
-                setConnectionStatus('syncing');
-                showGlobalLoader();
-            }
 
             // Limpeza preventiva de cache local legado para garantir dados 100% frescos do banco
             try { localStorage.removeItem('sf_cached_data'); } catch(e) {}
@@ -9536,6 +9536,7 @@
         // INIT APP
         // ================================================================
         async function initApp() {
+            showGlobalLoader();
             initThemeToggle();
             startRealtimeClock();
             initPwaInstall();
@@ -9556,6 +9557,8 @@
                 iniciarSyncTimer();
                 iniciarCheckSessaoUnicaTimer();
                 checkAuth(); // valida token em background, sem bloquear
+            } else {
+                hideGlobalLoader();
             }
         }
 

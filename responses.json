@@ -1,0 +1,98 @@
+[
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Login",
+    "body": "<!DOCTYPE html>\r\n<!--[if lt IE 7]>      <html class=\"no-js lt-ie9 lt-ie8 lt-ie7\"> <![endif]-->\r\n<!--[if IE 7]>         <html class=\"no-js lt-ie9 lt-ie8\"> <![endif]-->\r\n<!--[if IE 8]>         <html cla"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/toastr/toastr.min.js",
+    "body": "!function(e){e([\"jquery\"],function(e){return function(){function t(e,t,n){return g({type:O.error,iconClass:m().iconClasses.error,message:e,optionsOverride:n,title:t})}function n(t,n){return t||(t=m())"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/jquery/validation/jquery.validate.unobtrusive.min.js",
+    "body": "// Unobtrusive validation support library for jQuery and jQuery Validate\r\n// Copyright (C) Microsoft Corporation. All rights reserved.\r\n// @version v3.2.10\r\n!function(a){\"function\"==typeof define&&def"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/jquery/validation/jquery.validate.unobstrusive.fixValidationMessage.js",
+    "body": "\r\n(function ($) {\r\n    if (!$.validator.unobtrusive || !$.validator.unobtrusive.adapters) \r\n    {\r\n        return false;\r\n    }\r\n\r\n    // Walk through the adapters that connect unobstrusive validation"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/jquery/validation/jquery.validate.min.js",
+    "body": "/*! jQuery Validation Plugin - v1.17.0 - 7/29/2017\r\n * https://jqueryvalidation.org/\r\n * Copyright (c) 2017 J\u00f6rn Zaefferer; Licensed MIT */\r\n!function(a){\"function\"==typeof define&&define.amd?define(["
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/jquery/jquery-3.6.0.min.js",
+    "body": "/*! jQuery v3.6.0 | (c) OpenJS Foundation and other contributors | jquery.org/license */\r\n!function(e,t){\"use strict\";\"object\"==typeof module&&\"object\"==typeof module.exports?module.exports=e.document"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css?family=Roboto:100,300,400,400i,500,500i,700,900",
+    "body": "/* cyrillic-ext */\n@font-face {\n  font-family: 'Roboto';\n  font-style: italic;\n  font-weight: 400;\n  font-stretch: 100%;\n  src: url(https://fonts.gstatic.com/s/roboto/v51/KFO5CnqEu92Fr1Mu53ZEC9_Vu3r1g"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/",
+    "body": "\r\n<!DOCTYPE html>\r\n<!--[if lt IE 7]>      <html class=\"no-js lt-ie9 lt-ie8 lt-ie7\"> <![endif]-->\r\n<!--[if IE 7]>         <html class=\"no-js lt-ie9 lt-ie8\"> <![endif]-->\r\n<!--[if IE 8]>         <html c"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/css/kendo?v=fMGCeMOLlW43M4OdPkpko1-FH8VNdZoHR_qek5BRGis1",
+    "body": "/* Minification failed. Returning unminified contents.\r\n(37,57792): run-time error CSS1039: Token not allowed after unary operator: '-kendo-scrollbar-width'\r\n(37,59634): run-time error CSS1039: Token "
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/css/core?v=G57oGMMBh9P-YmvsCmKTyV2uGkCDLVhjbJL041JiI8o1",
+    "body": "/* Minification failed. Returning unminified contents.\r\n(10,5): run-time error CSS1062: Expected semicolon or closing curly-brace, found '-'\r\n(11,5): run-time error CSS1062: Expected semicolon or clos"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css?family=Roboto:100,300,400,400i,500,500i,700,900",
+    "body": "/* cyrillic-ext */\n@font-face {\n  font-family: 'Roboto';\n  font-style: italic;\n  font-weight: 400;\n  font-stretch: 100%;\n  src: url(https://fonts.gstatic.com/s/roboto/v51/KFO5CnqEu92Fr1Mu53ZEC9_Vu3r1g"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/css/components?v=5kSVKrPLVGZ1xLeEFr1D4F4zw7fQ93O6ayhfMARzh-w1",
+    "body": "/* Minification failed. Returning unminified contents.\r\n(45,17): run-time error CSS1039: Token not allowed after unary operator: '-features'\r\n(46,28): run-time error CSS1039: Token not allowed after u"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/css/packages?v=jJTh1NfDpOEJgAEZ2wGbC2fwo0piY_8eMR5CzveCd_c1",
+    "body": "/* Minification failed. Returning unminified contents.\r\n(16011,7924): run-time error CSS1060: Expected closing curly-brace, found '0'\r\n(16011,8139): run-time error CSS1019: Unexpected token, found '}'"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/css/global?v=ic9oWCECglN1_ke0WrIbIfKWtKPtVGohg230sxMZ8Wc1",
+    "body": "/* Minification failed. Returning unminified contents.\r\n(52,26): run-time error CSS1039: Token not allowed after unary operator: '-features'\r\n(57,26): run-time error CSS1039: Token not allowed after u"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Static/Js",
+    "body": "\n\r\nvar GALang = {};\r\n\r\nGALang.addText = \"Adicionar\";\r\nGALang.defaultSuccessMessage = \"Solicita\u00e7\u00e3o conclu\u00edda com sucesso!\";\r\nGALang.errorMessageDefault = \"Erro ao concluir a solicita\u00e7\u00e3o!\";\r\nGALang.erro"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/js/global?v=hI0EIlZ_zazQmouBEHPskGJ-kNHnI1TxoJg0IVPn9qw1",
+    "body": "/* Global Functions */\r\n\r\nGA.loading = (cb, container) => {\r\n\r\n    let $loading = $(container || '.main-container').startLoading();\r\n    let control = {\r\n        end: () => $loading.endLoading()\r\n    "
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/js/components?v=FIrLfl2ygzBXmGuUkLgj6CyTKnvdX-v5pFpPTV9Cc0M1",
+    "body": "// Global var to set an load callback to the accordion widget\r\nvar tabsLoad = null;\r\nvar tabsFinish = null;\r\nvar hasTabsPage = false;\r\n\r\n$.fn.GAAccordion = function GAAccordion(options) {\r\n    var tar"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/js/core?v=TlyfiEyIW-GwqiCo1ruIy_eitNCq0s0mWjRI7Zdw8us1",
+    "body": "/* Minification failed. Returning unminified contents.\r\n(167,22): run-time error JS1004: Expected ';'\r\n(168,22): run-time error JS1004: Expected ';'\r\n(312,79-80): run-time error JS1195: Expected expre"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/js/packages?v=C3eNnk_5Qup96adzgho5-SQhJjQI9gikvG66NKDgTMI1",
+    "body": "!function(e){e([\"jquery\"],function(e){return function(){function t(e,t,n){return g({type:O.error,iconClass:m().iconClasses.error,message:e,optionsOverride:n,title:t})}function n(t,n){return t||(t=m())"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/js/jquery?v=Tsgy7i17M4MspeKn6pClCuAETl3LzoOWJiEWx_Fiyis1",
+    "body": "/* Minification failed. Returning unminified contents.\r\n(15,2726969-2726976): run-time error JS1019: Can't have 'break' outside of loop: break e\r\n */\r\n/*! jQuery v3.6.0 | (c) OpenJS Foundation and oth"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/mxgraph/resources/graph.txt",
+    "body": "alreadyConnected=Nodes already connected\r\ncontainsValidationErrors=Contains validation errors\r\nupdatingDocument=Updating Document. Please wait...\r\nupdatingSelection=Updating Selection. Please wait...\r"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/mxgraph/resources/graph_pt.txt",
+    "body": "alreadyConnected=Nodes already connected\r\ncontainsValidationErrors=Contains validation errors\r\nupdatingDocument=Updating Document. Please wait...\r\nupdatingSelection=Updating Selection. Please wait...\r"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/mxgraph/resources/editor.txt",
+    "body": "askZoom=Enter zoom (%)\r\nproperties=Properties\r\noutline=Outline\r\ntasks=Tasks\r\nhelp=Help\r\n"
+  },
+  {
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/mxgraph/resources/editor_pt.txt",
+    "body": "askZoom=Enter zoom (%)\r\nproperties=Properties\r\noutline=Outline\r\ntasks=Tasks\r\nhelp=Help\r\n"
+  }
+]

@@ -1,0 +1,439 @@
+[
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Login",
+    "headers": {
+      "upgrade-insecure-requests": "1",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://fonts.googleapis.com/css?family=Roboto:100,300,400,400i,500,500i,700,900",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "POST",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Login/AuthenticateUser",
+    "headers": {
+      "content-type": "application/x-www-form-urlencoded",
+      "origin": "https://simplefarm.usinapitangueiras.com.br:8050",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/Login",
+      "upgrade-insecure-requests": "1",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    },
+    "post_data": "Lat=&Long=&PositioningAccuracy=&UserName=julianotimoteo&Password=Ttmotvini1986%40%23"
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/",
+    "headers": {
+      "content-type": "application/x-www-form-urlencoded",
+      "origin": "https://simplefarm.usinapitangueiras.com.br:8050",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/Login",
+      "upgrade-insecure-requests": "1",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/css/kendo?v=fMGCeMOLlW43M4OdPkpko1-FH8VNdZoHR_qek5BRGis1",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/css/core?v=G57oGMMBh9P-YmvsCmKTyV2uGkCDLVhjbJL041JiI8o1",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/css/packages?v=jJTh1NfDpOEJgAEZ2wGbC2fwo0piY_8eMR5CzveCd_c1",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/css/global?v=ic9oWCECglN1_ke0WrIbIfKWtKPtVGohg230sxMZ8Wc1",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/css/components?v=5kSVKrPLVGZ1xLeEFr1D4F4zw7fQ93O6ayhfMARzh-w1",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Docs/Management/ImageThumbnail/151?id=151",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Static/Js",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/js/jquery?v=Tsgy7i17M4MspeKn6pClCuAETl3LzoOWJiEWx_Fiyis1",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/js/packages?v=C3eNnk_5Qup96adzgho5-SQhJjQI9gikvG66NKDgTMI1",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/js/core?v=TlyfiEyIW-GwqiCo1ruIy_eitNCq0s0mWjRI7Zdw8us1",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/js/global?v=hI0EIlZ_zazQmouBEHPskGJ-kNHnI1TxoJg0IVPn9qw1",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/js/components?v=FIrLfl2ygzBXmGuUkLgj6CyTKnvdX-v5pFpPTV9Cc0M1",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://fonts.googleapis.com/css?family=Roboto:100,300,400,400i,500,500i,700,900",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/mxgraph/resources/graph.txt",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/mxgraph/resources/graph_pt.txt",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/mxgraph/resources/editor.txt",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/mxgraph/resources/editor_pt.txt",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Admin/Notification/GetNotifyCount?_=1789221440685",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "x-requested-with": "XMLHttpRequest",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "accept": "application/json, text/javascript, */*; q=0.01",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Home/Main?content=true&_=1789221440686",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "x-requested-with": "XMLHttpRequest",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "accept": "text/html, */*; q=0.01",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Home/GetMenuFull",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "x-requested-with": "XMLHttpRequest",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "accept": "*/*",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Menu/GetFavorites?_=1789221440687",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "x-requested-with": "XMLHttpRequest",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "accept": "application/json, text/javascript, */*; q=0.01",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Notification/GetAndCountUnreadNotificationsForUser/$%7BuserId%7D",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Admin/UserPanel/GetUserPanels?controllerName=Home&_=1789221440688",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "x-requested-with": "XMLHttpRequest",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "accept": "application/json, text/javascript, */*; q=0.01",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Social/TimeLine?_=1789221440689",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "x-requested-with": "XMLHttpRequest",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "accept": "text/html, */*; q=0.01",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/kendo/styles/fonts/glyphs/WebComponentsIcons.ttf?gedxeo",
+    "headers": {
+      "origin": "https://simplefarm.usinapitangueiras.com.br:8050",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/css/kendo?v=fMGCeMOLlW43M4OdPkpko1-FH8VNdZoHR_qek5BRGis1",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/PanelObjectVariableValue/GetByPanel?panelId=174&_=1789221440690",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "x-requested-with": "XMLHttpRequest",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "accept": "application/json, text/javascript, */*; q=0.01",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Admin/UserPanel/ViewPanel?panelId=174&_=1789221440691",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "x-requested-with": "XMLHttpRequest",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "accept": "text/html, */*; q=0.01",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/UserPanel/GetPanelLoadType/174?_=1789221440692",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "x-requested-with": "XMLHttpRequest",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "accept": "application/json, text/javascript, */*; q=0.01",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://api-simplefarm.usinapitangueiras.com.br:8051/api/PanelObject/GetWidgetList?userPanelId=174&referenceDate=2026-09-12T13%3A57%3A24.817Z&widgets=1565&records=300&_=1789221440693",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "authorization": "limited a93d6c48-e60a-4c8d-b416-44eb0c71bb61",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/",
+      "accept-language": "pt-BR",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "accept": "application/json, text/javascript, */*; q=0.01",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "post_data": null
+  },
+  {
+    "method": "GET",
+    "url": "https://simplefarm.usinapitangueiras.com.br:8050/Content/packages/kendo/styles/Metro/loading-image.gif",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://simplefarm.usinapitangueiras.com.br:8050/css/kendo?v=fMGCeMOLlW43M4OdPkpko1-FH8VNdZoHR_qek5BRGis1",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"148\", \"HeadlessChrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "post_data": null
+  }
+]

@@ -1,0 +1,8 @@
+export HOME="/data/data/com.termux/files/home"
+export PATH="/data/data/com.termux/files/usr/bin:$PATH"
+
+/data/data/com.termux/files/usr/bin/termux-wake-lock 2>/dev/null &
+
+if ! pgrep -f "watchdog.sh" > /dev/null; then
+    nohup /data/data/com.termux/files/usr/bin/bash /data/data/com.termux/files/home/simplefarm/watchdog.sh > /dev/null 2>&1 &
+fi
