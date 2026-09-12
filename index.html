@@ -4405,8 +4405,8 @@
       "modelo": "CAMINHAO VOLVO FMX 540",
       "tipo": "Caminhão",
       "grupo": "CAMINHOES",
-      "statusOS": "OK",
-      "codOS": "-"
+      "statusOS": "Com OS",
+      "codOS": "768066"
     },
     {
       "codigo": "31825",
@@ -4450,8 +4450,8 @@
       "modelo": "VOLVO FH 540",
       "tipo": "Caminhão",
       "grupo": "CAMINHOES",
-      "statusOS": "Com OS",
-      "codOS": "767050"
+      "statusOS": "OK",
+      "codOS": "-"
     },
     {
       "codigo": "311115",
@@ -4549,8 +4549,8 @@
       "modelo": "VOLVO FH 540",
       "tipo": "Caminhão",
       "grupo": "CAMINHOES",
-      "statusOS": "OK",
-      "codOS": "-"
+      "statusOS": "Com OS",
+      "codOS": "768072"
     },
     {
       "codigo": "312025",
@@ -4558,8 +4558,8 @@
       "modelo": "VOLVO FH 540",
       "tipo": "Caminhão",
       "grupo": "CAMINHOES",
-      "statusOS": "OK",
-      "codOS": "-"
+      "statusOS": "Com OS",
+      "codOS": "765797"
     }
   ],
   "operacoes": [
@@ -6453,21 +6453,7 @@
       "descricao": "VERIFICAR TREM DE ROLO ( NÃO ENGOLE CANA )  VERIFICAR VAZAMENTO NA MANGUEIRA DA CAIXA DE BOMBAS",
       "dataSincronizacao": "2026-09-10 15:53:34"
     },
-    {
-      "tipoOS": "NORMAL",
-      "subClasse": "10/1 - CAMINHOES - CAVALO MECANICO",
-      "codigoEquip": "311025",
-      "frotaCC": "311025 - FH540 ALUGADO",
-      "codOS": "767050",
-      "statusOS": "ABERTA",
-      "tipoOficina": "INTERNA",
-      "oficina": "1 - OF. CENTRAL",
-      "dataEntrada": "2026-09-10T10:10:00",
-      "dataPrevisao": "None",
-      "diasPermanencia": "0.2",
-      "descricao": "VERIFICAR SUPORTE DO PARALAMA",
-      "dataSincronizacao": "2026-09-10 15:53:34"
-    },
+
     {
       "tipoOS": "NORMAL",
       "subClasse": "10/11 - CAMINHOES - BORRACHEIRO",
@@ -7018,7 +7004,7 @@
             }
             const savedApi = localStorage.getItem('sf_custom_api_base');
             if (savedApi) return savedApi;
-            return 'http://127.0.0.1:8000';
+            return 'http://172.16.12.36:8000';
         })();
 
         function promptChangeServerIp() {
