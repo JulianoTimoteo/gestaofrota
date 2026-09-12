@@ -7011,12 +7011,16 @@
                 localStorage.setItem('sf_custom_api_base', formatted);
                 return formatted;
             }
+            if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+                if (window.location.port === '8000') return window.location.origin;
+                if (window.location.port === '3000') return window.location.origin.replace(':3000', ':8000');
+                if (window.location.hostname && !window.location.hostname.includes('github.io')) {
+                    return window.location.protocol + '//' + window.location.hostname + ':8000';
+                }
+            }
             const savedApi = localStorage.getItem('sf_custom_api_base');
             if (savedApi) return savedApi;
-            if (window.location.protocol === 'file:' || window.location.hostname.includes('github.io')) {
-                return 'http://127.0.0.1:8000';
-            }
-            return window.location.origin.includes('8000') ? window.location.origin : 'http://127.0.0.1:8000';
+            return 'http://127.0.0.1:8000';
         })();
 
         function promptChangeServerIp() {
@@ -7358,8 +7362,18 @@
                 if (res.ok) {
                     const d = await res.json();
                     if (d.success) {
-                        localStorage.setItem('sf_auth_role', d.role || 'visualizador');
-                        userRole = d.role || 'visualizador';
+                        const rawU = typeof d.usuario === 'string' ? d.usuario : (d.usuario?.usuario || d.user?.usuario || '');
+                        const userStr = String(rawU || '').toLowerCase();
+                        const isMasterUser = userStr === 'julianotimoteo' || userStr === 'logistica' || userStr === 'admin' || userStr.includes('juliano') || d.admin == 1 || d.role === 'admin' || d.role === '100' || d.nivel_chave === '100';
+                        const resolvedRole = isMasterUser ? 'admin' : (d.role || 'visualizador');
+                        
+                        const storage = (localStorage.getItem('sf_auth_token')) ? localStorage : sessionStorage;
+                        if (userStr) {
+                            storage.setItem('sf_auth_user', userStr);
+                        }
+                        if (d.nome) storage.setItem('sf_auth_name', d.nome);
+                        storage.setItem('sf_auth_role', resolvedRole);
+                        userRole = resolvedRole;
                         applyRBAC();
                         updateAuthUI();
                     }
@@ -8117,22 +8131,39 @@
         // RBAC (chamado apenas no login/init — não ao recarregar dados)
         // ================================================================
         function applyRBAC() {
-            const mainTabs       = document.getElementById('mainTabs');
-            const adminTabBtn    = document.querySelector('.tab-btn[data-tab="tab-admin"]');
+            const mainTabs        = document.getElementById('mainTabs');
+            const adminTabBtn     = document.querySelector('.tab-btn[data-tab="tab-admin"]');
             const adminTabContent = document.getElementById('tab-admin');
-            const curUser = (localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '').toLowerCase();
-            const isMasterAdmin = (curUser === 'julianotimoteo' || curUser === 'logistica' || curUser === 'admin' || ADMIN_ROLES.includes(userRole));
+
+            const rawUser = localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '';
+            const curUser = (typeof rawUser === 'string' ? rawUser : '').toLowerCase();
+            const curRole = (localStorage.getItem('sf_auth_role') || sessionStorage.getItem('sf_auth_role') || userRole || '').toLowerCase();
+
+            const isMasterAdmin = (
+                curUser === 'julianotimoteo' ||
+                curUser === 'logistica' ||
+                curUser === 'admin' ||
+                curUser.includes('juliano') ||
+                curRole === 'master' ||
+                curRole === 'admin' ||
+                curRole === '100' ||
+                curRole === '80' ||
+                curRole === 'gerente' ||
+                (typeof ADMIN_ROLES !== 'undefined' && (ADMIN_ROLES.includes(curRole) || ADMIN_ROLES.includes(userRole)))
+            ) && !curUser.includes('rafael');
 
             if (isMasterAdmin) {
                 if (mainTabs)        mainTabs.style.display       = 'inline-flex';
                 if (adminTabBtn)     adminTabBtn.style.display    = '';
                 if (adminTabContent) adminTabContent.style.display = '';
-                switchMainTab(activeMainTab, false);
-                switchAdminSubTab(activeAdminSub, false);
+                document.querySelectorAll('#adminSubTabs > .tab-btn').forEach(btn => btn.style.display = '');
+
+                switchMainTab(activeMainTab || 'tab-admin', false);
+                switchAdminSubTab(activeAdminSub || 'tab-equipamentos', false);
             } else {
-                // Usuário com acesso somente a Equipes: ocultar totalmente as abas principais superiores (#mainTabs)
-                if (mainTabs)        mainTabs.style.display        = 'none';
+                if (adminTabBtn)     adminTabBtn.style.display    = 'none';
                 if (adminTabContent) adminTabContent.style.display = 'none';
+                if (mainTabs)        mainTabs.style.display        = 'none';
                 switchMainTab('tab-equipe', false);
             }
         }

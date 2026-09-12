@@ -43,7 +43,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // Nao interceptar a raiz /, /monitor ou chamadas de API (permite abrir o DataServer monitor.html em http://localhost:8000/)
+    // Nao interceptar a raiz /, /monitor ou chamadas de API (permite abrir o DataServer monitor.html em http://${window.location.hostname}:8000/)
     if (url.pathname === '/' || url.pathname === '/monitor' || url.pathname === '/dataserver' || url.pathname.startsWith('/api')) {
         return;
     }

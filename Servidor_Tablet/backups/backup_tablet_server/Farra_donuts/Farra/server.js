@@ -35,7 +35,7 @@ try {
 
 const PORT = 3000;
 const HOST = '0.0.0.0';
-const PYTHON_API = 'http://127.0.0.1:8000';
+const PYTHON_API = 'http://${window.location.hostname}:8000';
 const REQUEST_TIMEOUT = 120000;
 const CACHE_TTL = 5000; // 5 segundos de cache para refletir estado de conexão em tempo real
 

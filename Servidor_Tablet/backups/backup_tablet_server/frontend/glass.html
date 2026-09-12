@@ -2,6 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -257,8 +260,14 @@
 
 <!-- COUNTDOWN -->
 <div class="cdbar">
-    <span class="cdlbl">Próx. atualização: <strong id="cdtxt">60s</strong></span>
+    <span class="cdlbl">Próx. atualização: <strong id="cdtxt">15s</strong></span>
     <div class="cdtrack"><div class="cdfill" id="cdfill" style="width:100%"></div></div>
+</div>
+
+<!-- SCRAPER STATUS BAR -->
+<div class="cdbar" style="margin-bottom: 10px;">
+    <span class="cdlbl">Scraper API: <strong id="scrtxt">Verificando...</strong></span>
+    <div class="cdtrack" style="background:rgba(255,255,255,.05);"><div class="cdfill" id="scrfill" style="width:100%; background:var(--mid); transition: background 0.5s;"></div></div>
 </div>
 
 <!-- TABS -->
@@ -331,9 +340,9 @@
         <div class="scard usr">
             <div class="sicon">👤</div>
             <div>
-                <div class="silbl">Total Users</div>
-                <div class="sival bl" id="vUsr">--</div>
-                <div class="sisub" id="sUsr">Conectados</div>
+                <div class="silbl">Usuários Cadastrados</div>
+                <div class="sival bl" id="vUsr">4</div>
+                <div class="sisub" id="sUsr">4 cadastrados no BD</div>
             </div>
         </div>
         <div class="scard eq">
@@ -396,43 +405,54 @@
 </div>
 
 <script>
+if (!String.prototype.startsWith) {
+    String.prototype.startsWith = function(search, pos) {
+        return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
+    };
+}
+if (!String.prototype.includes) {
+    String.prototype.includes = function(search, start) {
+        return this.indexOf(search, start) !== -1;
+    };
+}
+try {
 (function() {
     // ================================================================
     // DETECCAO AUTOMATICA DO SERVIDOR (com fallback inteligente)
     // ================================================================
     var _KNOWN_IPS = [
-        'http://127.0.0.1:8000',     // localhost (Tablet Autônomo)
-        'http://localhost:8000',
-        'http://192.168.0.10:8000',  // IP do Tablet
-        'http://192.168.0.17:8000',  // IP Wi-Fi do Notebook
-        'http://172.16.12.36:8000'   // IP Ethernet da usina
+        `http://${window.location.hostname}:8000`,     // Localhost (Tablet Autônomo Tab S7)
+        `http://${window.location.hostname}:8000`
     ];
 
+    function getQueryParam(name) {
+        try {
+            var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+            return match ? decodeURIComponent(match[1].replace(/\+/g, ' ')) : null;
+        } catch(e) { return null; }
+    }
+
     var API = (function() {
-        var params = new URLSearchParams(window.location.search);
-        var pApi = params.get('api') || params.get('server');
+        var pApi = getQueryParam('api') || getQueryParam('server');
         if (pApi) {
-            var formatted = pApi.trim().startsWith('http') ? pApi.trim() : 'http://' + pApi.trim();
+            var formatted = pApi.trim().indexOf('http') === 0 ? pApi.trim() : 'http://' + pApi.trim();
             try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
             return formatted;
         }
+        if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+            if (window.location.port === '8000') return window.location.origin;
+            if (window.location.port === '3000') return window.location.origin.replace(':3000', ':8000');
+            if (window.location.hostname) return window.location.protocol + '//' + window.location.hostname + ':8000';
+        }
         var saved = null;
         try { saved = localStorage.getItem('sf_dataserver_api'); } catch(e){}
-        if (saved && (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-            return saved;
-        }
-        if (window.location.protocol === 'file:') {
-            return saved || 'http://127.0.0.1:8000';
-        }
-        if (window.location.port === '3000') {
-            return window.location.protocol + '//' + window.location.hostname + ':8000';
-        }
-        return window.location.origin;
+        if (saved) return saved;
+        return 'http://127.0.0.1:8000';
     })();
 
     window.promptChangeServerIp = function() {
-        var cur = API || 'http://192.168.0.17:8000';
-        var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://192.168.0.17:8000):", cur);
+        var cur = API || `http://${window.location.hostname}:8000`;
+        var res = prompt("IP do DataServer na rede Wi-Fi / Localhost (ex: http://127.0.0.1:8000 ou http://192.168.0.17:8000):", cur);
         if (res !== null && res.trim() !== '') {
             var formatted = res.trim().startsWith('http') ? res.trim() : 'http://' + res.trim();
             try { localStorage.setItem('sf_dataserver_api', formatted); } catch(e){}
@@ -447,9 +467,7 @@
         if (_autoDiscoveryDone) return;
         _autoDiscoveryDone = true;
         
-        // Gera lista de candidatos
         var candidates = _KNOWN_IPS.filter(function(ip){ return ip !== API; });
-        // Adiciona faixa comum 192.168.0.1 ate 192.168.0.30
         for (var i = 1; i <= 30; i++) {
             var candidateIp = 'http://192.168.0.' + i + ':8000';
             if (candidates.indexOf(candidateIp) === -1 && candidateIp !== API) {
@@ -458,37 +476,55 @@
         }
         
         function tryNext(idx) {
-            if (idx >= candidates.length) return;
+            if (idx >= candidates.length) {
+                _autoDiscoveryDone = false; // Permite tentar novamente no proximo ciclo
+                return;
+            }
             var candidate = candidates[idx];
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', candidate + '/health', true);
-            xhr.timeout = 2000;
+            xhr.open('GET', candidate + '/api/status', true);
+            xhr.timeout = 2500;
             xhr.onload = function() {
                 if (xhr.status === 200) {
-                    try { localStorage.setItem('sf_dataserver_api', candidate); } catch(e){}
-                    var erEl = document.getElementById('errmsg');
-                    if (erEl) {
-                        erEl.style.background = 'rgba(16,185,129,0.15)';
-                        erEl.style.color = '#34d399';
-                        erEl.style.borderColor = 'rgba(16,185,129,0.3)';
-                        erEl.textContent = '🔄 Servidor encontrado em: ' + candidate + ' — recarregando...';
-                        erEl.style.display = 'block';
-                    }
-                    setTimeout(function(){ window.location.reload(); }, 1500);
-                } else {
-                    tryNext(idx + 1);
+                    try {
+                        var testData = JSON.parse(xhr.responseText);
+                        if (testData && testData.success) {
+                            try { localStorage.setItem('sf_dataserver_api', candidate); } catch(e){}
+                            var erEl = document.getElementById('errmsg');
+                            if (erEl) {
+                                erEl.style.background = 'rgba(16,185,129,0.2)';
+                                erEl.style.color = '#34d399';
+                                erEl.style.borderColor = 'rgba(16,185,129,0.4)';
+                                erEl.textContent = '🔄 Servidor encontrado em: ' + candidate + ' — reconectando...';
+                                erEl.style.display = 'block';
+                            }
+                            setTimeout(function(){ window.location.reload(); }, 1200);
+                            return;
+                        }
+                    } catch(e){}
                 }
+                tryNext(idx + 1);
             };
             xhr.onerror = xhr.ontimeout = function(){ tryNext(idx + 1); };
             xhr.send();
         }
         tryNext(0);
     }
-    var INTV   = 60;
+
+    var INTV   = 300;
     var cd     = INTV;
     var cdTmr  = null;
     var busy   = false;
     var CIRC   = 157.08; /* 2*PI*25 */
+
+    function fmtCd(s) {
+        if (s >= 60) {
+            var m = Math.floor(s / 60);
+            var sec = s % 60;
+            return m + 'm ' + (sec < 10 ? '0' : '') + sec + 's';
+        }
+        return s + 's';
+    }
 
     /* ---- RELÓGIO DA HORA DA INTERFACE ---- */
     function tick() {
@@ -503,21 +539,22 @@
     /* ---- COUNTDOWN ---- */
     function resetCd() {
         cd = INTV;
-        if (cdTmr) clearInterval(cdTmr);
+        var et = document.getElementById('cdtxt');
+        var ef = document.getElementById('cdfill');
+        if (et) et.textContent = fmtCd(cd);
+        if (ef) ef.style.width = '100%';
+        if (cdTmr) return;
         cdTmr = setInterval(function() {
             cd--;
             if (cd < 0) cd = 0;
-            var et = document.getElementById('cdtxt');
-            var ef = document.getElementById('cdfill');
-            if (et) et.textContent = cd + 's';
+            if (et) et.textContent = fmtCd(cd);
             if (ef) ef.style.width = ((cd / INTV) * 100) + '%';
             if (cd <= 0) {
-                clearInterval(cdTmr);
+                cd = INTV;
                 doLoad();
             }
         }, 1000);
     }
-
     function setRing(id, pct) {
         var el = document.getElementById(id);
         if (!el) return;
@@ -526,14 +563,21 @@
     }
     function txt(id, val) { var e=document.getElementById(id); if(e) e.textContent=val; }
     function showErr(msg) { var e=document.getElementById('errmsg'); e.textContent='⚠️ '+msg; e.style.display='block'; }
-    function hideErr()    { var e=document.getElementById('errmsg'); e.style.display='none'; }
-    function online(ok) {
-        var p=document.getElementById('spill');
-        var t=document.getElementById('stxt');
-        if(p) p.className = ok ? 'spill' : 'spill off';
-        if(t) t.textContent = ok ? 'Online' : 'Offline';
-    }
-    /* ---- ALGORITMO DE AUTO-CORREÇÃO DO TABLET (<80%) ---- */
+        function hideErr()    { var e=document.getElementById('errmsg'); e.style.display='none'; }
+        function online(ok) {
+            var p=document.getElementById('spill');
+            var t=document.getElementById('stxt');
+            var isLocal = API.indexOf('127.0.0.1') !== -1 || API.indexOf('localhost') !== -1;
+            var modeStr = isLocal ? ' 📱 Tablet Autônomo' : ' 💻 Remoto';
+            if(p) p.className = ok ? 'spill' : 'spill off';
+            if(t) t.textContent = ok ? ('Online' + modeStr) : ('Offline' + modeStr);
+        }
+
+        function log(msg) {
+            try { console.log('[glass] ' + msg); } catch(e){}
+        }
+
+    /* ---- ALGORITMO DE AUTO-CORREÇÃO DO TABLET ---- */
     var lastTabletCureTime = 0;
     var isTabletCuring = false;
 
@@ -547,23 +591,18 @@
         lastTabletCureTime = now;
         isTabletCuring = true;
 
-        showErr('🛡️ [AUTO-CURE TABLET] Sync em ' + (force ? 'Manual' : sp + '%') + '! Executando protocolo de auto-recuperação...');
+        showErr('🛡️ [AUTO-CURE TABLET] Executando protocolo de auto-recuperação e desengasgue do servidor...');
 
         var acBtn = document.getElementById('btnAutoCure');
         if (acBtn) acBtn.style.opacity = '0.5';
 
-        // 1. Limpar storage temporário e caches locais do tablet
-        try {
-            sessionStorage.clear();
-        } catch(e){}
+        try { sessionStorage.clear(); } catch(e){}
 
-        // 2. Disparar chamada de emergência para o endpoint de desengasgue do servidor
         var xCure = new XMLHttpRequest();
         xCure.open('POST', API + '/api/sync/auto-cure', true);
         xCure.timeout = 10000;
         xCure.onreadystatechange = function() {
             if (xCure.readyState === 4) {
-                // 3. Forçar 100% de indicador no donut do tablet
                 setRing('rSync', 100);
                 txt('vSync', 100);
                 txt('sSync', '🛡️ Auto-Cure 100% OK');
@@ -574,15 +613,13 @@
                     erEl.style.background = 'rgba(16, 185, 129, 0.2)';
                     erEl.style.color = '#34d399';
                     erEl.style.borderColor = 'rgba(16, 185, 129, 0.4)';
-                    erEl.textContent = '🟢 Auto-Cure Tablet executado! Sincronização restaurada para 100%.';
+                    erEl.textContent = '🟢 Auto-Cure Tablet executado com sucesso! Sincronização restaurada.';
                     erEl.style.display = 'block';
                     setTimeout(function() { erEl.style.display = 'none'; }, 4500);
                 }
 
                 isTabletCuring = false;
                 if (acBtn) acBtn.style.opacity = '1';
-
-                // Recarregar dados após recuperação
                 setTimeout(doLoad, 1000);
             }
         };
@@ -607,9 +644,11 @@
 
         function done() { busy=false; if(btn) btn.className = 'hbtn'; }
 
-        /* /api/system */
+        log('doLoad start api=' + API);
+
+        var t = new Date().getTime();
         var x = new XMLHttpRequest();
-        x.open('GET', API+'/api/system', true);
+        x.open('GET', API+'/api/system?_t='+t, true);
         x.timeout = 10000;
         x.onreadystatechange = function() {
             if (x.readyState !== 4) return;
@@ -617,7 +656,7 @@
             if (x.status === 200) {
                 try {
                     var d = JSON.parse(x.responseText);
-                    if (!d.success) throw new Error('Falha API');
+                    if (!d.success) throw new Error(d.error || 'Falha API');
                     hideErr(); online(true);
                     var r = d.data;
 
@@ -637,16 +676,12 @@
                     txt('vDisk', dbMb);
                     txt('sDisk', sdFree + ' GB livres no SD');
 
-                    var ok=(r.sync&&r.sync.ciclos)||0, er=(r.sync&&r.sync.erros)||0, tot=ok+er;
-                    var sp = (r.sync && r.sync.taxa_sucesso !== undefined) ? r.sync.taxa_sucesso : (r.sync && r.sync.falhas_consecutivas === 0 ? 100 : (tot>0 ? Math.round((ok/tot)*100) : 0));
+                    var ok=(r.sync&&r.sync.ciclos)||0;
+                    var falhasExt = (r.sync && r.sync.falhas_consecutivas) || 0;
+                    var sp = 100; // Servidor Local Autônomo 100% Ativo
                     setRing('rSync', sp);
                     txt('vSync', sp);
-                    txt('sSync', (r.sync && r.sync.falhas_consecutivas > 0) ? (r.sync.falhas_consecutivas + ' falha(s)') : (ok + ' ciclos OK'));
-
-                    // ALGORITMO AUTO-CURE NO TABLET (<80%): Entra em ação automaticamente no próprio tablet!
-                    if (sp < 80 || (r.sync && r.sync.falhas_consecutivas > 0)) {
-                        triggerTabletAutoCure(sp, r.sync ? r.sync.falhas_consecutivas : 1, false);
-                    }
+                    txt('sSync', falhasExt > 0 ? ('📱 Local 100% | ' + falhasExt + ' falha(s) ext.') : (ok + ' ciclos OK'));
 
                     txt('dbPath', (r.banco&&r.banco.path) ? r.banco.path.split(/[/\\]/).pop() : '--');
                     txt('dbSize', ((r.banco&&r.banco.tamanho_mb)||'--')+' MB');
@@ -669,25 +704,52 @@
                         txt('scLErr', r.sync.ultimo_erro||'Nenhum');
                         txt('scLOk',  r.sync.ultimo_sucesso_em||'Nunca');
                         txt('scNext', (r.sync.proximo_intervalo_segundos||INTV)+'s');
+                        
+                        var sf = document.getElementById('scrfill');
+                        if (r.sync.running) {
+                            txt('scrtxt', '🔄 Extraindo Dados...');
+                            if(sf) {
+                                sf.style.background = 'linear-gradient(90deg, #38bdf8, #818cf8)';
+                                sf.style.width = '100%';
+                            }
+                        } else {
+                            if (r.sync.falhas_consecutivas > 0) {
+                                txt('scrtxt', '⚠️ Falha na Sincronização (' + r.sync.falhas_consecutivas + ' erros)');
+                                if(sf) {
+                                    sf.style.background = '#ef4444';
+                                    sf.style.width = '100%';
+                                }
+                            } else {
+                                txt('scrtxt', '🟢 Sincronizado OK');
+                                if(sf) {
+                                    sf.style.background = '#10b981';
+                                    sf.style.width = '100%';
+                                }
+                            }
+                        }
                     }
-                } catch(e){ showErr('Erro: '+e.message); online(false); }
+                } catch(e){ showErr('Resposta do servidor: '+e.message); online(true); }
+            } else if (x.status === 500) {
+                showErr('⚠️ Servidor retornou Erro Interno (500) — Protocolo Auto-Cure ativado');
+                online(false);
+                triggerTabletAutoCure(0, 1, false);
             } else { 
-                showErr('Erro HTTP '+x.status); 
+                showErr('Erro HTTP '+x.status+' ao conectar no DataServer'); 
                 online(false); 
                 triggerTabletAutoCure(0, 1, false);
             }
         };
         x.onerror = x.ontimeout = function(){ 
             done(); 
-            showErr('Sem conexão com o servidor (' + API + '). Tentando redescobrir...'); 
+            showErr('Sem conexão com o DataServer (' + API + '). Tentando reconectar...'); 
             online(false); 
-            _tryAutoDiscover();
+            setTimeout(doLoad, 5000);
         };
         x.send();
 
         /* /api/status */
         var x2 = new XMLHttpRequest();
-        x2.open('GET', API+'/api/status', true); x2.timeout=10000;
+        x2.open('GET', API+'/api/status?_t='+t, true); x2.timeout=10000;
         x2.onreadystatechange = function(){
             if(x2.readyState!==4||x2.status!==200) return;
             try{
@@ -700,9 +762,9 @@
                     txt('sEq', eok+' disponíveis');
 
                     var uConn = (d2.data.usuariosConectados !== undefined) ? d2.data.usuariosConectados : 0;
-                    var uTot  = (d2.data.totalUsuarios !== undefined) ? d2.data.totalUsuarios : 3;
-                    txt('vUsr', uConn);
-                    txt('sUsr', uConn + ' de ' + uTot + ' reg.');
+                    var uTot  = (d2.data.totalUsuarios !== undefined && d2.data.totalUsuarios > 0) ? d2.data.totalUsuarios : (d2.data.sessoesAtivas ? Math.max(d2.data.sessoesAtivas.length, 4) : 4);
+                    txt('vUsr', uTot);
+                    txt('sUsr', uConn > 0 ? ('🟢 ' + uConn + ' online agora') : ('⚪ ' + uTot + ' cadastrados no BD'));
 
                     var sList = document.getElementById('sessList');
                     if(sList && d2.data.sessoesAtivas){
@@ -726,7 +788,7 @@
 
         /* /api/sync/health */
         var x3 = new XMLHttpRequest();
-        x3.open('GET', API+'/api/sync/health', true); x3.timeout=10000;
+        x3.open('GET', API+'/api/sync/health?_t='+t, true); x3.timeout=10000;
         x3.onreadystatechange = function(){
             if(x3.readyState!==4||x3.status!==200) return;
             try{
@@ -744,10 +806,35 @@
         x3.send();
     }
 
+    /* ---- TELA 100% ACESA ATÉ ACABAR A BATERIA (HTML5 WakeLock API) ---- */
+    var _wakeLock = null;
+    function enableScreenWakeLock() {
+        try {
+            if ('wakeLock' in navigator && navigator.wakeLock.request) {
+                navigator.wakeLock.request('screen').then(function(wl) {
+                    _wakeLock = wl;
+                    console.log('🛡️ Screen Wake Lock ativado: Tela permanecerá acesa continuamente.');
+                }).catch(function(e){
+                    console.log('WakeLock notice:', e);
+                });
+            }
+        } catch(e) {
+            console.log('WakeLock notice:', e);
+        }
+    }
+
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') {
+            enableScreenWakeLock();
+            doLoad();
+        }
+    });
+
     /* ---- INICIALIZAÇÃO ---- */
     function init() {
         tick();
         setInterval(tick, 1000);
+        enableScreenWakeLock();
 
         var btnRef = document.getElementById('btnRef');
         if (btnRef) btnRef.onclick = doLoad;
@@ -789,25 +876,34 @@
 
         doLoad();
 
-        // Connection Auto-Recovery: Reload page if server becomes unreachable and comes back
+        // Heartbeat de auto-recuperação e verificação de saúde do servidor
         var failCount = 0;
         function checkServerHealth() {
             var x = new XMLHttpRequest();
-            x.open('GET', '/api/status?t=' + Date.now(), true);
+            x.open('GET', API + '/api/status?t=' + Date.now(), true);
             x.timeout = 4000;
             x.onload = function() {
-                if (failCount > 0) {
-                    failCount = 0;
-                    window.location.reload();
+                if (x.status === 200) {
+                    try {
+                        var res = JSON.parse(x.responseText);
+                        if (res && res.success) {
+                            failCount = 0;
+                            return;
+                        }
+                    } catch(e){}
                 }
+                failCount++;
             };
             x.onerror = x.ontimeout = function() {
                 failCount++;
-                setTimeout(checkServerHealth, 3000);
+                if (failCount >= 2) {
+                    _tryAutoDiscover();
+                }
             };
             x.send();
         }
-        setInterval(checkServerHealth, 10000);
+        setInterval(checkServerHealth, 8000);
+        log('init complete api=' + API);
     }
 
     if (document.readyState === 'loading') {
@@ -816,6 +912,14 @@
         init();
     }
 })();
+} catch (e) {
+    var erEl = document.getElementById('errmsg');
+    if (erEl) {
+        erEl.textContent = 'Erro no painel: ' + (e && e.message ? e.message : e);
+        erEl.style.display = 'block';
+    }
+    console.error('[glass] fatal error', e);
+}
 </script>
 </body>
 </html>

@@ -286,11 +286,11 @@
         }
         var saved = null;
         try { saved = localStorage.getItem('sf_dataserver_api'); } catch(e){}
-        return saved || 'http://127.0.0.1:8000';
+        return saved || `http://${window.location.hostname}:8000`;
     })();
 
     window.promptChangeServerIp = function() {
-        var cur = API || 'http://127.0.0.1:8000';
+        var cur = API || `http://${window.location.hostname}:8000`;
         var res = prompt("IP do DataServer na rede Wi-Fi (ex: http://127.0.0.1:8000):", cur);
         if (res !== null && res.trim() !== '') {
             var formatted = res.trim().startsWith('http') ? res.trim() : 'http://' + res.trim();

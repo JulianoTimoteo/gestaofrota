@@ -395,7 +395,7 @@
             return saved;
         }
         if (window.location.protocol === 'file:') {
-            return saved || 'http://127.0.0.1:8000';
+            return saved || `http://${window.location.hostname}:8000`;
         }
         if (window.location.port === '3000') {
             return window.location.protocol + '//' + window.location.hostname + ':8000';

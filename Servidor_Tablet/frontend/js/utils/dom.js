@@ -179,19 +179,21 @@
             const adminTabBtn    = document.querySelector('.tab-btn[data-tab="tab-admin"]');
             const adminTabContent = document.getElementById('tab-admin');
 
-            const curUser = (localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '').toLowerCase();
-            const curRole = (localStorage.getItem('sf_auth_role') || sessionStorage.getItem('sf_auth_role') || userRole || '').toLowerCase();
+            const rawUser = localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '';
+            const curUser = (typeof rawUser === 'string' ? rawUser : '').toLowerCase();
+            const curRole = (localStorage.getItem('sf_auth_role') || sessionStorage.getItem('sf_auth_role') || (typeof userRole !== 'undefined' ? userRole : '') || '').toLowerCase();
 
             const isMasterAdmin = (
                 curUser === 'julianotimoteo' ||
                 curUser === 'logistica' ||
                 curUser === 'admin' ||
+                curUser.includes('juliano') ||
                 curRole === 'master' ||
                 curRole === 'admin' ||
                 curRole === '100' ||
                 curRole === '80' ||
                 curRole === 'gerente' ||
-                ADMIN_ROLES.includes(curRole)
+                (typeof ADMIN_ROLES !== 'undefined' && (ADMIN_ROLES.includes(curRole) || (typeof userRole !== 'undefined' && ADMIN_ROLES.includes(userRole))))
             ) && !curUser.includes('rafael');
 
             if (isMasterAdmin) {
@@ -203,7 +205,6 @@
                 switchMainTab(activeMainTab || 'tab-admin', false);
                 switchAdminSubTab(activeAdminSub || 'tab-equipamentos', false);
             } else {
-                // Usuário Operador / Leitura (ex: Rafael Farra): ocultar totalmente abas de administração e mostrar apenas dados da operação (#tab-equipe)
                 if (adminTabBtn)     adminTabBtn.style.display    = 'none';
                 if (adminTabContent) adminTabContent.style.display = 'none';
                 if (mainTabs)        mainTabs.style.display        = 'none';

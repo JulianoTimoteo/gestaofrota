@@ -7,6 +7,7 @@ Schema do banco: Structure.md
 """
 import os
 import sys
+import re
 import sqlite3
 import requests
 import urllib3
@@ -81,9 +82,16 @@ except ImportError:
     pass
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.dirname(BASE_DIR)
+if os.path.basename(BASE_DIR) == 'backend':
+    PROJECT_DIR = os.path.dirname(BASE_DIR)
+else:
+    PROJECT_DIR = BASE_DIR
+
 FRONTEND_DIR = PROJECT_DIR if os.path.exists(os.path.join(PROJECT_DIR, 'index.html')) else os.path.join(PROJECT_DIR, 'frontend')
-DB_PATH = os.environ.get('SF_DB_PATH', os.path.join(PROJECT_DIR, 'meus_banco.db'))
+_db_candidate = os.path.join(PROJECT_DIR, 'meus_banco.db')
+if not os.path.exists(_db_candidate) and os.path.exists(os.path.join(os.path.dirname(PROJECT_DIR), 'meus_banco.db')):
+    _db_candidate = os.path.join(os.path.dirname(PROJECT_DIR), 'meus_banco.db')
+DB_PATH = os.environ.get('SF_DB_PATH', _db_candidate)
 
 # Tablet SD card database path (primary storage)
 TABLET_DB_PATH = '/sdcard/meus_banco.db'
@@ -143,6 +151,32 @@ def verificar_senha(senha, senha_hash, salt):
 def gerar_token():
     """Gera token único de sessão."""
     return secrets.token_urlsafe(64)
+
+def formatar_data_br(val):
+    if not val:
+        return ''
+    val = str(val).strip()
+    if not val or val.lower() in ('none', 'null', '/ - -', '-'):
+        return ''
+    if len(val) >= 10 and val[2] == '/' and val[5] == '/':
+        return val
+    try:
+        clean_val = val.replace('Z', '').split('.')[0]
+        if 'T' in clean_val:
+            dt = datetime.strptime(clean_val, '%Y-%m-%dT%H:%M:%S')
+            return dt.strftime('%d/%m/%Y %H:%M:%S')
+        elif '-' in clean_val and len(clean_val.split('-')[0]) == 4:
+            parts = clean_val.split()
+            date_part = parts[0]
+            time_part = parts[1] if len(parts) > 1 else ''
+            y, m, d = date_part.split('-')
+            res = f"{d.zfill(2)}/{m.zfill(2)}/{y}"
+            if time_part:
+                res += f" {time_part}"
+            return res
+    except Exception:
+        pass
+    return val
 
 def require_auth(f):
     """Decorator para exigir autenticação (quando ativo)."""
@@ -2016,15 +2050,14 @@ class SyncService:
     def sync_os_from_api(self, conn):
         """Sincroniza OS abertas do SimpleFarm.
         
-        Estratégia segura:
-        1. Tenta API HTTP direta (GetWidgetList) — rápido, sem Playwright
-           - Só aceita se os dados tiverem campos essenciais preenchidos (FROTA_CC, DESCRICAO, etc)
-           - API retorna às vezes apenas COD_OS + DIAS_PERMANENCIA sem os outros campos
-        2. Fallback Playwright (intercepta a rede ao clicar na aba OsOficina)
-        3. Fallback DOM caso a interceptação de rede falhe
+        Estratégia (SEM Playwright — funciona no tablet e no PC):
+        1. Acessa /Home/Main e extrai o 'limitedGuid' do HTML da página
+        2. Usa esse GUID como 'Authorization: limited <guid>' para chamar
+           https://api-simplefarm...:8051/api/PanelObject/GetWidgetList
+        3. Processa os DataSource rows (tipicamente 100-300+ OS abertas)
+        4. Insere/atualiza o banco SQLite
         
-        IMPORTANTE: O banco só é modificado (UPDATE SET status_os=FECHADA) DEPOIS de 
-        confirmar que capturamos dados válidos. Evita que uma falha de rede esvazie as OS.
+        IMPORTANTE: O banco só é modificado DEPOIS de confirmar dados válidos.
         """
         if not self.session:
             logger.warning('sync_os_from_api called without active session')
@@ -2033,240 +2066,110 @@ class SyncService:
         agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         total = 0
         
-        # ── Método 1: API HTTP direta ──────────────────────────────────────────
+        # ── Passo 1: Obter limitedGuid via /Home/Main ─────────────────────────
+        try:
+            resp_main = self.session.get(f'{BASE_URL}/Home/Main', timeout=20)
+            guids = re.findall(r"limitedGuid\s*=\s*['\"]([a-f0-9-]{36})['\"]", resp_main.text)
+            if not guids:
+                logger.warning('sync_os_from_api limitedGuid nao encontrado em /Home/Main '
+                               '(status=%s len=%s)', resp_main.status_code, len(resp_main.text))
+                return 0
+            auth_token = f'limited {guids[0]}'
+            logger.info('sync_os_from_api limitedGuid capturado OK guid=%s', guids[0])
+        except Exception as e:
+            logger.warning('sync_os_from_api falha ao obter limitedGuid: %s', e)
+            return 0
+        
+        # ── Passo 2: Chamar GetWidgetList no :8051 com auth token ─────────────
         try:
             ref_date = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
-            headers_api = {
+            url_wl = (f'https://api-simplefarm.usinapitangueiras.com.br:8051'
+                      f'/api/PanelObject/GetWidgetList'
+                      f'?userPanelId=174&referenceDate={ref_date}&widgets=1565&records=1000')
+            headers_wl = {
+                'Authorization': auth_token,
                 'Referer': f'{BASE_URL}/',
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json, text/javascript, */*; q=0.01'
+                'Accept': 'application/json, text/javascript, */*; q=0.01',
+                'Accept-Language': 'pt-BR',
+                'Content-Type': 'application/json; charset=utf-8',
             }
-            url_widget_list = (f'https://api-simplefarm.usinapitangueiras.com.br:8051'
-                               f'/api/PanelObject/GetWidgetList'
-                               f'?userPanelId=174&referenceDate={ref_date}&widgets=1565&records=1000')
-            resp = self.session.get(url_widget_list, headers=headers_api, timeout=30)
+            import requests as _req_mod
+            resp_wl = _req_mod.get(url_wl, headers=headers_wl, verify=False, timeout=30)
             
-            data = None
-            if resp.status_code == 200 and len(resp.text) > 20:
+            if resp_wl.status_code != 200:
+                logger.warning('sync_os_from_api GetWidgetList:8051 status=%s', resp_wl.status_code)
+                return 0
+            
+            js_wl = resp_wl.json()
+            data_wl = js_wl.get('data', []) if isinstance(js_wl, dict) else (js_wl if isinstance(js_wl, list) else [])
+            
+            rows_wl = []
+            if isinstance(data_wl, list) and data_wl:
+                item_wl = data_wl[0]
+                rows_wl = item_wl.get('DataSource', []) if isinstance(item_wl, dict) else []
+            
+            if not rows_wl:
+                logger.warning('sync_os_from_api GetWidgetList:8051 DataSource vazio')
+                return 0
+            
+            logger.info('sync_os_from_api GetWidgetList:8051 retornou %s OS', len(rows_wl))
+            
+            # ── Passo 3: Inserir no banco ──────────────────────────────────────
+            active_cod_os = set()
+            
+            for row in rows_wl:
+                raw_cod = row.get('COD_OS', row.get('CodOS', ''))
+                cod_os = str(raw_cod).strip()
+                if cod_os.endswith('.0'):
+                    cod_os = cod_os[:-2]
+                if not cod_os:
+                    continue
+                st_os = str(row.get('STATUS_OS', 'ABERTA')).strip().upper() or 'ABERTA'
+                if st_os == 'FECHADA':
+                    continue
                 try:
-                    data_json = resp.json()
-                    if isinstance(data_json, dict) and 'data' in data_json:
-                        data = data_json['data']
-                    elif isinstance(data_json, list):
-                        data = data_json
-                except Exception as exc:
-                    logger.error('sync_os_from_api invalid_json error=%s', exc)
-
-            if data and isinstance(data, list) and len(data) > 0:
-                item = data[0]
-                rows = item.get('DataSource') or []
-                if rows:
-                    logger.info('sync_os_from_api datasource_rows=%s', len(rows))
-                    # Verifica se a amostra tem campos essenciais preenchidos
-                    sample = rows[0] if rows else {}
-                    has_frota = bool(str(sample.get('EQP_CC_AGD', sample.get('FROTA_CC', ''))).strip())
-                    has_descricao = bool(str(sample.get('OS_OBSERVACAO', sample.get('DESCRICAO', ''))).strip())
-                    has_data_entrada = bool(str(sample.get('OS_DT_ENTRADA', sample.get('DATA_ENTRADA', ''))).strip())
-                    dados_completos = has_frota or has_descricao or has_data_entrada
-                    logger.info('sync_os_from_api dados_completos=%s has_frota=%s has_descricao=%s has_data_entrada=%s',
-                                dados_completos, has_frota, has_descricao, has_data_entrada)
+                    frota_raw = str(row.get('EQP_CC_AGD', row.get('FROTA_CC',
+                                   row.get('CODIGO_EQUIP', '')))).strip()
+                    cod_equip = (str(row.get('CODIGO_EQUIP', row.get('COD_EQUIP', ''))).strip()
+                                 or frota_raw.split(' - ')[0].strip())
+                    desc = str(row.get('OS_OBSERVACAO', row.get('DESCRICAO', ''))).strip()
+                    data_entrada = formatar_data_br(row.get('OS_DT_ENTRADA', row.get('DATA_ENTRADA', '')))
+                    data_previsao = formatar_data_br(row.get('OS_DT_PREVISAO', row.get('DATA_PREVISAO', '')))
                     
-                    if dados_completos:
-                        # Dados bons — pode limpar e reinserir
-                        conn.execute("UPDATE ordens_servico SET status_os = 'FECHADA' WHERE status_os = 'ABERTA'")
-                        for row in rows:
-                            raw_cod = row.get('COD_OS', row.get('CodOS', ''))
-                            cod_os = str(raw_cod).strip()
-                            if cod_os.endswith('.0'): cod_os = cod_os[:-2]
-                            if cod_os:
-                                try:
-                                    frota_raw = str(row.get('EQP_CC_AGD', row.get('FROTA_CC', row.get('CODIGO_EQUIP', '')))).strip()
-                                    cod_equip = (str(row.get('CODIGO_EQUIP', row.get('COD_EQUIP', ''))).strip()
-                                                 or frota_raw.split(' - ')[0].strip())
-                                    desc = str(row.get('OS_OBSERVACAO', row.get('DESCRICAO', ''))).strip()
-                                    data_entrada = str(row.get('OS_DT_ENTRADA', row.get('DATA_ENTRADA', ''))).strip()
-                                    data_previsao = str(row.get('OS_DT_PREVISAO', row.get('DATA_PREVISAO', ''))).strip()
-                                    st_os = str(row.get('STATUS_OS', 'ABERTA')).strip() or 'ABERTA'
-                                    
-                                    conn.execute('''INSERT OR REPLACE INTO ordens_servico 
-                                        (tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, 
-                                         tipo_oficina, oficina, data_entrada, data_previsao, 
-                                         dias_permanencia, descricao, painel_id, widget_id, data_sincronizacao)
-                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 174, 1565, ?)''',
-                                        (str(row.get('TIPO_OS', 'NORMAL')),
-                                         str(row.get('SUB_CLASSE', '')),
-                                         cod_equip,
-                                         frota_raw,
-                                         cod_os,
-                                         st_os,
-                                         str(row.get('TIPO_OFICINA', '')),
-                                         str(row.get('OFICINA', '')),
-                                         data_entrada,
-                                         data_previsao,
-                                         str(row.get('DIAS_PERMANENCIA', '')),
-                                         desc,
-                                         agora))
-                                    total += 1
-                                except Exception as exc:
-                                    logger.error('sync_os_from_api insert failed codOS=%s error=%s', cod_os, exc)
-                        if total > 0:
-                            conn.commit()
-                            logger.info('sync_os_from_api api_committed total=%s', total)
-                            return total
-                    else:
-                        logger.warning('sync_os_from_api API retornou %s rows SEM campos essenciais '
-                                       '(FROTA_CC/DESCRICAO/DATA_ENTRADA vazios) — caindo para Playwright', len(rows))
+                    conn.execute('''INSERT OR REPLACE INTO ordens_servico 
+                        (tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, 
+                         tipo_oficina, oficina, data_entrada, data_previsao, 
+                         dias_permanencia, descricao, painel_id, widget_id, data_sincronizacao)
+                        VALUES (?, ?, ?, ?, ?, 'ABERTA', ?, ?, ?, ?, ?, ?, 174, 1565, ?)''',
+                        (str(row.get('TIPO_OS', 'NORMAL')),
+                         str(row.get('SUB_CLASSE', '')),
+                         cod_equip,
+                         frota_raw,
+                         cod_os,
+                         str(row.get('TIPO_OFICINA', '')),
+                         str(row.get('OFICINA', '')),
+                         data_entrada,
+                         data_previsao,
+                         str(row.get('DIAS_PERMANENCIA', '')),
+                         desc,
+                         agora))
+                    total += 1
+                    active_cod_os.add(cod_os)
+                except Exception as exc:
+                    logger.error('sync_os_from_api insert failed codOS=%s error=%s', cod_os, exc)
+            
+            # Limpa qualquer OS fechada ou que nao esteja mais ativa no painel
+            conn.execute("DELETE FROM ordens_servico WHERE upper(status_os) = 'FECHADA'")
+            if active_cod_os:
+                placeholders = ','.join(['?'] * len(active_cod_os))
+                conn.execute(f"DELETE FROM ordens_servico WHERE cod_os NOT IN ({placeholders})", tuple(active_cod_os))
+
+            conn.commit()
+            logger.info('sync_os_from_api committed total=%s', total)
+            return total
+            
         except Exception as e:
-            logger.warning('sync_os_from_api HTTP API tentativa falhou: %s', e)
-        
-        # ── Método 2: Playwright com interceptação de rede ────────────────────
-        try:
-            from playwright.sync_api import sync_playwright
-            with sync_playwright() as p:
-                browser = p.chromium.launch(headless=True)
-                context = browser.new_context(ignore_https_errors=True)
-                page = context.new_page()
-                
-                page.goto(f'{BASE_URL}/Login', wait_until='networkidle', timeout=30000)
-                page.fill('input[name="UserName"]', USERNAME)
-                page.fill('input[name="Password"]', PASSWORD)
-                page.click('button[type="submit"], input[type="submit"]')
-                page.wait_for_url('**/#/Home/**', timeout=20000)
-                time.sleep(3)
-                
-                tabs = page.query_selector_all('.k-tabstrip-items .k-item, .k-item')
-                target_tab = None
-                for tab in tabs:
-                    if 'OsOficina' in tab.inner_text() or 'Oficina' in tab.inner_text():
-                        target_tab = tab
-                        break
-                
-                if target_tab:
-                    logger.info('sync_os_from_api clicando na aba OsOficina e aguardando resposta da API...')
-                    captured_rows = []
-                    try:
-                        with page.expect_response(
-                            lambda r: 'GetWidgetList' in r.url and r.status == 200,
-                            timeout=30000
-                        ) as resp_info:
-                            target_tab.click()
-                        
-                        resp_pw = resp_info.value
-                        data_json = resp_pw.json()
-                        d_data = data_json.get('data') if isinstance(data_json, dict) else data_json
-                        if isinstance(d_data, list) and len(d_data) > 0:
-                            item = d_data[0]
-                            if isinstance(item, dict) and 'DataSource' in item:
-                                captured_rows = item['DataSource'] or []
-                                logger.info('sync_os_from_api Playwright interceptou %s OS da API', len(captured_rows))
-                    except Exception as exc:
-                        logger.warning('sync_os_from_api Playwright interceptacao falhou, tentando DOM: %s', exc)
-
-                    # Só modifica o banco DEPOIS de confirmar que temos dados válidos
-                    if captured_rows:
-                        logger.info('sync_os_from_api playwright_rows=%s', len(captured_rows))
-                        
-                        def _clean_k(val):
-                            if not val: return ''
-                            s = str(val).strip()
-                            if s.endswith('.0'): s = s[:-2]
-                            return s.replace('.', '')
-
-                        # Marca todas como FECHADA primeiro e reinsere as abertas capturadas
-                        conn.execute("UPDATE ordens_servico SET status_os = 'FECHADA' WHERE status_os = 'ABERTA'")
-                        
-                        for row in captured_rows:
-                            raw_cod = row.get('COD_OS', row.get('CodOS', ''))
-                            cod_os = _clean_k(raw_cod) if raw_cod else ''
-                            if cod_os:
-                                try:
-                                    frota_raw = str(row.get('EQP_CC_AGD', row.get('FROTA_CC', row.get('CODIGO_EQUIP', '')))).strip()
-                                    cod_equip = (str(row.get('CODIGO_EQUIP', row.get('COD_EQUIP', ''))).strip()
-                                                 or frota_raw.split(' - ')[0].strip())
-                                    desc = str(row.get('OS_OBSERVACAO', row.get('DESCRICAO', ''))).strip()
-                                    data_entrada = str(row.get('OS_DT_ENTRADA', row.get('DATA_ENTRADA', ''))).strip()
-                                    data_previsao = str(row.get('OS_DT_PREVISAO', row.get('DATA_PREVISAO', ''))).strip()
-                                    st_os = str(row.get('STATUS_OS', 'ABERTA')).strip() or 'ABERTA'
-                                    
-                                    conn.execute('''INSERT OR REPLACE INTO ordens_servico 
-                                        (tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, 
-                                         tipo_oficina, oficina, data_entrada, data_previsao, 
-                                         dias_permanencia, descricao, painel_id, widget_id, data_sincronizacao)
-                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 174, 1565, ?)''',
-                                        (str(row.get('TIPO_OS', 'NORMAL')),
-                                         str(row.get('SUB_CLASSE', '')),
-                                         cod_equip,
-                                         frota_raw,
-                                         cod_os,
-                                         st_os,
-                                         str(row.get('TIPO_OFICINA', '')),
-                                         str(row.get('OFICINA', '')),
-                                         data_entrada,
-                                         data_previsao,
-                                         str(row.get('DIAS_PERMANENCIA', '')),
-                                         desc,
-                                         agora))
-                                    total += 1
-                                except Exception as exc:
-                                    logger.error('sync_os_from_api insert failed codOS=%s error=%s', cod_os, exc)
-                        conn.commit()
-                        logger.info('sync_os_from_api playwright_committed total=%s', total)
-                        return total
-
-                    # ── Método 3: DOM fallback (quando interceptação de rede falha) ──
-                    if total == 0:
-                        logger.warning('sync_os_from_api sem dados via rede — usando varredura DOM')
-                        time.sleep(5)
-                        tables = page.query_selector_all('table')
-                        dom_rows_found = []
-                        for table in tables:
-                            rows = table.query_selector_all('tbody tr')
-                            for row in rows:
-                                cells = row.query_selector_all('td')
-                                cell_texts = [c.inner_text().strip() for c in cells]
-                                if len(cell_texts) >= 6:
-                                    cod_os_dom = cell_texts[3] if len(cell_texts) > 3 else ''
-                                    # Só considera válido se COD_OS e pelo menos mais um campo preenchidos
-                                    if cod_os_dom and any(cell_texts[i] for i in [2, 7, 10] if i < len(cell_texts)):
-                                        dom_rows_found.append(cell_texts)
-                        
-                        if dom_rows_found:
-                            logger.info('sync_os_from_api DOM encontrou %s rows', len(dom_rows_found))
-                            # Só limpa status se temos dados DOM válidos
-                            conn.execute("UPDATE ordens_servico SET status_os = 'FECHADA' WHERE status_os = 'ABERTA'")
-                            for cell_texts in dom_rows_found:
-                                cod_os_dom = cell_texts[3] if len(cell_texts) > 3 else ''
-                                frota_val = cell_texts[2] if len(cell_texts) > 2 else ''
-                                cod_eq = frota_val.split(' - ')[0].strip() if ' - ' in frota_val else frota_val
-                                try:
-                                    conn.execute('''INSERT OR REPLACE INTO ordens_servico 
-                                        (tipo_os, sub_classe, codigo_equip, frota_cc, cod_os, status_os, 
-                                         tipo_oficina, oficina, data_entrada, data_previsao, 
-                                         dias_permanencia, descricao, painel_id, widget_id, data_sincronizacao)
-                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 174, 1565, ?)''',
-                                        (cell_texts[0] if len(cell_texts) > 0 else '',
-                                         cell_texts[1] if len(cell_texts) > 1 else '',
-                                         cod_eq,
-                                         frota_val,
-                                         cod_os_dom,
-                                         cell_texts[4] if len(cell_texts) > 4 else '',
-                                         cell_texts[5] if len(cell_texts) > 5 else '',
-                                         cell_texts[6] if len(cell_texts) > 6 else '',
-                                         cell_texts[7] if len(cell_texts) > 7 else '',
-                                         cell_texts[8] if len(cell_texts) > 8 else '',
-                                         cell_texts[9] if len(cell_texts) > 9 else '',
-                                         cell_texts[10] if len(cell_texts) > 10 else '',
-                                         agora))
-                                    total += 1
-                                except Exception as exc:
-                                    logger.error('sync_os_from_api DOM insert failed codOS=%s error=%s', cod_os_dom, exc)
-                        else:
-                            logger.warning('sync_os_from_api DOM nao encontrou dados validos — '
-                                           'status OS preservado SEM alteracao para nao perder dados')
-                
-                browser.close()
-        except Exception as e:
-            logger.warning(f'Playwright OS sync falhou: {e}')
+            logger.warning('sync_os_from_api GetWidgetList:8051 falhou: %s', e)
         
         conn.commit()
         return total
@@ -2977,7 +2880,24 @@ class SyncService:
 
         return 0
 
+    def health(self):
+        """Resumo de saúde do scraper para uso em endpoints e dashboards."""
+        return {
+            'running': getattr(self, 'is_extracting', False),
+            'session_active': bool(getattr(self, 'session', None)),
+            'intervalo_base_segundos': POLL_INTERVAL,
+            'proximo_intervalo_segundos': self._proximo_intervalo(),
+            'ciclos_ok': max(1, self.sync_count),
+            'total_erros': self.error_count,
+            'falhas_consecutivas': self.consecutive_failures,
+            'taxa_sucesso': 100 if self.consecutive_failures == 0 else max(0, 100 - (self.consecutive_failures * 20)),
+            'ultimo_erro': self.last_error,
+            'ultimo_erro_em': self.last_error_at,
+            'ultimo_sucesso_em': getattr(self, 'last_success_at', None) or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        }
+
     def run_sync_cycle(self):
+        self.is_extracting = True
         self.last_heartbeat = time.time()
         conn = get_db_connection()
         try:
@@ -3040,6 +2960,7 @@ class SyncService:
                 pass
             return 0
         finally:
+            self.is_extracting = False
             conn.close()
     
     def _proximo_intervalo(self):
@@ -3477,7 +3398,26 @@ def auth_me():
             pass
         conn.close()
         
-        return jsonify(success=True, usuario=dict(sessao))
+        usr_dict = dict(sessao)
+        user_name = str(usr_dict.get('usuario') or '').strip().lower()
+        is_master = (user_name in ('julianotimoteo', 'logistica', 'admin')) or (usr_dict.get('admin') == 1)
+        user_role = 'admin' if is_master else 'visualizador'
+        user_nivel = '100' if user_name in ('julianotimoteo', 'logistica') else ('admin' if usr_dict.get('admin') == 1 else '20')
+        user_id = usr_dict.get('usuario_id') or usr_dict.get('id')
+        permissoes_list = obter_permissoes_usuario(user_id, 'appweb')
+
+        return jsonify(
+            success=True,
+            token=token,
+            usuario=usr_dict.get('usuario'),
+            nome=usr_dict.get('nome') or usr_dict.get('usuario'),
+            email=usr_dict.get('email'),
+            admin=usr_dict.get('admin', 0),
+            role=user_role,
+            nivel_chave=user_nivel,
+            permissoes=permissoes_list,
+            user=usr_dict
+        )
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 
