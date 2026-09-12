@@ -1,64 +1,35 @@
-const CACHE_NAME = 'fleet-cache-v4';
-const OFFLINE_URL = './index.html';
-const ASSETS_TO_CACHE = [
-    './index.html',
-    './manifest.json',
-    './android-chrome-192x192.png',
-    './android-chrome-512x512.png',
-    './favicon.ico'
-];
+const CACHE_NAME = 'fleet-cache-v22';
 
 self.addEventListener('install', (event) => {
-    event.waitUntil(
-        (async () => {
-            const cache = await caches.open(CACHE_NAME);
-            for (const asset of ASSETS_TO_CACHE) {
-                try {
-                    await cache.add(asset);
-                } catch (e) {
-                    // Skip non-critical assets
-                }
-            }
-        })()
-    );
     self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        (async () => {
-            const cacheNames = await caches.keys();
-            await Promise.all(
-                cacheNames.map((name) => {
-                    if (name !== CACHE_NAME) {
-                        return caches.delete(name);
-                    }
+        caches.keys().then((keys) => {
+            return Promise.all(
+                keys.map((key) => {
+                    return caches.delete(key);
                 })
             );
-            await clients.claim();
-        })()
+        }).then(() => self.clients.claim())
     );
 });
 
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // Nao interceptar a raiz /, /monitor ou chamadas de API (permite abrir o DataServer monitor.html em http://${window.location.hostname}:8000/)
-    if (url.pathname === '/' || url.pathname === '/monitor' || url.pathname === '/dataserver' || url.pathname.startsWith('/api')) {
+    // NUNCA interceptar ou cachear chamadas de API
+    if (url.pathname.startsWith('/api') || url.pathname.includes('/api/')) {
         return;
     }
 
     if (event.request.method === 'GET') {
         event.respondWith(
-            caches.match(event.request).then((cachedResponse) => {
-                if (cachedResponse) {
-                    return cachedResponse;
-                }
-                return fetch(event.request).catch(() => {
-                    if (event.request.mode === 'navigate') {
-                        return caches.match(OFFLINE_URL);
-                    }
-                });
+            fetch(event.request).then((networkResponse) => {
+                return networkResponse;
+            }).catch(() => {
+                return caches.match(event.request);
             })
         );
     }

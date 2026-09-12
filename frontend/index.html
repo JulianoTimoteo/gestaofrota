@@ -3,7 +3,7 @@
 <head>
     <script>
         (function() {
-            var APP_VER = '2026_v17_force_cache_flush';
+            var APP_VER = '2026_v22_purge_all_caches';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
@@ -27,9 +27,7 @@
         if ('serviceWorker' in navigator) {
             caches.keys().then(function(names) {
                 for (let name of names) {
-                    if (name !== 'fleet-cache-v16') {
-                        caches.delete(name);
-                    }
+                    caches.delete(name);
                 }
             });
         }
@@ -3429,6 +3427,109 @@
                 <div class="action-modal-actions" style="margin-top:0.5rem;display:flex;justify-content:flex-end;gap:0.5rem;">
                     <button type="button" class="btn btn-secondary" id="btnCancelAddOper">Cancelar</button>
                     <button type="submit" class="btn btn-primary" id="btnSaveAddOper" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%);border:none;"><i class="fas fa-save"></i> Salvar Operação</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR FROTA / EQUIPAMENTO -->
+    <div class="action-modal-overlay" id="modalEditEquipOverlay">
+        <div class="action-modal" style="max-width:480px;width:92%;">
+            <h3><i class="fas fa-edit" style="color:var(--color-primary);"></i> Editar Equipamento</h3>
+            <form id="formEditEquip" style="display:flex;flex-direction:column;gap:0.9rem;margin-top:1rem;">
+                <input type="hidden" id="editEquipCodigoOriginal">
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Código do Equipamento</label>
+                    <input type="text" id="editEquipCodigo" class="filter-input" readonly style="width:100%;opacity:0.8;cursor:not-allowed;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Descrição *</label>
+                    <input type="text" id="editEquipDescricao" class="filter-input" required style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Modelo *</label>
+                    <input type="text" id="editEquipModelo" class="filter-input" required style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Tipo de Equipamento *</label>
+                    <select id="editEquipTipo" class="filter-input" required style="width:100%;cursor:pointer;">
+                        <option value="Trator">Trator</option>
+                        <option value="Caminhão">Caminhão</option>
+                        <option value="Motobomba">Motobomba</option>
+                        <option value="Uniport">Uniport</option>
+                        <option value="Pá carregadeira">Pá carregadeira</option>
+                        <option value="Motoniveladora">Motoniveladora</option>
+                        <option value="Colhedora">Colhedora</option>
+                        <option value="Pulverizador">Pulverizador</option>
+                        <option value="Escavadeira">Escavadeira</option>
+                        <option value="Veículo Utilitário">Veículo Utilitário</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Equipe / Grupo *</label>
+                    <select id="editEquipGrupo" class="filter-input" required style="width:100%;cursor:pointer;">
+                        <option value="BIOMASSA">BIOMASSA</option>
+                        <option value="FERTIRRIGACAO">FERTIRRIGACAO</option>
+                        <option value="HERBICIDA">HERBICIDA</option>
+                        <option value="LINHA AMARELA">LINHA AMARELA</option>
+                        <option value="PREPARO">PREPARO</option>
+                        <option value="TRATOS CULTURAIS">TRATOS CULTURAIS</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Status *</label>
+                    <select id="editEquipStatus" class="filter-input" required style="width:100%;cursor:pointer;">
+                        <option value="ATIVO">ATIVO</option>
+                        <option value="INATIVO">INATIVO</option>
+                    </select>
+                </div>
+                <div id="editEquipError" style="color:#ef4444;font-size:0.8rem;display:none;font-weight:600;"></div>
+                <div class="action-modal-actions" style="margin-top:0.5rem;display:flex;justify-content:flex-end;gap:0.5rem;">
+                    <button type="button" class="btn btn-secondary" id="btnCancelEditEquip" onclick="document.getElementById('modalEditEquipOverlay')?.classList.remove('active')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);border:none;"><i class="fas fa-save"></i> Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR OPERAÇÃO PRODUTIVA -->
+    <div class="action-modal-overlay" id="modalEditOperOverlay">
+        <div class="action-modal" style="max-width:480px;width:92%;">
+            <h3><i class="fas fa-edit" style="color:var(--color-primary);"></i> Editar Operação Produtiva</h3>
+            <form id="formEditOper" style="display:flex;flex-direction:column;gap:0.9rem;margin-top:1rem;">
+                <input type="hidden" id="editOperCodigoOriginal">
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Código da Operação</label>
+                    <input type="text" id="editOperCodigo" class="filter-input" readonly style="width:100%;opacity:0.8;cursor:not-allowed;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Descrição da Operação *</label>
+                    <input type="text" id="editOperDescricao" class="filter-input" required style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Equipe Vinculada</label>
+                    <select id="editOperEquipe" class="filter-input" style="width:100%;cursor:pointer;">
+                        <option value="">- Sem equipe vinculada -</option>
+                        <option value="BIOMASSA">BIOMASSA</option>
+                        <option value="FERTIRRIGACAO">FERTIRRIGACAO</option>
+                        <option value="HERBICIDA">HERBICIDA</option>
+                        <option value="LINHA AMARELA">LINHA AMARELA</option>
+                        <option value="PREPARO">PREPARO</option>
+                        <option value="TRATOS CULTURAIS">TRATOS CULTURAIS</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Status *</label>
+                    <select id="editOperStatus" class="filter-input" required style="width:100%;cursor:pointer;">
+                        <option value="ATIVO">ATIVO</option>
+                        <option value="INATIVO">INATIVO</option>
+                    </select>
+                </div>
+                <div id="editOperError" style="color:#ef4444;font-size:0.8rem;display:none;font-weight:600;"></div>
+                <div class="action-modal-actions" style="margin-top:0.5rem;display:flex;justify-content:flex-end;gap:0.5rem;">
+                    <button type="button" class="btn btn-secondary" id="btnCancelEditOper" onclick="document.getElementById('modalEditOperOverlay')?.classList.remove('active')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);border:none;"><i class="fas fa-save"></i> Salvar Alterações</button>
                 </div>
             </form>
         </div>
@@ -7178,9 +7279,9 @@
                             origem_site: window.location.href || 'https://julianotimoteo.github.io/gestaofrota/' 
                         })
                     });
-                    const data = await res.json();
+                    const data = await res.json().catch(() => null);
 
-                    if (res.ok && data.success && data.token) {
+                    if (res.ok && data && data.success && data.token) {
                         const isMaster = (userInp === 'julianotimoteo' || userInp === 'logistica' || userInp === 'admin' || userInp.includes('logistica'));
                         const role = isMaster ? 'admin' : (data.role || (data.admin ? 'admin' : 'visualizador'));
                         const storage = keep ? localStorage : sessionStorage;
@@ -7211,8 +7312,10 @@
                         if (loginBtn) loginBtn.disabled = false;
                         hideGlobalLoader();
                         return;
-                    } else if (data && data.error && !res.ok) {
-                        statusEl.textContent = '❌ ' + (data.error || 'Acesso negado.');
+                    } else if (!res.ok || (data && !data.success)) {
+                        // Se o servidor respondeu ativamente (ex: 401 Unauthorized / Credenciais Inválidas), Bloqueia imediatamente!
+                        const errMsg = (data && data.error) ? data.error : 'Usuário ou senha incorretos.';
+                        statusEl.textContent = '❌ ' + errMsg;
                         statusEl.className   = 'login-status error';
                         if (cardWrapper) {
                             cardWrapper.classList.remove('state-default', 'state-success');
@@ -7223,11 +7326,13 @@
                         return;
                     }
                 } catch (err) {
-                    console.warn('API indisponível no momento, realizando validação direta no cadastro de dados:', err);
+                    console.warn('API indisponível no momento, realizando validação direta criptográfica no cadastro local:', err);
                 }
+            } else {
+                console.warn('Servidor HTTP não pode ser chamado diretamente de página HTTPS (Mixed Content). Validando credenciais via PBKDF2 local.');
             }
 
-            // 2. VALIDAÇÃO RÍGIDA NO CADASTRO DO BANCO (PARA GITHUB PAGES OU QUANDO API INDISPONÍVEL)
+            // 2. VALIDAÇÃO RÍGIDA CRIPTOGRÁFICA NO CADASTRO DO BANCO (QUANDO API OFFLINE OU MIXED CONTENT)
             const foundAccount = allowedAccountsMap[userInp];
 
             // PASSO A: Verificar se o usuário existe no banco de dados
@@ -7243,12 +7348,10 @@
                 return;
             }
 
-            // PASSO B: Validação estrita de senha contra o cadastro do banco
-            const validDefaultPasswords = ['1234', '123456', 'tmotvini1986@#', 'Ttmotvini1986@#', 'logistica', 'admin', 'pitangueiras', 'juliano'];
-            let isPasswordValid = validDefaultPasswords.includes(passInp);
+            // PASSO B: Validação estrita de senha via PBKDF2/SHA-256 (Sem aceitar senhas genéricas ou bypass)
+            let isPasswordValid = false;
 
-            // Se tiver hash e salt cadastrados, valida via PBKDF2/SHA-256 no navegador
-            if (!isPasswordValid && foundAccount.passHash && foundAccount.salt) {
+            if (foundAccount.passHash && foundAccount.salt) {
                 try {
                     const enc = new TextEncoder();
                     const keyMaterial = await crypto.subtle.importKey(
@@ -8286,8 +8389,8 @@
             }
         };
 
-        async function renderUsuariosList(page = currentPageAdmin) {
-            if (typeof page !== 'number') page = 1;
+        async function renderUsuariosList(page) {
+            if (page === undefined || page === null || typeof page !== 'number' || isNaN(page)) page = currentPageAdmin;
             currentPageAdmin = page;
 
             const tbody   = document.getElementById('usuariosTableBody');
@@ -8478,8 +8581,8 @@
             }).join('');
         }
 
-        function renderEquipamentos(page = currentPageEquipes) {
-            if (typeof page !== 'number') page = 1;
+        function renderEquipamentos(page) {
+            if (page === undefined || page === null || typeof page !== 'number' || isNaN(page)) page = currentPageEquipes;
             currentPageEquipes = page;
 
             const tbody   = document.getElementById('equipTableBody');
@@ -8688,8 +8791,8 @@
             if (tableWrap && savedScroll > 0) tableWrap.scrollTop = savedScroll;
         }
 
-        function renderOperacoes(page = currentPageOperacoes) {
-            if (typeof page !== 'number') page = 1;
+        function renderOperacoes(page) {
+            if (page === undefined || page === null || typeof page !== 'number' || isNaN(page)) page = currentPageOperacoes;
             currentPageOperacoes = page;
 
             const tbody   = document.getElementById('operTableBody');
@@ -9173,8 +9276,8 @@
             atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
         }
 
-        function renderTeamTabContent(team, page = currentPageEquipes) {
-            if (typeof page !== 'number') page = 1;
+        function renderTeamTabContent(team, page) {
+            if (page === undefined || page === null || typeof page !== 'number' || isNaN(page)) page = currentPageEquipes;
             currentPageEquipes = page;
 
             const content = document.getElementById('equipeSubContents');
@@ -9374,10 +9477,10 @@
 
             // Filtros
             const filterEquip = document.getElementById('filterEquip');
-            if (filterEquip) filterEquip.addEventListener('input', renderEquipamentos);
+            if (filterEquip) filterEquip.addEventListener('input', () => renderEquipamentos(1));
 
             const filterOperacao = document.getElementById('filterOperacao');
-            if (filterOperacao) filterOperacao.addEventListener('input', renderOperacoes);
+            if (filterOperacao) filterOperacao.addEventListener('input', () => renderOperacoes(1));
 
             // Filtro de equipe na aba Admin > Equipamentos
             const equipTeamFilter = document.getElementById('equipTeamFilter');
@@ -9548,7 +9651,7 @@
             document.getElementById('btnPwaDismiss')?.addEventListener('click', dismissPwaBanner);
 
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js?v=17').then(reg => {
+                navigator.serviceWorker.register('./sw.js?v=22').then(reg => {
                     reg.update();
                     console.log('Service Worker PWA registrado:', reg.scope);
                 }).catch(err => {
@@ -9598,13 +9701,23 @@
         window.openEditEquipModal = function(cod) {
             const eq = equipments.find(e => String(e.codigo) === String(cod));
             if (!eq) return;
-            document.getElementById('editEquipCodigo').value = eq.codigo || '';
-            document.getElementById('editEquipDescricao').value = eq.descricao || '';
-            document.getElementById('editEquipModelo').value = eq.modelo || '';
-            document.getElementById('editEquipTipo').value = eq.tipo || 'Trator';
-            document.getElementById('editEquipGrupo').value = eq.grupo || 'PREPARO';
-            document.getElementById('editEquipStatus').value = eq.statusInativo ? 'INATIVO' : 'ATIVO';
-            document.getElementById('modalEditEquipOverlay').classList.add('active');
+            const modal = document.getElementById('modalEditEquipOverlay');
+            if (!modal) return;
+
+            const elCod = document.getElementById('editEquipCodigo');
+            if (elCod) elCod.value = eq.codigo || '';
+            const elDesc = document.getElementById('editEquipDescricao');
+            if (elDesc) elDesc.value = eq.descricao || '';
+            const elMod = document.getElementById('editEquipModelo');
+            if (elMod) elMod.value = eq.modelo || '';
+            const elTipo = document.getElementById('editEquipTipo');
+            if (elTipo) elTipo.value = eq.tipo || 'Trator';
+            const elGrupo = document.getElementById('editEquipGrupo');
+            if (elGrupo) elGrupo.value = eq.grupo || 'PREPARO';
+            const elStatus = document.getElementById('editEquipStatus');
+            if (elStatus) elStatus.value = eq.statusInativo ? 'INATIVO' : 'ATIVO';
+
+            modal.classList.add('active');
         };
 
         window.toggleInativarEquip = function(cod) {
@@ -9624,11 +9737,19 @@
         window.openEditOperModal = function(cod) {
             const op = operacoes.find(o => String(o.codigo) === String(cod));
             if (!op) return;
-            document.getElementById('editOperCodigo').value = op.codigo || '';
-            document.getElementById('editOperDescricao').value = op.descricao || '';
-            document.getElementById('editOperEquipe').value = getOpTeam(op) !== '-' ? getOpTeam(op) : '';
-            document.getElementById('editOperStatus').value = op.status || 'ATIVO';
-            document.getElementById('modalEditOperOverlay').classList.add('active');
+            const modal = document.getElementById('modalEditOperOverlay');
+            if (!modal) return;
+
+            const elCod = document.getElementById('editOperCodigo');
+            if (elCod) elCod.value = op.codigo || '';
+            const elDesc = document.getElementById('editOperDescricao');
+            if (elDesc) elDesc.value = op.descricao || '';
+            const elEq = document.getElementById('editOperEquipe');
+            if (elEq) elEq.value = (typeof getOpTeam === 'function' ? getOpTeam(op) : op.equipe) !== '-' ? (getOpTeam(op) || op.equipe) : '';
+            const elStatus = document.getElementById('editOperStatus');
+            if (elStatus) elStatus.value = op.status || 'ATIVO';
+
+            modal.classList.add('active');
         };
 
         window.excluirOperacao = async function(cod) {
@@ -9657,7 +9778,7 @@
             // Remove do array em memória
             operacoes = operacoes.filter(o => String(o.codigo) !== String(cod));
 
-            // Guarda no localStorage para filtrar caso dados offline sejam carregados
+            // Guarda no localStorage para filtrar caso dados offline Sejam carregados
             const deletedOps = JSON.parse(localStorage.getItem('sf_deleted_ops') || '[]');
             if (!deletedOps.includes(String(cod))) {
                 deletedOps.push(String(cod));
@@ -9673,12 +9794,12 @@
 
         document.getElementById('formEditEquip')?.addEventListener('submit', function(e) {
             e.preventDefault();
-            const cod = document.getElementById('editEquipCodigo').value;
-            const desc = document.getElementById('editEquipDescricao').value;
-            const mod = document.getElementById('editEquipModelo').value;
-            const tipo = document.getElementById('editEquipTipo').value;
-            const grupo = document.getElementById('editEquipGrupo').value;
-            const status = document.getElementById('editEquipStatus').value;
+            const cod   = document.getElementById('editEquipCodigo')?.value || '';
+            const desc  = document.getElementById('editEquipDescricao')?.value || '';
+            const mod   = document.getElementById('editEquipModelo')?.value || '';
+            const tipo  = document.getElementById('editEquipTipo')?.value || 'Trator';
+            const grupo = document.getElementById('editEquipGrupo')?.value || 'PREPARO';
+            const status = document.getElementById('editEquipStatus')?.value || 'ATIVO';
 
             const eq = equipments.find(e => String(e.codigo) === String(cod));
             if (eq) {
@@ -9695,7 +9816,7 @@
                 inativos[String(cod)] = eq.statusInativo;
                 localStorage.setItem('sf_inativo_equips', JSON.stringify(inativos));
             }
-            document.getElementById('modalEditEquipOverlay').classList.remove('active');
+            document.getElementById('modalEditEquipOverlay')?.classList.remove('active');
             addLog(`✏️ Equipamento ${cod} atualizado com sucesso!`, 'success');
             renderEquipamentos();
             renderTeamTabs(false);
@@ -9704,10 +9825,10 @@
 
         document.getElementById('formEditOper')?.addEventListener('submit', function(e) {
             e.preventDefault();
-            const cod = document.getElementById('editOperCodigo').value;
-            const desc = document.getElementById('editOperDescricao').value;
-            const eq = document.getElementById('editOperEquipe').value;
-            const st = document.getElementById('editOperStatus').value;
+            const cod  = document.getElementById('editOperCodigo')?.value || '';
+            const desc = document.getElementById('editOperDescricao')?.value || '';
+            const eq   = document.getElementById('editOperEquipe')?.value || '';
+            const st   = document.getElementById('editOperStatus')?.value || 'ATIVO';
 
             const op = operacoes.find(o => String(o.codigo) === String(cod));
             if (op) {
@@ -9721,7 +9842,7 @@
                     op.equipe = '';
                 }
             }
-            document.getElementById('modalEditOperOverlay').classList.remove('active');
+            document.getElementById('modalEditOperOverlay')?.classList.remove('active');
             addLog(`✏️ Operação ${cod} atualizada com sucesso!`, 'success');
             renderOperacoes();
             renderTeamTabs(false);

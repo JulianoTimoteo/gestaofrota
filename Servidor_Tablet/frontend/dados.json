@@ -332,8 +332,8 @@
         "modelo": "NEW HOLLAND T6 - 130",
         "tipo": "TRATOR DE PNEUS LEVES MAG100R",
         "grupo": "HERBICIDA",
-        "statusOS": "OK",
-        "codOS": "-"
+        "statusOS": "Com OS",
+        "codOS": "768121"
       },
       {
         "codigo": "340",
@@ -467,8 +467,8 @@
         "modelo": "NEW HOLLAND T7 175",
         "tipo": "TRATOR DE PNEUS LEVES MAG100R",
         "grupo": "PREPARO",
-        "statusOS": "Com OS",
-        "codOS": "768109"
+        "statusOS": "OK",
+        "codOS": "-"
       },
       {
         "codigo": "724",
@@ -764,8 +764,8 @@
         "modelo": "COLHEDORA CASE 9900",
         "tipo": "Colhedora",
         "grupo": "COLHEDORA",
-        "statusOS": "OK",
-        "codOS": "-"
+        "statusOS": "Com OS",
+        "codOS": "768116"
       },
       {
         "codigo": "80519",
@@ -1070,8 +1070,8 @@
         "modelo": "VOLVO FH 540",
         "tipo": "Caminhão",
         "grupo": "CAMINHOES",
-        "statusOS": "Com OS",
-        "codOS": "765797"
+        "statusOS": "OK",
+        "codOS": "-"
       },
       {
         "codigo": "30601",
@@ -1160,8 +1160,8 @@
         "modelo": "13/1 - IMPLEMENTOS AGRICOLAS - CARR. DISTRIBUIDORA",
         "tipo": "Implemento",
         "grupo": "IMPLEMENTOS",
-        "statusOS": "Com OS",
-        "codOS": "768074"
+        "statusOS": "OK",
+        "codOS": "-"
       },
       {
         "codigo": "505",
@@ -1169,8 +1169,8 @@
         "modelo": "10/8 - CAMINHOES - BASCULANTE",
         "tipo": "Caminhão",
         "grupo": "CAMINHOES",
-        "statusOS": "Com OS",
-        "codOS": "768088"
+        "statusOS": "OK",
+        "codOS": "-"
       },
       {
         "codigo": "144",
@@ -1196,8 +1196,8 @@
         "modelo": "3/7 - CARREGADORAS - GUINCHO",
         "tipo": "Trator",
         "grupo": "PREPARO",
-        "statusOS": "Com OS",
-        "codOS": "768108"
+        "statusOS": "OK",
+        "codOS": "-"
       },
       {
         "codigo": "30507",
@@ -1547,8 +1547,8 @@
         "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
         "tipo": "Ônibus",
         "grupo": "APOIO",
-        "statusOS": "Com OS",
-        "codOS": "767900"
+        "statusOS": "OK",
+        "codOS": "-"
       },
       {
         "codigo": "460325",
@@ -3485,7 +3485,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "110.3",
         "descricao": "CHECK LIST",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3500,7 +3500,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "110.3",
         "descricao": "Oficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nOficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nCHECK LIST",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3515,7 +3515,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "110.3",
         "descricao": "Oficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nCHECK LIST",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3530,7 +3530,7 @@
         "dataPrevisao": "28/06/2026 16:48:00",
         "diasPermanencia": "101.1",
         "descricao": "REFORMA ELEVADOR",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3543,9 +3543,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "04/07/2026 09:20:00",
         "dataPrevisao": "",
-        "diasPermanencia": "70.3",
+        "diasPermanencia": "70.4",
         "descricao": "FAZER PEÇAS PARA USO INTERNO\r\n\r\nFABRICAR BUCHAS TORNO",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3560,7 +3560,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "66.4",
         "descricao": "REFORMAR PORTEIRA (CASSEZI)",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3575,7 +3575,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "54.1",
         "descricao": "REFORMA GERAL",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3590,7 +3590,7 @@
         "dataPrevisao": "15/09/2026 17:00:00",
         "diasPermanencia": "33.4",
         "descricao": "REFORMA \r\nTROCAR RETROVISOR L/D\r\nVERIFICAR PARALAMA TRASEIRO L/D \r\nVERIFICAR AMORTECEDOR DAS BARRAS E MOLAS \r\nVERIFICAR BEXIGAO DIANTEIRO L/D \r\nINSTALAR MANGUEIRA DE AR DENTRO DA GABINE \r\nVERIFICAR LENTE DA SETA L/D DIANTEIRA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3605,7 +3605,7 @@
         "dataPrevisao": "15/09/2026 00:00:00",
         "diasPermanencia": "23.4",
         "descricao": "REGULAR EMBREAGEM\r\n\r\nTROCAR MOLA - DIANTEIRA L / E ( QUEBRADA )",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3620,7 +3620,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "18.4",
         "descricao": "QUEBROU CORREIA DA ESTEIRA\r\n\r\nVERIFICAR ROSCA SEM FIM",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3635,7 +3635,7 @@
         "dataPrevisao": "14/09/2026 18:27:00",
         "diasPermanencia": "17.0",
         "descricao": "CAIU A PROTEÇÃO DA HÉLICE \r\nQUEBROU A HÉLICE \r\nESTOUROU AS MANGUEIRAS DO RADIADOR \r\nESTOURO A MANGUEIRA DO ÓLEO HIDRÁULICO \r\nESTOUROU MANGUEIRA DO ÓLEO DIESEL",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3648,9 +3648,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "29/08/2026 07:33:00",
         "dataPrevisao": "",
-        "diasPermanencia": "14.4",
+        "diasPermanencia": "14.5",
         "descricao": "FAZER REFORMA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3665,7 +3665,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "9.9",
         "descricao": "JOGANDO AGUA FORA DO RADIADOR",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3678,9 +3678,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "07/09/2026 07:00:00",
         "dataPrevisao": "",
-        "diasPermanencia": "5.4",
+        "diasPermanencia": "5.5",
         "descricao": "REFORMA LINEAR",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3693,9 +3693,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "07/09/2026 07:00:00",
         "dataPrevisao": "",
-        "diasPermanencia": "5.4",
+        "diasPermanencia": "5.5",
         "descricao": "REFORMA LINEAR",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3710,7 +3710,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "5.1",
         "descricao": "VERIFICAR CAMBIO (DANDO TRANCO)",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3725,7 +3725,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "4.5",
         "descricao": "REFORMA DE MELHORIA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3740,7 +3740,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "4.4",
         "descricao": "COLOCAR DISCOS ( ESTA JOGADO NO PATIO )\r\n\r\nTROCAR SUPORTE DA HASTE\r\n\r\nVERIFICAR MOLA DO DISCOS \r\n\r\nTROCAR BOTINHAS\r\n\r\nVERIFICAR EMBUCHAMENTOS\r\n\r\nCOLOCAR MOLA NO ROLO",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3755,7 +3755,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "4.3",
         "descricao": "VERIFICAR PARTIDA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3770,7 +3770,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "4.1",
         "descricao": "TROCAR RETROVISORES \r\n\r\nVERIFICAR VAZAMENTO NO TANQUE DE VENENO",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3783,9 +3783,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "08/09/2026 16:29:00",
         "dataPrevisao": "",
-        "diasPermanencia": "4.0",
+        "diasPermanencia": "4.1",
         "descricao": "APERTAR GRAMPO DO FEIXE DE MOLA - SEGUDNO EIXO L/D -",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3800,7 +3800,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.9",
         "descricao": "COLOCAR VIDRO FRONTAL ( QUEBRADO )\r\nVERIFICAR ACELERADOR (TRAVANDO QUANDO DESACELERA)\r\nVERIFICAR VEDAÇÃO NO SISTEMA DE AR (VAZAMENTO QUANDO CHOVE)",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3815,7 +3815,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.7",
         "descricao": "AFOGOU E NÃO PEGA PARTIDA\r\n\r\nLOCAL: ELETRICA INDUSTRIA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3830,7 +3830,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.7",
         "descricao": "COLOCAR CARRETEL DE MAGUEIRA\r\nCOLOCAR MANGUEIRA\r\n(ESTA UTILIZANDO SOMENTE O CANHAO)\r\nPERDENDO FORÇA E FUMACIANDO MUITO \r\nCANO DO COMPRESSOR FURADO - \nTÁ DESCARREGANDO O AR  DA EMBREAGEM \r\n\r\nLOCAL: FRENTE 10 - DESCEU PARA OFICINA 10/09 AS 01:35",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3845,7 +3845,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.4",
         "descricao": "REFORMA LINEAR",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3860,7 +3860,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.3",
         "descricao": "VERIFICAR SAPATA \r\n\r\nVERIFICAR PINO DE CENTRO",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3875,7 +3875,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.3",
         "descricao": "SOCORRO - EUCALIPTO CHEIROSO\r\n\r\nAFOGOU E NÃO PEGA\r\n\r\nVERIFICAR RESERVATORIO DE AGUA ( FURADO )\r\n\r\nCOLOCAR PARAFUSO DO ESTIRANTE \r\n\r\nCOLOCAR PORCA NO AMORTECEDOR DINATEIRO L / D \r\n\r\nVERIFICAR FREIO",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3890,7 +3890,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.3",
         "descricao": "VERIFICAR REGULAGEM DO BANCO \r\n\r\nVERIFICAR REGULAGEM DO VOLANTE \r\n\r\nVERIFICAR EMBREAGEM",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3905,7 +3905,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.1",
         "descricao": "VERIFICAR RADIADOR ( SOLTO )",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3920,7 +3920,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.0",
         "descricao": "VERIFICAR PERCA DE POTENCIA \r\n\r\nSOLDA NO PARACHOQUE TRASEIRO\r\nMOLEJO DIANTEIRO ESTOURADO",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3935,7 +3935,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "1.5",
         "descricao": "VERIFICAR VAZAMENTO DE ÓLEO DE MOTOR \r\n\r\nVERIFICAR PORTA L / E \r\n\r\nVERIFICAR SETAS L / D",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3950,7 +3950,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "1.4",
         "descricao": "VERIFICRA FREIO ESTACIONARIO\r\n\r\nCOLOCAR PARA LAMA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3965,7 +3965,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "1.4",
         "descricao": "VERIFICAR PERCA DE POTENCIA\r\n\r\nVERIFICAR CAMBIO ( ESCAPANDO MARCHA )",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3978,9 +3978,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "11/09/2026 14:45:00",
         "dataPrevisao": "",
-        "diasPermanencia": "1.1",
+        "diasPermanencia": "1.2",
         "descricao": "VERIFICAR TAMPA DA CAÇAMBA ( NÃO ABRE )",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -3993,9 +3993,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "11/09/2026 17:00:00",
         "dataPrevisao": "",
-        "diasPermanencia": "1.0",
+        "diasPermanencia": "1.1",
         "descricao": "VAZAMENTO DO RETENTOR DO EIXO - TRASEIRO L/D\r\nVERIFICAR FREIO\r\nVERIFICAR VALVULA DE TRANSFERENCIA\r\nVERIFICAR CORREIA (PATINANDO)",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4010,7 +4010,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "1.0",
         "descricao": "SUPER-AQUECENDO\r\n\r\nLOCAL: PRA FRENTE DO TREVIN DA SANTA CLARA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4025,7 +4025,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "1.0",
         "descricao": "NÃO ESTA CARREGANDO AR, VERIFICAR VÁLVULA P.U\r\n\r\nVERIFICAR ILUMINAÇAO DIANTEIRA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4039,8 +4039,8 @@
         "dataEntrada": "11/09/2026 18:32:00",
         "dataPrevisao": "",
         "diasPermanencia": "1.0",
-        "descricao": "TRPCAR VALVULA 4 VIAS",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "descricao": "TRPCAR VALVULA 4 VIAS\r\nRETIRAR CAÇAMBA\r\nINVERTER BICOS DA CAÇAMBA",
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4055,7 +4055,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.8",
         "descricao": "QUEBROU O CARDAN PEQUENO\r\nESCAPAMENTO FURADO (JOGANDO ÓLEO PRO ESCAPAMENTO  // FUMACIANDO)\r\n\r\nLOCAL: ANTES DA LUSITANIA - FRENTE 13B - PARADO NO VAZIO",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4068,24 +4068,9 @@
         "oficina": "6 - OF. VOL. 41109",
         "dataEntrada": "12/09/2026 00:09:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.7",
+        "diasPermanencia": "0.8",
         "descricao": "NÃO MARCA PORCENTAGEM DE COMBUSTÍVEL\r\nTROCAR MANGUEIRA \r\nTROCAR CORREIA DO AR CONDICIONADO\r\nESTEIRA DO ELEVADOR TRAVADA \r\nVERIFICAR CORRENTE DA ESTEIRA DO ELEVADOR FORA DA ENGRENAGEM (FEITO 12/09 04:00)",
-        "dataSincronizacao": "2026-09-12 17:25:58"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
-        "codigoEquip": "17319",
-        "frotaCC": "17319 - MARCO PL VOLARE",
-        "codOS": "767900",
-        "statusOS": "ABERTA",
-        "tipoOficina": "INTERNA",
-        "oficina": "1 - OF. CENTRAL",
-        "dataEntrada": "12/09/2026 02:00:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.6",
-        "descricao": "CAIU O CARDAN",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4100,7 +4085,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.6",
         "descricao": "VERIFICAR MOCINETE ESTRALANDO\r\nVERIFICAR BANDEJA \r\nVERIFICAR AR CONDICIONADO (SÓ LIGA NO 4)",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4115,7 +4100,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.6",
         "descricao": "SOCORRO - LOCAL : CARREGAMENTO DE VINHAÇA\r\n\r\nSEM FREIO",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4130,7 +4115,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.6",
         "descricao": "SOCORRO - LOCAL : CARREGAMENTO DE VINHAÇA\r\n\r\n\r\n\n\nSEM FREIO",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4145,7 +4130,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.4",
         "descricao": "SOCORRO - FRENTE 12\r\n\r\nVERIFICAR VENTOINHA DO MOTOR (LIGADA DIRETO)\r\nCUICA DO FREIO FURADA LADO ESQUERDO\r\nVERIFICAR CHASSI (QUEBROU A BOCA DE LOBO)",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4160,7 +4145,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.4",
         "descricao": "TROCAR LAMINA CAÇAMBA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4173,9 +4158,9 @@
         "oficina": "178 - MANUT. CAMPO",
         "dataEntrada": "12/09/2026 09:47:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.3",
+        "diasPermanencia": "0.4",
         "descricao": "SOCORRO - SENTIDO VIRADOURO DEPOIS DO ABACAXI TEM PLACA\r\n\r\nVERIFICAR ALAVANCA QUE TRAVA E DESTRAVA RODA BOBA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4190,7 +4175,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.2",
         "descricao": "VERIFICAR REPARO DA QUINTA RODA \r\n\r\nVERIFICAR AR CONDICIONADO",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4205,7 +4190,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.2",
         "descricao": "MOLA QUEBRADA \r\n\r\nBERÇO ESTOURADO",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4220,22 +4205,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.2",
         "descricao": "SOCORRO - BORRACHARIA \r\n\r\nVERIFICAR  PARTIDA\r\n\r\nAR CONDICIONADO NAO FUNCIONA\r\n\r\nBATERIA NAO CARREGA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "13/1 - IMPLEMENTOS AGRICOLAS - CARR. DISTRIBUIDORA",
-        "codigoEquip": "78225",
-        "frotaCC": "78225 - SALC/APLICA",
-        "codOS": "768074",
-        "statusOS": "ABERTA",
-        "tipoOficina": "CAMPO",
-        "oficina": "178 - MANUT. CAMPO",
-        "dataEntrada": "12/09/2026 12:52:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.2",
-        "descricao": "SOCORRO - PLANTIO\r\n\r\n\r\nQUEBROU A HASTE DO SUCADOR",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4250,7 +4220,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.2",
         "descricao": "ESTA SOLTANDO MUITA FUMAÇA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4265,37 +4235,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.2",
         "descricao": "ESTOUROU CORREIA DO ALTERNADOR",
-        "dataSincronizacao": "2026-09-12 17:25:58"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "10/1 - CAMINHOES - CAVALO MECANICO",
-        "codigoEquip": "312025",
-        "frotaCC": "312025 - FH540 ALUGADO",
-        "codOS": "765797",
-        "statusOS": "ABERTA",
-        "tipoOficina": "INTERNA",
-        "oficina": "231 - LUB. LAV. VEICULOS",
-        "dataEntrada": "12/09/2026 14:35:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.1",
-        "descricao": "GERADA PELA GERAÇÃO DE O.S. EM LOTE - LAVAR LAVADOR PROGRAMADA - 2026/37",
-        "dataSincronizacao": "2026-09-12 17:25:58"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "10/8 - CAMINHOES - BASCULANTE",
-        "codigoEquip": "505",
-        "frotaCC": "505 - VW 31-310 BASC",
-        "codOS": "768088",
-        "statusOS": "ABERTA",
-        "tipoOficina": "CAMPO",
-        "oficina": "178 - MANUT. CAMPO",
-        "dataEntrada": "12/09/2026 15:03:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.1",
-        "descricao": "SOCORRO - CALCARIO \r\n\r\nSEM PARTIDA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4309,8 +4249,8 @@
         "dataEntrada": "12/09/2026 15:43:00",
         "dataPrevisao": "",
         "diasPermanencia": "0.1",
-        "descricao": "SOCORRO - TREVO SANTA CLARA \r\n\r\nPNEU FURADO L/E\r\n\r\nSS",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "descricao": "SOCORRO - TREVO SANTA CLARA \r\n\r\nPNEU FURADO L/E",
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4325,7 +4265,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.1",
         "descricao": "TROCAR MANGUEIRA HIDRAULICA - ESTOUROU -",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4338,9 +4278,9 @@
         "oficina": "12 - PIT-STOP",
         "dataEntrada": "12/09/2026 16:25:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.0",
+        "diasPermanencia": "0.1",
         "descricao": "TROCAR LAMAPDA DA LUZ BAIXA L/D\r\n\r\nPATIO CARRETA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4353,39 +4293,9 @@
         "oficina": "12 - PIT-STOP",
         "dataEntrada": "12/09/2026 16:26:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.0",
+        "diasPermanencia": "0.1",
         "descricao": "TROCAR MANGUEIRA QUE SAI DO SEMI E VAI PARA CARRETA\r\nCOM O 311217\r\n\r\nPATIO CARRETA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "3/7 - CARREGADORAS - GUINCHO",
-        "codigoEquip": "3118",
-        "frotaCC": "3118 - VALTRA BM-125 I",
-        "codOS": "768108",
-        "statusOS": "ABERTA",
-        "tipoOficina": "CAMPO",
-        "oficina": "178 - MANUT. CAMPO",
-        "dataEntrada": "12/09/2026 17:08:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.0",
-        "descricao": "VERIFICAR MANGUEIRA DA GARRA\r\nINVERTIDO O SISTEMA DE ABERTURA E FECHAMENTO DA GARRA",
-        "dataSincronizacao": "2026-09-12 17:25:58"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "1/7 - TRATOR DE PNEUS - LINHA MEDIA",
-        "codigoEquip": "11318",
-        "frotaCC": "11318 - T7.175",
-        "codOS": "768109",
-        "statusOS": "ABERTA",
-        "tipoOficina": "INTERNA",
-        "oficina": "231 - LUB. LAV. VEICULOS",
-        "dataEntrada": "12/09/2026 17:09:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.0",
-        "descricao": "LAVAR",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4400,7 +4310,7 @@
         "dataPrevisao": "12/09/2026 17:39:00",
         "diasPermanencia": "0.0",
         "descricao": "GERADA PELA GERAÇÃO DE O.S. EM LOTE - CALIBRAR E MEDIR SULCOS BORRACHARIA PROGRAMADA - 2026/38",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4415,7 +4325,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.0",
         "descricao": "PNEU ESTOURADO 2O EIXO EXTERNO\r\n\r\nLOCAL: EM FRENTE A MB",
-        "dataSincronizacao": "2026-09-12 17:25:58"
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
         "tipoOS": "NORMAL",
@@ -4430,49 +4340,37 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.0",
         "descricao": "SEM PARTIDA\r\n\r\nFRENTE: 38",
-        "dataSincronizacao": "2026-09-12 17:25:58"
-      }
-    ],
-    "authUsuarios": [
-      {
-        "id": 1,
-        "usuario": "julianotimoteo",
-        "email": "julianotimoteo@usinapitangueiras.com.br",
-        "nome": "Juliano Timóteo",
-        "senha_hash": "10e44f2665de5d27f0a1c193621f57da09564d7aecf9a14dba53b5bbbc330e61",
-        "salt": "3b55dfdc2eed2626cebd5b0cdd1ada24997aadd4b8f030a50fac983209b6a1dc",
-        "nivel_chave": "admin",
-        "admin": 1
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
-        "id": 2,
-        "usuario": "rafaelfarra",
-        "email": "rafaelfarra@usinapitangueiras.com.br",
-        "nome": "Rafael Aparecido Farra",
-        "senha_hash": "1bcdab16d77b475a9a30ad0b8f8bd2c86c70785288bfade8da9620848364825e",
-        "salt": "85fa3df4f7cf80fa1da286655a878624d0dbdaafbd35230762142b8c66e4f22b",
-        "nivel_chave": "visualizador",
-        "admin": 0
+        "tipoOS": "NORMAL",
+        "subClasse": "14/1 - COLHEDORA - COLHEDORA DE CANA PICADA",
+        "codigoEquip": "80124",
+        "frotaCC": "80124 - CASE A 9900",
+        "codOS": "768116",
+        "statusOS": "ABERTA",
+        "tipoOficina": "INTERNA",
+        "oficina": "1 - OF. CENTRAL",
+        "dataEntrada": "12/09/2026 17:38:00",
+        "dataPrevisao": "",
+        "diasPermanencia": "0.0",
+        "descricao": "REVISAR CILINDRO DO GIRO",
+        "dataSincronizacao": "2026-09-12 18:16:08"
       },
       {
-        "id": 3,
-        "usuario": "logistica",
-        "email": "logistica@usinapitangueiras.com.br",
-        "nome": "Logistica Usina Pitangueiras",
-        "senha_hash": "8343b9f26b9db3054bc4bd2574f1f7dd0ef3b689bb54eb26709ab269f0519915",
-        "salt": "072afbaebef26177ce4abe9cdf6b1a7ade30f87c07f856a31dd260226c29e96d",
-        "nivel_chave": "admin",
-        "admin": 1
-      },
-      {
-        "id": 4,
-        "usuario": "reginaldomantovani",
-        "email": "reginaldomantovani@usinapitanguerias.com.br",
-        "nome": "Reginaldo Fernando Mantovani",
-        "senha_hash": "bdab8038ccaa024045a3dabf20d622e1e1f15de0a531f5c29b2925a08daa8fea",
-        "salt": "c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a",
-        "nivel_chave": "visualizador",
-        "admin": 0
+        "tipoOS": "NORMAL",
+        "subClasse": "1/6 - TRATOR DE PNEUS - LINHA LEVE",
+        "codigoEquip": "11618",
+        "frotaCC": "11618 - T6.130",
+        "codOS": "768121",
+        "statusOS": "ABERTA",
+        "tipoOficina": "INTERNA",
+        "oficina": "231 - LUB. LAV. VEICULOS",
+        "dataEntrada": "12/09/2026 17:57:00",
+        "dataPrevisao": "",
+        "diasPermanencia": "0.0",
+        "descricao": "LAVAR",
+        "dataSincronizacao": "2026-09-12 18:16:08"
       }
     ],
     "adminConfig": {
@@ -4788,6 +4686,6 @@
       },
       "ultimaAlteracao": "2026-09-10T14:04:40.001164"
     },
-    "ultimaSincronizacao": "2026-09-12 17:25:58"
+    "ultimaSincronizacao": "2026-09-12 18:16:08"
   }
 }

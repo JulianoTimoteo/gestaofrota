@@ -175,13 +175,20 @@
             const modal = document.getElementById('modalEditEquipOverlay');
             if (!modal) return;
 
-            document.getElementById('editEquipCodigoOriginal').value = eq.codigo || '';
-            document.getElementById('editEquipCodigo').value = eq.codigo || '';
-            document.getElementById('editEquipDescricao').value = eq.descricao || '';
-            document.getElementById('editEquipModelo').value = eq.modelo || '';
-            document.getElementById('editEquipTipo').value = eq.tipo || 'Trator';
-            document.getElementById('editEquipGrupo').value = eq.grupo || 'PREPARO';
-            document.getElementById('editEquipOperacao').value = eq.operacao || '';
+            const origEl = document.getElementById('editEquipCodigoOriginal');
+            if (origEl) origEl.value = eq.codigo || '';
+            const codEl = document.getElementById('editEquipCodigo');
+            if (codEl) codEl.value = eq.codigo || '';
+            const descEl = document.getElementById('editEquipDescricao');
+            if (descEl) descEl.value = eq.descricao || '';
+            const modEl = document.getElementById('editEquipModelo');
+            if (modEl) modEl.value = eq.modelo || '';
+            const tipoEl = document.getElementById('editEquipTipo');
+            if (tipoEl) tipoEl.value = eq.tipo || 'Trator';
+            const grupoEl = document.getElementById('editEquipGrupo');
+            if (grupoEl) grupoEl.value = eq.grupo || 'PREPARO';
+            const opEl = document.getElementById('editEquipOperacao');
+            if (opEl) opEl.value = eq.operacao || '';
 
             const errEl = document.getElementById('editEquipError');
             if (errEl) errEl.style.display = 'none';
@@ -347,10 +354,14 @@
             const modal = document.getElementById('modalEditOperOverlay');
             if (!modal) return;
 
-            document.getElementById('editOperCodigoOriginal').value = op.codigo || '';
-            document.getElementById('editOperCodigo').value = op.codigo || '';
-            document.getElementById('editOperDescricao').value = op.descricao || '';
-            document.getElementById('editOperEquipe').value = getOpTeam(op) || '-';
+            const origEl = document.getElementById('editOperCodigoOriginal');
+            if (origEl) origEl.value = op.codigo || '';
+            const codEl = document.getElementById('editOperCodigo');
+            if (codEl) codEl.value = op.codigo || '';
+            const descEl = document.getElementById('editOperDescricao');
+            if (descEl) descEl.value = op.descricao || '';
+            const eqEl = document.getElementById('editOperEquipe');
+            if (eqEl) eqEl.value = getOpTeam(op) || '-';
 
             const errEl = document.getElementById('editOperError');
             if (errEl) errEl.style.display = 'none';
