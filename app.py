@@ -936,6 +936,44 @@ def gerar_e_salvar_dados_json():
                         if clean not in os_sub_map: os_sub_map[clean] = []
                         if sub: os_sub_map[clean].append(sub)
 
+        # Auto-registro de equipamentos ausentes que possuem OS aberta
+        try:
+            cur_existing = conn.execute("SELECT codigo FROM equipamentos")
+            existing_codes = set(str(r[0]).strip() for r in cur_existing.fetchall() if r[0])
+            for r in os_rows:
+                raw_cod = str(r['codigo_equip'] or '').strip()
+                frota_cc = str(r['frota_cc'] or '').strip()
+                sub_classe = str(r['sub_classe'] or '').strip().upper()
+                descricao = str(r['descricao'] or '').strip()
+                if not raw_cod and frota_cc:
+                    raw_cod = frota_cc.split(' - ')[0].strip()
+                if raw_cod and raw_cod not in existing_codes:
+                    eq_desc = frota_cc if frota_cc else f"{raw_cod} - {sub_classe}"
+                    full_text = f"{eq_desc.upper()} {sub_classe.upper()} {descricao.upper()}"
+                    if 'COLHED' in full_text or '14/1' in sub_classe:
+                        tipo, grupo = 'Colhedora', 'COLHEDORA'
+                    elif 'CAMINH' in full_text or '10/' in sub_classe or 'CAVALO' in full_text or 'BOMBEIR' in full_text or 'BASCUL' in full_text:
+                        tipo, grupo = 'Caminhão', 'CAMINHOES'
+                    elif 'TRATOR' in full_text or '1/' in sub_classe:
+                        tipo, grupo = 'Trator', 'PREPARO'
+                    elif 'VEICUL' in full_text or 'CAMIONET' in full_text or 'MOB' in full_text or 'STRADA' in full_text or '11/' in sub_classe:
+                        tipo, grupo = 'Veículo Leve', 'APOIO'
+                    elif 'ONIBUS' in full_text or '29/' in sub_classe:
+                        tipo, grupo = 'Ônibus', 'APOIO'
+                    elif 'IMPLEMENT' in full_text or 'REBOQUE' in full_text or 'SEMI' in full_text or '16/' in sub_classe or '13/' in sub_classe:
+                        tipo, grupo = 'Implemento', 'IMPLEMENTOS'
+                    elif 'PA CARREG' in full_text or 'MOTONIV' in full_text or 'RETRO' in full_text:
+                        tipo, grupo = 'Pá Carregadeira', 'PREPARO'
+                    else:
+                        tipo, grupo = 'Trator', 'PREPARO'
+
+                    conn.execute("INSERT OR REPLACE INTO equipamentos (codigo, descricao, modelo, tipo, grupo) VALUES (?, ?, ?, ?, ?)",
+                                 (raw_cod, eq_desc, sub_classe, tipo, grupo))
+                    existing_codes.add(raw_cod)
+            conn.commit()
+        except Exception as _eq_err:
+            logger.warning("Auto-registro de equipamentos: %s", _eq_err)
+
         # 2. Equipamentos
         cur_eq = conn.execute("SELECT * FROM equipamentos")
         equip_rows = [dict(r) for r in cur_eq.fetchall()]

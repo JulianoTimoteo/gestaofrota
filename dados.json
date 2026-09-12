@@ -467,8 +467,8 @@
         "modelo": "NEW HOLLAND T7 175",
         "tipo": "TRATOR DE PNEUS LEVES MAG100R",
         "grupo": "PREPARO",
-        "statusOS": "OK",
-        "codOS": "-"
+        "statusOS": "Com OS",
+        "codOS": "768109"
       },
       {
         "codigo": "724",
@@ -602,8 +602,8 @@
         "modelo": "VALTRA BH 180",
         "tipo": "Trator",
         "grupo": "FERTIRRIGACAO",
-        "statusOS": "Com OS",
-        "codOS": "768051"
+        "statusOS": "OK",
+        "codOS": "-"
       },
       {
         "codigo": "533",
@@ -620,8 +620,8 @@
         "modelo": "FH540 ALUGADO",
         "tipo": "Caminhão",
         "grupo": "CAMINHOES",
-        "statusOS": "OK",
-        "codOS": "-"
+        "statusOS": "Com OS",
+        "codOS": "768110"
       },
       {
         "codigo": "80116",
@@ -701,8 +701,8 @@
         "modelo": "COLHEDORA CASE 8800",
         "tipo": "Colhedora",
         "grupo": "COLHEDORA",
-        "statusOS": "Com OS",
-        "codOS": "768098"
+        "statusOS": "OK",
+        "codOS": "-"
       },
       {
         "codigo": "80316",
@@ -863,8 +863,8 @@
         "modelo": "VOLVO FH 540",
         "tipo": "Caminhão",
         "grupo": "CAMINHOES",
-        "statusOS": "OK",
-        "codOS": "-"
+        "statusOS": "Com OS",
+        "codOS": "768112"
       },
       {
         "codigo": "31515",
@@ -1061,8 +1061,8 @@
         "modelo": "VOLVO FH 540",
         "tipo": "Caminhão",
         "grupo": "CAMINHOES",
-        "statusOS": "Com OS",
-        "codOS": "768072"
+        "statusOS": "OK",
+        "codOS": "-"
       },
       {
         "codigo": "312025",
@@ -1072,6 +1072,1158 @@
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "765797"
+      },
+      {
+        "codigo": "30601",
+        "descricao": "30601 - 30601",
+        "modelo": "/ -  -",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "744670"
+      },
+      {
+        "codigo": "87417",
+        "descricao": "87417 - REBOQUE AREA DE",
+        "modelo": "16/13 - IMPLEMENTO RODOVIARIO - REBOQUE AREA DE VIVENCIA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "766619"
+      },
+      {
+        "codigo": "100112",
+        "descricao": "100112 - S 10 LTZ",
+        "modelo": "11/2 - VEICULOS LEVES - CAMIONETES",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "766992"
+      },
+      {
+        "codigo": "81624",
+        "descricao": "81624 - SEMI SERG. 2 EX",
+        "modelo": "16/3 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES CANAVIEIROS",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "767114"
+      },
+      {
+        "codigo": "41109",
+        "descricao": "41109 - CARGO 6332 OF",
+        "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "767962"
+      },
+      {
+        "codigo": "811525",
+        "descricao": "811525 - SERGOMEL 2 EIXO",
+        "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "767991"
+      },
+      {
+        "codigo": "811625",
+        "descricao": "811625 - SERGOMEL 2 EIXO",
+        "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "767992"
+      },
+      {
+        "codigo": "38122",
+        "descricao": "38122 - VOLVO VM270 6X4",
+        "modelo": "10/9 - CAMINHOES - BOMBEIROS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "766801"
+      },
+      {
+        "codigo": "6134",
+        "descricao": "6134 - REB SERG 2 EIXO",
+        "modelo": "16/1 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 2 EIXOS",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "768069"
+      },
+      {
+        "codigo": "78225",
+        "descricao": "78225 - SALC/APLICA",
+        "modelo": "13/1 - IMPLEMENTOS AGRICOLAS - CARR. DISTRIBUIDORA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "768074"
+      },
+      {
+        "codigo": "505",
+        "descricao": "505 - VW 31-310 BASC",
+        "modelo": "10/8 - CAMINHOES - BASCULANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "768088"
+      },
+      {
+        "codigo": "144",
+        "descricao": "144 - CIVEMASA SUB.",
+        "modelo": "13/23 - IMPLEMENTOS AGRICOLAS - SUBSOLADOR",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "768094"
+      },
+      {
+        "codigo": "811725",
+        "descricao": "811725 - SERGOMEL 2 EIXO",
+        "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "768102"
+      },
+      {
+        "codigo": "3118",
+        "descricao": "3118 - VALTRA BM-125 I",
+        "modelo": "3/7 - CARREGADORAS - GUINCHO",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "768108"
+      },
+      {
+        "codigo": "30507",
+        "descricao": "30507 - 30507",
+        "modelo": "/ -  -",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "30301",
+        "descricao": "30301 - 30301",
+        "modelo": "/ -  -",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "746488"
+      },
+      {
+        "codigo": "17119",
+        "descricao": "17119 - MARCO PL VOLARE",
+        "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
+        "tipo": "Ônibus",
+        "grupo": "APOIO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "81422",
+        "descricao": "81422 - SEMI RANDON 2EX",
+        "modelo": "16/3 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES CANAVIEIROS",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "41102",
+        "descricao": "41102 - VW 26260 OFICIN",
+        "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "13106",
+        "descricao": "13106 - RETRO FIATALLIS",
+        "modelo": "41/1 - RETROESCAVADEIRA - RETROESCAVADEIRA",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "460125",
+        "descricao": "460125 - STRADA ENDURENC",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "462325",
+        "descricao": "462325 - FIAT MOBI 1.0",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "42205",
+        "descricao": "42205 - VW 31-310 MUNCK",
+        "modelo": "10/16 - CAMINHOES - MUNCK",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "17121",
+        "descricao": "17121 - MARCO PL VOLARE",
+        "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
+        "tipo": "Ônibus",
+        "grupo": "APOIO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "460525",
+        "descricao": "460525 - STRADA ENDURENC",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "463625",
+        "descricao": "463625 - FIAT MOBI 1.0",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "460225",
+        "descricao": "460225 - STRADA ENDURENC",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "30307",
+        "descricao": "30307 - 30307",
+        "modelo": "/ -  -",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "737102"
+      },
+      {
+        "codigo": "30401",
+        "descricao": "30401 - 30401",
+        "modelo": "/ -  -",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "747299"
+      },
+      {
+        "codigo": "743",
+        "descricao": "743 - MIX-6500",
+        "modelo": "44/8 - EQUIPAMENTO - JBA / RFA / JHA - CURRAL",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "751377"
+      },
+      {
+        "codigo": "36219",
+        "descricao": "36219 - VOLVO VM270 6X4",
+        "modelo": "10/8 - CAMINHOES - BASCULANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "760824"
+      },
+      {
+        "codigo": "78220",
+        "descricao": "78220 - SALC/APLICA",
+        "modelo": "13/1 - IMPLEMENTOS AGRICOLAS - CARR. DISTRIBUIDORA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "762555"
+      },
+      {
+        "codigo": "417",
+        "descricao": "417 - BH 165",
+        "modelo": "1/7 - TRATOR DE PNEUS - LINHA MEDIA",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "762860"
+      },
+      {
+        "codigo": "100318",
+        "descricao": "100318 - SAVEIRO RB MBV",
+        "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "764072"
+      },
+      {
+        "codigo": "101118",
+        "descricao": "101118 - GOL TL.",
+        "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "764927"
+      },
+      {
+        "codigo": "821922",
+        "descricao": "821922 - RANDON 4 EIXO",
+        "modelo": "16/22 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 4 EIXOS",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "766690"
+      },
+      {
+        "codigo": "811922",
+        "descricao": "811922 - SEMI RANDON 2EX",
+        "modelo": "16/3 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES CANAVIEIROS",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "766689"
+      },
+      {
+        "codigo": "37055",
+        "descricao": "37055 - IMPLEMENTO EMP",
+        "modelo": "49/1 - TERCEIRO/PRESTADOR - TERCEIRO",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "766650"
+      },
+      {
+        "codigo": "36119",
+        "descricao": "36119 - VOLVO VM270 6X4",
+        "modelo": "10/8 - CAMINHOES - BASCULANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "766672"
+      },
+      {
+        "codigo": "2220",
+        "descricao": "2220 - TRX 420 4X4",
+        "modelo": "48/68 - QUADRICICULO - QUADRICICULO",
+        "tipo": "Pá Carregadeira",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "766722"
+      },
+      {
+        "codigo": "5517",
+        "descricao": "5517 - SERGOMEL 2 EIXO",
+        "modelo": "16/9 - IMPLEMENTO RODOVIARIO - REBOQUE PRANCHA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "Com OS",
+        "codOS": "766729"
+      },
+      {
+        "codigo": "38121",
+        "descricao": "38121 - VOLVO VM270 6X4",
+        "modelo": "10/9 - CAMINHOES - BOMBEIROS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "764348"
+      },
+      {
+        "codigo": "531",
+        "descricao": "531 - BH-205 HI FLOW",
+        "modelo": "1/7 - TRATOR DE PNEUS - LINHA MEDIA",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "767022"
+      },
+      {
+        "codigo": "42105",
+        "descricao": "42105 - VW 31-310 MUNCK",
+        "modelo": "10/11 - CAMINHOES - BORRACHEIRO",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "767065"
+      },
+      {
+        "codigo": "100118",
+        "descricao": "100118 - VOYAGE",
+        "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "767106"
+      },
+      {
+        "codigo": "42113",
+        "descricao": "42113 - VW 31-330 MUNCK",
+        "modelo": "10/16 - CAMINHOES - MUNCK",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "767129"
+      },
+      {
+        "codigo": "672",
+        "descricao": "672 - CARGO 2626 BOMB",
+        "modelo": "10/9 - CAMINHOES - BOMBEIROS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "767163"
+      },
+      {
+        "codigo": "32217",
+        "descricao": "32217 - VOLVO FM 500",
+        "modelo": "10/8 - CAMINHOES - BASCULANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "767177"
+      },
+      {
+        "codigo": "101416",
+        "descricao": "101416 - FORD KA",
+        "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "767178"
+      },
+      {
+        "codigo": "6143",
+        "descricao": "6143 - SERGOMEL 3 EIXO",
+        "modelo": "16/10 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES BASCULANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "767575"
+      },
+      {
+        "codigo": "33220",
+        "descricao": "33220 - VOLVO VM270 6X4",
+        "modelo": "10/7 - CAMINHOES - COMBOIOS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "767902"
+      },
+      {
+        "codigo": "689",
+        "descricao": "689 - VOLVO FM 440",
+        "modelo": "10/26 - CAMINHOES - PALHA (BIOMASSA)",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "767922"
+      },
+      {
+        "codigo": "17319",
+        "descricao": "17319 - MARCO PL VOLARE",
+        "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
+        "tipo": "Ônibus",
+        "grupo": "APOIO",
+        "statusOS": "Com OS",
+        "codOS": "767900"
+      },
+      {
+        "codigo": "460325",
+        "descricao": "460325 - STRADA ENDURENC",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "767989"
+      },
+      {
+        "codigo": "687",
+        "descricao": "687 - VOLVO FM 440",
+        "modelo": "10/1 - CAMINHOES - CAVALO MECANICO",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "Com OS",
+        "codOS": "768070"
+      },
+      {
+        "codigo": "461925",
+        "descricao": "461925 - CHEVROLET SPIN",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "Com OS",
+        "codOS": "768081"
+      },
+      {
+        "codigo": "5136",
+        "descricao": "5136 - SERGOMEL 2 EIXO",
+        "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "1654",
+        "descricao": "1654 - GAIOLA SERGOMEL",
+        "modelo": "47/46 - GAIOLA  PLANTIO - GAIOLA  PLANTIO",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "5530",
+        "descricao": "5530 - FACCHINI 2 EIXO",
+        "modelo": "16/1 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 2 EIXOS",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "41188",
+        "descricao": "41188 - VOLKS 7-110 S",
+        "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "41509",
+        "descricao": "41509 - CARGO 6332",
+        "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "143",
+        "descricao": "143 - SUBSOLADOR",
+        "modelo": "13/23 - IMPLEMENTOS AGRICOLAS - SUBSOLADOR",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "31120",
+        "descricao": "31120 - VOLVO FM 540",
+        "modelo": "10/24 - CAMINHOES - PRANCHA",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "32317",
+        "descricao": "32317 - VOLVO FM 500",
+        "modelo": "10/8 - CAMINHOES - BASCULANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "674",
+        "descricao": "674 - CARGO 2626 BOMB",
+        "modelo": "10/9 - CAMINHOES - BOMBEIROS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "36319",
+        "descricao": "36319 - VOLVO VM270 6X4",
+        "modelo": "10/8 - CAMINHOES - BASCULANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "698",
+        "descricao": "698 - VW 26260 BOMB",
+        "modelo": "10/9 - CAMINHOES - BOMBEIROS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "407",
+        "descricao": "407 - GRADE 40/18",
+        "modelo": "13/22 - IMPLEMENTOS AGRICOLAS - GRADE NIVELADORA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "42313",
+        "descricao": "42313 - VW 31-330 MUNCK",
+        "modelo": "10/16 - CAMINHOES - MUNCK",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "31121",
+        "descricao": "31121 - VOLVO FH 540",
+        "modelo": "10/24 - CAMINHOES - PRANCHA",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "311017",
+        "descricao": "311017 - VOLVO FM 500",
+        "modelo": "10/9 - CAMINHOES - BOMBEIROS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "38210",
+        "descricao": "38210 - VW 31-320 BOMBE",
+        "modelo": "10/9 - CAMINHOES - BOMBEIROS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "842",
+        "descricao": "842 - GRADE NIVELAD.",
+        "modelo": "13/22 - IMPLEMENTOS AGRICOLAS - GRADE NIVELADORA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "17419",
+        "descricao": "17419 - MARCO PL VOLARE",
+        "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
+        "tipo": "Ônibus",
+        "grupo": "APOIO",
+        "statusOS": "Com OS",
+        "codOS": "767617"
+      },
+      {
+        "codigo": "614",
+        "descricao": "614 - CARGO 2425 HERB",
+        "modelo": "10/10 - CAMINHOES - CARGA SECA",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "38310",
+        "descricao": "38310 - VW 31-320 BOMBE",
+        "modelo": "10/9 - CAMINHOES - BOMBEIROS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "31715",
+        "descricao": "31715 - VOLVO FM 540",
+        "modelo": "10/17 - CAMINHOES - HERBICIDA",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "461525",
+        "descricao": "461525 - CHEVROLET SPIN",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "32117",
+        "descricao": "32117 - VOLVO FM 500",
+        "modelo": "10/8 - CAMINHOES - BASCULANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "85125",
+        "descricao": "85125 - TANQUE NONINO",
+        "modelo": "13/45 - IMPLEMENTOS AGRICOLAS - APLICADOR DE VINHAÇA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "31116",
+        "descricao": "31116 - VOLVO FM 540",
+        "modelo": "10/9 - CAMINHOES - BOMBEIROS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "3114",
+        "descricao": "3114 - VALTRA BM-125 I",
+        "modelo": "3/7 - CARREGADORAS - GUINCHO",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "83100",
+        "descricao": "83100 - TM-125/GSC",
+        "modelo": "13/19 - IMPLEMENTOS AGRICOLAS - CARRETEL IRRIGADOR",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "26115",
+        "descricao": "26115 - KRONE 82",
+        "modelo": "13/35 - IMPLEMENTOS AGRICOLAS - ENFARDADEIRA DE PALHA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "525",
+        "descricao": "525 - VW 17-180",
+        "modelo": "10/68 - CAMINHOES - TRANSPORTE DE ÁGUA",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "80118",
+        "descricao": "80118 - CASE A 8810",
+        "modelo": "14/1 - COLHEDORA - COLHEDORA DE CANA PICADA",
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORA",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "42111",
+        "descricao": "42111 - VOLKS 24-250",
+        "modelo": "10/16 - CAMINHOES - MUNCK",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "862",
+        "descricao": "862 - ONIBUS M.B.",
+        "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
+        "tipo": "Ônibus",
+        "grupo": "APOIO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "17219",
+        "descricao": "17219 - MARCO PL VOLARE",
+        "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
+        "tipo": "Ônibus",
+        "grupo": "APOIO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "33326",
+        "descricao": "33326 - VW 17.210 6X4",
+        "modelo": "10/7 - CAMINHOES - COMBOIOS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "616",
+        "descricao": "616 - CARGO 2425 CHU",
+        "modelo": "10/12 - CAMINHOES - CHURUMEIRA",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "80222",
+        "descricao": "80222 - CASE A 9900",
+        "modelo": "14/1 - COLHEDORA - COLHEDORA DE CANA PICADA",
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORA",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "85224",
+        "descricao": "85224 - TANQUE NONINO",
+        "modelo": "13/45 - IMPLEMENTOS AGRICOLAS - APLICADOR DE VINHAÇA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "85119",
+        "descricao": "85119 - TANQUE NONINO",
+        "modelo": "13/45 - IMPLEMENTOS AGRICOLAS - APLICADOR DE VINHAÇA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "149",
+        "descricao": "149 - PULVERIZADOR",
+        "modelo": "13/25 - IMPLEMENTOS AGRICOLAS - PULVERIZADOR",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "618",
+        "descricao": "618 - CARGO 2425",
+        "modelo": "10/67 - CAMINHOES - COLETA DE LIXO",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "635",
+        "descricao": "635 - FORD CARGO C712",
+        "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "42103",
+        "descricao": "42103 - VW 7-110 BOR",
+        "modelo": "10/11 - CAMINHOES - BORRACHEIRO",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "324",
+        "descricao": "324 - VALMET 85 ID",
+        "modelo": "3/7 - CARREGADORAS - GUINCHO",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "85118",
+        "descricao": "85118 - TANQUE NONINO",
+        "modelo": "13/45 - IMPLEMENTOS AGRICOLAS - APLICADOR DE VINHAÇA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "33110",
+        "descricao": "33110 - VW 31-320 COMBO",
+        "modelo": "10/7 - CAMINHOES - COMBOIOS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "42123",
+        "descricao": "42123 - MB ATEGO - BORR",
+        "modelo": "10/11 - CAMINHOES - BORRACHEIRO",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "31309",
+        "descricao": "31309 - CARGO 6332E",
+        "modelo": "10/10 - CAMINHOES - CARGA SECA",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "31420",
+        "descricao": "31420 - VOLVO FM 540",
+        "modelo": "10/24 - CAMINHOES - PRANCHA",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "41",
+        "descricao": "41 - VALMET 785",
+        "modelo": "44/8 - EQUIPAMENTO - JBA / RFA / JHA - CURRAL",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "31817",
+        "descricao": "31817 - VOLVO FM 500",
+        "modelo": "10/17 - CAMINHOES - HERBICIDA",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "25",
+        "descricao": "25 - MF 275",
+        "modelo": "1/6 - TRATOR DE PNEUS - LINHA LEVE",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "6136",
+        "descricao": "6136 - REB SERG 2 EIXO",
+        "modelo": "16/1 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 2 EIXOS",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "821322",
+        "descricao": "821322 - RANDON 4 EIXO",
+        "modelo": "16/22 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 4 EIXOS",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "32110",
+        "descricao": "32110 - VW 31-320 CAV M",
+        "modelo": "10/1 - CAMINHOES - CAVALO MECANICO",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "33410",
+        "descricao": "33410 - VW 31-320 COMBO",
+        "modelo": "10/69 - CAMINHOES - OUTROS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "41121",
+        "descricao": "41121 - VOLVO VM270 6X4",
+        "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "83101",
+        "descricao": "83101 - TM-125/GSC",
+        "modelo": "13/19 - IMPLEMENTOS AGRICOLAS - CARRETEL IRRIGADOR",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "32114",
+        "descricao": "32114 - VW 26-420 6X4",
+        "modelo": "10/1 - CAMINHOES - CAVALO MECANICO",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "100418",
+        "descricao": "100418 - SAVEIRO RB MBV",
+        "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "100111",
+        "descricao": "100111 - SAVEIRO CS 1.6",
+        "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "330",
+        "descricao": "330 - VALMET 88",
+        "modelo": "3/7 - CARREGADORAS - GUINCHO",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "33111",
+        "descricao": "33111 - MB-1718",
+        "modelo": "10/69 - CAMINHOES - OUTROS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "33226",
+        "descricao": "33226 -  VM 27.320",
+        "modelo": "10/7 - CAMINHOES - COMBOIOS",
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "81622",
+        "descricao": "81622 - SEMI RANDON 2EX",
+        "modelo": "16/3 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES CANAVIEIROS",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "467625",
+        "descricao": "467625 - FIAT MOBI 1.0",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "2320",
+        "descricao": "2320 - TRX 420 4X4",
+        "modelo": "48/68 - QUADRICICULO - QUADRICICULO",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "462825",
+        "descricao": "462825 - FIAT MOBI 1.0",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "468525",
+        "descricao": "468525 - MOBI LIKE",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "463125",
+        "descricao": "463125 - FIAT MOBI 1.0",
+        "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
+        "tipo": "Trator",
+        "grupo": "PREPARO",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "821324",
+        "descricao": "821324 - SERGOMEL 4 EIXO",
+        "modelo": "16/22 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 4 EIXOS",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "5141",
+        "descricao": "5141 - SERGOMEL 4 EIXO",
+        "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
+      },
+      {
+        "codigo": "5137",
+        "descricao": "5137 - SERGOMEL 2 EIXO",
+        "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
+        "tipo": "Implemento",
+        "grupo": "IMPLEMENTOS",
+        "statusOS": "OK",
+        "codOS": "-"
       }
     ],
     "operacoes": [
@@ -2333,7 +3485,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "110.3",
         "descricao": "CHECK LIST",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2348,7 +3500,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "110.3",
         "descricao": "Oficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nOficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nCHECK LIST",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2363,7 +3515,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "110.3",
         "descricao": "Oficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nCHECK LIST",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2376,9 +3528,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "03/06/2026 16:15:00",
         "dataPrevisao": "28/06/2026 16:48:00",
-        "diasPermanencia": "101.0",
+        "diasPermanencia": "101.1",
         "descricao": "REFORMA ELEVADOR",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2393,7 +3545,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "70.3",
         "descricao": "FAZER PEÇAS PARA USO INTERNO\r\n\r\nFABRICAR BUCHAS TORNO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2408,7 +3560,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "66.4",
         "descricao": "REFORMAR PORTEIRA (CASSEZI)",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2421,9 +3573,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "20/07/2026 16:03:00",
         "dataPrevisao": "",
-        "diasPermanencia": "54.0",
+        "diasPermanencia": "54.1",
         "descricao": "REFORMA GERAL",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2438,7 +3590,7 @@
         "dataPrevisao": "15/09/2026 17:00:00",
         "diasPermanencia": "33.4",
         "descricao": "REFORMA \r\nTROCAR RETROVISOR L/D\r\nVERIFICAR PARALAMA TRASEIRO L/D \r\nVERIFICAR AMORTECEDOR DAS BARRAS E MOLAS \r\nVERIFICAR BEXIGAO DIANTEIRO L/D \r\nINSTALAR MANGUEIRA DE AR DENTRO DA GABINE \r\nVERIFICAR LENTE DA SETA L/D DIANTEIRA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2451,9 +3603,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "20/08/2026 08:59:00",
         "dataPrevisao": "15/09/2026 00:00:00",
-        "diasPermanencia": "23.3",
+        "diasPermanencia": "23.4",
         "descricao": "REGULAR EMBREAGEM\r\n\r\nTROCAR MOLA - DIANTEIRA L / E ( QUEBRADA )",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2466,9 +3618,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "25/08/2026 08:40:00",
         "dataPrevisao": "",
-        "diasPermanencia": "18.3",
+        "diasPermanencia": "18.4",
         "descricao": "QUEBROU CORREIA DA ESTEIRA\r\n\r\nVERIFICAR ROSCA SEM FIM",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2481,9 +3633,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "26/08/2026 18:27:00",
         "dataPrevisao": "14/09/2026 18:27:00",
-        "diasPermanencia": "16.9",
+        "diasPermanencia": "17.0",
         "descricao": "CAIU A PROTEÇÃO DA HÉLICE \r\nQUEBROU A HÉLICE \r\nESTOUROU AS MANGUEIRAS DO RADIADOR \r\nESTOURO A MANGUEIRA DO ÓLEO HIDRÁULICO \r\nESTOUROU MANGUEIRA DO ÓLEO DIESEL",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2498,7 +3650,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "14.4",
         "descricao": "FAZER REFORMA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2513,7 +3665,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "9.9",
         "descricao": "JOGANDO AGUA FORA DO RADIADOR",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2528,7 +3680,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "5.4",
         "descricao": "REFORMA LINEAR",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2543,7 +3695,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "5.4",
         "descricao": "REFORMA LINEAR",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2558,7 +3710,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "5.1",
         "descricao": "VERIFICAR CAMBIO (DANDO TRANCO)",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2571,9 +3723,9 @@
         "oficina": "12 - PIT-STOP",
         "dataEntrada": "08/09/2026 06:17:00",
         "dataPrevisao": "",
-        "diasPermanencia": "4.4",
+        "diasPermanencia": "4.5",
         "descricao": "REFORMA DE MELHORIA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2586,9 +3738,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "08/09/2026 08:54:00",
         "dataPrevisao": "",
-        "diasPermanencia": "4.3",
+        "diasPermanencia": "4.4",
         "descricao": "COLOCAR DISCOS ( ESTA JOGADO NO PATIO )\r\n\r\nTROCAR SUPORTE DA HASTE\r\n\r\nVERIFICAR MOLA DO DISCOS \r\n\r\nTROCAR BOTINHAS\r\n\r\nVERIFICAR EMBUCHAMENTOS\r\n\r\nCOLOCAR MOLA NO ROLO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2601,9 +3753,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "08/09/2026 10:48:00",
         "dataPrevisao": "",
-        "diasPermanencia": "4.2",
+        "diasPermanencia": "4.3",
         "descricao": "VERIFICAR PARTIDA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2618,7 +3770,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "4.1",
         "descricao": "TROCAR RETROVISORES \r\n\r\nVERIFICAR VAZAMENTO NO TANQUE DE VENENO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2633,7 +3785,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "4.0",
         "descricao": "APERTAR GRAMPO DO FEIXE DE MOLA - SEGUDNO EIXO L/D -",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2648,7 +3800,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.9",
         "descricao": "COLOCAR VIDRO FRONTAL ( QUEBRADO )\r\nVERIFICAR ACELERADOR (TRAVANDO QUANDO DESACELERA)\r\nVERIFICAR VEDAÇÃO NO SISTEMA DE AR (VAZAMENTO QUANDO CHOVE)",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2663,7 +3815,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.7",
         "descricao": "AFOGOU E NÃO PEGA PARTIDA\r\n\r\nLOCAL: ELETRICA INDUSTRIA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2676,9 +3828,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "10/09/2026 01:35:00",
         "dataPrevisao": "",
-        "diasPermanencia": "2.6",
+        "diasPermanencia": "2.7",
         "descricao": "COLOCAR CARRETEL DE MAGUEIRA\r\nCOLOCAR MANGUEIRA\r\n(ESTA UTILIZANDO SOMENTE O CANHAO)\r\nPERDENDO FORÇA E FUMACIANDO MUITO \r\nCANO DO COMPRESSOR FURADO - \nTÁ DESCARREGANDO O AR  DA EMBREAGEM \r\n\r\nLOCAL: FRENTE 10 - DESCEU PARA OFICINA 10/09 AS 01:35",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2693,7 +3845,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.4",
         "descricao": "REFORMA LINEAR",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2708,7 +3860,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.3",
         "descricao": "VERIFICAR SAPATA \r\n\r\nVERIFICAR PINO DE CENTRO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2723,7 +3875,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.3",
         "descricao": "SOCORRO - EUCALIPTO CHEIROSO\r\n\r\nAFOGOU E NÃO PEGA\r\n\r\nVERIFICAR RESERVATORIO DE AGUA ( FURADO )\r\n\r\nCOLOCAR PARAFUSO DO ESTIRANTE \r\n\r\nCOLOCAR PORCA NO AMORTECEDOR DINATEIRO L / D \r\n\r\nVERIFICAR FREIO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2736,9 +3888,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "10/09/2026 11:15:00",
         "dataPrevisao": "",
-        "diasPermanencia": "2.2",
+        "diasPermanencia": "2.3",
         "descricao": "VERIFICAR REGULAGEM DO BANCO \r\n\r\nVERIFICAR REGULAGEM DO VOLANTE \r\n\r\nVERIFICAR EMBREAGEM",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2753,7 +3905,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "2.1",
         "descricao": "VERIFICAR RADIADOR ( SOLTO )",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2766,9 +3918,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "10/09/2026 18:20:00",
         "dataPrevisao": "",
-        "diasPermanencia": "1.9",
+        "diasPermanencia": "2.0",
         "descricao": "VERIFICAR PERCA DE POTENCIA \r\n\r\nSOLDA NO PARACHOQUE TRASEIRO\r\nMOLEJO DIANTEIRO ESTOURADO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2781,9 +3933,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "11/09/2026 06:37:00",
         "dataPrevisao": "",
-        "diasPermanencia": "1.4",
+        "diasPermanencia": "1.5",
         "descricao": "VERIFICAR VAZAMENTO DE ÓLEO DE MOTOR \r\n\r\nVERIFICAR PORTA L / E \r\n\r\nVERIFICAR SETAS L / D",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2796,9 +3948,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "11/09/2026 09:00:00",
         "dataPrevisao": "",
-        "diasPermanencia": "1.3",
+        "diasPermanencia": "1.4",
         "descricao": "VERIFICRA FREIO ESTACIONARIO\r\n\r\nCOLOCAR PARA LAMA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2811,9 +3963,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "11/09/2026 09:05:00",
         "dataPrevisao": "",
-        "diasPermanencia": "1.3",
+        "diasPermanencia": "1.4",
         "descricao": "VERIFICAR PERCA DE POTENCIA\r\n\r\nVERIFICAR CAMBIO ( ESCAPANDO MARCHA )",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2828,22 +3980,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "1.1",
         "descricao": "VERIFICAR TAMPA DA CAÇAMBA ( NÃO ABRE )",
-        "dataSincronizacao": "2026-09-12 16:32:46"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
-        "codigoEquip": "17319",
-        "frotaCC": "17319 - MARCO PL VOLARE",
-        "codOS": "767900",
-        "statusOS": "ABERTA",
-        "tipoOficina": "CAMPO",
-        "oficina": "178 - MANUT. CAMPO",
-        "dataEntrada": "11/09/2026 16:53:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "1.0",
-        "descricao": "CAIU O CARDAN\r\n\r\nLOCAL: RUA AMAPA PRA FRENTE DO TAVINHO - SEGUINDO ROTATORIA DA SAIDA DA GUARANI",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2858,7 +3995,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "1.0",
         "descricao": "VAZAMENTO DO RETENTOR DO EIXO - TRASEIRO L/D\r\nVERIFICAR FREIO\r\nVERIFICAR VALVULA DE TRANSFERENCIA\r\nVERIFICAR CORREIA (PATINANDO)",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2873,7 +4010,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "1.0",
         "descricao": "SUPER-AQUECENDO\r\n\r\nLOCAL: PRA FRENTE DO TREVIN DA SANTA CLARA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2886,9 +4023,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "11/09/2026 17:55:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.9",
+        "diasPermanencia": "1.0",
         "descricao": "NÃO ESTA CARREGANDO AR, VERIFICAR VÁLVULA P.U\r\n\r\nVERIFICAR ILUMINAÇAO DIANTEIRA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2901,9 +4038,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "11/09/2026 18:32:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.9",
+        "diasPermanencia": "1.0",
         "descricao": "TRPCAR VALVULA 4 VIAS",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2916,9 +4053,9 @@
         "oficina": "178 - MANUT. CAMPO",
         "dataEntrada": "11/09/2026 23:00:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.7",
+        "diasPermanencia": "0.8",
         "descricao": "QUEBROU O CARDAN PEQUENO\r\nESCAPAMENTO FURADO (JOGANDO ÓLEO PRO ESCAPAMENTO  // FUMACIANDO)\r\n\r\nLOCAL: ANTES DA LUSITANIA - FRENTE 13B - PARADO NO VAZIO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2933,7 +4070,22 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.7",
         "descricao": "NÃO MARCA PORCENTAGEM DE COMBUSTÍVEL\r\nTROCAR MANGUEIRA \r\nTROCAR CORREIA DO AR CONDICIONADO\r\nESTEIRA DO ELEVADOR TRAVADA \r\nVERIFICAR CORRENTE DA ESTEIRA DO ELEVADOR FORA DA ENGRENAGEM (FEITO 12/09 04:00)",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
+      },
+      {
+        "tipoOS": "NORMAL",
+        "subClasse": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
+        "codigoEquip": "17319",
+        "frotaCC": "17319 - MARCO PL VOLARE",
+        "codOS": "767900",
+        "statusOS": "ABERTA",
+        "tipoOficina": "INTERNA",
+        "oficina": "1 - OF. CENTRAL",
+        "dataEntrada": "12/09/2026 02:00:00",
+        "dataPrevisao": "",
+        "diasPermanencia": "0.6",
+        "descricao": "CAIU O CARDAN",
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2948,7 +4100,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.6",
         "descricao": "VERIFICAR MOCINETE ESTRALANDO\r\nVERIFICAR BANDEJA \r\nVERIFICAR AR CONDICIONADO (SÓ LIGA NO 4)",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2963,7 +4115,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.6",
         "descricao": "SOCORRO - LOCAL : CARREGAMENTO DE VINHAÇA\r\n\r\nSEM FREIO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2978,7 +4130,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.6",
         "descricao": "SOCORRO - LOCAL : CARREGAMENTO DE VINHAÇA\r\n\r\n\r\n\n\nSEM FREIO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -2991,9 +4143,9 @@
         "oficina": "178 - MANUT. CAMPO",
         "dataEntrada": "12/09/2026 08:40:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.3",
+        "diasPermanencia": "0.4",
         "descricao": "SOCORRO - FRENTE 12\r\n\r\nVERIFICAR VENTOINHA DO MOTOR (LIGADA DIRETO)\r\nCUICA DO FREIO FURADA LADO ESQUERDO\r\nVERIFICAR CHASSI (QUEBROU A BOCA DE LOBO)",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3006,9 +4158,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "12/09/2026 08:44:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.3",
+        "diasPermanencia": "0.4",
         "descricao": "TROCAR LAMINA CAÇAMBA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3023,22 +4175,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.3",
         "descricao": "SOCORRO - SENTIDO VIRADOURO DEPOIS DO ABACAXI TEM PLACA\r\n\r\nVERIFICAR ALAVANCA QUE TRAVA E DESTRAVA RODA BOBA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "1/7 - TRATOR DE PNEUS - LINHA MEDIA",
-        "codigoEquip": "537",
-        "frotaCC": "537 - BH-180 HI FLOW",
-        "codOS": "768051",
-        "statusOS": "ABERTA",
-        "tipoOficina": "CAMPO",
-        "oficina": "178 - MANUT. CAMPO",
-        "dataEntrada": "12/09/2026 10:45:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.2",
-        "descricao": "SOCORRO - ESTRADAO DO ALVARO BENTO \r\n\r\nESTOUROU A CORREIA QUE TOCA COMPRESSOR BOMBA DÁGUA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3053,7 +4190,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.2",
         "descricao": "VERIFICAR REPARO DA QUINTA RODA \r\n\r\nVERIFICAR AR CONDICIONADO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3068,7 +4205,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.2",
         "descricao": "MOLA QUEBRADA \r\n\r\nBERÇO ESTOURADO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3083,7 +4220,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.2",
         "descricao": "SOCORRO - BORRACHARIA \r\n\r\nVERIFICAR  PARTIDA\r\n\r\nAR CONDICIONADO NAO FUNCIONA\r\n\r\nBATERIA NAO CARREGA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3098,22 +4235,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.2",
         "descricao": "SOCORRO - PLANTIO\r\n\r\n\r\nQUEBROU A HASTE DO SUCADOR",
-        "dataSincronizacao": "2026-09-12 16:32:46"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "10/1 - CAMINHOES - CAVALO MECANICO",
-        "codigoEquip": "311925",
-        "frotaCC": "311925 - FH540 ALUGADO",
-        "codOS": "768072",
-        "statusOS": "ABERTA",
-        "tipoOficina": "INTERNA",
-        "oficina": "1 - OF. CENTRAL",
-        "dataEntrada": "12/09/2026 12:57:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.2",
-        "descricao": "VERIFICAR BARULHO EM BAIXO DA CABINE\r\n\r\nTROCAR BOMBA QUE JOGA AGUA NO PARABRISA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3126,9 +4248,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "12/09/2026 13:40:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.1",
+        "diasPermanencia": "0.2",
         "descricao": "ESTA SOLTANDO MUITA FUMAÇA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3141,9 +4263,9 @@
         "oficina": "1 - OF. CENTRAL",
         "dataEntrada": "12/09/2026 13:49:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.1",
+        "diasPermanencia": "0.2",
         "descricao": "ESTOUROU CORREIA DO ALTERNADOR",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3158,22 +4280,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.1",
         "descricao": "GERADA PELA GERAÇÃO DE O.S. EM LOTE - LAVAR LAVADOR PROGRAMADA - 2026/37",
-        "dataSincronizacao": "2026-09-12 16:32:46"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "16/10 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES BASCULANTE",
-        "codigoEquip": "86225",
-        "frotaCC": "86225 - RANDON 3 EIXO",
-        "codOS": "768087",
-        "statusOS": "ABERTA",
-        "tipoOficina": "CAMPO",
-        "oficina": "11 - CAMPO.BORRACHARIA",
-        "dataEntrada": "12/09/2026 14:56:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.1",
-        "descricao": "SOCORRO - PEDREIRA \r\n\r\nESTOUROU PNEU",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3188,22 +4295,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.1",
         "descricao": "SOCORRO - CALCARIO \r\n\r\nSEM PARTIDA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "13/45 - IMPLEMENTOS AGRICOLAS - APLICADOR DE VINHAÇA",
-        "codigoEquip": "85224",
-        "frotaCC": "85224 - TANQUE NONINO",
-        "codOS": "768092",
-        "statusOS": "ABERTA",
-        "tipoOficina": "CAMPO",
-        "oficina": "178 - MANUT. CAMPO",
-        "dataEntrada": "12/09/2026 15:07:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.1",
-        "descricao": "SOCORRO -  SENTIDO ROTATÓRIA DO CANAVIEIRA E ESTRADÃO DA SANTA ELISA , NA FAZENDA SANTA INÊS \n\r\n\r\n\r\nMANGOTE ABASTECIMENTO COM VAZAMENTO VAI PRECISAR REALIZAR TROCA  DO L/E\r\nESQUERDO",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3216,24 +4308,9 @@
         "oficina": "11 - CAMPO.BORRACHARIA",
         "dataEntrada": "12/09/2026 15:43:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.0",
+        "diasPermanencia": "0.1",
         "descricao": "SOCORRO - TREVO SANTA CLARA \r\n\r\nPNEU FURADO L/E\r\n\r\nSS",
-        "dataSincronizacao": "2026-09-12 16:32:46"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
-        "codigoEquip": "862",
-        "frotaCC": "862 - ONIBUS M.B.",
-        "codOS": "763800",
-        "statusOS": "ABERTA",
-        "tipoOficina": "INTERNA",
-        "oficina": "231 - LUB. LAV. VEICULOS",
-        "dataEntrada": "12/09/2026 16:09:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.0",
-        "descricao": "GERADA PELA GERAÇÃO DE O.S. EM LOTE - LAVAR LAVADOR PROGRAMADA - 2026/36",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3246,24 +4323,9 @@
         "oficina": "4 - OF. VOL. 41409",
         "dataEntrada": "12/09/2026 16:13:00",
         "dataPrevisao": "",
-        "diasPermanencia": "0.0",
-        "descricao": "TROCAR MANGUEIRA HIDRAULICA - ESWTOUROU -",
-        "dataSincronizacao": "2026-09-12 16:32:46"
-      },
-      {
-        "tipoOS": "NORMAL",
-        "subClasse": "14/1 - COLHEDORA - COLHEDORA DE CANA PICADA",
-        "codigoEquip": "80320",
-        "frotaCC": "80320 - CASE A 8810",
-        "codOS": "768098",
-        "statusOS": "ABERTA",
-        "tipoOficina": "CAMPO",
-        "oficina": "6 - OF. VOL. 41109",
-        "dataEntrada": "12/09/2026 16:22:00",
-        "dataPrevisao": "",
-        "diasPermanencia": "0.0",
-        "descricao": "VERIFICAR DIVISOR DE LINHA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "diasPermanencia": "0.1",
+        "descricao": "TROCAR MANGUEIRA HIDRAULICA - ESTOUROU -",
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3278,7 +4340,7 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.0",
         "descricao": "TROCAR LAMAPDA DA LUZ BAIXA L/D\r\n\r\nPATIO CARRETA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
       },
       {
         "tipoOS": "NORMAL",
@@ -3293,7 +4355,82 @@
         "dataPrevisao": "",
         "diasPermanencia": "0.0",
         "descricao": "TROCAR MANGUEIRA QUE SAI DO SEMI E VAI PARA CARRETA\r\nCOM O 311217\r\n\r\nPATIO CARRETA",
-        "dataSincronizacao": "2026-09-12 16:32:46"
+        "dataSincronizacao": "2026-09-12 17:25:58"
+      },
+      {
+        "tipoOS": "NORMAL",
+        "subClasse": "3/7 - CARREGADORAS - GUINCHO",
+        "codigoEquip": "3118",
+        "frotaCC": "3118 - VALTRA BM-125 I",
+        "codOS": "768108",
+        "statusOS": "ABERTA",
+        "tipoOficina": "CAMPO",
+        "oficina": "178 - MANUT. CAMPO",
+        "dataEntrada": "12/09/2026 17:08:00",
+        "dataPrevisao": "",
+        "diasPermanencia": "0.0",
+        "descricao": "VERIFICAR MANGUEIRA DA GARRA\r\nINVERTIDO O SISTEMA DE ABERTURA E FECHAMENTO DA GARRA",
+        "dataSincronizacao": "2026-09-12 17:25:58"
+      },
+      {
+        "tipoOS": "NORMAL",
+        "subClasse": "1/7 - TRATOR DE PNEUS - LINHA MEDIA",
+        "codigoEquip": "11318",
+        "frotaCC": "11318 - T7.175",
+        "codOS": "768109",
+        "statusOS": "ABERTA",
+        "tipoOficina": "INTERNA",
+        "oficina": "231 - LUB. LAV. VEICULOS",
+        "dataEntrada": "12/09/2026 17:09:00",
+        "dataPrevisao": "",
+        "diasPermanencia": "0.0",
+        "descricao": "LAVAR",
+        "dataSincronizacao": "2026-09-12 17:25:58"
+      },
+      {
+        "tipoOS": "NORMAL",
+        "subClasse": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
+        "codigoEquip": "17419",
+        "frotaCC": "17419 - MARCO PL VOLARE",
+        "codOS": "767617",
+        "statusOS": "ABERTA",
+        "tipoOficina": "INTERNA",
+        "oficina": "10 - BORRACHARIA",
+        "dataEntrada": "12/09/2026 17:14:00",
+        "dataPrevisao": "12/09/2026 17:39:00",
+        "diasPermanencia": "0.0",
+        "descricao": "GERADA PELA GERAÇÃO DE O.S. EM LOTE - CALIBRAR E MEDIR SULCOS BORRACHARIA PROGRAMADA - 2026/38",
+        "dataSincronizacao": "2026-09-12 17:25:58"
+      },
+      {
+        "tipoOS": "NORMAL",
+        "subClasse": "10/1 - CAMINHOES - CAVALO MECANICO",
+        "codigoEquip": "31225",
+        "frotaCC": "31225 - FH540 ALUGADO",
+        "codOS": "768110",
+        "statusOS": "ABERTA",
+        "tipoOficina": "CAMPO",
+        "oficina": "11 - CAMPO.BORRACHARIA",
+        "dataEntrada": "12/09/2026 17:17:00",
+        "dataPrevisao": "",
+        "diasPermanencia": "0.0",
+        "descricao": "PNEU ESTOURADO 2O EIXO EXTERNO\r\n\r\nLOCAL: EM FRENTE A MB",
+        "dataSincronizacao": "2026-09-12 17:25:58"
+      },
+      {
+        "tipoOS": "NORMAL",
+        "subClasse": "10/1 - CAMINHOES - CAVALO MECANICO",
+        "codigoEquip": "31425",
+        "frotaCC": "31425 - FH540 ALUGADO",
+        "codOS": "768112",
+        "statusOS": "ABERTA",
+        "tipoOficina": "CAMPO",
+        "oficina": "178 - MANUT. CAMPO",
+        "dataEntrada": "12/09/2026 17:23:00",
+        "dataPrevisao": "",
+        "diasPermanencia": "0.0",
+        "descricao": "SEM PARTIDA\r\n\r\nFRENTE: 38",
+        "dataSincronizacao": "2026-09-12 17:25:58"
       }
     ],
     "adminConfig": {
@@ -3609,6 +4746,6 @@
       },
       "ultimaAlteracao": "2026-09-10T14:04:40.001164"
     },
-    "ultimaSincronizacao": "2026-09-12 16:32:46"
+    "ultimaSincronizacao": "2026-09-12 17:25:58"
   }
 }
