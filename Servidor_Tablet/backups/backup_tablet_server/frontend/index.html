@@ -39,10 +39,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Frota - SimpleFarm</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico?v=2026">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026">
+    <link rel="icon" type="image/png" href="favicon_2.png?v=2026">
+    <link rel="apple-touch-icon" href="favicon_2.png?v=2026">
     <link rel="manifest" href="manifest.json?v=2026">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -4407,8 +4405,8 @@
       "modelo": "CAMINHAO VOLVO FMX 540",
       "tipo": "Caminhão",
       "grupo": "CAMINHOES",
-      "statusOS": "OK",
-      "codOS": "-"
+      "statusOS": "Com OS",
+      "codOS": "768066"
     },
     {
       "codigo": "31825",
@@ -4452,8 +4450,8 @@
       "modelo": "VOLVO FH 540",
       "tipo": "Caminhão",
       "grupo": "CAMINHOES",
-      "statusOS": "Com OS",
-      "codOS": "767050"
+      "statusOS": "OK",
+      "codOS": "-"
     },
     {
       "codigo": "311115",
@@ -4551,8 +4549,8 @@
       "modelo": "VOLVO FH 540",
       "tipo": "Caminhão",
       "grupo": "CAMINHOES",
-      "statusOS": "OK",
-      "codOS": "-"
+      "statusOS": "Com OS",
+      "codOS": "768072"
     },
     {
       "codigo": "312025",
@@ -4560,8 +4558,8 @@
       "modelo": "VOLVO FH 540",
       "tipo": "Caminhão",
       "grupo": "CAMINHOES",
-      "statusOS": "OK",
-      "codOS": "-"
+      "statusOS": "Com OS",
+      "codOS": "765797"
     }
   ],
   "operacoes": [
@@ -6455,21 +6453,7 @@
       "descricao": "VERIFICAR TREM DE ROLO ( NÃO ENGOLE CANA )  VERIFICAR VAZAMENTO NA MANGUEIRA DA CAIXA DE BOMBAS",
       "dataSincronizacao": "2026-09-10 15:53:34"
     },
-    {
-      "tipoOS": "NORMAL",
-      "subClasse": "10/1 - CAMINHOES - CAVALO MECANICO",
-      "codigoEquip": "311025",
-      "frotaCC": "311025 - FH540 ALUGADO",
-      "codOS": "767050",
-      "statusOS": "ABERTA",
-      "tipoOficina": "INTERNA",
-      "oficina": "1 - OF. CENTRAL",
-      "dataEntrada": "2026-09-10T10:10:00",
-      "dataPrevisao": "None",
-      "diasPermanencia": "0.2",
-      "descricao": "VERIFICAR SUPORTE DO PARALAMA",
-      "dataSincronizacao": "2026-09-10 15:53:34"
-    },
+
     {
       "tipoOS": "NORMAL",
       "subClasse": "10/11 - CAMINHOES - BORRACHEIRO",
@@ -7020,7 +7004,7 @@
             }
             const savedApi = localStorage.getItem('sf_custom_api_base');
             if (savedApi) return savedApi;
-            return 'http://127.0.0.1:8000';
+            return 'http://172.16.12.36:8000';
         })();
 
         function promptChangeServerIp() {
@@ -7329,11 +7313,7 @@
         }
 
         function isStaticGitHubPages() {
-            const customApi = localStorage.getItem('sf_custom_api_base');
-            if (customApi && customApi.trim() !== '') return false;
-            if (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') {
-                return true;
-            }
+            // NUNCA desativar chamadas de API — Sempre buscar dados reais em tempo real do banco de dados!
             return false;
         }
 
@@ -7940,28 +7920,14 @@
                 showGlobalLoader();
             }
 
-            // Se estiver hospedado no GitHub Pages estático sem API base customizada, usa direto o dataset local/embarcado (SEM ERRO 404 NO CONSOLE)
-            if (isStaticGitHubPages()) {
-                let cachedData = null;
-                try {
-                    const str = localStorage.getItem('sf_cached_data');
-                    if (str) cachedData = JSON.parse(str);
-                } catch (e) {}
-
-                const embeddedLength = (EMBEDDED_INITIAL_DATA && EMBEDDED_INITIAL_DATA.equipamentos) ? EMBEDDED_INITIAL_DATA.equipamentos.length : 0;
-                const cachedLength = (cachedData && cachedData.equipamentos) ? cachedData.equipamentos.length : 0;
-                const fallbackData = (cachedData && cachedLength >= embeddedLength) ? cachedData : EMBEDDED_INITIAL_DATA;
-
-                processarPayloadDados(fallbackData, true, isBackground);
-                if (!isBackground) hideGlobalLoader();
-                return;
-            }
+            // Limpeza preventiva de cache local legado para garantir dados 100% frescos do banco
+            try { localStorage.removeItem('sf_cached_data'); } catch(e) {}
 
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-                const res = await fetch(`${API_BASE}/api/dados`, {
+                const res = await fetch(`${API_BASE}/api/dados?_t=${Date.now()}`, {
                     signal: controller.signal,
                     headers: {
                         'Content-Type':  'application/json',

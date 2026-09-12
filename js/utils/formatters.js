@@ -50,7 +50,7 @@
         }
 
         async function syncAdminConfigToServer() {
-            if (isStaticGitHubPages()) return;
+            // Live API always enabled
             const payload = {
                 customGroups: getCustomEquipGroups(),
                 customTypes: getCustomEquipTypes(),

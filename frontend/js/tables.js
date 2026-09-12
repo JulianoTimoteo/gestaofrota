@@ -127,7 +127,7 @@
             const countEl = document.getElementById('totalUsuariosCount');
             if (!tbody) return;
 
-            if (isStaticGitHubPages()) {
+            if (false) {
                 if (countEl) countEl.textContent = `1 usuário registrado (Modo Cloud)`;
                 tbody.innerHTML = `<tr>
                     <td><strong>#1</strong></td>

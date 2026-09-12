@@ -7313,11 +7313,7 @@
         }
 
         function isStaticGitHubPages() {
-            const customApi = localStorage.getItem('sf_custom_api_base');
-            if (customApi && customApi.trim() !== '') return false;
-            if (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') {
-                return true;
-            }
+            // NUNCA desativar chamadas de API — Sempre buscar dados reais em tempo real do banco de dados!
             return false;
         }
 
@@ -7924,28 +7920,14 @@
                 showGlobalLoader();
             }
 
-            // Se estiver hospedado no GitHub Pages estático sem API base customizada, usa direto o dataset local/embarcado (SEM ERRO 404 NO CONSOLE)
-            if (isStaticGitHubPages()) {
-                let cachedData = null;
-                try {
-                    const str = localStorage.getItem('sf_cached_data');
-                    if (str) cachedData = JSON.parse(str);
-                } catch (e) {}
-
-                const embeddedLength = (EMBEDDED_INITIAL_DATA && EMBEDDED_INITIAL_DATA.equipamentos) ? EMBEDDED_INITIAL_DATA.equipamentos.length : 0;
-                const cachedLength = (cachedData && cachedData.equipamentos) ? cachedData.equipamentos.length : 0;
-                const fallbackData = (cachedData && cachedLength >= embeddedLength) ? cachedData : EMBEDDED_INITIAL_DATA;
-
-                processarPayloadDados(fallbackData, true, isBackground);
-                if (!isBackground) hideGlobalLoader();
-                return;
-            }
+            // Limpeza preventiva de cache local legado para garantir dados 100% frescos do banco
+            try { localStorage.removeItem('sf_cached_data'); } catch(e) {}
 
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-                const res = await fetch(`${API_BASE}/api/dados`, {
+                const res = await fetch(`${API_BASE}/api/dados?_t=${Date.now()}`, {
                     signal: controller.signal,
                     headers: {
                         'Content-Type':  'application/json',

@@ -14,7 +14,7 @@
 
         var singleSessionTimer = null;
         function iniciarCheckSessaoUnicaTimer() {
-            if (isStaticGitHubPages()) return;
+            // Live API always enabled
             if (singleSessionTimer) clearInterval(singleSessionTimer);
             singleSessionTimer = setInterval(async () => {
                 if (!authToken || authToken === 'sf_standalone_session_token') return;

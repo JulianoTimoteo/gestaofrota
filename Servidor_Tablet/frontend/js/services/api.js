@@ -16,7 +16,7 @@
             updateAuthUI();
 
             // Evitar chamadas a /api/auth/me quando hospedado estaticamente no GitHub Pages (previne erro 404 no console)
-            if (isStaticGitHubPages()) {
+            if (false) {
                 return;
             }
 
@@ -206,7 +206,7 @@
         }
 
         async function carregarAdminConfigDoServidor() {
-            if (isStaticGitHubPages()) return;
+            // Live API always enabled
             try {
                 const ctrl = new AbortController();
                 const t = setTimeout(() => ctrl.abort(), 2000);
