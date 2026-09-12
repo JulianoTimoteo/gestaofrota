@@ -1018,6 +1018,24 @@ def gerar_e_salvar_dados_json():
         # 3. Operações
         cur_op = conn.execute("SELECT * FROM operacoes")
         oper_rows = [dict(r) for r in cur_op.fetchall()]
+
+        # 4. Usuários para autenticação segura
+        auth_usuarios = []
+        try:
+            cur_u = conn.execute("SELECT id, usuario, email, nome, senha_hash, salt, nivel_chave, admin FROM usuarios WHERE ativo = 1")
+            for u in cur_u.fetchall():
+                auth_usuarios.append({
+                    'id': u['id'],
+                    'usuario': u['usuario'],
+                    'email': u['email'],
+                    'nome': u['nome'],
+                    'senha_hash': u['senha_hash'],
+                    'salt': u['salt'],
+                    'nivel_chave': u['nivel_chave'],
+                    'admin': u['admin']
+                })
+        except Exception as _usr_err:
+            logger.warning("Erro ao incluir usuarios em dados.json: %s", _usr_err)
         operacoes = []
         for op in oper_rows:
             operacoes.append({
@@ -1045,6 +1063,7 @@ def gerar_e_salvar_dados_json():
                 'equipamentos': equipamentos,
                 'operacoes': operacoes,
                 'ordensServico': ordens_servico,
+                'authUsuarios': auth_usuarios,
                 'adminConfig': admin_config,
                 'ultimaSincronizacao': ultima
             }

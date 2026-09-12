@@ -4433,6 +4433,48 @@
         "dataSincronizacao": "2026-09-12 17:25:58"
       }
     ],
+    "authUsuarios": [
+      {
+        "id": 1,
+        "usuario": "julianotimoteo",
+        "email": "julianotimoteo@usinapitangueiras.com.br",
+        "nome": "Juliano Timóteo",
+        "senha_hash": "10e44f2665de5d27f0a1c193621f57da09564d7aecf9a14dba53b5bbbc330e61",
+        "salt": "3b55dfdc2eed2626cebd5b0cdd1ada24997aadd4b8f030a50fac983209b6a1dc",
+        "nivel_chave": "admin",
+        "admin": 1
+      },
+      {
+        "id": 2,
+        "usuario": "rafaelfarra",
+        "email": "rafaelfarra@usinapitangueiras.com.br",
+        "nome": "Rafael Aparecido Farra",
+        "senha_hash": "1bcdab16d77b475a9a30ad0b8f8bd2c86c70785288bfade8da9620848364825e",
+        "salt": "85fa3df4f7cf80fa1da286655a878624d0dbdaafbd35230762142b8c66e4f22b",
+        "nivel_chave": "visualizador",
+        "admin": 0
+      },
+      {
+        "id": 3,
+        "usuario": "logistica",
+        "email": "logistica@usinapitangueiras.com.br",
+        "nome": "Logistica Usina Pitangueiras",
+        "senha_hash": "8343b9f26b9db3054bc4bd2574f1f7dd0ef3b689bb54eb26709ab269f0519915",
+        "salt": "072afbaebef26177ce4abe9cdf6b1a7ade30f87c07f856a31dd260226c29e96d",
+        "nivel_chave": "admin",
+        "admin": 1
+      },
+      {
+        "id": 4,
+        "usuario": "reginaldomantovani",
+        "email": "reginaldomantovani@usinapitanguerias.com.br",
+        "nome": "Reginaldo Fernando Mantovani",
+        "senha_hash": "bdab8038ccaa024045a3dabf20d622e1e1f15de0a531f5c29b2925a08daa8fea",
+        "salt": "c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a",
+        "nivel_chave": "visualizador",
+        "admin": 0
+      }
+    ],
     "adminConfig": {
       "customGroups": {
         "11216": "BIOMASSA",
