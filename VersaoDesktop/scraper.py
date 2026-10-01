@@ -140,7 +140,17 @@ def executar_scraping():
 
             duracao = time.time() - t_inicio
             total, novas = database.salvar_ordens_servico(lista_os, duracao)
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Sincronizacao finalizada em {duracao:.1f}s. Total: {total}, Novas: {novas}.", flush=True)
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Sincronizacao local SQLite finalizada em {duracao:.1f}s. Total: {total}, Novas: {novas}.", flush=True)
+
+            # Sincroniza automaticamente com o Cloud Firestore (osoficina)
+            try:
+                import firebase_sync
+                metricas = database.obter_metricas()
+                fs_ok, fs_msg = firebase_sync.salvar_no_firestore(lista_os, metricas)
+                print(f"  [Firebase] Sincronizacao Nuvem: {fs_msg}", flush=True)
+            except Exception as fe:
+                print(f"  [Firebase] Aviso na sincronizacao: {fe}", flush=True)
+
             return {'sucesso': True, 'total': total, 'novas': novas, 'duracao': duracao}
 
         except Exception as e:

@@ -12,14 +12,15 @@ import io
 app = Flask(__name__)
 
 SCRAPING_EM_ANDAMENTO = False
-INTERVALO_MINUTOS = 10
+INTERVALO_MINUTOS = 15
 LOCK_SCRAPING = threading.Lock()
 
 def loop_agendador():
-    """Loop em segundo plano que executa o scraping periodicamente."""
-    time.sleep(10)
+    """Loop em segundo plano que executa o scraping e sincroniza com Firebase a cada 15 min."""
+    time.sleep(15)
     while True:
         try:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Executando ciclo agendado (15 min)...", flush=True)
             executar_sync_seguro()
         except Exception as e:
             print(f"[Agendador] Erro no ciclo automatico: {e}", flush=True)
@@ -508,6 +509,18 @@ def api_sync():
     t = threading.Thread(target=executar_sync_seguro, daemon=True)
     t.start()
     return jsonify({'sucesso': True, 'mensagem': 'Sincronizacao iniciada em segundo plano.'})
+
+@app.route('/api/sync/firebase', methods=['POST', 'GET'])
+def api_sync_firebase():
+    """Força sincronização imediata dos dados locais para o Cloud Firestore (osoficina)."""
+    try:
+        import firebase_sync
+        lista = database.listar_ordens_servico()
+        metricas = database.obter_metricas()
+        sucesso, msg = firebase_sync.salvar_no_firestore(lista, metricas)
+        return jsonify({'sucesso': sucesso, 'mensagem': msg, 'total_os': len(lista)})
+    except Exception as e:
+        return jsonify({'sucesso': False, 'erro': str(e)}), 500
 
 @app.route('/api/historico')
 def api_historico():
