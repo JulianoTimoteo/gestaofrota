@@ -1075,8 +1075,7 @@ def gerar_e_salvar_dados_json():
         paths_to_save = [
             os.path.join(BASE_DIR, 'dados.json'),
             os.path.join(BASE_DIR, 'Gestao_Frota', 'dados.json'),
-            os.path.join(BASE_DIR, 'frontend', 'dados.json'),
-            os.path.join(BASE_DIR, 'Servidor_Tablet', 'frontend', 'dados.json')
+            os.path.join(BASE_DIR, 'frontend', 'dados.json')
         ]
         
         json_str = json.dumps(payload, ensure_ascii=False, indent=2)

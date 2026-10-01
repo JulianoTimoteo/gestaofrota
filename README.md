@@ -1,10 +1,20 @@
-# SimpleFarm Integration - API Documentation
+# SimpleFarm Integration & Gestão de Frota — Usina Pitangueiras
+
+## 🚀 Versão Desktop Autônoma (Novo Motor)
+A arquitetura anterior que utilizava um tablet Android físico com Termux e ponte ADB foi **completamente descontinuada e removida**.
+Agora o sistema opera de forma 100% autônoma via **Playwright no Windows** diretamente na pasta `VersaoDesktop/`:
+* **Extração Direta:** Robô Playwright headless navegando no SimpleFarm (`OFI 002 - Demanda de OS v2`).
+* **12 Colunas Oficiais:** Tipo OS, SubClasse, Frota / CC, Cód. OS, Status OS, Tipo Oficina, Oficina, Data Comunicação, Data Entrada, Data Previsão, Dias Permanência, Descrição Serviço.
+* **Banco de Dados Local:** SQLite (`simplefarm.db`) com deduplicação atômica e histórico de auditoria.
+* **Execução Rápida:** Basta executar `VersaoDesktop/iniciar_servidor.bat` ou abrir `http://127.0.0.1:8080`.
+
+---
 
 ## Visao Geral
 
 Sistema de integracao com o SimpleFarm da Usina Pitangueiras. Fornece uma API REST para acesso aos dados de OS, equipamentos, operacoes e metricas.
 
-**Base URL:** `http://<IP_DO_SERVIDOR>:8000`
+**Base URL:** `http://<IP_DO_SERVIDOR>:8000` ou `http://127.0.0.1:8080` (Versão Desktop)
 
 ## Acesso Rapido
 
