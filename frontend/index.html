@@ -7646,30 +7646,87 @@
         // NORMALIZAÇÃO DE TIPO E EQUIPES PERSONALIZADAS
         // ================================================================
         const LISTA_TIPOS_PADRAO = [
+            'Caminhão Canavieiro',
+            'Munck',
+            'Caminhão Bombeiro',
+            'Caminhão Comboio',
+            'Caminhão Oficina',
+            'Caminhão Borracharia',
+            'Caminhão Basculante',
+            'Caminhão Pipa/Vinhaça',
+            'Caminhão Apoio',
+            'Colhedora',
             'Trator',
-            'Caminhão',
             'Motobomba',
             'Uniport',
             'Pá carregadeira',
             'Motoniveladora',
-            'Colhedora',
             'Pulverizador',
             'Escavadeira',
             'Veículo Utilitário',
             'Outros'
         ];
 
-                function normalizarTipo(tipoRaw, descRaw = '', modeloRaw = '') {
-            const text = `${tipoRaw || ''} ${descRaw || ''} ${modeloRaw || ''}`.toUpperCase();
-            if (text.includes('MOTOBOMBA') || text.includes('MOTO BOMBA') || text.includes('BOMBA')) return 'Motobomba';
-            if (text.includes('TRATOR')) return 'Trator';
-            if (text.includes('CAMINHÃO') || text.includes('CAMINHAO')) return 'Caminhão';
+        function normalizarTipo(tipoRaw, descRaw = '', modeloRaw = '', codRaw = '') {
+            const desc = (descRaw || '').toUpperCase();
+            const mod  = (modeloRaw || '').toUpperCase();
+            const cod  = String(codRaw || '').trim();
+            const raw  = (tipoRaw || '').toUpperCase();
+            const text = `${cod} ${desc} ${mod} ${raw}`;
+
+            // 1. Equipamentos agrícolas/industriais prioritários
+            if (text.includes('COLHEDORA') || text.includes('COLHEITADEIRA')) return 'Colhedora';
+            if (text.includes('MOTOBOMBA') || text.includes('MOTO BOMBA') || text.includes('BOMBA DE VINHA') || (text.includes('BOMBA') && !text.includes('BOMB'))) return 'Motobomba';
             if (text.includes('UNIPORT')) return 'Uniport';
             if (text.includes('CARREGADEIRA')) return 'Pá carregadeira';
             if (text.includes('MOTONIVELADORA')) return 'Motoniveladora';
-            if (text.includes('COLHEDORA') || text.includes('COLHEITADEIRA')) return 'Colhedora';
             if (text.includes('PULVERIZADOR')) return 'Pulverizador';
             if (text.includes('ESCAVADEIRA')) return 'Escavadeira';
+
+            // 2. Classificação precisa da frota de Caminhões
+            const isTruckLike = text.includes('CAMINH') || text.includes('CARGO') || text.includes('VOLVO') || 
+                                text.includes('MUNCK') || text.includes('GUINDAUTO') || text.includes('CAVALO') || 
+                                text.includes('BOMB') || text.includes('COMBO') || text.includes('OFICIN') || 
+                                text.includes('BORR') || text.includes('BASC') || text.includes('RODOTREM') || 
+                                text.includes('SERGOMEL') || (cod.startsWith('31') && cod.length >= 5) || 
+                                (cod.startsWith('32') && cod.length >= 5);
+
+            if (isTruckLike) {
+                // Munck / Guindauto
+                if (text.includes('MUNCK') || text.includes('GUINDAUTO')) return 'Munck';
+
+                // Bombeiro / Combate a Incêndio
+                if (text.includes('BOMB') || text.includes('INCENDIO')) return 'Caminhão Bombeiro';
+
+                // Comboio / Lubrificação e Abastecimento
+                if (text.includes('COMBO') || text.includes('LUBRIF')) return 'Caminhão Comboio';
+
+                // Oficina Volante / Socorro Mecânico
+                if (text.includes('OFICIN') || desc.includes(' OF ') || desc.endsWith(' OF')) return 'Caminhão Oficina';
+
+                // Borracharia Volante
+                if (text.includes('BORR') || desc.includes(' BOR') || desc.endsWith(' BOR')) return 'Caminhão Borracharia';
+
+                // Basculante / Caçamba
+                if (text.includes('BASC') || text.includes('CACAMBA')) return 'Caminhão Basculante';
+
+                // Pipa / Chuveiro / Herbicida / Vinhaça
+                if (desc.includes('CHU') || desc.includes('HERB') || text.includes('PIPA') || text.includes('VINHA')) return 'Caminhão Pipa/Vinhaça';
+
+                // Caminhão Canavieiro (cana, cavalos mecânicos 6x4, rodotrem, puxada pesada)
+                if (text.includes('CANAVIEIRO') || text.includes('RODOTREM') || text.includes('CAVALO') || 
+                    text.includes('CAV M') || text.includes('FH540') || text.includes('FH 540') || 
+                    text.includes('FM 540') || text.includes('FM 500') || text.includes('FM 440') || 
+                    text.includes('SERGOMEL') || (text.includes('6332') && !text.includes('OF')) ||
+                    (cod.startsWith('31') && (cod.length === 5 || cod.length === 6))) {
+                    return 'Caminhão Canavieiro';
+                }
+
+                return 'Caminhão Apoio';
+            }
+
+            if (text.includes('TRATOR')) return 'Trator';
+
             if (tipoRaw && tipoRaw.trim()) {
                 const clean = tipoRaw.trim();
                 if (clean.length <= 18) {
@@ -7938,17 +7995,21 @@
                 const desc     = eq.descricao || '';
                 const mod      = eq.modelo    || '';
                 const rawT     = eq.tipo      || '';
-                const defaultT = normalizarTipo(rawT, desc, mod);
+                const defaultT = normalizarTipo(rawT, desc, mod, codStr);
                 const rawGrp   = (eq.grupo || '').trim();
                 const assignedGroup = customGroups[codStr] || rawGrp || 'PREPARO';
                 const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : (VALID_TEAMS.includes(rawGrp) ? rawGrp : 'PREPARO');
                 const defaultOp = getTeamDefaultOp(finalGroup);
+                let finalTipo = customTypes[codStr] || defaultT;
+                if ((finalTipo === 'Caminhão' || finalTipo === 'Caminhao') && defaultT !== 'Caminhão') {
+                    finalTipo = defaultT;
+                }
                 return {
                     codigo:    codStr,
                     descricao: desc,
                     modelo:    mod,
                     tipoRaw:   rawT,
-                    tipo:      customTypes[codStr] || defaultT,
+                    tipo:      finalTipo,
                     grupo:     finalGroup,
                     operacao:  customOps[codStr] || (eq.operacao ? formatarOp(eq.operacao) : defaultOp),
                     statusOS:  eq.statusOS  || 'OK',
@@ -9352,6 +9413,15 @@
             let html = '<div class="donut-grid">';
 
             // Donut geral da equipe
+            const teamUpper = (team || '').toUpperCase();
+            const segmentsGeral = [
+                { color: '#22c55e', label: 'Disponível', value: `${semOS} equip.`,        pct: `${pctDisp}%`,  percent: pctDisp },
+                { color: '#ef4444', label: 'Com OS',     value: `${comOS.length} equip.`,  pct: `${pctOS}%`,   percent: pctOS   }
+            ];
+            if (teamUpper !== 'CAMINHOES' && teamUpper !== 'COLHEDORA') {
+                segmentsGeral.push({ color: '#2563eb', label: 'Operações',  value: `${teamOps.length} ativas`, pct: '', percent: 0 });
+            }
+
             html += buildDonutCardHTML({
                 id:           `frota-${team}`,
                 title:        `GERAL · ${team} · ${teamEqs.length} EQUIP.`,
@@ -9360,11 +9430,7 @@
                 centerLabel:  'disp.',
                 totalLabel:   'Total registrado',
                 totalValue:   `${teamEqs.length} equip.`,
-                segments: [
-                    { color: '#22c55e', label: 'Disponível', value: `${semOS} equip.`,        pct: `${pctDisp}%`,  percent: pctDisp },
-                    { color: '#ef4444', label: 'Com OS',     value: `${comOS.length} equip.`,  pct: `${pctOS}%`,   percent: pctOS   },
-                    { color: '#2563eb', label: 'Operações',  value: `${teamOps.length} ativas`, pct: '',             percent: 0       }
-                ]
+                segments:     segmentsGeral
             });
 
             // Donuts por tipo
@@ -9402,11 +9468,20 @@
             Object.keys(byTipo).sort().forEach(tipo => {
                 const eqs  = byTipo[tipo];
                 const SIZE = 5;
+                const tipoUpper = (tipo || '').toUpperCase();
+                const omitirOperacao = teamUpper === 'CAMINHOES' || teamUpper === 'COLHEDORA' || 
+                                       tipoUpper.includes('CAMINH') || tipoUpper.includes('COLHEDOR') || 
+                                       tipoUpper === 'MUNCK';
+
                 for (let i = 0; i < eqs.length; i += SIZE) {
                     const chunk     = eqs.slice(i, i + SIZE);
                     const chunkNum  = Math.floor(i / SIZE) + 1;
                     const total     = Math.ceil(eqs.length / SIZE);
                     const hasOSCnt  = chunk.filter(eq => equipamentosComOS.has(String(eq.codigo))).length;
+
+                    const theadCols = omitirOperacao
+                        ? '<th>Frota</th><th>Descrição</th><th>Status OS</th>'
+                        : '<th>Frota</th><th>Descrição</th><th>Operação</th><th>Status OS</th>';
 
                     html += `<div class="card">
                         <div class="card-header">
@@ -9417,16 +9492,17 @@
                             </div>
                         </div>
                         <div class="table-wrap"><table><thead><tr>
-                            <th>Frota</th><th>Descrição</th><th>Operação</th><th>Status OS</th>
+                            ${theadCols}
                         </tr></thead><tbody>` +
                         chunk.map(eq => {
                             const hasOS = equipamentosComOS.has(String(eq.codigo));
                             const osBtn = hasOS ? `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver OS">📋</button>` : '';
                             const opText = eq.operacao || '-';
+                            const tdOperacao = omitirOperacao ? '' : `<td><span class="badge-equip os-fechada">${opText}</span></td>`;
                             return `<tr>
                                 <td><strong>${eq.codigo || '-'}</strong></td>
                                 <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
-                                <td><span class="badge-equip os-fechada">${opText}</span></td>
+                                ${tdOperacao}
                                 <td><span class="badge-equip ${hasOS ? 'os-aberta' : 'os-fechada'}">${hasOS ? 'Com OS' : 'OK'}</span> ${osBtn}</td>
                             </tr>`;
                         }).join('') +
