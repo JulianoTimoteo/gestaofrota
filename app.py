@@ -875,7 +875,7 @@ def get_open_os_map(conn):
     for r in cursor.fetchall():
         tp_of = str(r['tipo_oficina'] or '').strip().upper()
         tp_os = str(r['tipo_os'] or '').strip().upper()
-        if tp_of == 'EXTERNA' or 'REPARO' in tp_os:
+        if tp_of == 'EXTERNA':
             continue
         cod_os = r['cod_os']
         sub = str(r['sub_classe'] or '').strip().upper()
@@ -926,7 +926,7 @@ def gerar_e_salvar_dados_json():
         for r in os_rows:
             tp_of = str(r['tipo_oficina'] or '').strip().upper()
             tp_os = str(r['tipo_os'] or '').strip().upper()
-            if tp_of == 'EXTERNA' or 'REPARO' in tp_os:
+            if tp_of == 'EXTERNA':
                 continue
             # Extract codigoEquip from frota_cc
             frota_str = str(r['frota_cc'] or '')

@@ -3145,6 +3145,12 @@
                 <span class="counter ok" title="Equipamentos OK"><strong id="equipOkCount">0</strong> OK✅</span>
                 <span class="counter os" title="Equipamentos com OS"><strong id="equipOsCount">0</strong> c/OS📋</span>
             </div>
+            <div class="global-os-filters" style="display: flex; gap: 4px; margin-left: auto; align-items: center; padding-left: 10px;">
+                <button class="btn-filter-os active" data-osfilter="ABERTA" title="TIPO OS = NORMAL, STATUS = ABERTA" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#334155; color:#fff; cursor:pointer;"><i class="fas fa-wrench"></i> Aberta</button>
+                <button class="btn-filter-os" data-osfilter="REPARO" title="TIPO OS = REPARO" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer;"><i class="fas fa-tools"></i> Reparo</button>
+                <button class="btn-filter-os" data-osfilter="COMUNICADA" title="STATUS = COMUNICADA" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer;"><i class="fas fa-bullhorn"></i> Comunicada</button>
+                <button class="btn-filter-os" data-osfilter="TODAS" title="Todas as OS (Exceto Fechadas)" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer;"><i class="fas fa-list"></i> Todas</button>
+            </div>
         </div>
 
         <!-- TABS PRINCIPAIS (Ocultas para perfil Visualizador) -->
@@ -3547,6 +3553,7 @@
         let equipamentosComOS = new Set();
         let equipFiltroEquipe = 'TODAS';
         let isSyncing    = false;
+        let currentOsFilter = 'ABERTA';
         let syncTimer    = null;
 
         // PAGINATION STATE
@@ -7900,6 +7907,22 @@
             operacoes     = d.operacoes     || [];
             ordensServico = d.ordensServico || [];
 
+            // APPLY OS FILTER
+            ordensServico = ordensServico.filter(os => {
+                const tipoOS = (os.tipoOS || '').toUpperCase();
+                const statusOS = (os.statusOS || '').toUpperCase();
+                
+                if (currentOsFilter === 'ABERTA') {
+                    return tipoOS === 'NORMAL' && statusOS === 'ABERTA';
+                } else if (currentOsFilter === 'REPARO') {
+                    return tipoOS.includes('REPARO');
+                } else if (currentOsFilter === 'COMUNICADA') {
+                    return statusOS === 'COMUNICADA';
+                }
+                return true; // TODAS
+            });
+
+
             // Filtrar operações que foram excluídas localmente (proteção contra dados de cache ou sync)
             const deletedOps = JSON.parse(localStorage.getItem('sf_deleted_ops') || '[]');
             if (deletedOps.length > 0) {
@@ -8671,7 +8694,7 @@
                 }).join('');
 
                 return `<tr>
-                    <td><strong>${eq.codigo || '-'}</strong></td>
+                    <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> ${teamUpper === 'OUTROS' ? `<button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button>` : ''}</div></td>
                     <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
                     <td style="font-size:0.8rem;color:var(--color-gray-500);">${eq.modelo || '-'}</td>
                     <td>
@@ -9342,7 +9365,7 @@
                                 const diasVal = getEquipPermanenciaDias(eq);
                                 const diasPermText = diasVal > 0 ? `${diasVal.toFixed(1).replace('.', ',')} dias` : '> 24h';
                                 return `<tr>
-                                    <td><strong>${eq.codigo || '-'}</strong></td>
+                                    <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> ${teamUpper === 'OUTROS' ? `<button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button>` : ''}</div></td>
                                     <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
                                     <td><span class="badge-equip os-fechada" style="font-size:0.75rem;">${eq.operacao || '-'}</span></td>
                                     <td><span class="badge-equip os-aberta" style="font-weight:700;"><i class="fas fa-clock"></i> ${diasPermText}</span> ${osBtn}</td>
@@ -9459,7 +9482,7 @@
                             const opText = eq.operacao || '-';
                             const tdOperacao = omitirOperacao ? '' : `<td><span class="badge-equip os-fechada">${opText}</span></td>`;
                             return `<tr>
-                                <td><strong>${eq.codigo || '-'}</strong></td>
+                                <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> ${teamUpper === 'OUTROS' ? `<button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button>` : ''}</div></td>
                                 <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
                                 ${tdOperacao}
                                 <td><span class="badge-equip ${hasOS ? 'os-aberta' : 'os-fechada'}">${hasOS ? 'Com OS' : 'OK'}</span> ${osBtn}</td>
@@ -9703,6 +9726,25 @@
         // INIT APP
         // ================================================================
         async function initApp() {
+            // Global OS Filters
+            document.querySelectorAll('.btn-filter-os').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.btn-filter-os').forEach(b => {
+                        b.classList.remove('active');
+                        b.style.background = '#1e293b';
+                        b.style.color = '#cbd5e1';
+                    });
+                    e.currentTarget.classList.add('active');
+                    e.currentTarget.style.background = '#334155';
+                    e.currentTarget.style.color = '#fff';
+                    
+                    currentOsFilter = e.currentTarget.getAttribute('data-osfilter');
+                    
+                    // Reload data from API to re-process with new filter
+                    carregarDados();
+                });
+            });
+
             showGlobalLoader();
             initThemeToggle();
             startRealtimeClock();
@@ -9886,6 +9928,26 @@
 
 
         
+        
+        window.promptMoveToEquipe = function(cod) {
+            const eq = equipments.find(e => String(e.codigo) === String(cod));
+            if (!eq) return;
+            const nova = prompt('Digite o nome da Equipe para o equipamento ' + cod + ':
+(Ex: CAMINHOES, COLHEDORA, PREPARO, APOIO, etc)');
+            if (nova && nova.trim() !== '') {
+                const uppercaseNova = nova.trim().toUpperCase();
+                setCustomEquipGroup(cod, uppercaseNova);
+                
+                // Update in-memory
+                eq.grupo = uppercaseNova;
+                
+                addLog(`Equipamento ${cod} movido para ${uppercaseNova}`, 'success');
+                renderEquipamentos();
+                renderTeamTabs(false);
+                atualizarStatusGeral();
+            }
+        };
+
         window.selectTeam = function(targetTeam) {
             if (!targetTeam) return;
             activeTeam = targetTeam;
