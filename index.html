@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v25_purge_all_caches';
+            var APP_VER = '2026_v26_purge_all_caches';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
@@ -7668,72 +7668,11 @@
         ];
 
         function normalizarTipo(tipoRaw, descRaw = '', modeloRaw = '', codRaw = '') {
-            const desc = (descRaw || '').toUpperCase();
-            const mod  = (modeloRaw || '').toUpperCase();
-            const cod  = String(codRaw || '').trim();
-            const raw  = (tipoRaw || '').toUpperCase();
-            const text = `${cod} ${desc} ${mod} ${raw}`;
-
-            // 1. Equipamentos agrícolas/industriais prioritários
-            if (text.includes('COLHEDORA') || text.includes('COLHEITADEIRA')) return 'Colhedora';
-            if (text.includes('MOTOBOMBA') || text.includes('MOTO BOMBA') || text.includes('BOMBA DE VINHA') || (text.includes('BOMBA') && !text.includes('BOMB'))) return 'Motobomba';
-            if (text.includes('UNIPORT')) return 'Uniport';
-            if (text.includes('CARREGADEIRA')) return 'Pá carregadeira';
-            if (text.includes('MOTONIVELADORA')) return 'Motoniveladora';
-            if (text.includes('PULVERIZADOR')) return 'Pulverizador';
-            if (text.includes('ESCAVADEIRA')) return 'Escavadeira';
-
-            // 2. Classificação precisa da frota de Caminhões
-            const isTruckLike = text.includes('CAMINH') || text.includes('CARGO') || text.includes('VOLVO') || 
-                                text.includes('MUNCK') || text.includes('GUINDAUTO') || text.includes('CAVALO') || 
-                                text.includes('BOMB') || text.includes('COMBO') || text.includes('OFICIN') || 
-                                text.includes('BORR') || text.includes('BASC') || text.includes('RODOTREM') || 
-                                text.includes('SERGOMEL') || (cod.startsWith('31') && cod.length >= 5) || 
-                                (cod.startsWith('32') && cod.length >= 5);
-
-            if (isTruckLike) {
-                // Munck / Guindauto
-                if (text.includes('MUNCK') || text.includes('GUINDAUTO')) return 'Munck';
-
-                // Bombeiro / Combate a Incêndio
-                if (text.includes('BOMB') || text.includes('INCENDIO')) return 'Caminhão Bombeiro';
-
-                // Comboio / Lubrificação e Abastecimento
-                if (text.includes('COMBO') || text.includes('LUBRIF')) return 'Caminhão Comboio';
-
-                // Oficina Volante / Socorro Mecânico
-                if (text.includes('OFICIN') || desc.includes(' OF ') || desc.endsWith(' OF')) return 'Caminhão Oficina';
-
-                // Borracharia Volante
-                if (text.includes('BORR') || desc.includes(' BOR') || desc.endsWith(' BOR')) return 'Caminhão Borracharia';
-
-                // Basculante / Caçamba
-                if (text.includes('BASC') || text.includes('CACAMBA')) return 'Caminhão Basculante';
-
-                // Pipa / Chuveiro / Herbicida / Vinhaça
-                if (desc.includes('CHU') || desc.includes('HERB') || text.includes('PIPA') || text.includes('VINHA')) return 'Caminhão Pipa/Vinhaça';
-
-                // Caminhão Canavieiro (cana, cavalos mecânicos 6x4, rodotrem, puxada pesada)
-                if (text.includes('CANAVIEIRO') || text.includes('RODOTREM') || text.includes('CAVALO') || 
-                    text.includes('CAV M') || text.includes('FH540') || text.includes('FH 540') || 
-                    text.includes('FM 540') || text.includes('FM 500') || text.includes('FM 440') || 
-                    text.includes('SERGOMEL') || (text.includes('6332') && !text.includes('OF')) ||
-                    (cod.startsWith('31') && (cod.length === 5 || cod.length === 6))) {
-                    return 'Caminhão Canavieiro';
-                }
-
-                return 'Caminhão Apoio';
-            }
-
-            if (text.includes('TRATOR')) return 'Trator';
-
-            if (tipoRaw && tipoRaw.trim()) {
-                const clean = tipoRaw.trim();
-                if (clean.length <= 18) {
-                    return clean.charAt(0).toUpperCase() + clean.slice(1).toLowerCase();
-                }
-            }
-            return 'Outros';
+            // O Backend agora processa as subclasses e regras de Caminhões (inclusive os overrides do usuário).
+            // Confiamos 100% no tipo enviado pela API.
+            let t = String(tipoRaw || '').trim();
+            if (!t || t === 'undefined') return 'Desconhecido';
+            return t;
         }
 
         async function syncAdminConfigToServer() {
