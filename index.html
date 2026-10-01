@@ -7939,7 +7939,7 @@
             const customTypes  = getCustomEquipTypes();
             const customOps    = getCustomEquipOps();
 
-            const VALID_TEAMS = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
+            const VALID_TEAMS = ['BIOMASSA', 'CAMINHOES', 'CAMINHOES TERCEIROS', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'OUTROS', 'PREPARO', 'TORRES SOLINFNET', 'TRATOS CULTURAIS'];
             let customGroupsChanged = false;
             Object.keys(customGroups).forEach(k => {
                 if (customGroups[k] && !VALID_TEAMS.includes(customGroups[k])) {
@@ -7980,7 +7980,7 @@
                 const defaultT = normalizarTipo(rawT, desc, mod, codStr);
                 const rawGrp   = (eq.grupo || '').trim();
                 const assignedGroup = customGroups[codStr] || rawGrp || 'PREPARO';
-                const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : (VALID_TEAMS.includes(rawGrp) ? rawGrp : 'PREPARO');
+                const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : (VALID_TEAMS.includes(rawGrp) ? rawGrp : (rawGrp || assignedGroup || 'OUTROS'));
                 const defaultOp = getTeamDefaultOp(finalGroup);
                 let finalTipo = customTypes[codStr] || defaultT;
                 if ((finalTipo === 'CaminhÃ£o' || finalTipo === 'Caminhao') && defaultT !== 'CaminhÃ£o') {
