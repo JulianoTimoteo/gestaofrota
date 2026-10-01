@@ -7932,8 +7932,28 @@
                 localStorage.setItem('sf_custom_equip_groups', JSON.stringify(customGroups));
             }
 
+            // Verificação profunda: uma frota não pode estar em duas equipes
+            const uniqueEquips = new Map();
+            (d.equipamentos || []).forEach(eq => {
+                const codStr = String(eq.codigo || '').trim();
+                if (!codStr) return;
+                
+                if (uniqueEquips.has(codStr)) {
+                    const existing = uniqueEquips.get(codStr);
+                    const eqGrp = (eq.grupo || '').trim();
+                    const exGrp = (existing.grupo || '').trim();
+                    if (exGrp !== eqGrp && exGrp !== '' && eqGrp !== '') {
+                        if (!isBackground) {
+                            addLog(`⚠️ Alerta: Frota ${codStr} está duplicada (Equipes: ${exGrp} e ${eqGrp}). Mantida na equipe ${exGrp}.`, 'warning');
+                        }
+                    }
+                    return; // Ignora o duplicado
+                }
+                uniqueEquips.set(codStr, eq);
+            });
+
             // Mapear equipamentos com tipo limpo e operacao da lista
-            equipments = (d.equipamentos || []).map(eq => {
+            equipments = Array.from(uniqueEquips.values()).map(eq => {
                 const codStr   = String(eq.codigo || '');
                 const desc     = eq.descricao || '';
                 const mod      = eq.modelo    || '';
@@ -9417,7 +9437,7 @@
                             </div>
                         </div>
                         <div class="table-wrap"><table><thead><tr>
-                            <th>Frota</th><th>Descrição</th><th>Operação</th><th>Status OS</th>
+                            <th>Frota</th><th>Descrição</th>` + ((team === 'CAMINHOES' || team === 'COLHEDORA') ? '' : '<th>Operação</th>') + `<th>Status OS</th>
                         </tr></thead><tbody>` +
                         chunk.map(eq => {
                             const hasOS = equipamentosComOS.has(String(eq.codigo));
@@ -9425,9 +9445,9 @@
                             const opText = eq.operacao || '-';
                             return `<tr>
                                 <td><strong>${eq.codigo || '-'}</strong></td>
-                                <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
-                                <td><span class="badge-equip os-fechada">${opText}</span></td>
-                                <td><span class="badge-equip ${hasOS ? 'os-aberta' : 'os-fechada'}">${hasOS ? 'Com OS' : 'OK'}</span> ${osBtn}</td>
+                                <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>` +
+                                ((team === 'CAMINHOES' || team === 'COLHEDORA') ? '' : `<td><span class="badge-equip os-fechada">${opText}</span></td>`) +
+                                `<td><span class="badge-equip ${hasOS ? 'os-aberta' : 'os-fechada'}">${hasOS ? 'Com OS' : 'OK'}</span> ${osBtn}</td>
                             </tr>`;
                         }).join('') +
                         `</tbody></table></div></div>`;
