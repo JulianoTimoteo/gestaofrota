@@ -9500,7 +9500,8 @@
                 const eqs  = byTipo[tipo];
                 const SIZE = 5;
                 const tipoUpper = (tipo || '').toUpperCase();
-                const omitirOperacao = teamUpper === 'CAMINHOES' || teamUpper === 'COLHEDORA' || 
+                const omitirOperacaoList = ['CAMINHOES', 'COLHEDORAS', 'COLHEDORA', 'VL CARROS', 'BASCULANTE', 'COMBOIO', 'BOMBEIRO', 'VIVENCIA', 'CARRETAS', 'IMPLEMENTOS', 'COLHEDORA RESERVA', 'OS SERVIÇO', 'OS SERVICO', 'CARREGADEIRAS'];
+                const omitirOperacao = omitirOperacaoList.includes(teamUpper) || 
                                        tipoUpper.includes('CAMINH') || tipoUpper.includes('COLHEDOR') || 
                                        tipoUpper === 'MUNCK';
 
