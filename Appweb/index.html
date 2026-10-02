@@ -8035,7 +8035,7 @@
                             finalGroup = aiGuess;
                             isAIGuess = true;
                         } else {
-                            finalGroup = rawGrp || 'PREPARO';
+                            finalGroup = 'OUTROS';
                         }
                     } else {
                         finalGroup = rawGrp;
@@ -8669,9 +8669,12 @@
         // FILTROS E RENDER DE EQUIPAMENTOS
         // ================================================================
         function getEquipesDisponiveis() {
-            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
+            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS', 'OUTROS'];
             const extraTeams = equipments.map(eq => eq.grupo).filter(g => g && !standardTeams.includes(g));
-            return [...new Set([...standardTeams, ...extraTeams])];
+            const all = [...new Set([...standardTeams, ...extraTeams])];
+            
+            // Coloca OUTROS sempre no final
+            return all.filter(t => t !== 'OUTROS').concat(['OUTROS']);
         }
 
         function renderEquipTeamFilter() {
