@@ -769,14 +769,26 @@
         .team-carousel-container {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 14px;
             width: 100%;
             margin-bottom: 1.25rem;
             padding: 8px 4px;
             user-select: none;
-            flex-wrap: wrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
         }
+        .team-carousel-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .team-carousel-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .sub-tab-btn {
+            flex-shrink: 0;
+        }
+
 
         .team-carousel-btn {
             display: inline-flex;
@@ -9500,10 +9512,8 @@
                 const eqs  = byTipo[tipo];
                 const SIZE = 5;
                 const tipoUpper = (tipo || '').toUpperCase();
-                const omitirOperacaoList = ['CAMINHOES', 'COLHEDORAS', 'COLHEDORA', 'VL CARROS', 'BASCULANTE', 'COMBOIO', 'BOMBEIRO', 'VIVENCIA', 'CARRETAS', 'IMPLEMENTOS', 'COLHEDORA RESERVA', 'OS SERVIÇO', 'OS SERVICO', 'CARREGADEIRAS'];
-                const omitirOperacao = omitirOperacaoList.includes(teamUpper) || 
-                                       tipoUpper.includes('CAMINH') || tipoUpper.includes('COLHEDOR') || 
-                                       tipoUpper === 'MUNCK';
+                const mostrarOperacaoList = ['FERTIRRIGACAO', 'FERTIRRIGAÇÃO', 'HERBICIDA', 'TRATOS', 'TRATOS CULTURAIS', 'PREPARO', 'LINHA AMARELA'];
+                const omitirOperacao = !mostrarOperacaoList.includes(teamUpper);
 
                 for (let i = 0; i < eqs.length; i += SIZE) {
                     const chunk     = eqs.slice(i, i + SIZE);
