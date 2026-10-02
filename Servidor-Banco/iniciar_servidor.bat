@@ -8,9 +8,9 @@ echo   Usina Pitangueiras - Monitoramento Local
 echo ========================================================
 echo.
 echo [*] Iniciando o servidor web e o robô de sincronizacao...
-echo [*] Acesse no navegador: http://127.0.0.1:8080
+echo [*] Acesse no navegador: http://127.0.0.1:8000
 echo.
 
-start "" "http://127.0.0.1:8080"
+start "" "http://127.0.0.1:8000"
 python app.py
 pause

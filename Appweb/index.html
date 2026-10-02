@@ -3141,17 +3141,8 @@
             </div>
 
             <div class="header-info">
-                <span class="status-badge connected" id="statusContainer" onclick="promptChangeServerIp()" style="cursor:pointer;" title="Clique para alterar o IP do Servidor na rede Wi-Fi (Modo sem cabo USB)">
-                    <span class="radar-icon-box">
-                        <svg class="radar-svg" viewBox="0 0 24 24" width="14" height="14">
-                            <circle class="radar-svg-ping" id="radarPing" cx="12" cy="12" r="7" fill="#22c55e" />
-                            <circle class="radar-svg-core" id="statusDot" cx="12" cy="12" r="4.5" fill="#16a34a" />
-                        </svg>
-                    </span>
-                    <span id="connectionStatus">Conectado</span>
-                </span>
-                <span class="divider">|</span>
-                <span class="datetime" id="headerClock">--/--/----, --:--:--</span>
+                <!-- Status Removido -->
+                <!-- Clock Removido -->
                 <!-- Counters Removidos a pedido do usuario -->
             </div>
             <div class="global-os-filters" style="display: flex; gap: 4px; margin-left: auto; align-items: center; padding-left: 10px;">
@@ -8009,6 +8000,25 @@
                 return bestTeam;
             }
             // ============================================================
+
+            // ====== APLICAR FILTRO VISUAL DE OS NO STATUS DOS EQUIPAMENTOS ======
+            if (currentOsFilter !== 'TODAS') {
+                const activeOsMap = {};
+                ordensServico.forEach(os => {
+                    const f = String(os.frota || os.frotaCC || '').trim();
+                    if (f) activeOsMap[f] = os.codOS || os.numeroOS || 'S/N';
+                });
+                
+                uniqueEquips.forEach((eq, codStr) => {
+                    if (activeOsMap[codStr]) {
+                        eq.statusOS = 'Com OS';
+                        eq.codOS = activeOsMap[codStr];
+                    } else {
+                        eq.statusOS = 'OK';
+                        eq.codOS = '-';
+                    }
+                });
+            }
 
             // Mapear equipamentos com tipo limpo e operacao da lista
             equipments = Array.from(uniqueEquips.values()).map(eq => {
