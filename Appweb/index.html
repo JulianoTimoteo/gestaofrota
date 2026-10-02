@@ -8011,12 +8011,14 @@
                 const defaultT = normalizarTipo(rawT, desc, mod, codStr);
                 const rawGrp   = (eq.grupo || '').trim();
                 let finalGroup = customGroups[codStr];
+                let isAIGuess = false;
                 
                 // Se nao foi movido manualmente, tenta adivinhar com base no padrao de outras frotas!
                 if (!finalGroup) {
                     const aiGuess = guessTeamByPattern(desc, mod);
                     if (aiGuess) {
                         finalGroup = aiGuess;
+                        isAIGuess = true;
                     } else {
                         finalGroup = rawGrp || 'PREPARO';
                     }
@@ -8035,7 +8037,8 @@
                     grupo:     finalGroup,
                     operacao:  customOps[codStr] || (eq.operacao ? formatarOp(eq.operacao) : defaultOp),
                     statusOS:  eq.statusOS  || 'OK',
-                    codOS:     eq.codOS     || ''
+                    codOS:     eq.codOS     || '',
+                    isAIGuess: isAIGuess
                 };
             });
 
@@ -9405,7 +9408,7 @@
                                 const diasVal = getEquipPermanenciaDias(eq);
                                 const diasPermText = diasVal > 0 ? `${diasVal.toFixed(1).replace('.', ',')} dias` : '> 24h';
                                 return `<tr>
-                                    <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> ${teamUpper === 'OUTROS' ? `<button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button>` : ''}</div></td>
+                                    <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> <button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button> ${eq.isAIGuess ? `<button onclick=\"confirmAIGuess('${eq.codigo}', '${eq.grupo}')\" title=\"Confirmar sugestão da IA\" style=\"padding:2px 6px; font-size:10px; background:#22c55e; color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-check\"></i></button>` : ''}</div></td>
                                     <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
                                     <td><span class="badge-equip os-fechada" style="font-size:0.75rem;">${eq.operacao || '-'}</span></td>
                                     <td><span class="badge-equip os-aberta" style="font-weight:700;"><i class="fas fa-clock"></i> ${diasPermText}</span> ${osBtn}</td>
@@ -9522,7 +9525,7 @@
                             const opText = eq.operacao || '-';
                             const tdOperacao = omitirOperacao ? '' : `<td><span class="badge-equip os-fechada">${opText}</span></td>`;
                             return `<tr>
-                                <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> ${teamUpper === 'OUTROS' ? `<button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button>` : ''}</div></td>
+                                <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> <button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button> ${eq.isAIGuess ? `<button onclick=\"confirmAIGuess('${eq.codigo}', '${eq.grupo}')\" title=\"Confirmar sugestão da IA\" style=\"padding:2px 6px; font-size:10px; background:#22c55e; color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-check\"></i></button>` : ''}</div></td>
                                 <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
                                 ${tdOperacao}
                                 <td><span class="badge-equip ${hasOS ? 'os-aberta' : 'os-fechada'}">${hasOS ? 'Com OS' : 'OK'}</span> ${osBtn}</td>
@@ -9983,6 +9986,16 @@
 
         
         
+        
+        window.confirmAIGuess = function(cod, grupo) {
+            setCustomEquipGroup(cod, grupo);
+            const eq = equipments.find(e => String(e.codigo) === String(cod));
+            if (eq) {
+                eq.isAIGuess = false;
+                addLog(`Sugestão confirmada: Frota ${cod} fixada na equipe ${grupo}`, 'success');
+                renderEquipamentos();
+            }
+        };
         window.promptMoveToEquipe = function(cod) {
             const eq = equipments.find(e => String(e.codigo) === String(cod));
             if (!eq) return;
