@@ -8013,14 +8013,20 @@
                 let finalGroup = customGroups[codStr];
                 let isAIGuess = false;
                 
-                // Se nao foi movido manualmente, tenta adivinhar com base no padrao de outras frotas!
                 if (!finalGroup) {
-                    const aiGuess = guessTeamByPattern(desc, mod);
-                    if (aiGuess) {
-                        finalGroup = aiGuess;
-                        isAIGuess = true;
+                    const validTeams = ['BIOMASSA', 'CAMINHOES', 'CAMINHOES TERCEIROS', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TORRES SOLINFNET', 'TRATOS CULTURAIS'];
+                    
+                    // Só usa IA se a API não mandou um grupo útil ou mandou 'OUTROS'
+                    if (!rawGrp || rawGrp === 'OUTROS' || rawGrp === 'PREPARO' || !validTeams.includes(rawGrp)) {
+                        const aiGuess = guessTeamByPattern(desc, mod);
+                        if (aiGuess) {
+                            finalGroup = aiGuess;
+                            isAIGuess = true;
+                        } else {
+                            finalGroup = rawGrp || 'PREPARO';
+                        }
                     } else {
-                        finalGroup = rawGrp || 'PREPARO';
+                        finalGroup = rawGrp;
                     }
                 }
                 const defaultOp = getTeamDefaultOp(finalGroup);
