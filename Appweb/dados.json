@@ -618,7 +618,7 @@
         "codigo": "31225",
         "descricao": "FH540 ALUGADO",
         "modelo": "FH540 ALUGADO",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "768110"
@@ -637,7 +637,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 08",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -646,7 +646,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 9900",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 13",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -655,7 +655,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 10",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -664,7 +664,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 10",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -673,7 +673,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 11",
+        "grupo": "COLHEDORA",
         "statusOS": "Com OS",
         "codOS": "768080"
       },
@@ -682,7 +682,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 11",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -691,7 +691,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 14",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -700,7 +700,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8800",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 12",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -709,7 +709,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8000",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 12",
+        "grupo": "COLHEDORA",
         "statusOS": "Com OS",
         "codOS": "767974"
       },
@@ -718,7 +718,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 13",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -727,7 +727,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8800",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 14",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -736,7 +736,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 9900",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 14",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -745,7 +745,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 9900",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 14",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -754,7 +754,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 9900",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 14",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -763,7 +763,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 9900",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 13",
+        "grupo": "COLHEDORA",
         "statusOS": "Com OS",
         "codOS": "768116"
       },
@@ -772,7 +772,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 15",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -781,7 +781,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8800",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 15",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -790,7 +790,7 @@
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 12",
+        "grupo": "COLHEDORA",
         "statusOS": "Com OS",
         "codOS": "768096"
       },
@@ -798,7 +798,7 @@
         "codigo": "31115",
         "descricao": "CAMINHAO CANAVIEIRO 540",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Tremiado",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -807,7 +807,7 @@
         "codigo": "31125",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -816,7 +816,7 @@
         "codigo": "31215",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Tremiado",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -825,7 +825,7 @@
         "codigo": "31315",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Tremiado",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -834,7 +834,7 @@
         "codigo": "31316",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Tremiado",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -843,7 +843,7 @@
         "codigo": "31325",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -852,7 +852,7 @@
         "codigo": "31415",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Tremiado",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -861,7 +861,7 @@
         "codigo": "31425",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "768112"
@@ -870,7 +870,7 @@
         "codigo": "31515",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Tremiado",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "766509"
@@ -879,7 +879,7 @@
         "codigo": "31525",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -888,7 +888,7 @@
         "codigo": "31615",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Tremiado",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -897,7 +897,7 @@
         "codigo": "31625",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -906,7 +906,7 @@
         "codigo": "31725",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -924,7 +924,7 @@
         "codigo": "31825",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -942,7 +942,7 @@
         "codigo": "31925",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -960,7 +960,7 @@
         "codigo": "311025",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -969,7 +969,7 @@
         "codigo": "311115",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Tremiado",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -978,7 +978,7 @@
         "codigo": "311125",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -987,7 +987,7 @@
         "codigo": "311215",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Tremiado",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -996,7 +996,7 @@
         "codigo": "311225",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1005,7 +1005,7 @@
         "codigo": "311325",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1014,7 +1014,7 @@
         "codigo": "311425",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1023,7 +1023,7 @@
         "codigo": "311525",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1032,7 +1032,7 @@
         "codigo": "311625",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1041,7 +1041,7 @@
         "codigo": "311725",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1050,7 +1050,7 @@
         "codigo": "311825",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1059,7 +1059,7 @@
         "codigo": "311925",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1068,7 +1068,7 @@
         "codigo": "312025",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Rodotrem",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1843,7 +1843,7 @@
         "descricao": "80118 - CASE A 8810",
         "modelo": "14/1 - COLHEDORA - COLHEDORA DE CANA PICADA",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 08",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1897,7 +1897,7 @@
         "descricao": "80222 - CASE A 9900",
         "modelo": "14/1 - COLHEDORA - COLHEDORA DE CANA PICADA",
         "tipo": "COLHEDORA",
-        "grupo": "FRENTE 12",
+        "grupo": "COLHEDORA",
         "statusOS": "OK",
         "codOS": "-"
       },
