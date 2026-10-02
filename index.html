@@ -7446,10 +7446,7 @@
             updateAuthUI();
         }
 
-        function isStaticGitHubPages() {
-            // NUNCA desativar chamadas de API â€” Sempre buscar dados reais em tempo real do banco de dados!
-            return false;
-        }
+        function isStaticGitHubPages() { return window.location.hostname.includes('github.io'); }
 
         async function checkAuth() {
             let token = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token');

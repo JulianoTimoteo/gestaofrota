@@ -60,7 +60,7 @@
         "codigo": "311517",
         "descricao": "CAMINHAO VINHACA",
         "modelo": "CAMINHÃO VINHAÇA",
-        "tipo": "CAMINHÃO DE VINHAÇA",
+        "tipo": "Caminhão Pipa/Vinhaça",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -69,7 +69,7 @@
         "codigo": "31617",
         "descricao": "CAMINHÃO VINHAÇA",
         "modelo": "CAMINHÃO VINHAÇA",
-        "tipo": "CAMINHÃO DE VINHAÇA",
+        "tipo": "Caminhão Pipa/Vinhaça",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -79,7 +79,7 @@
         "descricao": "MOTO BOMBA CAMINHÃO",
         "modelo": "MOTO BOMBA",
         "tipo": "TRATOR DE PNEUS LEVES MAG100R",
-        "grupo": "CAMINHOES",
+        "grupo": "FERTIRRIGACAO",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -105,7 +105,7 @@
         "codigo": "311217",
         "descricao": "CAMINHÃO VINHACA",
         "modelo": "CAMINHÃO VINHAÇA",
-        "tipo": "CAMINHÃO DE VINHAÇA",
+        "tipo": "Caminhão Pipa/Vinhaça",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "768100"
@@ -141,7 +141,7 @@
         "codigo": "31717",
         "descricao": "CAMINHÃO VINHACA",
         "modelo": "CAMINHÃO VINHAÇA",
-        "tipo": "CAMINHÃO DE VINHAÇA",
+        "tipo": "Caminhão Pipa/Vinhaça",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -195,7 +195,7 @@
         "codigo": "311317",
         "descricao": "CAMINHAO VINHACA",
         "modelo": "CAMINHÃO VINHAÇA",
-        "tipo": "CAMINHÃO DE VINHAÇA",
+        "tipo": "Caminhão Pipa/Vinhaça",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "767916"
@@ -213,7 +213,7 @@
         "codigo": "311117",
         "descricao": "CAMINHÃO VINHAÇA",
         "modelo": "CAMINHÃO VINHAÇA",
-        "tipo": "CAMINHÃO DE VINHAÇA",
+        "tipo": "Caminhão Pipa/Vinhaça",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -222,7 +222,7 @@
         "codigo": "31319",
         "descricao": "CAMINHÃO VINHAÇA",
         "modelo": "CAMINHÃO VINHAÇA",
-        "tipo": "CAMINHÃO DE VINHAÇA",
+        "tipo": "Caminhão Pipa/Vinhaça",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -232,7 +232,7 @@
         "descricao": "MOTO BOMBA CAMINHAO",
         "modelo": "MOTO BOMBA",
         "tipo": "TRATOR DE PNEUS LEVES MAG100R",
-        "grupo": "CAMINHOES",
+        "grupo": "FERTIRRIGACAO",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -240,7 +240,7 @@
         "codigo": "311417",
         "descricao": "CAMINHÃO VINHACA",
         "modelo": "CAMINHÃO VINHAÇA",
-        "tipo": "CAMINHÃO DE VINHAÇA",
+        "tipo": "Caminhão Pipa/Vinhaça",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -322,7 +322,7 @@
         "descricao": "TL 5",
         "modelo": "NEW HOLLAND TL5",
         "tipo": "TRATOR DE PNEUS LEVES MAG100R",
-        "grupo": "HERBICIDA",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -583,7 +583,7 @@
         "descricao": "TRATOR VALTRA BH 180 HI FLOW",
         "modelo": "VALTRA BH 180",
         "tipo": "Trator",
-        "grupo": "FERTIRRIGACAO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "766961"
       },
@@ -592,7 +592,7 @@
         "descricao": "TRATOR VALTRA BH 180 HI FLOW",
         "modelo": "VALTRA BH 180",
         "tipo": "Trator",
-        "grupo": "FERTIRRIGACAO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -601,7 +601,7 @@
         "descricao": "TRATOR VALTRA BH - 180 HI FLOW",
         "modelo": "VALTRA BH 180",
         "tipo": "Trator",
-        "grupo": "FERTIRRIGACAO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -610,7 +610,7 @@
         "descricao": "TRATOR VALTRA BH 180 HI FLOW",
         "modelo": "VALTRA BH 180",
         "tipo": "Trator",
-        "grupo": "FERTIRRIGACAO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -618,7 +618,7 @@
         "codigo": "31225",
         "descricao": "FH540 ALUGADO",
         "modelo": "FH540 ALUGADO",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "768110"
@@ -627,8 +627,8 @@
         "codigo": "80116",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8800",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "COLHEDORA RESERVA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -636,8 +636,8 @@
         "codigo": "80317",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 08",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -645,8 +645,8 @@
         "codigo": "80224",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 9900",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 13",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -654,8 +654,8 @@
         "codigo": "80719",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 10",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -663,8 +663,8 @@
         "codigo": "80119",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 10",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -672,8 +672,8 @@
         "codigo": "80319",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 11",
         "statusOS": "Com OS",
         "codOS": "768080"
       },
@@ -681,8 +681,8 @@
         "codigo": "80419",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 11",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -690,8 +690,8 @@
         "codigo": "80219",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 14",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -699,8 +699,8 @@
         "codigo": "80320",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8800",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 12",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -708,8 +708,8 @@
         "codigo": "80316",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8000",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 12",
         "statusOS": "Com OS",
         "codOS": "767974"
       },
@@ -717,8 +717,8 @@
         "codigo": "80217",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 13",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -726,8 +726,8 @@
         "codigo": "80420",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8800",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 14",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -735,8 +735,8 @@
         "codigo": "80422",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 9900",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 14",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -744,8 +744,8 @@
         "codigo": "80322",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 9900",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 14",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -753,8 +753,8 @@
         "codigo": "80122",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 9900",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 14",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -762,8 +762,8 @@
         "codigo": "80124",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 9900",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 13",
         "statusOS": "Com OS",
         "codOS": "768116"
       },
@@ -771,8 +771,8 @@
         "codigo": "80519",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 15",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -780,8 +780,8 @@
         "codigo": "80120",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8800",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 15",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -789,8 +789,8 @@
         "codigo": "80619",
         "descricao": "COLHEDORA",
         "modelo": "COLHEDORA CASE 8810",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 12",
         "statusOS": "Com OS",
         "codOS": "768096"
       },
@@ -798,7 +798,7 @@
         "codigo": "31115",
         "descricao": "CAMINHAO CANAVIEIRO 540",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -807,7 +807,7 @@
         "codigo": "31125",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -816,7 +816,7 @@
         "codigo": "31215",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -825,7 +825,7 @@
         "codigo": "31315",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -834,7 +834,7 @@
         "codigo": "31316",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -843,7 +843,7 @@
         "codigo": "31325",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -852,7 +852,7 @@
         "codigo": "31415",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -861,7 +861,7 @@
         "codigo": "31425",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "768112"
@@ -870,7 +870,7 @@
         "codigo": "31515",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "766509"
@@ -879,7 +879,7 @@
         "codigo": "31525",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -888,7 +888,7 @@
         "codigo": "31615",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -897,7 +897,7 @@
         "codigo": "31625",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -906,7 +906,7 @@
         "codigo": "31725",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -915,7 +915,7 @@
         "codigo": "31815",
         "descricao": "CAVALO MECANICO",
         "modelo": "CAMINHAO VOLVO FMX 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Apoio",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "768066"
@@ -924,7 +924,7 @@
         "codigo": "31825",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -933,7 +933,7 @@
         "codigo": "31915",
         "descricao": "CAVALO MECANICO",
         "modelo": "CAMINHÃO VOLVO FMX 500",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -942,7 +942,7 @@
         "codigo": "31925",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -951,7 +951,7 @@
         "codigo": "311015",
         "descricao": "CAMINHÃO RODOTREM",
         "modelo": "CAMINHÃO VOLVO FMX 500",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Apoio",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -960,7 +960,7 @@
         "codigo": "311025",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -969,7 +969,7 @@
         "codigo": "311115",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -978,7 +978,7 @@
         "codigo": "311125",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -987,7 +987,7 @@
         "codigo": "311215",
         "descricao": "CAMINHAO CANAVIEIRO",
         "modelo": "PLATAFORMA TREMINHADO",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -996,7 +996,7 @@
         "codigo": "311225",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1005,7 +1005,7 @@
         "codigo": "311325",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1014,7 +1014,7 @@
         "codigo": "311425",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1023,7 +1023,7 @@
         "codigo": "311525",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1032,7 +1032,7 @@
         "codigo": "311625",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1041,7 +1041,7 @@
         "codigo": "311725",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1050,7 +1050,7 @@
         "codigo": "311825",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1059,7 +1059,7 @@
         "codigo": "311925",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1068,7 +1068,7 @@
         "codigo": "312025",
         "descricao": "CAVALO MECANICO",
         "modelo": "VOLVO FH 540",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1078,7 +1078,7 @@
         "descricao": "30601 - 30601",
         "modelo": "/ -  -",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "744670"
       },
@@ -1087,7 +1087,7 @@
         "descricao": "87417 - REBOQUE AREA DE",
         "modelo": "16/13 - IMPLEMENTO RODOVIARIO - REBOQUE AREA DE VIVENCIA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "766619"
       },
@@ -1096,7 +1096,7 @@
         "descricao": "100112 - S 10 LTZ",
         "modelo": "11/2 - VEICULOS LEVES - CAMIONETES",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "766992"
       },
@@ -1105,7 +1105,7 @@
         "descricao": "81624 - SEMI SERG. 2 EX",
         "modelo": "16/3 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES CANAVIEIROS",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767114"
       },
@@ -1114,7 +1114,7 @@
         "descricao": "41109 - CARGO 6332 OF",
         "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767962"
       },
@@ -1123,7 +1123,7 @@
         "descricao": "811525 - SERGOMEL 2 EIXO",
         "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767991"
       },
@@ -1132,7 +1132,7 @@
         "descricao": "811625 - SERGOMEL 2 EIXO",
         "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767992"
       },
@@ -1141,7 +1141,7 @@
         "descricao": "38122 - VOLVO VM270 6X4",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "766801"
       },
@@ -1150,7 +1150,7 @@
         "descricao": "6134 - REB SERG 2 EIXO",
         "modelo": "16/1 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 2 EIXOS",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "768069"
       },
@@ -1159,7 +1159,7 @@
         "descricao": "78225 - SALC/APLICA",
         "modelo": "13/1 - IMPLEMENTOS AGRICOLAS - CARR. DISTRIBUIDORA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1168,7 +1168,7 @@
         "descricao": "505 - VW 31-310 BASC",
         "modelo": "10/8 - CAMINHOES - BASCULANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1177,7 +1177,7 @@
         "descricao": "144 - CIVEMASA SUB.",
         "modelo": "13/23 - IMPLEMENTOS AGRICOLAS - SUBSOLADOR",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "768094"
       },
@@ -1186,7 +1186,7 @@
         "descricao": "811725 - SERGOMEL 2 EIXO",
         "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "768102"
       },
@@ -1195,7 +1195,7 @@
         "descricao": "3118 - VALTRA BM-125 I",
         "modelo": "3/7 - CARREGADORAS - GUINCHO",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1204,7 +1204,7 @@
         "descricao": "30507 - 30507",
         "modelo": "/ -  -",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1213,7 +1213,7 @@
         "descricao": "30301 - 30301",
         "modelo": "/ -  -",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "746488"
       },
@@ -1222,7 +1222,7 @@
         "descricao": "17119 - MARCO PL VOLARE",
         "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
         "tipo": "Ônibus",
-        "grupo": "APOIO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1231,7 +1231,7 @@
         "descricao": "81422 - SEMI RANDON 2EX",
         "modelo": "16/3 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES CANAVIEIROS",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1240,7 +1240,7 @@
         "descricao": "41102 - VW 26260 OFICIN",
         "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1249,7 +1249,7 @@
         "descricao": "13106 - RETRO FIATALLIS",
         "modelo": "41/1 - RETROESCAVADEIRA - RETROESCAVADEIRA",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1258,7 +1258,7 @@
         "descricao": "460125 - STRADA ENDURENC",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1267,7 +1267,7 @@
         "descricao": "462325 - FIAT MOBI 1.0",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1276,7 +1276,7 @@
         "descricao": "42205 - VW 31-310 MUNCK",
         "modelo": "10/16 - CAMINHOES - MUNCK",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1285,7 +1285,7 @@
         "descricao": "17121 - MARCO PL VOLARE",
         "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
         "tipo": "Ônibus",
-        "grupo": "APOIO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1294,7 +1294,7 @@
         "descricao": "460525 - STRADA ENDURENC",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1303,7 +1303,7 @@
         "descricao": "463625 - FIAT MOBI 1.0",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1312,7 +1312,7 @@
         "descricao": "460225 - STRADA ENDURENC",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1321,7 +1321,7 @@
         "descricao": "30307 - 30307",
         "modelo": "/ -  -",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "737102"
       },
@@ -1330,7 +1330,7 @@
         "descricao": "30401 - 30401",
         "modelo": "/ -  -",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "747299"
       },
@@ -1339,7 +1339,7 @@
         "descricao": "743 - MIX-6500",
         "modelo": "44/8 - EQUIPAMENTO - JBA / RFA / JHA - CURRAL",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "751377"
       },
@@ -1348,7 +1348,7 @@
         "descricao": "36219 - VOLVO VM270 6X4",
         "modelo": "10/8 - CAMINHOES - BASCULANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "760824"
       },
@@ -1357,7 +1357,7 @@
         "descricao": "78220 - SALC/APLICA",
         "modelo": "13/1 - IMPLEMENTOS AGRICOLAS - CARR. DISTRIBUIDORA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "762555"
       },
@@ -1366,7 +1366,7 @@
         "descricao": "417 - BH 165",
         "modelo": "1/7 - TRATOR DE PNEUS - LINHA MEDIA",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "762860"
       },
@@ -1375,7 +1375,7 @@
         "descricao": "100318 - SAVEIRO RB MBV",
         "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "764072"
       },
@@ -1384,7 +1384,7 @@
         "descricao": "101118 - GOL TL.",
         "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "764927"
       },
@@ -1393,7 +1393,7 @@
         "descricao": "821922 - RANDON 4 EIXO",
         "modelo": "16/22 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 4 EIXOS",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "766690"
       },
@@ -1402,7 +1402,7 @@
         "descricao": "811922 - SEMI RANDON 2EX",
         "modelo": "16/3 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES CANAVIEIROS",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "766689"
       },
@@ -1411,7 +1411,7 @@
         "descricao": "37055 - IMPLEMENTO EMP",
         "modelo": "49/1 - TERCEIRO/PRESTADOR - TERCEIRO",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "766650"
       },
@@ -1420,7 +1420,7 @@
         "descricao": "36119 - VOLVO VM270 6X4",
         "modelo": "10/8 - CAMINHOES - BASCULANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "766672"
       },
@@ -1429,7 +1429,7 @@
         "descricao": "2220 - TRX 420 4X4",
         "modelo": "48/68 - QUADRICICULO - QUADRICICULO",
         "tipo": "Pá Carregadeira",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "766722"
       },
@@ -1438,7 +1438,7 @@
         "descricao": "5517 - SERGOMEL 2 EIXO",
         "modelo": "16/9 - IMPLEMENTO RODOVIARIO - REBOQUE PRANCHA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "766729"
       },
@@ -1446,7 +1446,7 @@
         "codigo": "38121",
         "descricao": "38121 - VOLVO VM270 6X4",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
-        "tipo": "Caminhão",
+        "tipo": "Frente",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "764348"
@@ -1456,7 +1456,7 @@
         "descricao": "531 - BH-205 HI FLOW",
         "modelo": "1/7 - TRATOR DE PNEUS - LINHA MEDIA",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767022"
       },
@@ -1465,7 +1465,7 @@
         "descricao": "42105 - VW 31-310 MUNCK",
         "modelo": "10/11 - CAMINHOES - BORRACHEIRO",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767065"
       },
@@ -1474,7 +1474,7 @@
         "descricao": "100118 - VOYAGE",
         "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767106"
       },
@@ -1482,7 +1482,7 @@
         "codigo": "42113",
         "descricao": "42113 - VW 31-330 MUNCK",
         "modelo": "10/16 - CAMINHOES - MUNCK",
-        "tipo": "Caminhão",
+        "tipo": "Prancha",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "767129"
@@ -1491,7 +1491,7 @@
         "codigo": "672",
         "descricao": "672 - CARGO 2626 BOMB",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
-        "tipo": "Caminhão",
+        "tipo": "Frente",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "767163"
@@ -1500,7 +1500,7 @@
         "codigo": "32217",
         "descricao": "32217 - VOLVO FM 500",
         "modelo": "10/8 - CAMINHOES - BASCULANTE",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Basculante",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "767177"
@@ -1510,7 +1510,7 @@
         "descricao": "101416 - FORD KA",
         "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767178"
       },
@@ -1519,7 +1519,7 @@
         "descricao": "6143 - SERGOMEL 3 EIXO",
         "modelo": "16/10 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES BASCULANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767575"
       },
@@ -1528,7 +1528,7 @@
         "descricao": "33220 - VOLVO VM270 6X4",
         "modelo": "10/7 - CAMINHOES - COMBOIOS",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767902"
       },
@@ -1536,7 +1536,7 @@
         "codigo": "689",
         "descricao": "689 - VOLVO FM 440",
         "modelo": "10/26 - CAMINHOES - PALHA (BIOMASSA)",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Basculante",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "767922"
@@ -1546,7 +1546,7 @@
         "descricao": "17319 - MARCO PL VOLARE",
         "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
         "tipo": "Ônibus",
-        "grupo": "APOIO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1555,7 +1555,7 @@
         "descricao": "460325 - STRADA ENDURENC",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767989"
       },
@@ -1563,7 +1563,7 @@
         "codigo": "687",
         "descricao": "687 - VOLVO FM 440",
         "modelo": "10/1 - CAMINHOES - CAVALO MECANICO",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Basculante",
         "grupo": "CAMINHOES",
         "statusOS": "Com OS",
         "codOS": "768070"
@@ -1573,7 +1573,7 @@
         "descricao": "461925 - CHEVROLET SPIN",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "768081"
       },
@@ -1582,7 +1582,7 @@
         "descricao": "5136 - SERGOMEL 2 EIXO",
         "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1591,7 +1591,7 @@
         "descricao": "1654 - GAIOLA SERGOMEL",
         "modelo": "47/46 - GAIOLA  PLANTIO - GAIOLA  PLANTIO",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1600,7 +1600,7 @@
         "descricao": "5530 - FACCHINI 2 EIXO",
         "modelo": "16/1 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 2 EIXOS",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1609,7 +1609,7 @@
         "descricao": "41188 - VOLKS 7-110 S",
         "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1618,7 +1618,7 @@
         "descricao": "41509 - CARGO 6332",
         "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1627,7 +1627,7 @@
         "descricao": "143 - SUBSOLADOR",
         "modelo": "13/23 - IMPLEMENTOS AGRICOLAS - SUBSOLADOR",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1635,7 +1635,7 @@
         "codigo": "31120",
         "descricao": "31120 - VOLVO FM 540",
         "modelo": "10/24 - CAMINHOES - PRANCHA",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Basculante",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1645,7 +1645,7 @@
         "descricao": "32317 - VOLVO FM 500",
         "modelo": "10/8 - CAMINHOES - BASCULANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1653,7 +1653,7 @@
         "codigo": "674",
         "descricao": "674 - CARGO 2626 BOMB",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
-        "tipo": "Caminhão",
+        "tipo": "Frente",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1663,7 +1663,7 @@
         "descricao": "36319 - VOLVO VM270 6X4",
         "modelo": "10/8 - CAMINHOES - BASCULANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1672,7 +1672,7 @@
         "descricao": "698 - VW 26260 BOMB",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1681,7 +1681,7 @@
         "descricao": "407 - GRADE 40/18",
         "modelo": "13/22 - IMPLEMENTOS AGRICOLAS - GRADE NIVELADORA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1689,7 +1689,7 @@
         "codigo": "42313",
         "descricao": "42313 - VW 31-330 MUNCK",
         "modelo": "10/16 - CAMINHOES - MUNCK",
-        "tipo": "Caminhão",
+        "tipo": "Prancha",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1699,7 +1699,7 @@
         "descricao": "31121 - VOLVO FH 540",
         "modelo": "10/24 - CAMINHOES - PRANCHA",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1707,7 +1707,7 @@
         "codigo": "311017",
         "descricao": "311017 - VOLVO FM 500",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Bombeiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1716,7 +1716,7 @@
         "codigo": "38210",
         "descricao": "38210 - VW 31-320 BOMBE",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
-        "tipo": "Caminhão",
+        "tipo": "Frente",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1726,7 +1726,7 @@
         "descricao": "842 - GRADE NIVELAD.",
         "modelo": "13/22 - IMPLEMENTOS AGRICOLAS - GRADE NIVELADORA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1735,7 +1735,7 @@
         "descricao": "17419 - MARCO PL VOLARE",
         "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
         "tipo": "Ônibus",
-        "grupo": "APOIO",
+        "grupo": "OUTROS",
         "statusOS": "Com OS",
         "codOS": "767617"
       },
@@ -1744,7 +1744,7 @@
         "descricao": "614 - CARGO 2425 HERB",
         "modelo": "10/10 - CAMINHOES - CARGA SECA",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1752,7 +1752,7 @@
         "codigo": "38310",
         "descricao": "38310 - VW 31-320 BOMBE",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
-        "tipo": "Caminhão",
+        "tipo": "Frente",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1761,7 +1761,7 @@
         "codigo": "31715",
         "descricao": "31715 - VOLVO FM 540",
         "modelo": "10/17 - CAMINHOES - HERBICIDA",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Canavieiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1771,7 +1771,7 @@
         "descricao": "461525 - CHEVROLET SPIN",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1779,7 +1779,7 @@
         "codigo": "32117",
         "descricao": "32117 - VOLVO FM 500",
         "modelo": "10/8 - CAMINHOES - BASCULANTE",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Basculante",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1789,7 +1789,7 @@
         "descricao": "85125 - TANQUE NONINO",
         "modelo": "13/45 - IMPLEMENTOS AGRICOLAS - APLICADOR DE VINHAÇA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1797,7 +1797,7 @@
         "codigo": "31116",
         "descricao": "31116 - VOLVO FM 540",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
-        "tipo": "Caminhão",
+        "tipo": "Caminhão Bombeiro",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1807,7 +1807,7 @@
         "descricao": "3114 - VALTRA BM-125 I",
         "modelo": "3/7 - CARREGADORAS - GUINCHO",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1816,7 +1816,7 @@
         "descricao": "83100 - TM-125/GSC",
         "modelo": "13/19 - IMPLEMENTOS AGRICOLAS - CARRETEL IRRIGADOR",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1825,7 +1825,7 @@
         "descricao": "26115 - KRONE 82",
         "modelo": "13/35 - IMPLEMENTOS AGRICOLAS - ENFARDADEIRA DE PALHA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1834,7 +1834,7 @@
         "descricao": "525 - VW 17-180",
         "modelo": "10/68 - CAMINHOES - TRANSPORTE DE ÁGUA",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1842,8 +1842,8 @@
         "codigo": "80118",
         "descricao": "80118 - CASE A 8810",
         "modelo": "14/1 - COLHEDORA - COLHEDORA DE CANA PICADA",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 08",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1852,7 +1852,7 @@
         "descricao": "42111 - VOLKS 24-250",
         "modelo": "10/16 - CAMINHOES - MUNCK",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1861,7 +1861,7 @@
         "descricao": "862 - ONIBUS M.B.",
         "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
         "tipo": "Ônibus",
-        "grupo": "APOIO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1870,7 +1870,7 @@
         "descricao": "17219 - MARCO PL VOLARE",
         "modelo": "29/1 - ONIBUS - TRANSPORTE PESSOAL",
         "tipo": "Ônibus",
-        "grupo": "APOIO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1879,7 +1879,7 @@
         "descricao": "33326 - VW 17.210 6X4",
         "modelo": "10/7 - CAMINHOES - COMBOIOS",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1888,7 +1888,7 @@
         "descricao": "616 - CARGO 2425 CHU",
         "modelo": "10/12 - CAMINHOES - CHURUMEIRA",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1896,8 +1896,8 @@
         "codigo": "80222",
         "descricao": "80222 - CASE A 9900",
         "modelo": "14/1 - COLHEDORA - COLHEDORA DE CANA PICADA",
-        "tipo": "Colhedora",
-        "grupo": "COLHEDORA",
+        "tipo": "COLHEDORA",
+        "grupo": "FRENTE 12",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1906,7 +1906,7 @@
         "descricao": "85224 - TANQUE NONINO",
         "modelo": "13/45 - IMPLEMENTOS AGRICOLAS - APLICADOR DE VINHAÇA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1915,7 +1915,7 @@
         "descricao": "85119 - TANQUE NONINO",
         "modelo": "13/45 - IMPLEMENTOS AGRICOLAS - APLICADOR DE VINHAÇA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1924,7 +1924,7 @@
         "descricao": "149 - PULVERIZADOR",
         "modelo": "13/25 - IMPLEMENTOS AGRICOLAS - PULVERIZADOR",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1933,7 +1933,7 @@
         "descricao": "618 - CARGO 2425",
         "modelo": "10/67 - CAMINHOES - COLETA DE LIXO",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1942,7 +1942,7 @@
         "descricao": "635 - FORD CARGO C712",
         "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1951,7 +1951,7 @@
         "descricao": "42103 - VW 7-110 BOR",
         "modelo": "10/11 - CAMINHOES - BORRACHEIRO",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1960,7 +1960,7 @@
         "descricao": "324 - VALMET 85 ID",
         "modelo": "3/7 - CARREGADORAS - GUINCHO",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1969,7 +1969,7 @@
         "descricao": "85118 - TANQUE NONINO",
         "modelo": "13/45 - IMPLEMENTOS AGRICOLAS - APLICADOR DE VINHAÇA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1978,7 +1978,7 @@
         "descricao": "33110 - VW 31-320 COMBO",
         "modelo": "10/7 - CAMINHOES - COMBOIOS",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1987,7 +1987,7 @@
         "descricao": "42123 - MB ATEGO - BORR",
         "modelo": "10/11 - CAMINHOES - BORRACHEIRO",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1996,7 +1996,7 @@
         "descricao": "31309 - CARGO 6332E",
         "modelo": "10/10 - CAMINHOES - CARGA SECA",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2004,7 +2004,7 @@
         "codigo": "31420",
         "descricao": "31420 - VOLVO FM 540",
         "modelo": "10/24 - CAMINHOES - PRANCHA",
-        "tipo": "Caminhão",
+        "tipo": "Prancha",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -2014,7 +2014,7 @@
         "descricao": "41 - VALMET 785",
         "modelo": "44/8 - EQUIPAMENTO - JBA / RFA / JHA - CURRAL",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2023,7 +2023,7 @@
         "descricao": "31817 - VOLVO FM 500",
         "modelo": "10/17 - CAMINHOES - HERBICIDA",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2032,7 +2032,7 @@
         "descricao": "25 - MF 275",
         "modelo": "1/6 - TRATOR DE PNEUS - LINHA LEVE",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2041,7 +2041,7 @@
         "descricao": "6136 - REB SERG 2 EIXO",
         "modelo": "16/1 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 2 EIXOS",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2050,7 +2050,7 @@
         "descricao": "821322 - RANDON 4 EIXO",
         "modelo": "16/22 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 4 EIXOS",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2059,7 +2059,7 @@
         "descricao": "32110 - VW 31-320 CAV M",
         "modelo": "10/1 - CAMINHOES - CAVALO MECANICO",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2068,7 +2068,7 @@
         "descricao": "33410 - VW 31-320 COMBO",
         "modelo": "10/69 - CAMINHOES - OUTROS",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2077,7 +2077,7 @@
         "descricao": "41121 - VOLVO VM270 6X4",
         "modelo": "10/13 - CAMINHOES - OFICINA VOLANTE",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2086,7 +2086,7 @@
         "descricao": "83101 - TM-125/GSC",
         "modelo": "13/19 - IMPLEMENTOS AGRICOLAS - CARRETEL IRRIGADOR",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2095,7 +2095,7 @@
         "descricao": "32114 - VW 26-420 6X4",
         "modelo": "10/1 - CAMINHOES - CAVALO MECANICO",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2104,7 +2104,7 @@
         "descricao": "100418 - SAVEIRO RB MBV",
         "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2113,7 +2113,7 @@
         "descricao": "100111 - SAVEIRO CS 1.6",
         "modelo": "11/4 - VEICULOS LEVES - VEÍCULOS LEVES",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2122,7 +2122,7 @@
         "descricao": "330 - VALMET 88",
         "modelo": "3/7 - CARREGADORAS - GUINCHO",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2131,7 +2131,7 @@
         "descricao": "33111 - MB-1718",
         "modelo": "10/69 - CAMINHOES - OUTROS",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2140,7 +2140,7 @@
         "descricao": "33226 -  VM 27.320",
         "modelo": "10/7 - CAMINHOES - COMBOIOS",
         "tipo": "Caminhão",
-        "grupo": "CAMINHOES",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2149,7 +2149,7 @@
         "descricao": "81622 - SEMI RANDON 2EX",
         "modelo": "16/3 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES CANAVIEIROS",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2158,7 +2158,7 @@
         "descricao": "467625 - FIAT MOBI 1.0",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2167,7 +2167,7 @@
         "descricao": "2320 - TRX 420 4X4",
         "modelo": "48/68 - QUADRICICULO - QUADRICICULO",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2176,7 +2176,7 @@
         "descricao": "462825 - FIAT MOBI 1.0",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2185,7 +2185,7 @@
         "descricao": "468525 - MOBI LIKE",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2194,7 +2194,7 @@
         "descricao": "463125 - FIAT MOBI 1.0",
         "modelo": "11/6 - VEICULOS LEVES - ALUGADOS",
         "tipo": "Trator",
-        "grupo": "PREPARO",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2203,7 +2203,7 @@
         "descricao": "821324 - SERGOMEL 4 EIXO",
         "modelo": "16/22 - IMPLEMENTO RODOVIARIO - REBOQUE CANAVIEIRO 4 EIXOS",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2212,7 +2212,7 @@
         "descricao": "5141 - SERGOMEL 4 EIXO",
         "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2221,7 +2221,7 @@
         "descricao": "5137 - SERGOMEL 2 EIXO",
         "modelo": "16/19 - IMPLEMENTO RODOVIARIO - REBOQUE VINHAÇA",
         "tipo": "Implemento",
-        "grupo": "IMPLEMENTOS",
+        "grupo": "OUTROS",
         "statusOS": "OK",
         "codOS": "-"
       }
