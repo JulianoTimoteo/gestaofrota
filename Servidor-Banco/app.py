@@ -88,8 +88,8 @@ if os.path.basename(BASE_DIR) == 'backend':
 else:
     PROJECT_DIR = BASE_DIR
 
-FRONTEND_DIR = PROJECT_DIR if os.path.exists(os.path.join(PROJECT_DIR, 'index.html')) else os.path.join(PROJECT_DIR, 'frontend')
-_db_candidate = os.path.join(PROJECT_DIR, 'VersaoDesktop', 'simplefarm.db')
+FRONTEND_DIR = os.path.join(os.path.dirname(PROJECT_DIR), 'Appweb')
+_db_candidate = os.path.join(PROJECT_DIR, 'simplefarm.db')
 DB_PATH = os.environ.get('SF_DB_PATH', _db_candidate)
 
 # Tablet SD card database path (primary storage)
@@ -1248,7 +1248,7 @@ def gerar_e_salvar_dados_json():
                 'tempoOperacao': op.get('tempo_operacao') or op.get('tempoOperacao') or ''
             })
             
-        row_u = conn.execute("SELECT MAX(data_sincronizacao) FROM ordens_servico").fetchone()
+        row_u = conn.execute("SELECT MAX(atualizado_em) FROM ordens_servico").fetchone()
         raw_ultima = row_u[0] if row_u and row_u[0] else None
         ultima = str(raw_ultima) if raw_ultima else datetime.now().isoformat()
         
@@ -1271,9 +1271,7 @@ def gerar_e_salvar_dados_json():
 
         # Grava em dados.json na raiz e em todas as pastas do projeto
         paths_to_save = [
-            os.path.join(BASE_DIR, 'dados.json'),
-            os.path.join(BASE_DIR, 'Gestao_Frota', 'dados.json'),
-            os.path.join(BASE_DIR, 'frontend', 'dados.json')
+            os.path.join(os.path.dirname(BASE_DIR), 'Appweb', 'dados.json')
         ]
         
         json_str = json.dumps(payload, ensure_ascii=False, indent=2)
@@ -3982,7 +3980,7 @@ def get_api_status():
         equip_os = sum(1 for eq_c in all_eqs if eq_c in os_map_stat)
         equip_ok = max(0, total_equip - equip_os)
 
-        row_u = conn.execute("SELECT MAX(data_sincronizacao) FROM ordens_servico").fetchone()
+        row_u = conn.execute("SELECT MAX(atualizado_em) FROM ordens_servico").fetchone()
         raw_ultima = row_u[0] if row_u and row_u[0] else None
         ultima = str(raw_ultima) if raw_ultima else 'Nunca'
 
