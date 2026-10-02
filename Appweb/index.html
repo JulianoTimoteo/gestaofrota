@@ -7936,17 +7936,8 @@
             const customTypes  = getCustomEquipTypes();
             const customOps    = getCustomEquipOps();
 
-            const VALID_TEAMS = ['BIOMASSA', 'CAMINHOES', 'CAMINHOES TERCEIROS', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'OUTROS', 'PREPARO', 'TORRES SOLINFNET', 'TRATOS CULTURAIS'];
-            let customGroupsChanged = false;
-            Object.keys(customGroups).forEach(k => {
-                if (customGroups[k] && !VALID_TEAMS.includes(customGroups[k])) {
-                    delete customGroups[k];
-                    customGroupsChanged = true;
-                }
-            });
-            if (customGroupsChanged) {
-                localStorage.setItem('sf_custom_equip_groups', JSON.stringify(customGroups));
-            }
+            /* Pruning removed */
+
 
             // Verificação profunda: uma frota não pode estar em duas equipes
             const uniqueEquips = new Map();
@@ -7977,7 +7968,7 @@
                 const defaultT = normalizarTipo(rawT, desc, mod, codStr);
                 const rawGrp   = (eq.grupo || '').trim();
                 const assignedGroup = customGroups[codStr] || rawGrp || 'PREPARO';
-                const finalGroup = VALID_TEAMS.includes(assignedGroup) ? assignedGroup : (VALID_TEAMS.includes(rawGrp) ? rawGrp : (rawGrp || assignedGroup || 'OUTROS'));
+                const finalGroup = assignedGroup;
                 const defaultOp = getTeamDefaultOp(finalGroup);
                 let finalTipo = customTypes[codStr] || defaultT;
                 if ((finalTipo === 'Caminhão' || finalTipo === 'Caminhao') && defaultT !== 'Caminhão') {
@@ -9705,8 +9696,18 @@
             document.getElementById('btnHeaderInstallPwa')?.addEventListener('click', triggerPwaInstall);
             document.getElementById('btnPwaDismiss')?.addEventListener('click', dismissPwaBanner);
 
+            
             if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        if (registration.scope.includes('/gestaofrota/') && !registration.scope.endsWith('Appweb/')) {
+                            console.log('Unregistering old root SW:', registration.scope);
+                            registration.unregister();
+                        }
+                    }
+                });
                 navigator.serviceWorker.register('./sw.js?v=22').then(reg => {
+
                     reg.update();
                     console.log('Service Worker PWA registrado:', reg.scope);
                 }).catch(err => {
