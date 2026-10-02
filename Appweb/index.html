@@ -481,7 +481,7 @@
 
         .theme-toggle-wrapper .slider:before {
             position: absolute;
-            content: "â˜€️";
+            content: "☀️";
             height: 22px;
             width: 22px;
             left: 3px;
@@ -504,7 +504,7 @@
 
         .theme-toggle-wrapper input:checked + .slider:before {
             transform: translateX(26px);
-            content: "ðŸŒ™";
+            content: "🌙";
         }
 
         .theme-toggle-wrapper .clouds {
@@ -3146,10 +3146,10 @@
                 <span class="counter os" title="Equipamentos com OS"><strong id="equipOsCount">0</strong> c/OS📋</span>
             </div>
             <div class="global-os-filters" style="display: flex; gap: 4px; margin-left: auto; align-items: center; padding-left: 10px;">
-                <button class="btn-filter-os active" data-osfilter="ABERTA" title="TIPO OS = NORMAL, STATUS = ABERTA" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#334155; color:#fff; cursor:pointer;"><i class="fas fa-wrench"></i> Aberta</button>
-                <button class="btn-filter-os" data-osfilter="REPARO" title="TIPO OS = REPARO" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer;"><i class="fas fa-tools"></i> Reparo</button>
-                <button class="btn-filter-os" data-osfilter="COMUNICADA" title="STATUS = COMUNICADA" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer;"><i class="fas fa-bullhorn"></i> Comunicada</button>
-                <button class="btn-filter-os" data-osfilter="TODAS" title="Todas as OS (Exceto Fechadas)" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer;"><i class="fas fa-list"></i> Todas</button>
+                <button class="btn-filter-os" data-osfilter="ABERTA" title="TIPO OS = NORMAL, STATUS = ABERTA" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer; transition: all 0.3s;"><i class="fas fa-wrench"></i> Aberta</button>
+                <button class="btn-filter-os" data-osfilter="REPARO" title="TIPO OS = REPARO" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer; transition: all 0.3s;"><i class="fas fa-tools"></i> Reparo</button>
+                <button class="btn-filter-os" data-osfilter="COMUNICADA" title="STATUS = COMUNICADA" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer; transition: all 0.3s;"><i class="fas fa-bullhorn"></i> Comunicada</button>
+                <button class="btn-filter-os active" data-osfilter="TODAS" title="Todas as OS (Exceto Fechadas)" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #3b82f6; background:#3b82f6; color:#fff; cursor:pointer; box-shadow: 0 0 8px rgba(59, 130, 246, 0.5); transition: all 0.3s;"><i class="fas fa-list"></i> Todas</button>
             </div>
         </div>
 
@@ -3553,7 +3553,7 @@
         let equipamentosComOS = new Set();
         let equipFiltroEquipe = 'TODAS';
         let isSyncing    = false;
-        let currentOsFilter = 'ABERTA';
+        let currentOsFilter = 'TODAS';
         let syncTimer    = null;
 
         // PAGINATION STATE
@@ -9729,11 +9729,15 @@
                     document.querySelectorAll('.btn-filter-os').forEach(b => {
                         b.classList.remove('active');
                         b.style.background = '#1e293b';
+                        b.style.borderColor = '#475569';
                         b.style.color = '#cbd5e1';
+                        b.style.boxShadow = 'none';
                     });
                     e.currentTarget.classList.add('active');
-                    e.currentTarget.style.background = '#334155';
+                    e.currentTarget.style.background = '#3b82f6';
+                    e.currentTarget.style.borderColor = '#3b82f6';
                     e.currentTarget.style.color = '#fff';
+                    e.currentTarget.style.boxShadow = '0 0 8px rgba(59, 130, 246, 0.5)';
                     
                     currentOsFilter = e.currentTarget.getAttribute('data-osfilter');
                     
