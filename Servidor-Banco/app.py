@@ -868,8 +868,8 @@ def api_config_admin():
     return jsonify(success=True, data=get_admin_config_data())
 
 def get_open_os_map(conn):
-    """Retorna mapa inteligente de código/frota de equipamentos -> cod_os e subclasses para OS ABERTAS (excluindo EXTERNA e REPARO DE PEÇA para Gestão de Frota)."""
-    cursor = conn.execute("SELECT codigo_equip, frota_cc, cod_os, tipo_oficina, tipo_os, subclasse FROM ordens_servico WHERE upper(status_os) = 'ABERTA'")
+    """Retorna mapa inteligente de cdigo/frota de equipamentos -> cod_os e subclasses para OS ABERTAS (excluindo EXTERNA e REPARO DE PEA para Gesto de Frota)."""
+    cursor = conn.execute("SELECT frota_cc, cod_os, tipo_oficina, tipo_os, subclasse FROM ordens_servico WHERE upper(status_os) = 'ABERTA'")
     os_map = {}
     sub_map = {}
     for r in cursor.fetchall():
@@ -879,15 +879,18 @@ def get_open_os_map(conn):
             continue
         cod_os = r['cod_os']
         sub = str(r['subclasse'] or '').strip().upper()
-        for raw in (codigo_equip, r['frota_cc']):
-            if raw:
-                s = str(raw).strip()
-                os_map[s] = cod_os
-                clean = s.split(' - ')[0].strip()
-                if clean:
-                    os_map[clean] = cod_os
-                    if clean not in sub_map: sub_map[clean] = []
-                    if sub: sub_map[clean].append(sub)
+        
+        # We extract code from frota_cc since codigo_equip column was removed
+        frota_cc = r['frota_cc']
+        if frota_cc:
+            s = str(frota_cc).strip()
+            os_map[s] = cod_os
+            clean = s.split(' - ')[0].strip()
+            if clean:
+                os_map[clean] = cod_os
+                if clean not in sub_map: sub_map[clean] = []
+                if sub: sub_map[clean].append(sub)
+                
     return os_map, sub_map
 
 
