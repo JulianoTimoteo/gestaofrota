@@ -765,7 +765,7 @@
             overflow: visible;
         }
 
-        /* ===== ABA EQUIPES â€” CARROSSEL 3 ITENS (ESQUERDA - CENTRO ATIVO - DIREITA) ===== */
+        /* ===== ABA EQUIPES - CARROSSEL 3 ITENS (ESQUERDA - CENTRO ATIVO - DIREITA) ===== */
         .team-carousel-container {
             display: flex;
             align-items: center;
@@ -3241,7 +3241,7 @@
                         <div class="card-header">
                             <h2><i class="fas fa-sync-alt"></i> Sincronização</h2>
                             <div style="display:flex;gap:0.5rem;align-items:center;">
-                                <span class="count-badge" id="syncStatus" style="background:#dcfce7;color:#166534;">â— Ativa</span>
+                                <span class="count-badge" id="syncStatus" style="background:#dcfce7;color:#166534;">â- Ativa</span>
                                 <button class="btn btn-outline btn-sm" id="syncNowBtn">
                                     <i class="fas fa-redo"></i> Sincronizar Agora
                                 </button>
@@ -3250,15 +3250,15 @@
                         <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:1rem;margin-bottom:1rem;">
                             <div style="background:var(--color-gray-50);padding:0.85rem 1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
                                 <div style="font-size:0.7rem;color:var(--color-gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.25rem;">Equipamentos</div>
-                                <div style="font-size:1.5rem;font-weight:800;color:var(--color-primary);" id="syncEquipCount">â€”</div>
+                                <div style="font-size:1.5rem;font-weight:800;color:var(--color-primary);" id="syncEquipCount">-</div>
                             </div>
                             <div style="background:var(--color-gray-50);padding:0.85rem 1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
                                 <div style="font-size:0.7rem;color:var(--color-gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.25rem;">Ordens de Serviço</div>
-                                <div style="font-size:1.5rem;font-weight:800;color:var(--color-danger);" id="syncOsCount">â€”</div>
+                                <div style="font-size:1.5rem;font-weight:800;color:var(--color-danger);" id="syncOsCount">-</div>
                             </div>
                             <div style="background:var(--color-gray-50);padding:0.85rem 1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
                                 <div style="font-size:0.7rem;color:var(--color-gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.25rem;">Operações</div>
-                                <div style="font-size:1.5rem;font-weight:800;color:#22c55e;" id="syncOpCount">â€”</div>
+                                <div style="font-size:1.5rem;font-weight:800;color:#22c55e;" id="syncOpCount">-</div>
                             </div>
                             <div style="background:var(--color-gray-50);padding:0.85rem 1rem;border-radius:8px;border:1px solid var(--color-gray-200);">
                                 <div style="font-size:0.7rem;color:var(--color-gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.25rem;">Usuários Conectados</div>
@@ -3543,7 +3543,7 @@
 
     <script>
         // ================================================================
-        // ESTADO GLOBAL â€” única fonte da verdade
+        // ESTADO GLOBAL - única fonte da verdade
         // ================================================================
         let authToken    = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token') || '';
         let userRole     = localStorage.getItem('sf_auth_role') || 'visualizador';
@@ -3586,7 +3586,7 @@
             return html;
         }
 
-        // Aba ativa â€” gerenciada em memória (não força re-render ao recarregar dados)
+        // Aba ativa - gerenciada em memória (não força re-render ao recarregar dados)
         let activeMainTab    = localStorage.getItem('sf_active_tab')           || 'tab-equipe';
         let activeAdminSub   = localStorage.getItem('sf_active_admin_subtab')  || 'tab-equipamentos';
         let activeTeam       = localStorage.getItem('sf_active_team')          || null;
@@ -8081,10 +8081,10 @@
 
             const syncTime = d.ultimaSincronizacao || new Date().toISOString();
             if (isOfflineFallback) {
-                addLog(`ðŸŸ¢ Modo Standalone / Cloud â€” ${equipments.length} equip. · ${ordensServico.length} OS`, 'info');
+                addLog(`ðŸŸ¢ Modo Standalone / Cloud - ${equipments.length} equip. · ${ordensServico.length} OS`, 'info');
                 setConnectionStatus('success');
             } else {
-                addLog(`✅ Dados atualizados â€” ${equipments.length} equip. · ${ordensServico.length} OS · Sync: ${syncTime}`, 'success');
+                addLog(`✅ Dados atualizados - ${equipments.length} equip. · ${ordensServico.length} OS · Sync: ${syncTime}`, 'success');
                 setConnectionStatus('success');
             }
 
@@ -8299,7 +8299,7 @@
         }
 
         // ================================================================
-        // TAB SWITCHING â€” estável, nunca volta para admin sozinho
+        // TAB SWITCHING - estável, nunca volta para admin sozinho
         // ================================================================
         function switchMainTab(tabId, persist = true) {
             if (!tabId) return;
@@ -8336,7 +8336,7 @@
         }
 
         // ================================================================
-        // RBAC (chamado apenas no login/init â€” não ao recarregar dados)
+        // RBAC (chamado apenas no login/init - não ao recarregar dados)
         // ================================================================
         function applyRBAC() {
             const mainTabs        = document.getElementById('mainTabs');
@@ -9052,7 +9052,7 @@
                     <div class="donut-legend-rows">${legend}</div>
                     <div class="donut-total-row">
                         <span class="donut-total-label">${cfg.totalLabel || 'Total registrado'}</span>
-                        <span class="donut-total-val">${cfg.totalValue || 'â€”'}</span>
+                        <span class="donut-total-val">${cfg.totalValue || '-'}</span>
                     </div>
                 </div>
             </div>`;
@@ -9086,9 +9086,9 @@
                                 <strong style="font-size:0.95rem;">OS nº ${os.codOS || 'S/N'}</strong>
                                 <span class="badge-equip os-aberta">${os.statusOS || 'ABERTA'}</span>
                             </div>
-                            <div class="os-report-meta"><i class="fas fa-calendar-alt" style="margin-right:4px;"></i> <strong>Entrada:</strong> ${os.dataEntrada || 'â€”'}</div>
-                            <div class="os-report-meta"><i class="fas fa-clock" style="margin-right:4px;"></i> <strong>Dias:</strong> ${os.diasPermanencia || 'â€”'}</div>
-                            <div class="os-report-meta"><i class="fas fa-tools" style="margin-right:4px;"></i> <strong>Tipo:</strong> ${os.tipoOficina || 'â€”'} â€” ${os.oficina || 'â€”'}</div>
+                            <div class="os-report-meta"><i class="fas fa-calendar-alt" style="margin-right:4px;"></i> <strong>Entrada:</strong> ${os.dataEntrada || '-'}</div>
+                            <div class="os-report-meta"><i class="fas fa-clock" style="margin-right:4px;"></i> <strong>Dias:</strong> ${os.diasPermanencia || '-'}</div>
+                            <div class="os-report-meta"><i class="fas fa-tools" style="margin-right:4px;"></i> <strong>Tipo:</strong> ${os.tipoOficina || '-'} - ${os.oficina || '-'}</div>
                             <div class="os-report-desc"><strong style="color:var(--color-primary);">Descrição:</strong> ${os.descricao || 'Manutenção registrada no sistema'}</div>
                         </div>`).join('') +
                 `</div>`;
@@ -9277,7 +9277,7 @@
         }
 
         // ================================================================
-        // ABA EQUIPES â€” CARROSSEL CÍCLICO 3 ITENS (ESQUERDA - CENTRO ATIVO - DIREITA)
+        // ABA EQUIPES - CARROSSEL CÍCLICO 3 ITENS (ESQUERDA - CENTRO ATIVO - DIREITA)
         // ================================================================
         function navigateTeamTab(dir) {
             const baseTeams = getEquipesDisponiveis();
@@ -9636,7 +9636,7 @@
                 });
             }
 
-            // Modal OS â€” fechar
+            // Modal OS - fechar
             const osClose = document.getElementById('osReportModalClose');
             if (osClose) osClose.addEventListener('click', () => {
                 document.getElementById('osReportModalOverlay').classList.remove('active');
@@ -9945,7 +9945,7 @@
                     }
                 } catch (netErr) {
                     // Sem servidor (offline): remove só localmente com marcação
-                    addLog(`⚠️ Servidor offline â€” operação ${cod} marcada para exclusão local.`, 'warning');
+                    addLog(`⚠️ Servidor offline - operação ${cod} marcada para exclusão local.`, 'warning');
                 }
             }
 
@@ -9959,7 +9959,7 @@
                 localStorage.setItem('sf_deleted_ops', JSON.stringify(deletedOps));
             }
 
-            addLog(`ðŸ—‘️ Operação ${cod} excluída com sucesso!`, 'warning');
+            addLog(`ðŸ-‘️ Operação ${cod} excluída com sucesso!`, 'warning');
             renderOperacoes();
             renderTeamTabs(false);
             atualizarStatusGeral();
