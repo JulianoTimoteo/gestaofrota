@@ -61,7 +61,7 @@
         "descricao": "CAMINHAO VINHACA",
         "modelo": "CAMINHÃO VINHAÇA",
         "tipo": "Caminhão Pipa/Vinhaça",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO PIPA/VINHAÇA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -70,7 +70,7 @@
         "descricao": "CAMINHÃO VINHAÇA",
         "modelo": "CAMINHÃO VINHAÇA",
         "tipo": "Caminhão Pipa/Vinhaça",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO PIPA/VINHAÇA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -106,7 +106,7 @@
         "descricao": "CAMINHÃO VINHACA",
         "modelo": "CAMINHÃO VINHAÇA",
         "tipo": "Caminhão Pipa/Vinhaça",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO PIPA/VINHAÇA",
         "statusOS": "Com OS",
         "codOS": "768100"
       },
@@ -142,7 +142,7 @@
         "descricao": "CAMINHÃO VINHACA",
         "modelo": "CAMINHÃO VINHAÇA",
         "tipo": "Caminhão Pipa/Vinhaça",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO PIPA/VINHAÇA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -196,7 +196,7 @@
         "descricao": "CAMINHAO VINHACA",
         "modelo": "CAMINHÃO VINHAÇA",
         "tipo": "Caminhão Pipa/Vinhaça",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO PIPA/VINHAÇA",
         "statusOS": "Com OS",
         "codOS": "767916"
       },
@@ -214,7 +214,7 @@
         "descricao": "CAMINHÃO VINHAÇA",
         "modelo": "CAMINHÃO VINHAÇA",
         "tipo": "Caminhão Pipa/Vinhaça",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO PIPA/VINHAÇA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -223,7 +223,7 @@
         "descricao": "CAMINHÃO VINHAÇA",
         "modelo": "CAMINHÃO VINHAÇA",
         "tipo": "Caminhão Pipa/Vinhaça",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO PIPA/VINHAÇA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -241,7 +241,7 @@
         "descricao": "CAMINHÃO VINHACA",
         "modelo": "CAMINHÃO VINHAÇA",
         "tipo": "Caminhão Pipa/Vinhaça",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO PIPA/VINHAÇA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -916,7 +916,7 @@
         "descricao": "CAVALO MECANICO",
         "modelo": "CAMINHAO VOLVO FMX 540",
         "tipo": "Caminhão Apoio",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO APOIO",
         "statusOS": "Com OS",
         "codOS": "768066"
       },
@@ -934,7 +934,7 @@
         "descricao": "CAVALO MECANICO",
         "modelo": "CAMINHÃO VOLVO FMX 500",
         "tipo": "Caminhão Canavieiro",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO APOIO",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -952,7 +952,7 @@
         "descricao": "CAMINHÃO RODOTREM",
         "modelo": "CAMINHÃO VOLVO FMX 500",
         "tipo": "Caminhão Apoio",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO APOIO",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1447,7 +1447,7 @@
         "descricao": "38121 - VOLVO VM270 6X4",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
         "tipo": "Frente",
-        "grupo": "CAMINHOES",
+        "grupo": "FRENTE",
         "statusOS": "Com OS",
         "codOS": "764348"
       },
@@ -1483,7 +1483,7 @@
         "descricao": "42113 - VW 31-330 MUNCK",
         "modelo": "10/16 - CAMINHOES - MUNCK",
         "tipo": "Prancha",
-        "grupo": "CAMINHOES",
+        "grupo": "PRANCHA",
         "statusOS": "Com OS",
         "codOS": "767129"
       },
@@ -1492,7 +1492,7 @@
         "descricao": "672 - CARGO 2626 BOMB",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
         "tipo": "Frente",
-        "grupo": "CAMINHOES",
+        "grupo": "FRENTE",
         "statusOS": "Com OS",
         "codOS": "767163"
       },
@@ -1501,7 +1501,7 @@
         "descricao": "32217 - VOLVO FM 500",
         "modelo": "10/8 - CAMINHOES - BASCULANTE",
         "tipo": "Caminhão Basculante",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO BASCULANTE",
         "statusOS": "Com OS",
         "codOS": "767177"
       },
@@ -1537,7 +1537,7 @@
         "descricao": "689 - VOLVO FM 440",
         "modelo": "10/26 - CAMINHOES - PALHA (BIOMASSA)",
         "tipo": "Caminhão Basculante",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO BASCULANTE",
         "statusOS": "Com OS",
         "codOS": "767922"
       },
@@ -1564,7 +1564,7 @@
         "descricao": "687 - VOLVO FM 440",
         "modelo": "10/1 - CAMINHOES - CAVALO MECANICO",
         "tipo": "Caminhão Basculante",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO BASCULANTE",
         "statusOS": "Com OS",
         "codOS": "768070"
       },
@@ -1636,7 +1636,7 @@
         "descricao": "31120 - VOLVO FM 540",
         "modelo": "10/24 - CAMINHOES - PRANCHA",
         "tipo": "Caminhão Basculante",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO BASCULANTE",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1654,7 +1654,7 @@
         "descricao": "674 - CARGO 2626 BOMB",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
         "tipo": "Frente",
-        "grupo": "CAMINHOES",
+        "grupo": "FRENTE",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1690,7 +1690,7 @@
         "descricao": "42313 - VW 31-330 MUNCK",
         "modelo": "10/16 - CAMINHOES - MUNCK",
         "tipo": "Prancha",
-        "grupo": "CAMINHOES",
+        "grupo": "PRANCHA",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1708,7 +1708,7 @@
         "descricao": "311017 - VOLVO FM 500",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
         "tipo": "Caminhão Bombeiro",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO BOMBEIRO",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1717,7 +1717,7 @@
         "descricao": "38210 - VW 31-320 BOMBE",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
         "tipo": "Frente",
-        "grupo": "CAMINHOES",
+        "grupo": "FRENTE",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1753,7 +1753,7 @@
         "descricao": "38310 - VW 31-320 BOMBE",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
         "tipo": "Frente",
-        "grupo": "CAMINHOES",
+        "grupo": "FRENTE",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1761,7 +1761,7 @@
         "codigo": "31715",
         "descricao": "31715 - VOLVO FM 540",
         "modelo": "10/17 - CAMINHOES - HERBICIDA",
-        "tipo": "Caminhão Canavieiro",
+        "tipo": "Tremiado",
         "grupo": "CAMINHOES",
         "statusOS": "OK",
         "codOS": "-"
@@ -1780,7 +1780,7 @@
         "descricao": "32117 - VOLVO FM 500",
         "modelo": "10/8 - CAMINHOES - BASCULANTE",
         "tipo": "Caminhão Basculante",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO BASCULANTE",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -1798,7 +1798,7 @@
         "descricao": "31116 - VOLVO FM 540",
         "modelo": "10/9 - CAMINHOES - BOMBEIROS",
         "tipo": "Caminhão Bombeiro",
-        "grupo": "CAMINHOES",
+        "grupo": "CAMINHÃO BOMBEIRO",
         "statusOS": "OK",
         "codOS": "-"
       },
@@ -2005,7 +2005,7 @@
         "descricao": "31420 - VOLVO FM 540",
         "modelo": "10/24 - CAMINHOES - PRANCHA",
         "tipo": "Prancha",
-        "grupo": "CAMINHOES",
+        "grupo": "PRANCHA",
         "statusOS": "OK",
         "codOS": "-"
       },
