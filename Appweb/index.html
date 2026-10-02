@@ -1731,7 +1731,7 @@
             font-weight: 600;
         }
 
-        /* ===== ABA VERMELHA 24H âš ï¸ ===== */
+        /* ===== ABA VERMELHA 24H ⚠️ ===== */
         .sub-tab-btn.btn-24h-alert,
         .team-filter-btn.btn-24h-alert {
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
@@ -3141,9 +3141,9 @@
                 <span class="divider">|</span>
                 <span class="datetime" id="headerClock">--/--/----, --:--:--</span>
                 <span class="divider">|</span>
-                <span class="counter" title="OS Abertas"><strong id="osAbertasCount">0</strong> OSðŸ“‹</span>
-                <span class="counter ok" title="Equipamentos OK"><strong id="equipOkCount">0</strong> OKâœ…</span>
-                <span class="counter os" title="Equipamentos com OS"><strong id="equipOsCount">0</strong> c/OSðŸ“‹</span>
+                <span class="counter" title="OS Abertas"><strong id="osAbertasCount">0</strong> OS📋</span>
+                <span class="counter ok" title="Equipamentos OK"><strong id="equipOkCount">0</strong> OK✅</span>
+                <span class="counter os" title="Equipamentos com OS"><strong id="equipOsCount">0</strong> c/OS📋</span>
             </div>
             <div class="global-os-filters" style="display: flex; gap: 4px; margin-left: auto; align-items: center; padding-left: 10px;">
                 <button class="btn-filter-os active" data-osfilter="ABERTA" title="TIPO OS = NORMAL, STATUS = ABERTA" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#334155; color:#fff; cursor:pointer;"><i class="fas fa-wrench"></i> Aberta</button>
@@ -3281,7 +3281,7 @@
         </div>
     </div>
 
-    <!-- MODAL RELATÃ“RIO DA OS (ðŸ“‹) -->
+    <!-- MODAL RELATÃ“RIO DA OS (📋) -->
     <div class="action-modal-overlay" id="osReportModalOverlay">
         <div class="action-modal">
             <h3 id="osReportModalTitle"><i class="fas fa-clipboard-list" style="color:var(--color-primary);"></i> Detalhes da Ordem de Serviço</h3>
@@ -7299,7 +7299,7 @@
                         storage.setItem('sf_auth_role',  role);
                         authToken = data.token;
                         userRole  = role;
-                        statusEl.textContent = 'âœ… Login efetuado!';
+                        statusEl.textContent = '✅ Login efetuado!';
                         statusEl.className   = 'login-status success';
 
                         if (cardWrapper) {
@@ -7407,7 +7407,7 @@
             storage.setItem('sf_auth_role',  role);
             authToken = token;
             userRole  = role;
-            statusEl.textContent = 'âœ… Login efetuado com sucesso!';
+            statusEl.textContent = '✅ Login efetuado com sucesso!';
             statusEl.className   = 'login-status success';
 
             if (cardWrapper) {
@@ -7960,7 +7960,7 @@
                     const exGrp = (existing.grupo || '').trim();
                     if (exGrp !== eqGrp && exGrp !== '' && eqGrp !== '') {
                         if (!isBackground) {
-                            addLog(`âš ï¸ Alerta: Frota ${codStr} está duplicada (Equipes: ${exGrp} e ${eqGrp}). Mantida na equipe ${exGrp}.`, 'warning');
+                            addLog(`⚠️ Alerta: Frota ${codStr} está duplicada (Equipes: ${exGrp} e ${eqGrp}). Mantida na equipe ${exGrp}.`, 'warning');
                         }
                     }
                     return; // Ignora o duplicado
@@ -8013,7 +8013,7 @@
                 addLog(`ðŸŸ¢ Modo Standalone / Cloud â€” ${equipments.length} equip. · ${ordensServico.length} OS`, 'info');
                 setConnectionStatus('success');
             } else {
-                addLog(`âœ… Dados atualizados â€” ${equipments.length} equip. · ${ordensServico.length} OS · Sync: ${syncTime}`, 'success');
+                addLog(`✅ Dados atualizados â€” ${equipments.length} equip. · ${ordensServico.length} OS · Sync: ${syncTime}`, 'success');
                 setConnectionStatus('success');
             }
 
@@ -8243,7 +8243,7 @@
             document.querySelectorAll('#tab-admin, #tab-equipe').forEach(el => {
                 el.classList.toggle('active', el.id === tabId);
             });
-            atualizarStatusGeral(tabId === 'tab-equipe' ? (activeTeam === '24hâš ï¸' ? null : activeTeam) : null);
+            atualizarStatusGeral(tabId === 'tab-equipe' ? (activeTeam === '24h⚠️' ? null : activeTeam) : null);
         }
 
         function switchAdminSubTab(subId, persist = true) {
@@ -8607,7 +8607,7 @@
         function getEquipesDisponiveis() {
             const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
             const extraTeams = equipments.map(eq => eq.grupo).filter(g => g && !standardTeams.includes(g));
-            return [...new Set([...standardTeams, ...extraTeams])].sort();
+            return [...new Set([...standardTeams, ...extraTeams])];
         }
 
         function renderEquipTeamFilter() {
@@ -8647,7 +8647,7 @@
             }
 
             const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
-            const allTeams = [...new Set([...standardTeams, ...getEquipesDisponiveis()])].sort();
+            const allTeams = [...new Set([...standardTeams, ...getEquipesDisponiveis()])];
 
             // Tipos para a lista suspensa
             const allTipos = [...new Set([...LISTA_TIPOS_PADRAO, ...equipments.map(e => e.tipo)])].sort();
@@ -8674,7 +8674,7 @@
                 const hasOS       = equipamentosComOS.has(String(eq.codigo));
                 const statusLabel = hasOS ? 'Com OS' : 'OK';
                 const statusClass = hasOS ? 'os-aberta' : 'os-fechada';
-                const osBtn       = hasOS ? `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver OS">ðŸ“‹</button>` : '';
+                const osBtn       = hasOS ? `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver OS">📋</button>` : '';
 
                 const moverOptions = allTeams.map(t =>
                     `<option value="${t}" ${t === eq.grupo ? 'selected' : ''}>${t}</option>`
@@ -9077,7 +9077,7 @@
                     document.getElementById('modalAddEquipOverlay')?.classList.remove('active');
                     document.getElementById('formAddEquip')?.reset();
 
-                    addLog(`âœ… Frota ${codigo} (${descricao}) cadastrada no programa e gravada no banco!`, 'success');
+                    addLog(`✅ Frota ${codigo} (${descricao}) cadastrada no programa e gravada no banco!`, 'success');
                     renderEquipamentos();
                     renderTeamTabs(false);
                     atualizarStatusGeral();
@@ -9143,7 +9143,7 @@
                     document.getElementById('modalAddOperOverlay')?.classList.remove('active');
                     document.getElementById('formAddOper')?.reset();
 
-                    addLog(`âœ… Operação Produtiva ${codigo} (${descricao}) cadastrada no programa e gravada no banco!`, 'success');
+                    addLog(`✅ Operação Produtiva ${codigo} (${descricao}) cadastrada no programa e gravada no banco!`, 'success');
                     renderOperacoes();
                     renderTeamTabs(false);
                     atualizarStatusGeral();
@@ -9207,7 +9207,7 @@
         // ================================================================
         function navigateTeamTab(dir) {
             const baseTeams = getEquipesDisponiveis();
-            const teams = [...baseTeams, '24hâš ï¸'];
+            const teams = [...baseTeams, '24h⚠️'];
             if (teams.length === 0) return;
 
             let currentIndex = teams.indexOf(activeTeam);
@@ -9225,7 +9225,7 @@
             if (!container) return;
 
             const baseTeams = getEquipesDisponiveis();
-            const teams = [...baseTeams, '24hâš ï¸'];
+            const teams = [...baseTeams, '24h⚠️'];
             const total = teams.length;
 
             if (total === 0) {
@@ -9242,14 +9242,14 @@
             const isMobile = window.innerWidth <= 768;
 
             const getTeamCount = (teamName) => {
-                const is24h = (teamName === '24hâš ï¸' || teamName === '24H âš ï¸');
+                const is24h = (teamName === '24h⚠️' || teamName === '24H ⚠️');
                 return is24h
                     ? equipments.filter(eq => isEquip24h(eq)).length
                     : equipments.filter(eq => eq.grupo === teamName).length;
             };
 
             const getTeamLabel = (teamName) => {
-                return (teamName === '24hâš ï¸' || teamName === '24H âš ï¸')
+                return (teamName === '24h⚠️' || teamName === '24H ⚠️')
                     ? '24h <i class="fas fa-exclamation-triangle pulse-icon"></i>'
                     : teamName;
             };
@@ -9313,7 +9313,7 @@
             });
 
             renderTeamTabContent(activeTeam);
-            atualizarStatusGeral(activeTeam === '24hâš ï¸' ? null : activeTeam);
+            atualizarStatusGeral(activeTeam === '24h⚠️' ? null : activeTeam);
         }
 
         function renderTeamTabContent(team, page) {
@@ -9323,7 +9323,7 @@
             const content = document.getElementById('equipeSubContents');
             if (!content) return;
 
-            const is24hTab = (team === '24hâš ï¸' || team === '24H âš ï¸');
+            const is24hTab = (team === '24h⚠️' || team === '24H ⚠️');
 
             if (is24hTab) {
                 // Filtrar apenas equipamentos com >= 1.0 dia (>= 24h)
@@ -9358,7 +9358,7 @@
                             </thead>
                             <tbody>` +
                             eqs24h.map(eq => {
-                                const osBtn = `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver detalhes da OS">ðŸ“‹</button>`;
+                                const osBtn = `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver detalhes da OS">📋</button>`;
                                 const diasVal = getEquipPermanenciaDias(eq);
                                 const diasPermText = diasVal > 0 ? `${diasVal.toFixed(1).replace('.', ',')} dias` : '> 24h';
                                 return `<tr>
@@ -9475,7 +9475,7 @@
                         </tr></thead><tbody>` +
                         chunk.map(eq => {
                             const hasOS = equipamentosComOS.has(String(eq.codigo));
-                            const osBtn = hasOS ? `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver OS">ðŸ“‹</button>` : '';
+                            const osBtn = hasOS ? `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver OS">📋</button>` : '';
                             const opText = eq.operacao || '-';
                             const tdOperacao = omitirOperacao ? '' : `<td><span class="badge-equip os-fechada">${opText}</span></td>`;
                             return `<tr>
@@ -9635,7 +9635,7 @@
                 }
                 await carregarDados(false);
             } catch (e) {
-                addLog('âš ï¸ Alerta Auto-Cure: ' + e.message, 'warning');
+                addLog('⚠️ Alerta Auto-Cure: ' + e.message, 'warning');
             } finally {
                 hideGlobalLoader();
             }
@@ -9840,12 +9840,12 @@
                     const data = await res.json().catch(() => ({}));
                     if (!res.ok && res.status !== 404) {
                         // Só falha se não for 404 (já inexistente no banco é ok)
-                        addLog(`âš ï¸ Falha ao excluir operação ${cod} no servidor: ${data.error || res.status}`, 'error');
+                        addLog(`⚠️ Falha ao excluir operação ${cod} no servidor: ${data.error || res.status}`, 'error');
                         return; // NÃƒO remove localmente se falhou no servidor
                     }
                 } catch (netErr) {
                     // Sem servidor (offline): remove só localmente com marcação
-                    addLog(`âš ï¸ Servidor offline â€” operação ${cod} marcada para exclusão local.`, 'warning');
+                    addLog(`⚠️ Servidor offline â€” operação ${cod} marcada para exclusão local.`, 'warning');
                 }
             }
 
@@ -9891,7 +9891,7 @@
                 localStorage.setItem('sf_inativo_equips', JSON.stringify(inativos));
             }
             document.getElementById('modalEditEquipOverlay')?.classList.remove('active');
-            addLog(`âœï¸ Equipamento ${cod} atualizado com sucesso!`, 'success');
+            addLog(`✏️ Equipamento ${cod} atualizado com sucesso!`, 'success');
             renderEquipamentos();
             renderTeamTabs(false);
             atualizarStatusGeral();
@@ -9917,7 +9917,7 @@
                 }
             }
             document.getElementById('modalEditOperOverlay')?.classList.remove('active');
-            addLog(`âœï¸ Operação ${cod} atualizada com sucesso!`, 'success');
+            addLog(`✏️ Operação ${cod} atualizada com sucesso!`, 'success');
             renderOperacoes();
             renderTeamTabs(false);
             atualizarStatusGeral();
