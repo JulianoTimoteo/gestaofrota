@@ -9483,6 +9483,19 @@
                 if (!byTipo[t]) byTipo[t] = [];
                 byTipo[t].push(eq);
             });
+            
+            // Ordena cada tipo: 1º 'Com OS', 2º código numérico crescente
+            Object.keys(byTipo).forEach(t => {
+                byTipo[t].sort((a, b) => {
+                    const aHasOS = (a.statusOS || '').toUpperCase() !== 'OK' ? 0 : 1;
+                    const bHasOS = (b.statusOS || '').toUpperCase() !== 'OK' ? 0 : 1;
+                    if (aHasOS !== bHasOS) return aHasOS - bHasOS;
+                    
+                    const numA = parseInt(String(a.codigo).replace(/\D/g, ''), 10) || 0;
+                    const numB = parseInt(String(b.codigo).replace(/\D/g, ''), 10) || 0;
+                    return numA - numB;
+                });
+            });
 
             Object.keys(byTipo).sort().forEach(tipo => {
                 const eqs     = byTipo[tipo];
