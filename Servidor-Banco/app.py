@@ -1372,7 +1372,307 @@ MASTER_OVERRIDES = {
     "312025": {
         "tipo": "Caminhão",
         "grupo": "CAMINHOES"
-    }
+    },
+    "100109": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100111": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100112": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100114": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100116": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100117": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100118": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100119": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100124": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100125": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100126": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100212": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100219": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100221": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100224": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100318": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100321": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100325": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100418": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "100716": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "101116": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "101118": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "101318": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "101416": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "460125": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "460225": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "460325": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "460424": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "460425": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "460525": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "460625": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "460725": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "460925": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "461025": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "461125": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "461225": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "461325": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "461425": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "461525": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "461625": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "461725": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "461825": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "461925": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "462025": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "462125": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "462325": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "462425": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "462525": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "462625": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "462725": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "462825": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "462925": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "463025": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "463125": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "463225": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "463425": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "463525": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "463625": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "467425": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "467525": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "467625": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "467725": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "467825": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "468025": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "468125": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "468325": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "468425": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "468525": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "468625": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "468726": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "468826": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "469026": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "469126": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "469226": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
+    "469326": {
+        "tipo": "Veículo Leve",
+        "grupo": "VEICULOS LEVES"
+    },
 }
 
 LATEST_DADOS_PAYLOAD = None
@@ -1459,7 +1759,7 @@ def gerar_e_salvar_dados_json():
                     elif 'TRATOR' in full_text or '1/' in subclasse:
                         tipo, grupo = 'Trator', 'PREPARO'
                     elif 'VEICUL' in full_text or 'CAMIONET' in full_text or 'MOB' in full_text or 'STRADA' in full_text or '11/' in subclasse:
-                        tipo, grupo = 'Veículo Leve', 'APOIO'
+                        tipo, grupo = 'Veículo Leve', 'VEICULOS LEVES'
                     elif 'ONIBUS' in full_text or '29/' in subclasse:
                         tipo, grupo = 'Ônibus', 'APOIO'
                     elif 'IMPLEMENT' in full_text or 'REBOQUE' in full_text or 'SEMI' in full_text or '16/' in subclasse or '13/' in subclasse:
@@ -1508,6 +1808,9 @@ def gerar_e_salvar_dados_json():
             if override:
                 tipo = override['tipo']
                 grp  = override['grupo']
+            elif '11/' in mod or 'VEICULO' in mod.upper() or 'VEICULO' in desc.upper():
+                tipo = 'Veículo Leve'
+                grp  = 'VEICULOS LEVES'
             else:
                 tipo = tipo or 'Outros'
                 grp  = 'OUTROS'
