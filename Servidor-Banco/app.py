@@ -912,6 +912,16 @@ def get_open_os_map(conn):
 # LIVE TUNNEL & PRE-CACHED DADOS.JSON GENERATOR
 # ================================================================
 # ================================================================
+# 32 CAMINHÕES OFICIAIS CANAVIEIROS (EQUIPE CAMINHOES)
+# ================================================================
+C32_CAMINHOES = set([
+    '311015', '311025', '311115', '311125', '31115', '311215', '311225', '31125',
+    '311325', '311425', '311525', '311625', '311725', '311825', '311925', '312025',
+    '31215', '31225', '31315', '31316', '31325', '31415', '31425', '31515',
+    '31525', '31615', '31625', '31725', '31815', '31825', '31915', '31925'
+])
+
+# ================================================================
 # MASTER OVERRIDES OFICIAIS (118 EQUIPAMENTOS MAPEADOS)
 # ================================================================
 MASTER_OVERRIDES = {
@@ -1769,7 +1779,7 @@ def gerar_e_salvar_dados_json():
                     if 'COLHED' in full_text or '14/1' in subclasse:
                         tipo, grupo = 'Colhedora', 'COLHEDORA'
                     elif 'CAMINH' in full_text or '10/' in subclasse or 'CAVALO' in full_text or 'BOMBEIR' in full_text or 'BASCUL' in full_text:
-                        tipo, grupo = 'Caminhão', 'CAMINHOES'
+                        tipo, grupo = 'Caminhão', ('CAMINHOES' if raw_cod in C32_CAMINHOES else 'OUTROS')
                     elif 'TRATOR' in full_text or '1/' in subclasse:
                         tipo, grupo = 'Trator', 'PREPARO'
                     elif 'VEICUL' in full_text or 'CAMIONET' in full_text or 'MOB' in full_text or 'STRADA' in full_text or '11/' in subclasse:
@@ -1816,13 +1826,17 @@ def gerar_e_salvar_dados_json():
             subs = ' '.join(os_sub_map.get(cod, [])).upper()
             full_text = f"{desc.upper()} {mod.upper()} {tipo.upper()} {subs}"
 
-            # MASTER OVERRIDES global aplicado
-            override = MASTER_OVERRIDES.get(cod)
-            if override:
+            # 1. Se for um dos 32 caminhões canavieiros oficiais
+            if cod in C32_CAMINHOES:
+                tipo = 'Caminhão'
+                grp  = 'CAMINHOES'
+            # 2. MASTER OVERRIDES global aplicado
+            elif cod in MASTER_OVERRIDES:
+                override = MASTER_OVERRIDES.get(cod)
                 tipo = override['tipo']
                 grp  = override['grupo']
-            elif grp and grp.upper() not in ('', 'OUTROS', 'DESCONHECIDO'):
-                # Respeita rigorosamente a equipe gravada no banco pelo usuário
+            elif grp and grp.upper() not in ('', 'OUTROS', 'DESCONHECIDO', 'CAMINHOES'):
+                # Respeita rigorosamente a equipe gravada no banco pelo usuário (exceto CAMINHOES indevidos)
                 grp = grp.upper()
                 tipo = tipo or 'Outros'
             elif 'ONIBUS' in full_text or '29/' in mod or 'VOLARE' in full_text:
@@ -1839,15 +1853,15 @@ def gerar_e_salvar_dados_json():
             elif 'COLHED' in full_text or '14/1' in mod:
                 tipo = 'Colhedora'
                 grp  = 'COLHEDORAS'
-            elif 'CAMINH' in full_text or '10/' in mod:
-                tipo = 'Caminhão'
-                grp  = 'CAMINHOES'
             elif 'TRATOR' in full_text or '1/' in mod:
                 tipo = 'Trator'
                 grp  = 'PREPARO'
+            elif 'CAMINH' in full_text or '10/' in mod:
+                tipo = 'Caminhão'
+                grp  = 'OUTROS'
             else:
                 tipo = tipo or 'Outros'
-                grp  = grp or 'OUTROS'
+                grp  = 'OUTROS'
 
             if grp == 'ONIBUS' or (tipo and ('nibus' in tipo.lower() or '\ufffd' in tipo)):
                 tipo = 'Ônibus'

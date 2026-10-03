@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v38_autocomplete_modal';
+            var APP_VER = '2026_v39_caminhoes_32_fixed';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
@@ -15900,13 +15900,25 @@
                 let finalGroup = customGroups[codStr];
                 let isAIGuess = false;
                 
+                const C32_CAMINHOES = new Set([
+                    '311015', '311025', '311115', '311125', '31115', '311215', '311225', '31125',
+                    '311325', '311425', '311525', '311625', '311725', '311825', '311925', '312025',
+                    '31215', '31225', '31315', '31316', '31325', '31415', '31425', '31515',
+                    '31525', '31615', '31625', '31725', '31815', '31825', '31915', '31925'
+                ]);
+                
                 if (!finalGroup) {
-                    const validTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
+                    const validTeams = ['BIOMASSA', 'CAMINHOES', 'CARRETAS', 'COLHEDORAS', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'ONIBUS', 'PREPARO', 'TRATOS CULTURAIS', 'VEICULOS LEVES'];
                     if (rawGrp && validTeams.includes(rawGrp)) {
                         finalGroup = (rawGrp === 'COLHEDORA') ? 'COLHEDORAS' : rawGrp;
                     } else {
                         finalGroup = 'OUTROS';
                     }
+                }
+
+                // Proteção estrita dos 32 caminhões canavieiros: nenhum outro caminhão entra na equipe CAMINHOES
+                if (finalGroup === 'CAMINHOES' && !C32_CAMINHOES.has(codStr) && !customGroups[codStr]) {
+                    finalGroup = 'OUTROS';
                 }
                 const defaultOp = getTeamDefaultOp(finalGroup);
                 let finalTipo = customTypes[codStr] || defaultT;
