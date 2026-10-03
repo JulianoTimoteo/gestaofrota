@@ -1811,24 +1811,48 @@ def gerar_e_salvar_dados_json():
             desc = get_f(eq, 'desc')
             mod  = get_f(eq, 'model')
             tipo = get_f(eq, 'tipo')
-            grp  = get_f(eq, 'grup') or 'PREPARO'
+            grp  = get_f(eq, 'grup')
 
             subs = ' '.join(os_sub_map.get(cod, [])).upper()
             full_text = f"{desc.upper()} {mod.upper()} {tipo.upper()} {subs}"
 
-
-                # MASTER OVERRIDES global aplicado
+            # MASTER OVERRIDES global aplicado
             override = MASTER_OVERRIDES.get(cod)
             if override:
                 tipo = override['tipo']
                 grp  = override['grupo']
+            elif grp and grp.upper() not in ('', 'OUTROS', 'DESCONHECIDO'):
+                # Respeita rigorosamente a equipe gravada no banco pelo usuário
+                grp = grp.upper()
+                tipo = tipo or 'Outros'
+            elif 'ONIBUS' in full_text or '29/' in mod or 'VOLARE' in full_text:
+                tipo = 'Ônibus'
+                grp  = 'ONIBUS'
+            elif ('16/' in mod or 'REBOQUE' in full_text or 'SEMI' in full_text or 'CARRETA' in full_text or 
+                  'PRANCHA' in full_text or 'SERGOMEL' in full_text or 'RANDON' in full_text or 'FACCHINI' in full_text or 
+                  'GALEGO' in full_text or 'HERCULES' in full_text or 'PLATAFOR' in full_text) and '10/' not in mod and 'CAVALO' not in full_text and 'CAMINHAO' not in full_text and 'CAMINHÃO' not in full_text:
+                tipo = 'Carreta'
+                grp  = 'CARRETAS'
             elif '11/' in mod or 'VEICULO' in mod.upper() or 'VEICULO' in desc.upper():
                 tipo = 'Veículo Leve'
                 grp  = 'VEICULOS LEVES'
+            elif 'COLHED' in full_text or '14/1' in mod:
+                tipo = 'Colhedora'
+                grp  = 'COLHEDORAS'
+            elif 'CAMINH' in full_text or '10/' in mod:
+                tipo = 'Caminhão'
+                grp  = 'CAMINHOES'
+            elif 'TRATOR' in full_text or '1/' in mod:
+                tipo = 'Trator'
+                grp  = 'PREPARO'
             else:
                 tipo = tipo or 'Outros'
-                grp  = 'OUTROS'
+                grp  = grp or 'OUTROS'
 
+            if grp == 'ONIBUS' or (tipo and ('nibus' in tipo.lower() or '\ufffd' in tipo)):
+                tipo = 'Ônibus'
+            elif grp == 'CARRETAS' and (not tipo or tipo == 'Outros' or 'reboque' in (tipo or '').lower()):
+                tipo = 'Carreta'
 
             equipamentos.append({
                 'codigo': cod,

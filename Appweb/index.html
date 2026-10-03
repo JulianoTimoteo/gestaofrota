@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v37_persist_custom_teams';
+            var APP_VER = '2026_v38_autocomplete_modal';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
@@ -3650,6 +3650,43 @@
         </div>
     </div>
 
+    <!-- MODAL MOVER EQUIPAMENTO PARA EQUIPE -->
+    <div class="action-modal-overlay" id="modalMoveEquipeOverlay">
+        <div class="action-modal" style="max-width:480px;width:92%;">
+            <h3 id="modalMoveEquipeTitle"><i class="fas fa-arrows-alt" style="color:var(--color-primary);"></i> Mover Equipamento</h3>
+            <div id="modalMoveEquipeSub" style="font-size:0.85rem;color:var(--color-gray-600);margin-top:4px;margin-bottom:1rem;"></div>
+            
+            <form id="formMoveEquipe" onsubmit="salvarMoveEquipeForm(event)">
+                <input type="hidden" id="moveEquipCodigo" value="">
+                
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:6px;">
+                        Selecione ou digite o nome da Equipe:
+                    </label>
+                    <input type="text" id="moveEquipInput" class="filter-input" list="equipesDataList" 
+                           placeholder="Digite para filtrar (ex: ON -> ONIBUS)..." 
+                           autocomplete="off" required 
+                           style="width:100%;font-size:0.95rem;padding:0.55rem 0.75rem;text-transform:uppercase;">
+                    <datalist id="equipesDataList"></datalist>
+                </div>
+
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--color-gray-500);text-transform:uppercase;margin-bottom:6px;">
+                        Equipes Existentes (clique rápido):
+                    </label>
+                    <div id="moveEquipChips" style="display:flex;flex-wrap:wrap;gap:6px;max-height:120px;overflow-y:auto;padding:6px;background:var(--color-gray-50);border-radius:8px;border:1px solid var(--color-gray-200);"></div>
+                </div>
+
+                <div class="action-modal-actions" style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:1.2rem;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalMoveEquipeOverlay')?.classList.remove('active')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%);border:none;font-weight:600;">
+                        <i class="fas fa-check"></i> Salvar na Equipe
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // ================================================================
         // ESTADO GLOBAL - única fonte da verdade
@@ -3700,7 +3737,28 @@
         let activeAdminSub   = localStorage.getItem('sf_active_admin_subtab')  || 'tab-equipamentos';
         let activeTeam       = localStorage.getItem('sf_active_team')          || null;
 
-        const ADMIN_ROLES = ['admin', 'master', '100', '80', 'gerente', 'coordenador', 'supervisor', 'logistica'];
+        const ADMIN_ROLES = ['admin', 'master', 'logistica'];
+
+        function isUserAdmin() {
+            const rawUser = localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '';
+            const curUser = (typeof rawUser === 'string' ? rawUser : '').toLowerCase().trim();
+            const curRole = (localStorage.getItem('sf_auth_role') || sessionStorage.getItem('sf_auth_role') || userRole || '').toLowerCase().trim();
+
+            // Bloqueio explícito: Gerente Rafael Farra e Supervisor Reginaldo Mantovani são apenas leitura (visualizadores)
+            if (curUser.includes('rafael') || curUser.includes('reginaldo') || curRole === 'visualizador' || curRole === 'leitura') {
+                return false;
+            }
+
+            return (
+                curUser === 'julianotimoteo' ||
+                curUser === 'logistica' ||
+                curUser === 'admin' ||
+                curUser.includes('juliano') ||
+                curUser.includes('logistica') ||
+                curRole === 'master' ||
+                curRole === 'admin'
+            );
+        }
 
         // ================================================================
         // EMBEDDED DATASET FOR GITHUB PAGES & STANDALONE OFFLINE MODE
@@ -16259,23 +16317,7 @@
             const adminTabBtn     = document.querySelector('.tab-btn[data-tab="tab-admin"]');
             const adminTabContent = document.getElementById('tab-admin');
 
-            const rawUser = localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user') || '';
-            const curUser = (typeof rawUser === 'string' ? rawUser : '').toLowerCase().trim();
-            const curRole = (localStorage.getItem('sf_auth_role') || sessionStorage.getItem('sf_auth_role') || userRole || '').toLowerCase().trim();
-
-            const isMasterAdmin = (
-                curUser === 'julianotimoteo' ||
-                curUser === 'logistica' ||
-                curUser === 'admin' ||
-                curUser.includes('juliano') ||
-                curUser.includes('logistica') ||
-                curRole === 'master' ||
-                curRole === 'admin' ||
-                curRole === '100' ||
-                curRole === '80' ||
-                curRole === 'gerente' ||
-                (typeof ADMIN_ROLES !== 'undefined' && (ADMIN_ROLES.includes(curRole) || ADMIN_ROLES.includes(userRole)))
-            ) && !curUser.includes('rafael');
+            const isMasterAdmin = isUserAdmin();
 
             if (isMasterAdmin) {
                 if (mainTabs)        mainTabs.style.display       = 'inline-flex';
@@ -16712,7 +16754,7 @@
                 }).join('');
 
                 return `<tr>
-                    <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> ${(eq.grupo || '').toUpperCase() === 'OUTROS' ? `<button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button>` : ''}</div></td>
+                    <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> ${isUserAdmin() && (eq.grupo || '').toUpperCase() === 'OUTROS' ? `<button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button>` : ''}</div></td>
                     <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
                     <td style="font-size:0.8rem;color:var(--color-gray-500);">${eq.modelo || '-'}</td>
                     <td>
@@ -17385,7 +17427,7 @@
                                 const diasVal = getEquipPermanenciaDias(eq);
                                 const diasPermText = diasVal > 0 ? `${diasVal.toFixed(1).replace('.', ',')} dias` : '> 24h';
                                 return `<tr>
-                                    <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> <button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button> ${eq.isAIGuess ? `<button onclick=\"confirmAIGuess('${eq.codigo}', '${eq.grupo}')\" title=\"Confirmar sugestão da IA\" style=\"padding:2px 6px; font-size:10px; background:#22c55e; color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-check\"></i></button>` : ''}</div></td>
+                                    <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> ${isUserAdmin() ? `<button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button>` : ''} ${isUserAdmin() && eq.isAIGuess ? `<button onclick=\"confirmAIGuess('${eq.codigo}', '${eq.grupo}')\" title=\"Confirmar sugestão da IA\" style=\"padding:2px 6px; font-size:10px; background:#22c55e; color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-check\"></i></button>` : ''}</div></td>
                                     <td><span class="badge-equip team-badge">${eq.grupo || '-'}</span></td>
                                     <td><span class="badge-equip os-fechada" style="font-size:0.75rem;">${eq.operacao || '-'}</span></td>
                                     <td><span class="badge-equip os-aberta" style="font-weight:700;"><i class="fas fa-clock"></i> ${diasPermText}</span> ${osBtn}</td>
@@ -17514,7 +17556,7 @@
                             const opText = eq.operacao || '-';
                             const tdOperacao = omitirOperacao ? '' : `<td><span class="badge-equip os-fechada">${opText}</span></td>`;
                             return `<tr>
-                                <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> <button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button> ${eq.isAIGuess ? `<button onclick=\"confirmAIGuess('${eq.codigo}', '${eq.grupo}')\" title=\"Confirmar sugestão da IA\" style=\"padding:2px 6px; font-size:10px; background:#22c55e; color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-check\"></i></button>` : ''}</div></td>
+                                <td><div style=\"display:flex;align-items:center;gap:6px;\"><strong>${eq.codigo || '-'}</strong> ${isUserAdmin() ? `<button onclick=\"promptMoveToEquipe('${eq.codigo}')\" title=\"Mover para uma Equipe\" style=\"padding:2px 6px; font-size:10px; background:var(--color-primary); color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-plus\"></i></button>` : ''} ${isUserAdmin() && eq.isAIGuess ? `<button onclick=\"confirmAIGuess('${eq.codigo}', '${eq.grupo}')\" title=\"Confirmar sugestão da IA\" style=\"padding:2px 6px; font-size:10px; background:#22c55e; color:#fff; border:none; border-radius:4px; cursor:pointer;\"><i class=\"fas fa-check\"></i></button>` : ''}</div></td>
                                 <td style="font-weight: 400 !important;">${eq.descricao || '-'}</td>
                                 ${tdOperacao}
                                 <td><span class="badge-equip ${hasOS ? 'os-aberta' : 'os-fechada'}">${hasOS ? 'Com OS' : 'OK'}</span> ${osBtn}</td>
@@ -17617,6 +17659,11 @@
             });
             document.getElementById('formAddOper')?.addEventListener('submit', submitAddOper);
             document.getElementById('modalAddOperOverlay')?.addEventListener('click', e => {
+                if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
+            });
+
+            // Modal Mover Equipe - fechar ao clicar no fundo
+            document.getElementById('modalMoveEquipeOverlay')?.addEventListener('click', e => {
                 if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
             });
 
@@ -17996,19 +18043,69 @@
         window.promptMoveToEquipe = function(cod) {
             const eq = equipments.find(e => String(e.codigo) === String(cod));
             if (!eq) return;
-            const nova = prompt('Digite o nome da Equipe para o equipamento ' + cod + ':\\n(Ex: CAMINHOES, COLHEDORA, PREPARO, APOIO, etc)');
-            if (nova && nova.trim() !== '') {
-                const uppercaseNova = nova.trim().toUpperCase();
-                setCustomEquipGroup(cod, uppercaseNova);
-                
-                // Update in-memory
-                eq.grupo = uppercaseNova;
-                
-                addLog(`Equipamento ${cod} movido para ${uppercaseNova}`, 'success');
-                renderEquipamentos();
-                renderTeamTabs(false);
-                atualizarStatusGeral();
+
+            const modal = document.getElementById('modalMoveEquipeOverlay');
+            const titleEl = document.getElementById('modalMoveEquipeTitle');
+            const subEl = document.getElementById('modalMoveEquipeSub');
+            const codInput = document.getElementById('moveEquipCodigo');
+            const nameInput = document.getElementById('moveEquipInput');
+            const dataList = document.getElementById('equipesDataList');
+            const chipsContainer = document.getElementById('moveEquipChips');
+
+            if (!modal) return;
+
+            codInput.value = eq.codigo;
+            nameInput.value = eq.grupo || '';
+            if (titleEl) titleEl.innerHTML = `<i class="fas fa-arrows-alt" style="color:var(--color-primary);"></i> Mover Frota <strong>${eq.codigo}</strong>`;
+            if (subEl) subEl.textContent = `${eq.descricao || ''} (${eq.modelo || ''}) - Equipe Atual: ${eq.grupo || 'OUTROS'}`;
+
+            // Carrega a lista de abas/equipes existentes
+            const teams = getEquipesDisponiveis().filter(t => t !== '24h⚠️' && t !== '24H ⚠️');
+            
+            // Popula datalist para autocompletar (ao digitar 'ON' aparece 'ONIBUS')
+            if (dataList) {
+                dataList.innerHTML = teams.map(t => `<option value="${t}">${t}</option>`).join('');
             }
+
+            // Popula chips clicáveis rápidos
+            if (chipsContainer) {
+                chipsContainer.innerHTML = teams.map(t => {
+                    const isCur = t === eq.grupo;
+                    const bg = isCur ? 'background:var(--color-primary);color:#fff;' : 'background:#fff;border:1px solid var(--color-gray-300);color:var(--color-text);';
+                    return `<button type="button" onclick="document.getElementById('moveEquipInput').value='${t}'; document.getElementById('moveEquipInput').focus();" 
+                            style="padding:4px 9px;font-size:0.75rem;font-weight:600;border-radius:6px;cursor:pointer;${bg}">
+                            ${t}
+                    </button>`;
+                }).join('');
+            }
+
+            modal.classList.add('active');
+            setTimeout(() => {
+                nameInput.focus();
+                nameInput.select();
+            }, 100);
+        };
+
+        window.salvarMoveEquipeForm = function(e) {
+            e.preventDefault();
+            const cod = document.getElementById('moveEquipCodigo')?.value;
+            const inputVal = (document.getElementById('moveEquipInput')?.value || '').trim();
+            if (!cod || !inputVal) return;
+
+            const uppercaseNova = inputVal.toUpperCase();
+            const eq = equipments.find(e => String(e.codigo) === String(cod));
+            if (eq) {
+                eq.grupo = uppercaseNova;
+            }
+
+            setCustomEquipGroup(cod, uppercaseNova);
+
+            document.getElementById('modalMoveEquipeOverlay')?.classList.remove('active');
+            addLog(`Equipamento ${cod} movido com sucesso para a equipe "${uppercaseNova}"`, 'success');
+
+            renderTeamTabs(false);
+            renderEquipamentos();
+            atualizarStatusGeral();
         };
 
         window.selectTeam = function(targetTeam) {
