@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fleet-cache-v22';
+const CACHE_NAME = 'fleet-cache-v24';
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();
@@ -19,8 +19,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // NUNCA interceptar ou cachear chamadas de API
-    if (url.pathname.startsWith('/api') || url.pathname.includes('/api/')) {
+    // NUNCA interceptar ou cachear chamadas de API ou dados.json
+    if (url.pathname.startsWith('/api') || url.pathname.includes('/api/') || url.pathname.endsWith('dados.json') || url.search.includes('_t=')) {
         return;
     }
 

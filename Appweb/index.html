@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v31_os_filters_rules';
+            var APP_VER = '2026_v34_fix_tab_usuarios';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
                 localStorage.removeItem('sf_custom_equip_groups');
                 localStorage.removeItem('sf_active_team');
+                localStorage.removeItem('sf_cached_data');
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.getRegistrations().then(function(regs) {
                         for (var r of regs) r.unregister();
@@ -3308,6 +3309,7 @@
                         </div>
                         <div class="api-log" id="apiLog" style="padding:0.8rem;border-radius:8px;font-family:monospace;font-size:0.75rem;max-height:280px;overflow-y:auto;"></div>
                     </div>
+                </div>
 
                 <!-- Usuários -->
                 <div id="tab-usuarios" class="tab-content">
@@ -3344,7 +3346,7 @@
                             </table>
                         </div>
                     </div>
-                </div>                </div>
+                </div>
             </div>
         </div>
 
@@ -17607,7 +17609,7 @@
                         }
                     }
                 });
-                navigator.serviceWorker.register('./sw.js?v=22').then(reg => {
+                navigator.serviceWorker.register('./sw.js?v=24').then(reg => {
 
                     reg.update();
                     console.log('Service Worker PWA registrado:', reg.scope);
