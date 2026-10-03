@@ -967,12 +967,10 @@ def gerar_e_salvar_dados_json():
             cur_existing = conn.execute("SELECT codigo FROM equipamentos")
             existing_codes = set(str(r[0]).strip() for r in cur_existing.fetchall() if r[0])
             for r in os_rows:
-                raw_cod = str(r['codigo_equip'] or '').strip()
                 frota_cc = str(r['frota_cc'] or '').strip()
                 subclasse = str(r['subclasse'] or '').strip().upper()
                 descricao = str(r['descricao'] or '').strip()
-                if not raw_cod and frota_cc:
-                    raw_cod = frota_cc.split(' - ')[0].strip()
+                raw_cod = frota_cc.split(' - ')[0].strip() if frota_cc else ''
                 if raw_cod and raw_cod not in existing_codes:
                     eq_desc = frota_cc if frota_cc else f"{raw_cod} - {subclasse}"
                     full_text = f"{eq_desc.upper()} {subclasse.upper()} {descricao.upper()}"
@@ -992,13 +990,13 @@ def gerar_e_salvar_dados_json():
                         tipo, grupo = 'Pá Carregadeira', 'PREPARO'
                     else:
                         tipo, grupo = 'Trator', 'PREPARO'
-
                     conn.execute("INSERT OR REPLACE INTO equipamentos (codigo, descricao, modelo, tipo, grupo) VALUES (?, ?, ?, ?, ?)",
                                  (raw_cod, eq_desc, subclasse, tipo, grupo))
                     existing_codes.add(raw_cod)
             conn.commit()
         except Exception as _eq_err:
             logger.warning("Auto-registro de equipamentos: %s", _eq_err)
+
 
         # 2. Equipamentos
         cur_eq = conn.execute("SELECT * FROM equipamentos")
@@ -1317,7 +1315,7 @@ def listar_os():
         conn = get_db_connection()
         cursor = conn.execute('''
             SELECT cod_os, tipo_os, subclasse, frota_cc, status_os, tipo_oficina, oficina, 
-                   data_entrada, data_previsao, dias_permanencia, descricao_servico, atualizado_em
+                   data_comunicacao, data_entrada, data_previsao, dias_permanencia, descricao_servico, atualizado_em
             FROM ordens_servico 
             ORDER BY 
                 CASE 
@@ -1330,12 +1328,8 @@ def listar_os():
         conn.close()
         dados = []
         for row in rows:
-            # We must map to the same fields the frontend expects:
-            # codigoEquip was mapped to codigo_equip, which doesn't exist now. 
-            # But the frontend only uses frotaCC anyway. We can extract it from frota_cc if needed.
             frota_parts = str(row['frota_cc'] or '').split(' - ')
             codigoEquip = frota_parts[0] if frota_parts else ''
-            
             dados.append({
                 'tipoOS': row['tipo_os'] or 'NORMAL',
                 'subClasse': row['subclasse'] or '',
@@ -1345,6 +1339,7 @@ def listar_os():
                 'statusOS': row['status_os'],
                 'tipoOficina': row['tipo_oficina'],
                 'oficina': row['oficina'],
+                'dataComunicacao': row['data_comunicacao'] or '',
                 'dataEntrada': row['data_entrada'],
                 'dataPrevisao': row['data_previsao'],
                 'diasPermanencia': row['dias_permanencia'],
@@ -1352,6 +1347,41 @@ def listar_os():
                 'dataSincronizacao': row['atualizado_em']
             })
         return jsonify(success=True, data=dados, total=len(dados))
+    except Exception as exc:
+        return jsonify(success=False, error=str(exc)), 500
+
+@app.route('/api/os/metricas')
+def metricas_os():
+    """Retorna metricas resumidas das OS para o Dashboard Desktop."""
+    try:
+        conn = get_db_connection()
+        rows = conn.execute('''
+            SELECT tipo_oficina, dias_permanencia
+            FROM ordens_servico
+            WHERE status_os NOT IN ('FECHADA', 'ENCERRADA', 'CANCELADA')
+        ''').fetchall()
+        ultimo_sync = conn.execute('''
+            SELECT data_hora FROM historico_sync ORDER BY id DESC LIMIT 1
+        ''').fetchone()
+        sync_row = conn.execute('''
+            SELECT COUNT(*) as cnt FROM historico_sync 
+            WHERE status = 'running' AND data_hora > datetime('now', '-5 minutes', 'localtime')
+        ''').fetchone()
+        conn.close()
+        total = len(rows)
+        campo = sum(1 for r in rows if r['tipo_oficina'] and 'CAMPO' in str(r['tipo_oficina']).upper())
+        externa = sum(1 for r in rows if r['tipo_oficina'] and 'EXTERNA' in str(r['tipo_oficina']).upper())
+        dias_vals = [r['dias_permanencia'] for r in rows if r['dias_permanencia'] is not None]
+        max_dias = max(dias_vals) if dias_vals else 0
+        return jsonify(
+            success=True,
+            total_ativas=total,
+            total_campo=campo,
+            total_externa=externa,
+            max_dias=round(float(max_dias), 1),
+            scraping_em_andamento=bool(sync_row and sync_row['cnt'] > 0),
+            ultimo_sync={'data_hora': ultimo_sync['data_hora'] if ultimo_sync else ''}
+        )
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 
@@ -1829,7 +1859,7 @@ def detail_page(item):
     
     elif item == 'equip':
         total_equip = conn.execute('SELECT COUNT(*) FROM equipamentos').fetchone()[0]
-        total_os = conn.execute("SELECT COUNT(DISTINCT codigo_equip) FROM ordens_servico WHERE upper(status_os) = 'ABERTA'").fetchone()[0]
+        total_os = conn.execute("SELECT COUNT(DISTINCT frota_cc) FROM ordens_servico WHERE upper(status_os) = 'ABERTA'").fetchone()[0]
         title = 'EQUIPAMENTOS'
         icon = '🚛'
         content = f'''
@@ -2451,9 +2481,14 @@ class SyncService:
             logger.info('sync_os_from_api GetWidgetList:8051 retornou %s OS', len(rows_wl))
             
             # ── Passo 3: Inserir no banco ──────────────────────────────────────
+            # LOG: captura chaves da primeira linha para diagnóstico
+            if rows_wl:
+                logger.info('sync_os_from_api CAMPOS_DISPONIVEIS: %s', list(rows_wl[0].keys()))
+            
             active_cod_os = set()
             
             for row in rows_wl:
+
                 raw_cod = row.get('COD_OS', row.get('CodOS', ''))
                 cod_os = str(raw_cod).strip()
                 if cod_os.endswith('.0'):
@@ -2469,20 +2504,25 @@ class SyncService:
                     cod_equip = (str(row.get('CODIGO_EQUIP', row.get('COD_EQUIP', ''))).strip()
                                  or frota_raw.split(' - ')[0].strip())
                     desc = str(row.get('OS_OBSERVACAO', row.get('DESCRICAO', ''))).strip()
+                    data_comunicacao = formatar_data_br(row.get('OS_DT_COMUNICACAO',
+                                       row.get('DATA_COMUNICACAO',
+                                       row.get('DT_COMUNICACAO',
+                                       row.get('DATACOMUNICACAO', '')))))
                     data_entrada = formatar_data_br(row.get('OS_DT_ENTRADA', row.get('DATA_ENTRADA', '')))
                     data_previsao = formatar_data_br(row.get('OS_DT_PREVISAO', row.get('DATA_PREVISAO', '')))
                     
                     conn.execute('''INSERT OR REPLACE INTO ordens_servico 
                         (cod_os, tipo_os, subclasse, frota_cc, status_os, 
-                         tipo_oficina, oficina, data_entrada, data_previsao, 
+                         tipo_oficina, oficina, data_comunicacao, data_entrada, data_previsao, 
                          dias_permanencia, descricao_servico, atualizado_em)
-                        VALUES (?, ?, ?, ?, 'ABERTA', ?, ?, ?, ?, ?, ?, ?)''',
+                        VALUES (?, ?, ?, ?, 'ABERTA', ?, ?, ?, ?, ?, ?, ?, ?)''',
                         (cod_os,
                          str(row.get('TIPO_OS', 'NORMAL')),
                          str(row.get('SUB_CLASSE', '')),
                          frota_raw,
                          str(row.get('TIPO_OFICINA', '')),
                          str(row.get('OFICINA', '')),
+                         data_comunicacao,
                          data_entrada,
                          data_previsao,
                          str(row.get('DIAS_PERMANENCIA', '')),
@@ -2490,6 +2530,7 @@ class SyncService:
                          agora))
                     total += 1
                     active_cod_os.add(cod_os)
+
                 except Exception as exc:
                     logger.error('sync_os_from_api insert failed codOS=%s error=%s', cod_os, exc)
             

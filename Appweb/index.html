@@ -660,21 +660,20 @@
             letter-spacing: 0.02em;
         }
 
-        /* ===== BOTÃƒO REFRESH NA LOGO DO HEADER ===== */
+        /* ===== BOTÃO REFRESH NA LOGO DO HEADER ===== */
         .logo-refresh-btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.45rem;
             cursor: pointer;
             position: relative;
             user-select: none;
-            padding: 0.25rem 0.5rem;
+            padding: 2px 4px;
             border-radius: var(--radius-md);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .header-logo-img {
-            max-height: 38px;
+            max-height: 48px;
             width: auto;
             object-fit: contain;
             transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), filter 0.25s ease;
@@ -685,45 +684,60 @@
         }
 
         .logo-refresh-btn:hover .header-logo-img {
-            transform: scale(1.18);
-            filter: drop-shadow(0 4px 10px rgba(16, 185, 129, 0.4));
+            transform: scale(1.08);
+            filter: drop-shadow(0 4px 10px rgba(16, 185, 129, 0.35));
         }
 
+        /* Tooltip flutuante clássico, SEM empurrar o layout lateral */
         .logo-refresh-tooltip {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.76rem;
-            font-weight: 700;
-            color: #059669;
-            background: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            padding: 0.22rem 0.6rem;
-            border-radius: 20px;
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: rgba(15, 23, 42, 0.92);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
             opacity: 0;
-            max-width: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            transform: translateX(-6px) scale(0.95);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            visibility: hidden;
             pointer-events: none;
-            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
+            white-space: nowrap;
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            z-index: 1000;
+        }
+
+        .logo-refresh-tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 4px;
+            border-style: solid;
+            border-color: transparent transparent rgba(15, 23, 42, 0.92) transparent;
         }
 
         body.dark-theme .logo-refresh-tooltip {
-            background: rgba(16, 185, 129, 0.18);
-            border-color: rgba(16, 185, 129, 0.4);
-            color: #34d399;
+            background: rgba(30, 41, 59, 0.95);
+            color: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-theme .logo-refresh-tooltip::before {
+            border-color: transparent transparent rgba(30, 41, 59, 0.95) transparent;
         }
 
         .logo-refresh-btn:hover .logo-refresh-tooltip {
             opacity: 1;
-            max-width: 160px;
-            transform: translateX(0) scale(1);
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
         }
 
         .logo-refresh-btn:active .header-logo-img {
-            transform: scale(0.95);
+            transform: scale(0.96);
         }
 
         .logo-refresh-btn.refreshing .header-logo-img {
@@ -732,8 +746,8 @@
 
         .logo-refresh-btn.refreshing .logo-refresh-tooltip {
             opacity: 1;
-            max-width: 160px;
-            transform: translateX(0) scale(1);
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
         }
 
         .logo-refresh-btn.refreshing .logo-refresh-tooltip i {
@@ -742,7 +756,7 @@
 
         @keyframes logoPulse {
             0% { transform: scale(1.05); filter: drop-shadow(0 2px 5px rgba(16, 185, 129, 0.2)); }
-            100% { transform: scale(1.22); filter: drop-shadow(0 6px 14px rgba(16, 185, 129, 0.5)); }
+            100% { transform: scale(1.15); filter: drop-shadow(0 6px 14px rgba(16, 185, 129, 0.5)); }
         }
 
         .header-top-row {
@@ -2371,7 +2385,7 @@
                 margin: 0 !important;
             }
             .header-logo-img {
-                height: 26px !important;
+                height: 33px !important;
                 width: auto !important;
             }
             .badge-version {
@@ -2673,8 +2687,8 @@
                 padding: 0.15rem 0.45rem !important;
             }
             .header-logo-img {
-                height: 52px !important;
-                max-height: 52px !important;
+                height: 65px !important;
+                max-height: 65px !important;
                 padding: 4px 8px !important;
             }
             .footer-note {
@@ -2683,10 +2697,10 @@
             }
         }
 
-        /* ===== LOGO IMAGE STYLES (TRIPLICADA LARGURA / DOBRADA ALTURA) ===== */
+        /* ===== LOGO IMAGE STYLES (+25% ALTURA) ===== */
         .header-logo-img {
-            height: 76px;
-            max-height: 80px;
+            height: 95px;
+            max-height: 100px;
             width: auto;
             object-fit: contain;
             vertical-align: middle;
@@ -3101,9 +3115,9 @@
         <div class="header" id="mainHeader">
             <div class="header-top-row">
                 <h1>
-                    <div class="logo-refresh-btn" id="logoRefreshBtn" title="Clique para atualizar os dados" onclick="carregarDadosManualmenteLogo()">
+                    <div class="logo-refresh-btn" id="logoRefreshBtn" title="Atualizar" onclick="carregarDadosManualmenteLogo()">
                         <img src="logo.png" alt="Usina Pitangueiras" class="header-logo-img" onerror="this.onerror=null; this.src='apple-touch-icon.png';">
-                        <span class="logo-refresh-tooltip" id="logoRefreshTooltip"><i class="fas fa-sync-alt"></i> Atualizar dados</span>
+                        <span class="logo-refresh-tooltip" id="logoRefreshTooltip">Atualizar</span>
                     </div>
                     <span class="header-app-title">Gestão de Frota</span>
                     <span class="badge-version">v14 - API</span>
@@ -7882,14 +7896,14 @@
             const btn = document.getElementById('logoRefreshBtn');
             const tooltip = document.getElementById('logoRefreshTooltip');
             if (btn) btn.classList.add('refreshing');
-            if (tooltip) tooltip.innerHTML = '<i class="fas fa-sync-alt"></i> Sincronizando...';
+            if (tooltip) tooltip.textContent = 'Sincronizando...';
 
             await carregarDados(false);
 
-            if (tooltip) tooltip.innerHTML = '<i class="fas fa-check-circle"></i> Atualizado!';
+            if (tooltip) tooltip.textContent = 'Atualizado!';
             setTimeout(() => {
                 if (btn) btn.classList.remove('refreshing');
-                if (tooltip) tooltip.innerHTML = '<i class="fas fa-sync-alt"></i> Atualizar dados';
+                if (tooltip) tooltip.textContent = 'Atualizar';
             }, 1800);
         }
 
