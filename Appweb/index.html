@@ -3304,10 +3304,29 @@
                                 <div style="font-size:1.5rem;font-weight:800;color:#8b5cf6;" id="syncUsersConnectedCount">1</div>
                             </div>
                         </div>
-                        <div style="font-size:0.78rem;color:var(--color-gray-500);margin-bottom:0.75rem;">
-                            <i class="fas fa-clock"></i> Próxima atualização automática em <strong>5 minutos</strong> · Fonte: API SimpleFarm (porta 8000)
+                        <!-- Widget Barra de Energia Dinâmica -->
+                        <div class="sync-energy-card" style="margin-top:1rem;margin-bottom:0.75rem;background:var(--color-gray-50);border:1px solid var(--color-gray-200);border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+                                <span style="font-weight:700;font-size:0.9rem;display:flex;align-items:center;gap:8px;color:var(--color-text);">
+                                    <i class="fas fa-bolt" id="syncEnergyIcon" style="color:#10b981;font-size:1.15rem;transition:all 0.4s ease;"></i>
+                                    Status do Ciclo de Sincronização
+                                </span>
+                                <span id="syncEnergySubText" style="font-size:0.78rem;font-weight:600;color:var(--color-gray-500);">Fonte: API SimpleFarm (porta 8000)</span>
+                            </div>
+                            
+                            <!-- Barra de Energia (Track) -->
+                            <div class="energy-bar-track" style="position:relative;width:100%;height:42px;background:#e2e8f0;border-radius:24px;overflow:hidden;box-shadow:inset 0 2px 5px rgba(0,0,0,0.12);border:1px solid rgba(0,0,0,0.08);">
+                                <!-- Barra Interna Animada -->
+                                <div id="syncEnergyFill" style="position:absolute;top:0;left:0;height:100%;width:0%;border-radius:24px;background:linear-gradient(90deg, #10b981 0%, #34d399 100%);box-shadow:0 0 14px rgba(16,185,129,0.5);transition:width 1s linear, background 0.5s ease;"></div>
+                                <!-- Texto Centralizado -->
+                                <div id="syncEnergyText" style="position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;color:#0f172a;text-shadow:0 1px 2px rgba(255,255,255,0.85);letter-spacing:0.3px;pointer-events:none;padding:0 1.2rem;">
+                                    Próxima atualização em 5m 00s
+                                </div>
+                            </div>
                         </div>
-                        <div class="api-log" id="apiLog" style="padding:0.8rem;border-radius:8px;font-family:monospace;font-size:0.75rem;max-height:280px;overflow-y:auto;"></div>
+                        <div id="syncLastDetails" style="font-size:0.75rem;color:var(--color-gray-500);text-align:right;padding-right:4px;">
+                            <span id="syncLastInfo">Aguardando primeiro ciclo...</span>
+                        </div>
                     </div>
                 </div>
 
@@ -15656,6 +15675,8 @@
         // CARREGAR DADOS (sem alterar aba ativa)
         // ================================================================
         async function carregarDadosManualmenteLogo() {
+            await triggerSyncExecution();
+            return;
             const btn = document.getElementById('logoRefreshBtn');
             const tooltip = document.getElementById('logoRefreshTooltip');
             if (btn) btn.classList.add('refreshing');
@@ -15814,7 +15835,7 @@
                 let isAIGuess = false;
                 
                 if (!finalGroup) {
-                    const validTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS', 'VEICULOS LEVES'];
+                    const validTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
                     if (rawGrp && validTeams.includes(rawGrp)) {
                         finalGroup = (rawGrp === 'COLHEDORA') ? 'COLHEDORAS' : rawGrp;
                     } else {
@@ -16002,17 +16023,127 @@
                 // ================================================================
         // SYNC TIMER (15 segundos - silencioso em todos os dispositivos)
         // ================================================================
+        // ================================================================
+        // BARRA DE ENERGIA & CICLO DE SINCRONIZAÇÃO (5 MINUTOS)
+        // ================================================================
+        const SYNC_TOTAL_SECONDS = 300; // 5 minutos = 300 segundos
+        let syncElapsedSeconds   = 0;
+        let syncState            = 'COUNTDOWN'; // 'COUNTDOWN' | 'FETCHING' | 'SUCCESS'
+        let syncSuccessCountdown = 10;
+        let syncMasterTimer      = null;
+
+        function updateSyncEnergyBarUI() {
+            const fill    = document.getElementById('syncEnergyFill');
+            const text    = document.getElementById('syncEnergyText');
+            const icon    = document.getElementById('syncEnergyIcon');
+            const details = document.getElementById('syncLastInfo');
+            if (!fill || !text) return;
+
+            if (syncState === 'COUNTDOWN') {
+                const remaining = Math.max(0, SYNC_TOTAL_SECONDS - syncElapsedSeconds);
+                const percent   = Math.min(100, (syncElapsedSeconds / SYNC_TOTAL_SECONDS) * 100);
+                const m         = Math.floor(remaining / 60);
+                const s         = remaining % 60;
+                const timeStr   = `${m}m ${s < 10 ? '0' : ''}${s}s`;
+
+                fill.style.transition = 'width 1s linear, background 0.5s ease';
+                fill.style.width      = `${percent}%`;
+                fill.style.background = 'linear-gradient(90deg, #10b981 0%, #34d399 100%)';
+                fill.style.boxShadow  = '0 0 12px rgba(16, 185, 129, 0.4)';
+                if (icon) {
+                    icon.style.color = '#10b981';
+                    icon.className = 'fas fa-bolt';
+                }
+
+                text.style.color = percent > 50 ? '#ffffff' : '#0f172a';
+                text.style.textShadow = percent > 50 ? '0 1px 3px rgba(0,0,0,0.6)' : '0 1px 2px rgba(255,255,255,0.9)';
+                text.innerHTML = `<i class="fas fa-clock" style="margin-right:6px;"></i> Próxima atualização em ${timeStr}`;
+
+            } else if (syncState === 'FETCHING') {
+                fill.style.transition = 'width 0.4s ease, background 0.4s ease';
+                fill.style.width      = '100%';
+                fill.style.background = 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)';
+                fill.style.boxShadow  = '0 0 16px rgba(37, 99, 235, 0.6)';
+                if (icon) {
+                    icon.style.color = '#2563eb';
+                    icon.className = 'fas fa-spinner fa-spin';
+                }
+
+                text.style.color = '#ffffff';
+                text.style.textShadow = '0 1px 3px rgba(0,0,0,0.7)';
+                text.innerHTML = `<i class="fas fa-sync-alt fa-spin" style="margin-right:6px;"></i> Buscando novos dados...`;
+
+            } else if (syncState === 'SUCCESS') {
+                fill.style.transition = 'width 0.3s ease, background 0.4s ease';
+                fill.style.width      = '100%';
+                fill.style.background = 'linear-gradient(90deg, #059669 0%, #10b981 100%)';
+                fill.style.boxShadow  = '0 0 18px rgba(16, 185, 129, 0.7)';
+                if (icon) {
+                    icon.style.color = '#10b981';
+                    icon.className = 'fas fa-check-circle';
+                }
+
+                text.style.color = '#ffffff';
+                text.style.textShadow = '0 1px 3px rgba(0,0,0,0.7)';
+                text.innerHTML = `<i class="fas fa-check-circle" style="margin-right:6px;"></i> Dados atualizados às ${window.syncLastUpdateTime || new Date().toLocaleTimeString('pt-BR')}`;
+                
+                if (details) {
+                    details.textContent = `Última sincronização com sucesso às ${window.syncLastUpdateTime || new Date().toLocaleTimeString('pt-BR')}`;
+                }
+            }
+        }
+
+        async function triggerSyncExecution() {
+            if (syncState === 'FETCHING') return;
+            syncState = 'FETCHING';
+            updateSyncEnergyBarUI();
+
+            const syncBtn = document.getElementById('syncNowBtn');
+            if (syncBtn) {
+                syncBtn.disabled = true;
+                syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Atualizando...';
+            }
+
+            try {
+                await carregarDados(true);
+            } catch (err) {
+                console.warn('Erro ao atualizar dados:', err);
+            } finally {
+                window.syncLastUpdateTime = new Date().toLocaleTimeString('pt-BR');
+                syncState = 'SUCCESS';
+                syncSuccessCountdown = 10; // Permanece por 10 segundos!
+                updateSyncEnergyBarUI();
+
+                if (syncBtn) {
+                    syncBtn.disabled = false;
+                    syncBtn.innerHTML = '<i class="fas fa-redo"></i> Sincronizar Agora';
+                }
+            }
+        }
+
         function iniciarSyncTimer() {
-            if (syncTimer) clearInterval(syncTimer);
-            const QUINZE_SEGUNDOS = 15 * 1000;
-            syncTimer = setInterval(async () => {
-                if (isSyncing) return;
-                isSyncing = true;
-                try {
-                    await carregarDados(true);
-                } catch(e) {}
-                isSyncing = false;
-            }, QUINZE_SEGUNDOS);
+            if (syncMasterTimer) clearInterval(syncMasterTimer);
+            syncElapsedSeconds = 0;
+            syncState = 'COUNTDOWN';
+            updateSyncEnergyBarUI();
+
+            syncMasterTimer = setInterval(async () => {
+                if (syncState === 'COUNTDOWN') {
+                    syncElapsedSeconds++;
+                    updateSyncEnergyBarUI();
+                    if (syncElapsedSeconds >= SYNC_TOTAL_SECONDS) {
+                        await triggerSyncExecution();
+                    }
+                } else if (syncState === 'SUCCESS') {
+                    syncSuccessCountdown--;
+                    if (syncSuccessCountdown <= 0) {
+                        // Reseta e recomeça a contagem de 5 minutos
+                        syncElapsedSeconds = 0;
+                        syncState = 'COUNTDOWN';
+                        updateSyncEnergyBarUI();
+                    }
+                }
+            }, 1000);
         }
 
         var singleSessionTimer = null;
@@ -16092,7 +16223,7 @@
         }
 
         function switchAdminSubTab(subId, persist = true) {
-            const validSubTabs = ['tab-equipamentos', 'tab-operacoes', 'tab-sync', 'tab-usuarios'];
+            const validSubTabs = ['tab-equipamentos', 'tab-operacoes', 'tab-sync'];
             if (!subId || !validSubTabs.includes(subId)) {
                 subId = 'tab-equipamentos';
             }
@@ -16107,9 +16238,6 @@
             document.querySelectorAll('#adminSubContents > .tab-content').forEach(el => {
                 el.classList.toggle('active', el.id === subId);
             });
-            if (subId === 'tab-usuarios') {
-                renderUsuariosList();
-            }
         }
 
         // ================================================================
@@ -16277,24 +16405,21 @@
             }
         };
 
-        async function renderUsuariosList(page) {
-            if (page === undefined || page === null || typeof page !== 'number' || isNaN(page)) page = currentPageAdmin;
+        async function renderUsuariosList(page = 1) {
             currentPageAdmin = page;
-
             const tbody   = document.getElementById('usuariosTableBody');
             const countEl = document.getElementById('totalUsuariosCount');
             if (!tbody) return;
 
+            let users = [];
             const defaultAccounts = [
-                { id: 1, usuario: 'julianotimoteo', nome: 'Juliano Timóteo', email: 'julianotimoteo@usinapitangueiras.com.br', nivel_chave: 'admin', admin: 1, ativo: 1, ultimo_login: 'Online agora' },
-                { id: 2, usuario: 'logistica', nome: 'Logística Usina Pitangueiras', email: 'logistica@usinapitangueiras.com.br', nivel_chave: 'admin', admin: 1, ativo: 1, ultimo_login: 'Recente' },
-                { id: 3, usuario: 'rafaelfarra', nome: 'Rafael Aparecido Farra', email: 'rafaelfarra@usinapitangueiras.com.br', nivel_chave: 'visualizador', admin: 0, ativo: 1, ultimo_login: 'Recente' },
-                { id: 4, usuario: 'reginaldomantovani', nome: 'Reginaldo Fernando Mantovani', email: 'reginaldomantovani@usinapitangueiras.com.br', nivel_chave: 'visualizador', admin: 0, ativo: 1, ultimo_login: 'Recente' }
+                { id: 1, usuario: 'julianotimoteo', nome: 'Juliano Timóteo', email: 'julianotimoteo@usinapitangueiras.com.br', nivel_chave: 'admin', admin: 1, ativo: 1, ultimo_login: 'Hoje' },
+                { id: 2, usuario: 'logistica', nome: 'Logística Usina Pitangueiras', email: 'logistica@usinapitangueiras.com.br', nivel_chave: 'admin', admin: 1, ativo: 1, ultimo_login: 'Hoje' },
+                { id: 3, usuario: 'rafaelfarra', nome: 'Rafael Aparecido Farra', email: 'rafaelfarra@usinapitangueiras.com.br', nivel_chave: 'visualizador', admin: 0, ativo: 1, ultimo_login: 'Hoje' },
+                { id: 4, usuario: 'reginaldomantovani', nome: 'Reginaldo Fernando Mantovani', email: 'reginaldomantovani@usinapitangueiras.com.br', nivel_chave: 'visualizador', admin: 0, ativo: 1, ultimo_login: 'Hoje' }
             ];
 
-            let users = [];
-
-            // 1. Tentar carregar da API local se disponível
+            // 1. Tentar da API do servidor local
             if (!isStaticGitHubPages()) {
                 try {
                     const res = await fetch(`${API_BASE}/api/usuarios`, {
@@ -16309,7 +16434,7 @@
                 } catch (e) {}
             }
 
-            // 2. Se não veio da API, tentar do dados.json ou EMBEDDED_INITIAL_DATA
+            // 2. Se a API estiver offline ou vazia, tentar do dados.json ou EMBEDDED_INITIAL_DATA
             if (users.length === 0) {
                 if (typeof EMBEDDED_INITIAL_DATA !== 'undefined' && Array.isArray(EMBEDDED_INITIAL_DATA.authUsuarios) && EMBEDDED_INITIAL_DATA.authUsuarios.length > 0) {
                     users = EMBEDDED_INITIAL_DATA.authUsuarios;
@@ -16327,7 +16452,6 @@
             }
 
             currentUsersCache = users;
-            if (countEl) countEl.textContent = `${users.length} usuários registrados`;
 
             const filterInp = (document.getElementById('filterUsuarios')?.value || '').toLowerCase().trim();
             let displayUsers = users;
@@ -16339,6 +16463,8 @@
                     (u.nivel_chave || '').toLowerCase().includes(filterInp)
                 );
             }
+
+            if (countEl) countEl.textContent = `${displayUsers.length} usuários cadastrados`;
 
             const rolesMap = {
                 'admin': { label: 'Administrador (Total)', badge: 'os-aberta' },
@@ -16361,7 +16487,7 @@
                 const roleInfo = rolesMap[roleKey] || { label: roleKey, badge: 'os-fechada' };
                 const isProtectedMaster = (u.usuario === 'julianotimoteo' || u.id == 1 || u.id == 2);
                 const userEmail = u.email || `${u.usuario}@usinapitangueiras.com.br`;
-                const lastLogin = u.ultimo_login ? u.ultimo_login : 'Nunca';
+                const lastLogin = u.ultimo_login ? u.ultimo_login : 'Hoje';
                 const statusBadge = (u.ativo !== 0 && u.ativo !== false) ? '<span class="badge-equip os-fechada"><i class="fas fa-check-circle"></i> Ativo</span>' : '<span class="badge-equip os-aberta">Inativo</span>';
 
                 const actionButtons = isProtectedMaster
@@ -16484,7 +16610,7 @@
         // FILTROS E RENDER DE EQUIPAMENTOS
         // ================================================================
         function getEquipesDisponiveis() {
-            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS', 'VEICULOS LEVES', 'OUTROS'];
+            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS', 'OUTROS'];
             const extraTeams = equipments.map(eq => eq.grupo).filter(g => g && !standardTeams.includes(g));
             const all = [...new Set([...standardTeams, ...extraTeams])];
             
@@ -16521,6 +16647,8 @@
             });
 
             if (countEl) countEl.textContent = dados.length;
+            const syncOpEl = document.getElementById('syncOpCount');
+            if (syncOpEl) syncOpEl.textContent = (operacoes || []).length;
 
             if (dados.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7" class="empty-message">Nenhum equipamento encontrado.</td></tr>';
@@ -16744,6 +16872,8 @@
             });
 
             if (countEl) countEl.textContent = dados.length;
+            const syncOpEl = document.getElementById('syncOpCount');
+            if (syncOpEl) syncOpEl.textContent = (operacoes || []).length;
 
             if (dados.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7" class="empty-message">Nenhuma operação produtiva encontrada.</td></tr>';
@@ -17609,7 +17739,7 @@
                         }
                     }
                 });
-                navigator.serviceWorker.register('./sw.js?v=24').then(reg => {
+                navigator.serviceWorker.register('./sw.js?v=22').then(reg => {
 
                     reg.update();
                     console.log('Service Worker PWA registrado:', reg.scope);
