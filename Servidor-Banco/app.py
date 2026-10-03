@@ -624,7 +624,21 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT, usuario TEXT UNIQUE NOT NULL,
             senha_hash TEXT NOT NULL, salt TEXT NOT NULL, email TEXT, nome TEXT,
             admin INTEGER DEFAULT 0, ativo INTEGER DEFAULT 1,
-            ultimo_login TEXT, criado_em TEXT DEFAULT CURRENT_TIMESTAMP)''')
+            ultimo_login TEXT, criado_em TEXT DEFAULT CURRENT_TIMESTAMP,
+            nivel_chave TEXT)''')
+        try:
+            conn.execute("ALTER TABLE usuarios ADD COLUMN nivel_chave TEXT")
+        except Exception:
+            pass
+
+        # Popula usuarios oficiais caso nao existam
+        conn.executemany('''INSERT OR IGNORE INTO usuarios (usuario, senha_hash, salt, email, nome, admin, ativo, nivel_chave)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', [
+            ('julianotimoteo', '10e44f2665de5d27f0a1c193621f57da09564d7aecf9a14dba53b5bbbc330e61', '3b55dfdc2eed2626cebd5b0cdd1ada24997aadd4b8f030a50fac983209b6a1dc', 'julianotimoteo@usinapitangueiras.com.br', 'Juliano Timóteo', 1, 1, 'admin'),
+            ('logistica', '8343b9f26b9db3054bc4bd2574f1f7dd0ef3b689bb54eb26709ab269f0519915', '072afbaebef26177ce4abe9cdf6b1a7ade30f87c07f856a31dd260226c29e96d', 'logistica@usinapitangueiras.com.br', 'Logística Usina Pitangueiras', 1, 1, 'admin'),
+            ('rafaelfarra', '1bcdab16d77b475a9a30ad0b8f8bd2c86c70785288bfade8da9620848364825e', '85fa3df4f7cf80fa1da286655a878624d0dbdaafbd35230762142b8c66e4f22b', 'rafaelfarra@usinapitangueiras.com.br', 'Rafael Aparecido Farra', 0, 1, 'visualizador'),
+            ('reginaldomantovani', 'bdab8038ccaa024045a3dabf20d622e1e1f15de0a531f5c29b2925a08daa8fea', 'c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a', 'reginaldomantovani@usinapitangueiras.com.br', 'Reginaldo Fernando Mantovani', 0, 1, 'visualizador')
+        ])
         conn.execute('''CREATE TABLE IF NOT EXISTS sessoes (
             id INTEGER PRIMARY KEY AUTOINCREMENT, usuario_id INTEGER NOT NULL,
             token TEXT UNIQUE NOT NULL, ip_origem TEXT, origem_site TEXT, expira_em TEXT NOT NULL,

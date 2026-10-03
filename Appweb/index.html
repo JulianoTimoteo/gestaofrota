@@ -3202,6 +3202,7 @@
                 <button class="tab-btn active" data-subtab="tab-equipamentos"><i class="fas fa-list"></i> Equipamentos</button>
                 <button class="tab-btn" data-subtab="tab-operacoes"><i class="fas fa-tasks"></i> Operações</button>
                 <button class="tab-btn" data-subtab="tab-sync"><i class="fas fa-cloud-upload-alt"></i> Sincronização</button>
+                <button class="tab-btn" data-subtab="tab-usuarios"><i class="fas fa-users-cog"></i> Usuários</button>
             </div>
             <div id="adminSubContents">
                 <!-- Equipamentos -->
@@ -3307,7 +3308,43 @@
                         </div>
                         <div class="api-log" id="apiLog" style="padding:0.8rem;border-radius:8px;font-family:monospace;font-size:0.75rem;max-height:280px;overflow-y:auto;"></div>
                     </div>
-                </div>
+
+                <!-- Usuários -->
+                <div id="tab-usuarios" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-users-cog"></i> Gestão de Usuários & Logins</h2>
+                            <div class="flex gap-2">
+                                <button type="button" onclick="openUserCrudModal()" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;padding:0.4rem 0.88rem;font-size:0.82rem;font-weight:600;border-radius:8px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#fff;border:none;cursor:pointer;box-shadow:0 2px 6px rgba(16,185,129,0.3);white-space:nowrap;"><i class="fas fa-user-plus"></i> +Novo Usuário</button>
+                                <input type="text" class="filter-input" id="filterUsuarios" oninput="filtrarUsuariosTabela()" placeholder="Filtrar usuário...">
+                                <span class="count-badge" id="totalUsuariosCount">0</span>
+                            </div>
+                        </div>
+                        <div style="background:var(--color-gray-50);border:1px solid var(--color-gray-200);border-radius:8px;padding:0.85rem 1.2rem;margin-bottom:1rem;font-size:0.85rem;line-height:1.5;">
+                            <strong><i class="fas fa-database" style="color:var(--color-primary);"></i> Onde ficam armazenados os logins?</strong><br>
+                            Os usuários são armazenados no banco de dados SQLite local (<code>simplefarm.db</code>, tabela <code>usuarios</code> com senha criptografada via hash SHA-256 + Salt individual). Quando conectado ao servidor (porta 8000), qualquer alteração é gravada no banco e replicada para o arquivo <code>dados.json</code> e cache seguro do navegador.
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Login / Usuário</th>
+                                        <th>Nome Completo</th>
+                                        <th>E-mail</th>
+                                        <th>Nível de Acesso</th>
+                                        <th>Status</th>
+                                        <th>Último Login</th>
+                                        <th style="min-width:140px;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usuariosTableBody">
+                                    <tr><td colspan="8" class="empty-message">Carregando usuários...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>                </div>
             </div>
         </div>
 
@@ -14825,7 +14862,7 @@
         }
         // Force valid admin subtab
         const savedSub = localStorage.getItem('sf_active_admin_subtab');
-        if (savedSub === 'tab-usuarios' || savedSub === 'tab-database') {
+        if (savedSub === 'tab-database') {
             localStorage.setItem('sf_active_admin_subtab', 'tab-equipamentos');
         }
 
@@ -16053,7 +16090,7 @@
         }
 
         function switchAdminSubTab(subId, persist = true) {
-            const validSubTabs = ['tab-equipamentos', 'tab-operacoes', 'tab-sync'];
+            const validSubTabs = ['tab-equipamentos', 'tab-operacoes', 'tab-sync', 'tab-usuarios'];
             if (!subId || !validSubTabs.includes(subId)) {
                 subId = 'tab-equipamentos';
             }
@@ -16068,6 +16105,9 @@
             document.querySelectorAll('#adminSubContents > .tab-content').forEach(el => {
                 el.classList.toggle('active', el.id === subId);
             });
+            if (subId === 'tab-usuarios') {
+                renderUsuariosList();
+            }
         }
 
         // ================================================================
@@ -16243,81 +16283,112 @@
             const countEl = document.getElementById('totalUsuariosCount');
             if (!tbody) return;
 
-            if (isStaticGitHubPages()) {
-                if (countEl) countEl.textContent = `1 usuário registrado (Modo Cloud)`;
-                tbody.innerHTML = `<tr>
-                    <td><strong>#1</strong></td>
-                    <td><strong style="color:var(--color-primary);">julianotimoteo</strong></td>
-                    <td>Juliano Timóteo</td>
-                    <td style="font-size:0.8rem;color:var(--color-gray-600);">julianotimoteo@usinapitangueiras.com.br</td>
-                    <td><span class="badge-equip os-aberta">Administrador</span></td>
-                    <td><span class="badge-equip os-fechada"><i class="fas fa-check-circle"></i> Ativo</span></td>
-                    <td style="font-size:0.8rem;color:var(--color-gray-500);">Online agora</td>
-                    <td><span style="font-weight:700;color:var(--color-primary);"><i class="fas fa-shield-alt"></i> Master Protegido</span></td>
-                </tr>`;
+            const defaultAccounts = [
+                { id: 1, usuario: 'julianotimoteo', nome: 'Juliano Timóteo', email: 'julianotimoteo@usinapitangueiras.com.br', nivel_chave: 'admin', admin: 1, ativo: 1, ultimo_login: 'Online agora' },
+                { id: 2, usuario: 'logistica', nome: 'Logística Usina Pitangueiras', email: 'logistica@usinapitangueiras.com.br', nivel_chave: 'admin', admin: 1, ativo: 1, ultimo_login: 'Recente' },
+                { id: 3, usuario: 'rafaelfarra', nome: 'Rafael Aparecido Farra', email: 'rafaelfarra@usinapitangueiras.com.br', nivel_chave: 'visualizador', admin: 0, ativo: 1, ultimo_login: 'Recente' },
+                { id: 4, usuario: 'reginaldomantovani', nome: 'Reginaldo Fernando Mantovani', email: 'reginaldomantovani@usinapitangueiras.com.br', nivel_chave: 'visualizador', admin: 0, ativo: 1, ultimo_login: 'Recente' }
+            ];
+
+            let users = [];
+
+            // 1. Tentar carregar da API local se disponível
+            if (!isStaticGitHubPages()) {
+                try {
+                    const res = await fetch(`${API_BASE}/api/usuarios`, {
+                        headers: { Authorization: 'Bearer ' + authToken }
+                    });
+                    if (res.ok) {
+                        const result = await res.json();
+                        if (result && result.success && Array.isArray(result.data) && result.data.length > 0) {
+                            users = result.data;
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            // 2. Se não veio da API, tentar do dados.json ou EMBEDDED_INITIAL_DATA
+            if (users.length === 0) {
+                if (typeof EMBEDDED_INITIAL_DATA !== 'undefined' && Array.isArray(EMBEDDED_INITIAL_DATA.authUsuarios) && EMBEDDED_INITIAL_DATA.authUsuarios.length > 0) {
+                    users = EMBEDDED_INITIAL_DATA.authUsuarios;
+                } else {
+                    try {
+                        const cached = JSON.parse(localStorage.getItem('sf_db_usuarios') || '[]');
+                        if (Array.isArray(cached) && cached.length > 0) users = cached;
+                    } catch (e) {}
+                }
+            }
+
+            // 3. Fallback para as contas padrão oficiais
+            if (users.length === 0) {
+                users = defaultAccounts;
+            }
+
+            currentUsersCache = users;
+            if (countEl) countEl.textContent = `${users.length} usuários registrados`;
+
+            const filterInp = (document.getElementById('filterUsuarios')?.value || '').toLowerCase().trim();
+            let displayUsers = users;
+            if (filterInp) {
+                displayUsers = users.filter(u => 
+                    (u.usuario || '').toLowerCase().includes(filterInp) ||
+                    (u.nome || '').toLowerCase().includes(filterInp) ||
+                    (u.email || '').toLowerCase().includes(filterInp) ||
+                    (u.nivel_chave || '').toLowerCase().includes(filterInp)
+                );
+            }
+
+            const rolesMap = {
+                'admin': { label: 'Administrador (Total)', badge: 'os-aberta' },
+                'analista': { label: 'Analista (Total)', badge: 'team-badge' },
+                'supervisor': { label: 'Supervisor (Total)', badge: 'team-badge' },
+                'operador': { label: 'Operador (Equipes)', badge: 'os-fechada' },
+                'visualizador': { label: 'Visualizador (Leitura)', badge: 'os-fechada' }
+            };
+
+            const startIndex = (currentPageAdmin - 1) * ITEMS_PER_PAGE;
+            const paginatedUsers = displayUsers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+            if (paginatedUsers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-message">Nenhum usuário encontrado com o filtro atual.</td></tr>';
                 return;
             }
 
-            try {
-                const res = await fetch(`${API_BASE}/api/usuarios`, {
-                    headers: { Authorization: 'Bearer ' + authToken }
-                });
-                if (!res.ok) {
-                    tbody.innerHTML = '<tr><td colspan="8" class="empty-message">Apenas administradores podem visualizar os usuários do banco.</td></tr>';
-                    return;
-                }
-                const result = await res.json();
-                if (result && result.success && Array.isArray(result.data)) {
-                    currentUsersCache = result.data;
-                    const users = result.data;
-                    if (countEl) countEl.textContent = `${users.length} usuários registrados`;
+            tbody.innerHTML = paginatedUsers.map(u => {
+                const roleKey = (u.usuario === 'julianotimoteo' || u.usuario === 'logistica' || u.admin == 1) ? 'admin' : (u.nivel_chave || 'visualizador');
+                const roleInfo = rolesMap[roleKey] || { label: roleKey, badge: 'os-fechada' };
+                const isProtectedMaster = (u.usuario === 'julianotimoteo' || u.id == 1 || u.id == 2);
+                const userEmail = u.email || `${u.usuario}@usinapitangueiras.com.br`;
+                const lastLogin = u.ultimo_login ? u.ultimo_login : 'Nunca';
+                const statusBadge = (u.ativo !== 0 && u.ativo !== false) ? '<span class="badge-equip os-fechada"><i class="fas fa-check-circle"></i> Ativo</span>' : '<span class="badge-equip os-aberta">Inativo</span>';
 
-                    const rolesMap = {
-                        'admin': { label: 'Administrador', badge: 'os-aberta' },
-                        'analista': { label: 'Analista', badge: 'team-badge' },
-                        'supervisor': { label: 'Supervisor', badge: 'team-badge' },
-                        'operador': { label: 'Operador', badge: 'os-fechada' },
-                        'visualizador': { label: 'Visualizador', badge: 'os-fechada' }
-                    };
+                const actionButtons = isProtectedMaster
+                    ? `<span style="font-size:0.78rem;font-weight:700;color:var(--color-primary);"><i class="fas fa-shield-alt"></i> Master Protegido</span>`
+                    : `<div style="display:flex;gap:4px;">
+                        <button type="button" onclick="openUserCrudModal(${u.id})" class="btn-sm" style="padding:0.25rem 0.5rem;font-size:0.75rem;font-weight:600;border-radius:6px;background:var(--color-primary);color:#fff;border:none;cursor:pointer;"><i class="fas fa-edit"></i> Editar</button>
+                        <button type="button" onclick="excluirUsuarioCrud(${u.id}, '${u.usuario}')" class="btn-sm" style="padding:0.25rem 0.5rem;font-size:0.75rem;font-weight:600;border-radius:6px;background:#ef4444;color:#fff;border:none;cursor:pointer;"><i class="fas fa-trash-alt"></i> Excluir</button>
+                       </div>`;
 
-                    const startIndex = (currentPageAdmin - 1) * ITEMS_PER_PAGE;
-                    const paginatedUsers = users.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-                    tbody.innerHTML = paginatedUsers.map(u => {
-                        const roleInfo = rolesMap[u.nivel_chave] || { label: u.nivel_chave || 'Visualizador', badge: 'os-fechada' };
-                        const isProtectedMaster = (u.usuario === 'julianotimoteo' || u.id == 1 || u.id == 2);
-                        const userEmail = u.email || `${u.usuario}@usinapitangueiras.com.br`;
-                        const lastLogin = u.ultimo_login ? u.ultimo_login : 'Nunca';
-                        const statusBadge = u.ativo !== 0 ? '<span class="badge-equip os-fechada"><i class="fas fa-check-circle"></i> Ativo</span>' : '<span class="badge-equip os-aberta">Inativo</span>';
-
-                        const actionButtons = isProtectedMaster
-                            ? `<span style="font-size:0.78rem;font-weight:700;color:var(--color-primary);"><i class="fas fa-shield-alt"></i> Master Protegido</span>`
-                            : `<div style="display:flex;gap:4px;">
-                                <button type="button" onclick="openUserCrudModal(${u.id})" class="btn-sm" style="padding:0.25rem 0.5rem;font-size:0.75rem;font-weight:600;border-radius:6px;background:var(--color-primary);color:#fff;border:none;cursor:pointer;"><i class="fas fa-edit"></i> Editar</button>
-                                <button type="button" onclick="excluirUsuarioCrud(${u.id}, '${u.usuario}')" class="btn-sm" style="padding:0.25rem 0.5rem;font-size:0.75rem;font-weight:600;border-radius:6px;background:#ef4444;color:#fff;border:none;cursor:pointer;"><i class="fas fa-trash-alt"></i> Excluir</button>
-                               </div>`;
-
-                        return `<tr>
-                            <td><strong>#${u.id}</strong></td>
-                            <td><strong style="color:var(--color-primary);">${u.usuario}</strong></td>
-                            <td>${u.nome || u.usuario}</td>
-                            <td style="font-size:0.8rem;color:var(--color-gray-600);">${userEmail}</td>
-                            <td><span class="badge-equip ${roleInfo.badge}">${roleInfo.label}</span></td>
-                            <td>${statusBadge}</td>
-                            <td style="font-size:0.8rem;color:var(--color-gray-500);">${lastLogin}</td>
-                            <td>${actionButtons}</td>
-                        </tr>`;
-                    }).join('');
-                    
-                    if (users.length > ITEMS_PER_PAGE) {
-                        tbody.innerHTML += `<tr><td colspan="8">${generatePaginationHTML(currentPageAdmin, users.length, ITEMS_PER_PAGE, 'renderUsuariosList')}</td></tr>`;
-                    }
-                }
-
-            } catch (e) {
-                tbody.innerHTML = `<tr><td colspan="8" class="empty-message">Erro ao carregar usuários: ${e.message}</td></tr>`;
+                return `<tr>
+                    <td><strong>#${u.id || '-'}</strong></td>
+                    <td><strong style="color:var(--color-primary);">${u.usuario}</strong></td>
+                    <td>${u.nome || u.usuario}</td>
+                    <td style="font-size:0.8rem;color:var(--color-gray-600);">${userEmail}</td>
+                    <td><span class="badge-equip ${roleInfo.badge}">${roleInfo.label}</span></td>
+                    <td>${statusBadge}</td>
+                    <td style="font-size:0.8rem;color:var(--color-gray-500);">${lastLogin}</td>
+                    <td>${actionButtons}</td>
+                </tr>`;
+            }).join('');
+            
+            if (displayUsers.length > ITEMS_PER_PAGE) {
+                tbody.innerHTML += `<tr><td colspan="8">${generatePaginationHTML(currentPageAdmin, displayUsers.length, ITEMS_PER_PAGE, 'renderUsuariosList')}</td></tr>`;
             }
         }
+
+        window.filtrarUsuariosTabela = function() {
+            renderUsuariosList(1);
+        };
 
         // ================================================================
         // GERENCIADOR DE BANCO (EXPLORADOR DE TABELAS SQLITE)
