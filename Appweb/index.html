@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v26_purge_all_caches';
+            var APP_VER = '2026_v28_official_fleet_teams';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
+                localStorage.removeItem('sf_custom_equip_groups');
+                localStorage.removeItem('sf_active_team');
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.getRegistrations().then(function(regs) {
                         for (var r of regs) r.unregister();
@@ -688,25 +690,34 @@
             filter: drop-shadow(0 4px 10px rgba(16, 185, 129, 0.35));
         }
 
-        /* Tooltip flutuante clássico, SEM empurrar o layout lateral */
+        /* Tooltip flutuante com a identidade visual da Usina (Verde Pitangueiras) */
         .logo-refresh-tooltip {
             position: absolute;
-            top: calc(100% + 6px);
+            top: calc(100% + 8px);
             left: 50%;
             transform: translateX(-50%) translateY(4px);
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: #ffffff;
-            background: rgba(15, 23, 42, 0.92);
-            padding: 0.25rem 0.6rem;
-            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #047857 !important;
+            background: #ecfdf5 !important;
+            border: 1px solid #a7f3d0 !important;
+            padding: 0.22rem 0.65rem;
+            border-radius: 20px;
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
             white-space: nowrap;
             transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
             z-index: 1000;
+        }
+
+        .logo-refresh-tooltip i {
+            font-size: 0.7rem;
+            color: #047857 !important;
         }
 
         .logo-refresh-tooltip::before {
@@ -715,19 +726,31 @@
             bottom: 100%;
             left: 50%;
             transform: translateX(-50%);
-            border-width: 4px;
+            border-width: 5px;
             border-style: solid;
-            border-color: transparent transparent rgba(15, 23, 42, 0.92) transparent;
+            border-color: transparent transparent #a7f3d0 transparent;
+        }
+
+        body:not(.dark-theme) .logo-refresh-tooltip,
+        body:not(.dark-theme) .logo-refresh-tooltip span,
+        body:not(.dark-theme) .logo-refresh-tooltip i {
+            color: #047857 !important;
         }
 
         body.dark-theme .logo-refresh-tooltip {
-            background: rgba(30, 41, 59, 0.95);
-            color: #f8fafc;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(6, 78, 59, 0.95) !important;
+            border-color: #059669 !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
         }
 
         body.dark-theme .logo-refresh-tooltip::before {
-            border-color: transparent transparent rgba(30, 41, 59, 0.95) transparent;
+            border-color: transparent transparent #059669 transparent;
+        }
+
+        body.dark-theme .logo-refresh-tooltip,
+        body.dark-theme .logo-refresh-tooltip span,
+        body.dark-theme .logo-refresh-tooltip i {
+            color: #6ee7b7 !important;
         }
 
         .logo-refresh-btn:hover .logo-refresh-tooltip {
@@ -3115,9 +3138,9 @@
         <div class="header" id="mainHeader">
             <div class="header-top-row">
                 <h1>
-                    <div class="logo-refresh-btn" id="logoRefreshBtn" title="Atualizar" onclick="carregarDadosManualmenteLogo()">
+                    <div class="logo-refresh-btn" id="logoRefreshBtn" title="Atualizar dados" onclick="carregarDadosManualmenteLogo()">
                         <img src="logo.png" alt="Usina Pitangueiras" class="header-logo-img" onerror="this.onerror=null; this.src='apple-touch-icon.png';">
-                        <span class="logo-refresh-tooltip" id="logoRefreshTooltip">Atualizar</span>
+                        <span class="logo-refresh-tooltip" id="logoRefreshTooltip"><i class="fas fa-sync-alt"></i> Atualizar</span>
                     </div>
                     <span class="header-app-title">Gestão de Frota</span>
                     <span class="badge-version">v14 - API</span>
@@ -6774,18 +6797,125 @@
   ],
   "adminConfig": {
     "customGroups": {
-      "11216": "BIOMASSA",
-      "311517": "FERTIRRIGACAO",
-      "31617": "FERTIRRIGACAO",
-      "33": "FERTIRRIGACAO",
-      "311217": "FERTIRRIGACAO",
-      "31717": "FERTIRRIGACAO",
-      "311317": "FERTIRRIGACAO",
-      "311117": "FERTIRRIGACAO",
-      "31319": "FERTIRRIGACAO",
       "32": "FERTIRRIGACAO",
-      "311417": "FERTIRRIGACAO"
-    },
+      "33": "FERTIRRIGACAO",
+      "34": "FERTIRRIGACAO",
+      "48": "FERTIRRIGACAO",
+      "91": "FERTIRRIGACAO",
+      "101": "TORRES SOLINFNET",
+      "313": "LINHA AMARELA",
+      "329": "LINHA AMARELA",
+      "340": "HERBICIDA",
+      "418": "PREPARO",
+      "435": "FERTIRRIGACAO",
+      "527": "LINHA AMARELA",
+      "543": "LINHA AMARELA",
+      "724": "PREPARO",
+      "726": "PREPARO",
+      "732": "PREPARO",
+      "11116": "BIOMASSA",
+      "11118": "BIOMASSA",
+      "11119": "PREPARO",
+      "11121": "PREPARO",
+      "11124": "HERBICIDA",
+      "11125": "HERBICIDA",
+      "11126": "FERTIRRIGACAO",
+      "11216": "BIOMASSA",
+      "11218": "BIOMASSA",
+      "11221": "PREPARO",
+      "11224": "HERBICIDA",
+      "11225": "HERBICIDA",
+      "11226": "FERTIRRIGACAO",
+      "11316": "FERTIRRIGACAO",
+      "11318": "PREPARO",
+      "11321": "BIOMASSA",
+      "11324": "TRATOS CULTURAIS",
+      "11326": "FERTIRRIGACAO",
+      "11416": "PREPARO",
+      "11418": "PREPARO",
+      "11421": "PREPARO",
+      "11424": "TRATOS CULTURAIS",
+      "11426": "FERTIRRIGACAO",
+      "11516": "PREPARO",
+      "11518": "HERBICIDA",
+      "11524": "TRATOS CULTURAIS",
+      "11526": "FERTIRRIGACAO",
+      "11616": "FERTIRRIGACAO",
+      "11618": "HERBICIDA",
+      "11626": "FERTIRRIGACAO",
+      "11718": "HERBICIDA",
+      "20123": "FERTIRRIGACAO",
+      "31115": "CAMINHOES",
+      "31125": "CAMINHOES",
+      "31215": "CAMINHOES",
+      "31225": "CAMINHOES",
+      "31315": "CAMINHOES",
+      "31316": "CAMINHOES",
+      "31319": "FERTIRRIGACAO",
+      "31325": "CAMINHOES",
+      "31415": "CAMINHOES",
+      "31425": "CAMINHOES",
+      "31515": "CAMINHOES",
+      "31525": "CAMINHOES",
+      "31615": "CAMINHOES",
+      "31617": "FERTIRRIGACAO",
+      "31625": "CAMINHOES",
+      "31717": "FERTIRRIGACAO",
+      "31725": "CAMINHOES",
+      "31815": "CAMINHOES",
+      "31825": "CAMINHOES",
+      "31915": "CAMINHOES",
+      "31925": "CAMINHOES",
+      "50116": "LINHA AMARELA",
+      "50118": "LINHA AMARELA",
+      "60116": "LINHA AMARELA",
+      "60118": "LINHA AMARELA",
+      "60120": "LINHA AMARELA",
+      "60121": "LINHA AMARELA",
+      "60126": "LINHA AMARELA",
+      "70121": "HERBICIDA",
+      "70122": "HERBICIDA",
+      "80116": "COLHEDORAS",
+      "80118": "COLHEDORAS",
+      "80119": "COLHEDORAS",
+      "80120": "COLHEDORAS",
+      "80122": "COLHEDORAS",
+      "80124": "COLHEDORAS",
+      "80217": "COLHEDORAS",
+      "80219": "COLHEDORAS",
+      "80222": "COLHEDORAS",
+      "80224": "COLHEDORAS",
+      "80316": "COLHEDORAS",
+      "80317": "COLHEDORAS",
+      "80319": "COLHEDORAS",
+      "80320": "COLHEDORAS",
+      "80322": "COLHEDORAS",
+      "80419": "COLHEDORAS",
+      "80420": "COLHEDORAS",
+      "80422": "COLHEDORAS",
+      "80519": "COLHEDORAS",
+      "80619": "COLHEDORAS",
+      "80719": "COLHEDORAS",
+      "311015": "CAMINHOES",
+      "311025": "CAMINHOES",
+      "311115": "CAMINHOES",
+      "311117": "FERTIRRIGACAO",
+      "311125": "CAMINHOES",
+      "311215": "CAMINHOES",
+      "311217": "FERTIRRIGACAO",
+      "311225": "CAMINHOES",
+      "311317": "FERTIRRIGACAO",
+      "311325": "CAMINHOES",
+      "311417": "FERTIRRIGACAO",
+      "311425": "CAMINHOES",
+      "311517": "FERTIRRIGACAO",
+      "311525": "CAMINHOES",
+      "311625": "CAMINHOES",
+      "311725": "CAMINHOES",
+      "311825": "CAMINHOES",
+      "311925": "CAMINHOES",
+      "312025": "CAMINHOES"
+    ,
     "customTypes": {
       "313": "Pá carregadeira",
       "329": "Pá carregadeira",
@@ -7896,14 +8026,14 @@
             const btn = document.getElementById('logoRefreshBtn');
             const tooltip = document.getElementById('logoRefreshTooltip');
             if (btn) btn.classList.add('refreshing');
-            if (tooltip) tooltip.textContent = 'Sincronizando...';
+            if (tooltip) tooltip.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Sincronizando...';
 
             await carregarDados(false);
 
-            if (tooltip) tooltip.textContent = 'Atualizado!';
+            if (tooltip) tooltip.innerHTML = '<i class="fas fa-check-circle"></i> Atualizado!';
             setTimeout(() => {
                 if (btn) btn.classList.remove('refreshing');
-                if (tooltip) tooltip.textContent = 'Atualizar';
+                if (tooltip) tooltip.innerHTML = '<i class="fas fa-sync-alt"></i> Atualizar';
             }, 1800);
         }
 
@@ -7994,24 +8124,8 @@
             }
 
             function guessTeamByPattern(desc, mod) {
-                const descWords = (desc || '').toUpperCase().split(/[^A-Z0-9]+/).filter(w => w.length >= 4);
-                const modWords = (mod || '').toUpperCase().split(/[^A-Z0-9]+/).filter(w => w.length >= 4);
-                const allWords = [...descWords, ...modWords];
-                if (allWords.length === 0) return null;
-                
-                let bestTeam = null;
-                let maxScore = 0;
-                for (const team in patternMemory) {
-                    let score = 0;
-                    allWords.forEach(w => {
-                        if (patternMemory[team][w]) score += patternMemory[team][w];
-                    });
-                    if (score > maxScore && score > 0) {
-                        maxScore = score;
-                        bestTeam = team;
-                    }
-                }
-                return bestTeam;
+                // DESATIVADO: Frotas agora respeitam estritamente a base oficial do banco
+                return null;
             }
             // ============================================================
 
@@ -8047,19 +8161,11 @@
                 let isAIGuess = false;
                 
                 if (!finalGroup) {
-                    const validTeams = ['BIOMASSA', 'CAMINHOES', 'CAMINHOES TERCEIROS', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TORRES SOLINFNET', 'TRATOS CULTURAIS'];
-                    
-                    // Só usa IA se a API não mandou um grupo útil ou mandou 'OUTROS'
-                    if (!rawGrp || rawGrp === 'OUTROS' || rawGrp === 'PREPARO' || !validTeams.includes(rawGrp)) {
-                        const aiGuess = guessTeamByPattern(desc, mod);
-                        if (aiGuess) {
-                            finalGroup = aiGuess;
-                            isAIGuess = true;
-                        } else {
-                            finalGroup = 'OUTROS';
-                        }
+                    const validTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TORRES SOLINFNET', 'TRATOS CULTURAIS'];
+                    if (rawGrp && validTeams.includes(rawGrp)) {
+                        finalGroup = (rawGrp === 'COLHEDORA') ? 'COLHEDORAS' : rawGrp;
                     } else {
-                        finalGroup = rawGrp;
+                        finalGroup = 'OUTROS';
                     }
                 }
                 const defaultOp = getTeamDefaultOp(finalGroup);
@@ -8690,7 +8796,7 @@
         // FILTROS E RENDER DE EQUIPAMENTOS
         // ================================================================
         function getEquipesDisponiveis() {
-            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS', 'OUTROS'];
+            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TORRES SOLINFNET', 'TRATOS CULTURAIS', 'OUTROS'];
             const extraTeams = equipments.map(eq => eq.grupo).filter(g => g && !standardTeams.includes(g));
             const all = [...new Set([...standardTeams, ...extraTeams])];
             

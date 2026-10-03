@@ -897,6 +897,484 @@ def get_open_os_map(conn):
 # ================================================================
 # LIVE TUNNEL & PRE-CACHED DADOS.JSON GENERATOR
 # ================================================================
+# ================================================================
+# MASTER OVERRIDES OFICIAIS (118 EQUIPAMENTOS MAPEADOS)
+# ================================================================
+MASTER_OVERRIDES = {
+    "32": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "33": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "34": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "48": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "91": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "101": {
+        "tipo": "TORRE SOLINFNET CONCENTRADOR",
+        "grupo": "TORRES SOLINFNET"
+    },
+    "313": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "LINHA AMARELA"
+    },
+    "329": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "LINHA AMARELA"
+    },
+    "340": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "HERBICIDA"
+    },
+    "418": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "435": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "527": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "LINHA AMARELA"
+    },
+    "543": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "LINHA AMARELA"
+    },
+    "724": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "726": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "732": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "11116": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "BIOMASSA"
+    },
+    "11118": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "BIOMASSA"
+    },
+    "11119": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "11121": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "11124": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "HERBICIDA"
+    },
+    "11125": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "HERBICIDA"
+    },
+    "11126": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "11216": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "BIOMASSA"
+    },
+    "11218": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "BIOMASSA"
+    },
+    "11221": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "11224": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "HERBICIDA"
+    },
+    "11225": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "HERBICIDA"
+    },
+    "11226": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "11316": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "11318": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "11321": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "BIOMASSA"
+    },
+    "11324": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "TRATOS CULTURAIS"
+    },
+    "11326": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "11416": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "11418": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "11421": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "11424": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "TRATOS CULTURAIS"
+    },
+    "11426": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "11516": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "PREPARO"
+    },
+    "11518": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "HERBICIDA"
+    },
+    "11524": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "TRATOS CULTURAIS"
+    },
+    "11526": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "11616": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "11618": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "HERBICIDA"
+    },
+    "11626": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "11718": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "HERBICIDA"
+    },
+    "20123": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "31115": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31125": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31215": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31225": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31315": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31316": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31319": {
+        "tipo": "CAMINHÃO DE VINHAÇA",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "31325": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31415": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31425": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31515": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31525": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31615": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31617": {
+        "tipo": "CAMINHÃO DE VINHAÇA",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "31625": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31717": {
+        "tipo": "CAMINHÃO DE VINHAÇA",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "31725": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31815": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31825": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31915": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "31925": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "50116": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "LINHA AMARELA"
+    },
+    "50118": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "LINHA AMARELA"
+    },
+    "60116": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "LINHA AMARELA"
+    },
+    "60118": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "LINHA AMARELA"
+    },
+    "60120": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "LINHA AMARELA"
+    },
+    "60121": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "LINHA AMARELA"
+    },
+    "60126": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "LINHA AMARELA"
+    },
+    "70121": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "HERBICIDA"
+    },
+    "70122": {
+        "tipo": "TRATOR DE PNEUS LEVES MAG100R",
+        "grupo": "HERBICIDA"
+    },
+    "80116": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80118": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80119": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80120": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80122": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80124": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80217": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80219": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80222": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80224": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80316": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80317": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80319": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80320": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80322": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80419": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80420": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80422": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80519": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80619": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "80719": {
+        "tipo": "Colhedora",
+        "grupo": "COLHEDORAS"
+    },
+    "311015": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311025": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311115": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311117": {
+        "tipo": "CAMINHÃO DE VINHAÇA",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "311125": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311215": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311217": {
+        "tipo": "CAMINHÃO DE VINHAÇA",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "311225": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311317": {
+        "tipo": "CAMINHÃO DE VINHAÇA",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "311325": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311417": {
+        "tipo": "CAMINHÃO DE VINHAÇA",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "311425": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311517": {
+        "tipo": "CAMINHÃO DE VINHAÇA",
+        "grupo": "FERTIRRIGACAO"
+    },
+    "311525": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311625": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311725": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311825": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "311925": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    },
+    "312025": {
+        "tipo": "Caminhão",
+        "grupo": "CAMINHOES"
+    }
+}
+
 LATEST_DADOS_PAYLOAD = None
 
 def gerar_e_salvar_dados_json():
@@ -1025,176 +1503,7 @@ def gerar_e_salvar_dados_json():
             full_text = f"{desc.upper()} {mod.upper()} {tipo.upper()} {subs}"
 
 
-        # ================================================================
-        # MASTER OVERRIDES: Mapeamento estrito de Tipo e Grupo por Frota
-        # O que nao estiver aqui vai para OUTROS (regra do usuario)
-        # ================================================================
-            MASTER_OVERRIDES = {
-                # FERTIRRIGACAO
-                '32': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '33': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '34': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '48': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '91': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '435': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '11126': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '11226': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '11316': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '11326': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '11426': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '11526': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '11616': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '11626': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                '20123': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'},
-                # TORRES SOLINFNET
-                '101': {'tipo': 'TORRE SOLINFNET CONCENTRADOR', 'grupo': 'TORRES SOLINFNET'},
-                # LINHA AMARELA
-                '313': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'},
-                '329': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'},
-                '527': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'},
-                '543': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'},
-                '50116': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'},
-                '50118': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'},
-                '60116': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'},
-                '60118': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'},
-                '60120': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'},
-                '60121': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'},
-                '60126': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'},
-                # HERBICIDA
-                '340': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'},
-                '11124': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'},
-                '11125': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'},
-                '11224': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'},
-                '11518': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'},
-                '11618': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'},
-                '11718': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'},
-                '70121': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'},
-                '70122': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'},
-                # PREPARO
-                '418': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                '724': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                '726': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                '732': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                '11119': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                '11121': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                '11221': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                '11318': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                '11416': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                '11418': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                '11421': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                '11516': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'},
-                # BIOMASSA
-                '11116': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'BIOMASSA'},
-                '11118': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'BIOMASSA'},
-                '11216': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'BIOMASSA'},
-                '11218': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'BIOMASSA'},
-                '11321': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'BIOMASSA'},
-                # TRATOS CULTURAIS
-                '11324': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'TRATOS CULTURAIS'},
-                '11424': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'TRATOS CULTURAIS'},
-                '11524': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'TRATOS CULTURAIS'},
-                # COLHEDORAS (FRENTES)
-                '80116': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA RESERVA'},
-                '80118': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80119': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80120': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80122': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80124': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80217': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80219': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80222': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80224': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80316': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80317': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80319': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80320': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80322': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80419': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80420': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80422': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80519': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80619': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                '80719': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'},
-                # CAMINHOES CANAVIEIROS (Rodotrem / Cavalo Mecanico)
-                '31115': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'},
-                '31125': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '31215': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'},
-                '31225': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '31315': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'},
-                '31316': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'},
-                '31325': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '31415': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'},
-                '31425': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '31515': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'},
-                '31525': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '31615': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'},
-                '31625': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '31715': {'tipo': 'Caminhão Canavieiro', 'grupo': 'CAMINHOES'},
-                '31725': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '31825': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '31915': {'tipo': 'Caminhão Canavieiro', 'grupo': 'CAMINHÃO APOIO'},  # CORRIGIDO: era Apoio
-                '31925': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '311015': {'tipo': 'Caminhão Canavieiro', 'grupo': 'CAMINHOES'},
-                '311025': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '311115': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'},
-                '311125': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '311215': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'},
-                '311225': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '311325': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '311425': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '311525': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '311625': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '311725': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '311825': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '311925': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                '312025': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'},
-                # CAMINHOES TREMIADOS (Canavieiro)
-                '31815': {'tipo': 'Caminhão Canavieiro', 'grupo': 'CAMINHOES'},
-                # CAMINHOES PIPA/VINHACA
-                '31319': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'},
-                '31617': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'},
-                '31717': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'},
-                '311117': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'},
-                '311217': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'},
-                '311317': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'},
-                '311417': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'},
-                '311517': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'},
-                # CAMINHOES BOMBEIROS
-                '31116': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'},
-                '31216': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'},
-                '31417': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'},
-                '31917': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'},
-                '38113': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'},
-                '311017': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'},
-                # CAMINHOES BASCULANTES (Cacamba)
-                '687': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'},
-                '689': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'},
-                '31120': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'},
-                '31317': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'},
-                '32117': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'},
-                '32217': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'},
-                # PRANCHAS
-                '31220': {'tipo': 'Prancha', 'grupo': 'PRANCHA'},
-                '31320': {'tipo': 'Prancha', 'grupo': 'PRANCHA'},
-                '31420': {'tipo': 'Prancha', 'grupo': 'PRANCHA'},
-                '42113': {'tipo': 'Prancha', 'grupo': 'PRANCHA'},
-                '42213': {'tipo': 'Prancha', 'grupo': 'PRANCHA'},
-                '42313': {'tipo': 'Prancha', 'grupo': 'PRANCHA'},
-                # FRENTES (carro de apoio de colhedora)
-                '672': {'tipo': 'Frente', 'grupo': 'FRENTE'},
-                '674': {'tipo': 'Frente', 'grupo': 'FRENTE'},
-                '38120': {'tipo': 'Frente', 'grupo': 'FRENTE'},
-                '38121': {'tipo': 'Frente', 'grupo': 'FRENTE'},
-                '38210': {'tipo': 'Frente', 'grupo': 'FRENTE'},
-                '38220': {'tipo': 'Frente', 'grupo': 'FRENTE'},
-                '38221': {'tipo': 'Frente', 'grupo': 'FRENTE'},
-                '38310': {'tipo': 'Frente', 'grupo': 'FRENTE'},
-                # CAMINHOES TERCEIROS
-                '38270': {'tipo': 'Caminhão Canavieiro', 'grupo': 'CAMINHOES TERCEIROS'},
-                '39490': {'tipo': 'Caminhão Canavieiro', 'grupo': 'CAMINHOES TERCEIROS'},
-                '50230': {'tipo': 'Caminhão Canavieiro', 'grupo': 'CAMINHOES TERCEIROS'},
-            }
-        
+                # MASTER OVERRIDES global aplicado
             override = MASTER_OVERRIDES.get(cod)
             if override:
                 tipo = override['tipo']
@@ -1439,9 +1748,7 @@ def listar_equipamentos():
             item['Modelo'] = item.get('Modelo', item.get('modelo', ''))
             item['modelo'] = item['Modelo']
             
-            # User overrides mapping
-            MASTER_OVERRIDES = {'32': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '33': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '34': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '48': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '91': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '101': {'tipo': 'TORRE SOLINFNET CONCENTRADOR', 'grupo': 'TORRES SOLINFNET'}, '313': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'}, '329': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'}, '340': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'}, '418': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '435': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '527': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'}, '543': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'}, '724': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '726': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '732': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '11116': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'BIOMASSA'}, '11118': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'BIOMASSA'}, '11119': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '11121': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '11124': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'}, '11125': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'}, '11126': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '11216': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'BIOMASSA'}, '11218': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'BIOMASSA'}, '11221': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '11224': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'}, '11225': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'}, '11226': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '11316': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '11318': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '11321': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'BIOMASSA'}, '11324': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'TRATOS CULTURAIS'}, '11326': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '11416': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '11418': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '11421': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '11424': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'TRATOS CULTURAIS'}, '11426': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '11516': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'PREPARO'}, '11518': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'}, '11524': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'TRATOS CULTURAIS'}, '11526': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '11616': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '11618': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'}, '11626': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '11718': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'}, '20123': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'FERTIRRIGACAO'}, '31115': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'}, '31125': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '31215': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'}, '31225': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '31315': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'}, '31316': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'}, '31319': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'}, '31325': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '31415': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'}, '31425': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '31515': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'}, '31525': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '31615': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'}, '31617': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'}, '31625': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '31717': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'}, '31725': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '31815': {'tipo': 'Caminhão Canavieiro', 'grupo': 'CAMINHOES'}, '31825': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '31915': {'tipo': 'Caminhão Canavieiro', 'grupo': 'CAMINHOES'}, '31925': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '38270': {'tipo': 'CAMINHÃO CANAVIEIRO', 'grupo': 'CAMINHOES TERCEIROS'}, '39490': {'tipo': 'CAMINHÃO CANAVIEIRO', 'grupo': 'CAMINHOES TERCEIROS'}, '50116': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'}, '50118': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'}, '50230': {'tipo': 'CAMINHÃO CANAVIEIRO', 'grupo': 'CAMINHOES TERCEIROS'}, '60116': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'}, '60118': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'}, '60120': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'}, '60121': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'}, '60126': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'LINHA AMARELA'}, '70121': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'}, '70122': {'tipo': 'TRATOR DE PNEUS LEVES MAG100R', 'grupo': 'HERBICIDA'}, '80116': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA RESERVA'}, '80118': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80119': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80120': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80122': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80124': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80217': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80219': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80222': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80224': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80316': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80317': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80319': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80320': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80322': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80419': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80420': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80422': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80519': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80619': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '80719': {'tipo': 'COLHEDORA', 'grupo': 'COLHEDORA'}, '311015': {'tipo': 'Caminhão Canavieiro', 'grupo': 'CAMINHOES'}, '311025': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '311115': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'}, '311117': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'}, '311125': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '311215': {'tipo': 'Tremiado', 'grupo': 'CAMINHOES'}, '311217': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'}, '311225': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '311317': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'}, '311325': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '311417': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'}, '311425': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '311517': {'tipo': 'Caminhão Pipa/Vinhaça', 'grupo': 'CAMINHÃO PIPA/VINHAÇA'}, '311525': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '311625': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '311725': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '311825': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '311925': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '312025': {'tipo': 'Rodotrem', 'grupo': 'CAMINHÃO'}, '31917': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'}, '311017': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'}, '31216': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'}, '31116': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'}, '31417': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'}, '38113': {'tipo': 'Caminhão Bombeiro', 'grupo': 'CAMINHÃO BOMBEIRO'}, '687': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'}, '689': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'}, '32117': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'}, '32217': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'}, '31317': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'}, '672': {'tipo': 'Frente', 'grupo': 'FRENTE'}, '38310': {'tipo': 'Frente', 'grupo': 'FRENTE'}, '674': {'tipo': 'Frente', 'grupo': 'FRENTE'}, '38121': {'tipo': 'Frente', 'grupo': 'FRENTE'}, '38221': {'tipo': 'Frente', 'grupo': 'FRENTE'}, '38210': {'tipo': 'Frente', 'grupo': 'FRENTE'}, '38120': {'tipo': 'Frente', 'grupo': 'FRENTE'}, '38220': {'tipo': 'Frente', 'grupo': 'FRENTE'}, '31120': {'tipo': 'Caminhão Basculante', 'grupo': 'CAMINHÃO BASCULANTE'}, '31220': {'tipo': 'Prancha', 'grupo': 'PRANCHA'}, '31320': {'tipo': 'Prancha', 'grupo': 'PRANCHA'}, '31420': {'tipo': 'Prancha', 'grupo': 'PRANCHA'}, '42213': {'tipo': 'Prancha', 'grupo': 'PRANCHA'}, '42113': {'tipo': 'Prancha', 'grupo': 'PRANCHA'}, '42313': {'tipo': 'Prancha', 'grupo': 'PRANCHA'}}
-            
+            # Usando MASTER_OVERRIDES global
             override = MASTER_OVERRIDES.get(cod)
             
             if override:
