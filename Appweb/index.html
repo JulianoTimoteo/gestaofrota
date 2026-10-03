@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v35_fix_encoding';
+            var APP_VER = '2026_v37_persist_custom_teams';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
-                localStorage.removeItem('sf_custom_equip_groups');
-                localStorage.removeItem('sf_active_team');
                 localStorage.removeItem('sf_cached_data');
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.getRegistrations().then(function(regs) {
@@ -3472,12 +3470,17 @@
                     <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Equipe / Grupo *</label>
                     <select id="addEquipGrupo" class="filter-input" required style="width:100%;cursor:pointer;">
                         <option value="BIOMASSA">BIOMASSA</option>
+                        <option value="CAMINHOES">CAMINHOES</option>
+                        <option value="CARRETAS">CARRETAS</option>
+                        <option value="COLHEDORAS">COLHEDORAS</option>
                         <option value="FERTIRRIGACAO">FERTIRRIGACAO</option>
                         <option value="HERBICIDA">HERBICIDA</option>
                         <option value="LINHA AMARELA">LINHA AMARELA</option>
+                        <option value="ONIBUS">ONIBUS</option>
                         <option value="PREPARO" selected>PREPARO</option>
                         <option value="TRATOS CULTURAIS">TRATOS CULTURAIS</option>
                         <option value="VEICULOS LEVES">VEICULOS LEVES</option>
+                        <option value="OUTROS">OUTROS</option>
                     </select>
                 </div>
                 <div id="addEquipError" style="color:#ef4444;font-size:0.8rem;display:none;font-weight:600;"></div>
@@ -3575,12 +3578,17 @@
                     <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;">Equipe / Grupo *</label>
                     <select id="editEquipGrupo" class="filter-input" required style="width:100%;cursor:pointer;">
                         <option value="BIOMASSA">BIOMASSA</option>
+                        <option value="CAMINHOES">CAMINHOES</option>
+                        <option value="CARRETAS">CARRETAS</option>
+                        <option value="COLHEDORAS">COLHEDORAS</option>
                         <option value="FERTIRRIGACAO">FERTIRRIGACAO</option>
                         <option value="HERBICIDA">HERBICIDA</option>
                         <option value="LINHA AMARELA">LINHA AMARELA</option>
+                        <option value="ONIBUS">ONIBUS</option>
                         <option value="PREPARO">PREPARO</option>
                         <option value="TRATOS CULTURAIS">TRATOS CULTURAIS</option>
                         <option value="VEICULOS LEVES">VEICULOS LEVES</option>
+                        <option value="OUTROS">OUTROS</option>
                     </select>
                 </div>
                 <div>
@@ -16223,7 +16231,7 @@
         }
 
         function switchAdminSubTab(subId, persist = true) {
-            const validSubTabs = ['tab-equipamentos', 'tab-operacoes', 'tab-sync'];
+            const validSubTabs = ['tab-equipamentos', 'tab-operacoes', 'tab-sync', 'tab-usuarios'];
             if (!subId || !validSubTabs.includes(subId)) {
                 subId = 'tab-equipamentos';
             }
@@ -16238,6 +16246,9 @@
             document.querySelectorAll('#adminSubContents > .tab-content').forEach(el => {
                 el.classList.toggle('active', el.id === subId);
             });
+            if (subId === 'tab-usuarios') {
+                renderUsuariosList();
+            }
         }
 
         // ================================================================
@@ -16610,7 +16621,7 @@
         // FILTROS E RENDER DE EQUIPAMENTOS
         // ================================================================
         function getEquipesDisponiveis() {
-            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS', 'OUTROS'];
+            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'CARRETAS', 'COLHEDORAS', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'ONIBUS', 'PREPARO', 'TRATOS CULTURAIS', 'VEICULOS LEVES', 'OUTROS'];
             const extraTeams = equipments.map(eq => eq.grupo).filter(g => g && !standardTeams.includes(g));
             const all = [...new Set([...standardTeams, ...extraTeams])];
             
@@ -16656,7 +16667,7 @@
                 return;
             }
 
-            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
+            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'CARRETAS', 'COLHEDORAS', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'ONIBUS', 'PREPARO', 'TRATOS CULTURAIS', 'VEICULOS LEVES'];
             const allTeams = [...new Set([...standardTeams, ...getEquipesDisponiveis()])];
 
             // Tipos para a lista suspensa
@@ -17739,7 +17750,7 @@
                         }
                     }
                 });
-                navigator.serviceWorker.register('./sw.js?v=26').then(reg => {
+                navigator.serviceWorker.register('./sw.js?v=28').then(reg => {
 
                     reg.update();
                     console.log('Service Worker PWA registrado:', reg.scope);
@@ -17825,7 +17836,15 @@
             const elTipo = document.getElementById('editEquipTipo');
             if (elTipo) elTipo.value = eq.tipo || 'Trator';
             const elGrupo = document.getElementById('editEquipGrupo');
-            if (elGrupo) elGrupo.value = eq.grupo || 'PREPARO';
+            if (elGrupo) {
+                if (eq.grupo && !Array.from(elGrupo.options).some(o => o.value === eq.grupo)) {
+                    const opt = document.createElement('option');
+                    opt.value = eq.grupo;
+                    opt.textContent = eq.grupo;
+                    elGrupo.appendChild(opt);
+                }
+                elGrupo.value = eq.grupo || 'PREPARO';
+            }
             const elStatus = document.getElementById('editEquipStatus');
             if (elStatus) elStatus.value = eq.statusInativo ? 'INATIVO' : 'ATIVO';
 

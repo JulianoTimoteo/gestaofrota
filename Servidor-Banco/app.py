@@ -1774,10 +1774,10 @@ def gerar_e_salvar_dados_json():
                         tipo, grupo = 'Trator', 'PREPARO'
                     elif 'VEICUL' in full_text or 'CAMIONET' in full_text or 'MOB' in full_text or 'STRADA' in full_text or '11/' in subclasse:
                         tipo, grupo = 'Veículo Leve', 'VEICULOS LEVES'
-                    elif 'ONIBUS' in full_text or '29/' in subclasse:
-                        tipo, grupo = 'Ônibus', 'APOIO'
-                    elif 'IMPLEMENT' in full_text or 'REBOQUE' in full_text or 'SEMI' in full_text or '16/' in subclasse or '13/' in subclasse:
-                        tipo, grupo = 'Implemento', 'IMPLEMENTOS'
+                    elif 'ONIBUS' in full_text or '29/' in subclasse or 'VOLARE' in full_text:
+                        tipo, grupo = 'Ônibus', 'ONIBUS'
+                    elif 'CARRETA' in full_text or 'REBOQUE' in full_text or 'SEMI' in full_text or '16/' in subclasse or 'RANDON' in full_text or 'SERGOMEL' in full_text or 'PRANCHA' in full_text:
+                        tipo, grupo = 'Carreta', 'CARRETAS'
                     elif 'PA CARREG' in full_text or 'MOTONIV' in full_text or 'RETRO' in full_text:
                         tipo, grupo = 'Pá Carregadeira', 'PREPARO'
                     else:
