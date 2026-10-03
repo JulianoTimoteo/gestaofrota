@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v30_syntax_fix';
+            var APP_VER = '2026_v31_os_filters_rules';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
@@ -3183,10 +3183,10 @@
                 <!-- Counters Removidos a pedido do usuario -->
             </div>
             <div class="global-os-filters" style="display: flex; gap: 4px; margin-left: auto; align-items: center; padding-left: 10px;">
-                <button class="btn-filter-os" data-osfilter="ABERTA" title="TIPO OS = NORMAL, STATUS = ABERTA" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer; transition: all 0.3s;"><i class="fas fa-wrench"></i> Aberta</button>
-                <button class="btn-filter-os" data-osfilter="REPARO" title="TIPO OS = REPARO" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer; transition: all 0.3s;"><i class="fas fa-tools"></i> Reparo</button>
-                <button class="btn-filter-os" data-osfilter="COMUNICADA" title="STATUS = COMUNICADA" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer; transition: all 0.3s;"><i class="fas fa-bullhorn"></i> Comunicada</button>
-                <button class="btn-filter-os active" data-osfilter="TODAS" title="Todas as OS (Exceto Fechadas)" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #3b82f6; background:#3b82f6; color:#fff; cursor:pointer; box-shadow: 0 0 8px rgba(59, 130, 246, 0.5); transition: all 0.3s;"><i class="fas fa-list"></i> Todas</button>
+                <button class="btn-filter-os active" data-osfilter="ABERTA" title="Ordens de Serviço Abertas (Sem Lote, Reforma, Reparo de Peças ou Comunicada)" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #3b82f6; background:#3b82f6; color:#fff; cursor:pointer; box-shadow: 0 0 8px rgba(59, 130, 246, 0.5); transition: all 0.3s;"><i class="fas fa-wrench"></i> Aberta</button>
+                <button class="btn-filter-os" data-osfilter="REPARO" title="Tipo OS = REPARO DE PEÇAS" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer; transition: all 0.3s;"><i class="fas fa-tools"></i> Reparo</button>
+                <button class="btn-filter-os" data-osfilter="COMUNICADA" title="Status OS = COMUNICADA" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer; transition: all 0.3s;"><i class="fas fa-bullhorn"></i> Comunicada</button>
+                <button class="btn-filter-os" data-osfilter="TODAS" title="Todas as OS (Exceto Fechadas)" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer; transition: all 0.3s;"><i class="fas fa-list"></i> Todas</button>
             </div>
         </div>
 
@@ -3590,7 +3590,7 @@
         let equipamentosComOS = new Set();
         let equipFiltroEquipe = 'TODAS';
         let isSyncing    = false;
-        let currentOsFilter = 'TODAS';
+        let currentOsFilter = 'ABERTA';
         let syncTimer    = null;
 
         // PAGINATION STATE
@@ -8048,19 +8048,40 @@
             operacoes     = d.operacoes     || [];
             ordensServico = d.ordensServico || [];
 
-            // APPLY OS FILTER
+            // APPLY OS FILTER (Regras Estritas Oficiais)
             ordensServico = ordensServico.filter(os => {
-                const tipoOS = (os.tipoOS || '').toUpperCase();
-                const statusOS = (os.statusOS || '').toUpperCase();
+                const tipoOS   = String(os.tipoOS || '').trim().toUpperCase();
+                const statusOS = String(os.statusOS || '').trim().toUpperCase();
+                const desc     = String(os.descricao || '').trim().toUpperCase();
                 
                 if (currentOsFilter === 'ABERTA') {
-                    return tipoOS === 'NORMAL' && statusOS === 'ABERTA';
+                    // Aberta = o estado da OS não pode ser GERADA PELA GERAÇÃO DE O.S. EM LOTE - ou REFORMA, REPARO DE PEÇAS, COMUNICADA
+                    // Se tiver um dos tres itens não deve estar no filtro quando clico em aberta.
+                    const isLote = desc.includes('GERADA PELA GERAÇÃO DE O.S. EM LOTE') || 
+                                   desc.includes('GERADA PELA GERACAO DE O.S. EM LOTE') || 
+                                   desc.includes('EM LOTE');
+                    const isReforma = desc.includes('REFORMA') || tipoOS.includes('REFORMA');
+                    const isReparoPecas = tipoOS.includes('REPARO DE PEÇAS') || 
+                                          tipoOS.includes('REPARO DE PECAS') || 
+                                          desc.includes('REPARO DE PEÇAS') || 
+                                          desc.includes('REPARO DE PECAS');
+                    const isComunicada = (statusOS === 'COMUNICADA');
+
+                    if (isLote || isReforma || isReparoPecas || isComunicada) {
+                        return false;
+                    }
+                    return statusOS === 'ABERTA' || statusOS === '';
                 } else if (currentOsFilter === 'REPARO') {
-                    return tipoOS.includes('REPARO');
+                    // Reparo = Todas que tiver Tipo OS == REPARO DE PEÇAS
+                    return tipoOS.includes('REPARO DE PEÇAS') || 
+                           tipoOS.includes('REPARO DE PECAS') || 
+                           desc.includes('REPARO DE PEÇAS') || 
+                           desc.includes('REPARO DE PECAS');
                 } else if (currentOsFilter === 'COMUNICADA') {
+                    // Comunicada = Status OS == COMUNICADA
                     return statusOS === 'COMUNICADA';
                 }
-                return true; // TODAS
+                return true; // TODAS (todas as OS ativas)
             });
 
 
@@ -8130,23 +8151,22 @@
             // ============================================================
 
             // ====== APLICAR FILTRO VISUAL DE OS NO STATUS DOS EQUIPAMENTOS ======
-            if (currentOsFilter !== 'TODAS') {
-                const activeOsMap = {};
-                ordensServico.forEach(os => {
-                    const f = String(os.frota || os.frotaCC || '').trim();
-                    if (f) activeOsMap[f] = os.codOS || os.numeroOS || 'S/N';
-                });
-                
-                uniqueEquips.forEach((eq, codStr) => {
-                    if (activeOsMap[codStr]) {
-                        eq.statusOS = 'Com OS';
-                        eq.codOS = activeOsMap[codStr];
-                    } else {
-                        eq.statusOS = 'OK';
-                        eq.codOS = '-';
-                    }
-                });
-            }
+            const activeOsMap = {};
+            ordensServico.forEach(os => {
+                const raw = os.codigoEquip || os.frota || os.frotaCC || '';
+                const f = String(raw).split(' - ')[0].trim();
+                if (f) activeOsMap[f] = os.codOS || os.numeroOS || 'S/N';
+            });
+            
+            uniqueEquips.forEach((eq, codStr) => {
+                if (activeOsMap[codStr]) {
+                    eq.statusOS = 'Com OS';
+                    eq.codOS = activeOsMap[codStr];
+                } else {
+                    eq.statusOS = 'OK';
+                    eq.codOS = '-';
+                }
+            });
 
             // Mapear equipamentos com tipo limpo e operacao da lista
             equipments = Array.from(uniqueEquips.values()).map(eq => {
@@ -8187,10 +8207,11 @@
                 };
             });
 
-            // Montar set de equipamentos com OS aberta
+            // Montar set de equipamentos com OS ativa/filtrada
             equipamentosComOS = new Set();
             ordensServico.forEach(os => {
-                const cod = (os.codigoEquip || '').split(' - ')[0].trim();
+                const raw = os.codigoEquip || os.frota || os.frotaCC || '';
+                const cod = String(raw).split(' - ')[0].trim();
                 if (cod && /^\d+$/.test(cod)) equipamentosComOS.add(cod);
             });
             equipments.forEach(eq => {
