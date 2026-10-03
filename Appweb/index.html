@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v28_official_fleet_teams';
+            var APP_VER = '2026_v29_remove_torres_solinfnet';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
@@ -6802,7 +6802,7 @@
       "34": "FERTIRRIGACAO",
       "48": "FERTIRRIGACAO",
       "91": "FERTIRRIGACAO",
-      "101": "TORRES SOLINFNET",
+      "101": "OUTROS",
       "313": "LINHA AMARELA",
       "329": "LINHA AMARELA",
       "340": "HERBICIDA",
@@ -8161,7 +8161,7 @@
                 let isAIGuess = false;
                 
                 if (!finalGroup) {
-                    const validTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TORRES SOLINFNET', 'TRATOS CULTURAIS'];
+                    const validTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'COLHEDORA', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS'];
                     if (rawGrp && validTeams.includes(rawGrp)) {
                         finalGroup = (rawGrp === 'COLHEDORA') ? 'COLHEDORAS' : rawGrp;
                     } else {
@@ -8796,7 +8796,7 @@
         // FILTROS E RENDER DE EQUIPAMENTOS
         // ================================================================
         function getEquipesDisponiveis() {
-            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TORRES SOLINFNET', 'TRATOS CULTURAIS', 'OUTROS'];
+            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'COLHEDORAS', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'PREPARO', 'TRATOS CULTURAIS', 'OUTROS'];
             const extraTeams = equipments.map(eq => eq.grupo).filter(g => g && !standardTeams.includes(g));
             const all = [...new Set([...standardTeams, ...extraTeams])];
             

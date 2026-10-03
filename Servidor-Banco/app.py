@@ -923,7 +923,7 @@ MASTER_OVERRIDES = {
     },
     "101": {
         "tipo": "TORRE SOLINFNET CONCENTRADOR",
-        "grupo": "TORRES SOLINFNET"
+        "grupo": "OUTROS"
     },
     "313": {
         "tipo": "TRATOR DE PNEUS LEVES MAG100R",
