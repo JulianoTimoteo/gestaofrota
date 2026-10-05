@@ -8,6 +8,15 @@ Agora o sistema opera de forma 100% autônoma via **Playwright no Windows** dire
 * **Banco de Dados Local:** SQLite (`simplefarm.db`) com deduplicação atômica e histórico de auditoria.
 * **Execução Rápida:** Basta executar `VersaoDesktop/iniciar_servidor.bat` ou abrir `http://127.0.0.1:8080`.
 
+## 🔔 Módulo de Alarmes por Usuário & Barra de Busca Universal (v14 - 2026_v42)
+* **Monitoramento Ativo de Disponibilidade:** Permite configurar limites de alerta por equipe (ex.: avisar quando Fertirrigação estiver abaixo de 85% de disponibilidade).
+* **Segregação por Usuário:** Regras e histórico exclusivos por operador. O alarme de um usuário nunca aciona outro.
+* **Alerta Multissensorial:** Sirene industrial via **Web Audio API** nativa (960Hz/770Hz), vibração pulsante no celular e notificação pop-up push no topo da tela.
+* **Operação em Segundo Plano:** Monitoramento contínuo a cada 30 segundos no servidor e suporte a app aberto ou fechado via Service Worker.
+* **Barra de Pesquisa Instantânea Universal:** Filtro em tempo real abaixo das abas de equipes para qualquer campo (frota, descrição, operação, tipo e OS).
+* **Exclusão de OUTROS da Aba `24h⚠️`:** Apenas equipes operacionais principais são listadas e contabilizadas como críticas.
+* **Documentação Técnica Completa:** Consulte [`docs/MODULO_ALARMES_E_BUSCA.md`](docs/MODULO_ALARMES_E_BUSCA.md).
+
 ---
 
 ## Visao Geral
@@ -47,6 +56,13 @@ curl http://172.16.12.36:8000/api/operacoes
 | GET | `/api/tables/{name}` | Dados de uma tabela especifica |
 | GET | `/api/export` | Exporta dados (json/csv) |
 | GET | `/api/system` | Informacoes do sistema (CPU, memoria, disco, rede) |
+| GET | `/api/alarmes/regras` | Lista regras de alarme do usuário autenticado |
+| POST | `/api/alarmes/regras` | Cria nova regra de alarme |
+| PUT | `/api/alarmes/regras/{id}` | Atualiza regra ou liga/desliga status (toggle) |
+| DELETE | `/api/alarmes/regras/{id}` | Exclui regra do usuário |
+| GET | `/api/alarmes/historico` | Histórico dos últimos disparos do usuário |
+| POST | `/api/alarmes/testar` | Dispara alarme de teste imediato no aparelho |
+| GET | `/api/alarmes/pendentes` | Consulta disparos recentes (<45s) para som/vibração |
 
 ### Endpoints Protegidos (requerem API Key)
 

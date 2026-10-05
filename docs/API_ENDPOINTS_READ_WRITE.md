@@ -268,6 +268,58 @@ curl http://172.16.12.36:8000/api/niveis \
 
 ---
 
+## Módulo de Alarmes e Notificações (por Usuário)
+
+Todos os endpoints abaixo são segregados por usuário autenticado. O usuário só visualiza, cria, edita ou exclui suas próprias regras e histórico.
+
+### `/api/alarmes/regras`
+- **`GET`**: Retorna regras cadastradas pelo usuário.
+  ```bash
+  curl http://172.16.12.36:8000/api/alarmes/regras -H "Authorization: Bearer <jwt>"
+  ```
+- **`POST`**: Cria uma nova regra para a equipe selecionada.
+  ```bash
+  curl -X POST http://172.16.12.36:8000/api/alarmes/regras \
+    -H "Authorization: Bearer <jwt>" \
+    -H "Content-Type: application/json" \
+    -d '{"equipe":"FERTIRRIGACAO","metrica":"DISPONIBILIDADE_ABAIXO","limite":85.0,"cooldown_minutos":30,"ativo":1,"som":1,"vibracao":1}'
+  ```
+
+### `/api/alarmes/regras/<id>`
+- **`PUT`**: Atualiza dados da regra ou liga/desliga o status (`ativo`: 1 ou 0).
+  ```bash
+  curl -X PUT http://172.16.12.36:8000/api/alarmes/regras/1 \
+    -H "Authorization: Bearer <jwt>" \
+    -H "Content-Type: application/json" \
+    -d '{"ativo":0}'
+  ```
+- **`DELETE`**: Remove permanentemente a regra do usuário.
+  ```bash
+  curl -X DELETE http://172.16.12.36:8000/api/alarmes/regras/1 -H "Authorization: Bearer <jwt>"
+  ```
+
+### `/api/alarmes/historico`
+- **`GET`**: Retorna os disparos registrados para o usuário autenticado.
+  ```bash
+  curl http://172.16.12.36:8000/api/alarmes/historico -H "Authorization: Bearer <jwt>"
+  ```
+
+### `/api/alarmes/testar`
+- **`POST`**: Dispara teste imediato no aparelho do usuário (sirene, vibração e pop-up) e grava no histórico.
+  ```bash
+  curl -X POST http://172.16.12.36:8000/api/alarmes/testar \
+    -H "Authorization: Bearer <jwt>" \
+    -H "Content-Type: application/json" -d '{}'
+  ```
+
+### `/api/alarmes/pendentes`
+- **`GET`**: Consulta se há disparos recentes (<45s) pendentes para acionar áudio/vibração no cliente.
+  ```bash
+  curl http://172.16.12.36:8000/api/alarmes/pendentes -H "Authorization: Bearer <jwt>"
+  ```
+
+---
+
 ## Observações
 
 - Nunca remova ou renomeie rotas públicas legadas sem mapear todos os consumidores.

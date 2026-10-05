@@ -1,28 +1,33 @@
 # Ponto de Restauração — Gestão de Frota v14
 
-**Data de Criação:** 04/09/2026 12:52 (Horário Local)  
-**Tag Git:** `ponto-de-restauracao`  
-**Commit Hash:** Initial Commit (`68d1b76`)
+**Data de Atualização:** 05/10/2026 08:50 (Horário Local)  
+**Versão Atual:** `2026_v42_modulo_alarmes_ativo`  
+**Tag Git:** `v14-alarmes-busca-ok`  
 
 ---
 
 ## 📌 Estado Garantido Neste Ponto de Restauração
 
-1. **Estabilidade de Tela e Troca de Abas**:
-   - Troca de abas instantânea e sem re-renderização desnecessária.
-   - Navegação mantida mesmo durante atualizações em segundo plano.
+1. **Módulo de Alarmes por Usuário**:
+   - Controle de disponibilidade percentual por equipe (ex.: Fertirrigação < 85%).
+   - Segregação rigorosa por usuário: regras e disparos isolados no SQLite (`usuario_id`).
+   - Alertas sonoros sintetizados via Web Audio API (sirene industrial 960Hz/770Hz) sem arquivos externos.
+   - Vibração de emergência no celular (`navigator.vibrate`) e notificações nativas push no Service Worker (`sw.js`).
+   - Monitoramento contínuo em segundo plano no servidor Flask a cada 30 segundos.
+   - Toggle liga/desliga de regras e botão de teste imediato no aparelho.
 
-2. **Temporizador de Atualização Automática (5 Minutos)**:
-   - Temporizador de 300 segundos (5 minutos) com barra discreta de progresso no footer.
-   - Atualizações em segundo plano sem deslogar o usuário ou resetar o scroll da tela.
+2. **Barra de Pesquisa Instantânea Universal**:
+   - Posicionada abaixo do carrossel de equipes em todas as abas.
+   - Filtro em tempo real por frota, descrição, operação produtiva, tipo e OS.
+   - Recálculo instantâneo dos donuts e contadores conforme digitação.
 
-3. **Correção de Autenticação / Biometria**:
-   - Login por biometria e formulário operando com armazenamento persistente em `localStorage` e suporte a `sessionStorage`.
-   - Token JWT / Admin devidamente preservado.
+3. **Exclusão de OUTROS da Aba Crítica `24h⚠️`**:
+   - Equipamentos da equipe `OUTROS` são desconsiderados da listagem e do badge numérico de OS crítica.
 
-4. **Integração com API Backend**:
-   - Carregamento de todos os 64 equipamentos e ordens de serviço.
-   - `statusOS` e badges calculados diretamente da API.
+4. **Estabilidade de Tela e Atualização Contínua**:
+   - Troca de abas instantânea sem re-renderização desnecessária.
+   - Temporizador de sincronização e Live Tunnel a cada 30 segundos.
+   - Sessão e tokens preservados em `localStorage` e `sessionStorage`.
 
 ---
 

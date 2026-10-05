@@ -38,6 +38,19 @@ curl http://172.16.12.36:8000/api/operacoes
 | GET | `/api/export` | Exporta dados (json/csv) |
 | GET | `/api/system` | Informacoes do sistema (CPU, memoria, disco, rede) |
 
+### Endpoints de Alarmes e Notificações (por Usuário)
+
+| Metodo | Endpoint | Descricao |
+|--------|----------|-----------|
+| GET | `/api/alarmes/regras` | Lista regras de alarme do usuário autenticado |
+| POST | `/api/alarmes/regras` | Cria nova regra de alarme para o usuário |
+| PUT | `/api/alarmes/regras/{id}` | Atualiza regra ou liga/desliga status (toggle) |
+| DELETE | `/api/alarmes/regras/{id}` | Exclui regra do usuário |
+| GET | `/api/alarmes/historico` | Histórico dos últimos disparos do usuário |
+| POST | `/api/alarmes/testar` | Dispara alarme de teste imediato no aparelho |
+| GET | `/api/alarmes/pendentes` | Consulta disparos recentes (<45s) para som/vibração |
+| POST | `/api/alarmes/inscrever-push` | Registra endpoint Web Push para notificações em background |
+
 ### Endpoints Protegidos (requerem API Key)
 
 | Metodo | Endpoint | Descricao | Header |
