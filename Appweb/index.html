@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v43_blue_pwa_icon';
+            var APP_VER = '2026_v44_mobile_ux_pwa_strict_login';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
@@ -33,6 +33,19 @@
                 }
             });
         }
+
+        // Captura imediata no Head do evento de instalação do PWA
+        window.deferredPwaPrompt = null;
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            window.deferredPwaPrompt = e;
+            console.log('[PWA] beforeinstallprompt capturado com sucesso no head!');
+            var btn = document.getElementById('btnHeaderInstallPwa');
+            var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            if (btn && !isStandalone) {
+                btn.style.display = 'inline-flex';
+            }
+        });
     </script>
     
 
@@ -807,18 +820,72 @@
             overflow: visible;
         }
 
-        /* ===== ABA EQUIPES - CARROSSEL 3 ITENS (ESQUERDA - CENTRO ATIVO - DIREITA) ===== */
+        /* ===== ABA EQUIPES - CARROSSEL CÍCLICO E NAVEGAÇÃO SUAVE ===== */
+        .team-carousel-nav-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 0.85rem;
+            position: relative;
+        }
+
+        .team-nav-arrow-btn {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 12px;
+            background: var(--color-surface, #ffffff);
+            border: 1.5px solid var(--color-gray-200, #e2e8f0);
+            color: var(--color-primary, #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            z-index: 5;
+        }
+
+        .team-nav-arrow-btn:hover {
+            background: var(--color-primary, #2563eb);
+            color: #ffffff;
+            border-color: var(--color-primary, #2563eb);
+            transform: scale(1.06);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .team-nav-arrow-btn:active {
+            transform: scale(0.92);
+        }
+
+        body.dark-theme .team-nav-arrow-btn {
+            background: #1e293b;
+            border-color: #334155;
+            color: #60a5fa;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        body.dark-theme .team-nav-arrow-btn:hover {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
         .team-carousel-container {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 10px;
             width: 100%;
-            margin-bottom: 1.25rem;
-            padding: 8px 4px;
+            flex: 1;
+            margin-bottom: 0;
+            padding: 6px 2px;
             user-select: none;
             overflow-x: auto;
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
         .team-carousel-container::-webkit-scrollbar {
             height: 6px;
@@ -2568,32 +2635,69 @@
 
             /* Donut cards responsive optimization */
             .donut-card {
-                padding: 0.85rem 0.75rem !important;
-                gap: 0.75rem !important;
+                padding: 1rem 0.9rem !important;
+                gap: 0.85rem !important;
+                border-radius: 16px !important;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
             }
             .donut-chart-wrapper {
-                width: 110px !important;
-                height: 110px !important;
-                min-width: 110px !important;
-                min-height: 110px !important;
+                width: 108px !important;
+                height: 108px !important;
+                min-width: 108px !important;
+                min-height: 108px !important;
+                flex-shrink: 0 !important;
             }
             .donut-chart-wrapper .donut-value {
-                font-size: 1.3rem !important;
+                font-size: 1.25rem !important;
+                font-weight: 800 !important;
             }
             .donut-chart-wrapper .donut-label {
-                font-size: 0.65rem !important;
+                font-size: 0.62rem !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.5px !important;
             }
             .donut-header-title {
                 white-space: normal !important;
                 word-break: break-word !important;
-                font-size: 0.7rem !important;
-                line-height: 1.25 !important;
+                font-size: 0.76rem !important;
+                font-weight: 800 !important;
+                line-height: 1.3 !important;
+                color: var(--color-primary, #2563eb) !important;
+                margin-bottom: 0.35rem !important;
             }
             .donut-legend-area {
                 min-width: 0 !important;
+                flex: 1 !important;
+            }
+            .donut-legend-row {
+                padding: 0.18rem 0 !important;
+                gap: 0.3rem !important;
             }
             .donut-legend-name, .donut-val, .donut-pct {
-                font-size: 0.78rem !important;
+                font-size: 0.76rem !important;
+                font-weight: 600 !important;
+            }
+            .donut-val {
+                font-weight: 700 !important;
+            }
+            .donut-total-row {
+                margin-top: 0.35rem !important;
+                padding-top: 0.35rem !important;
+                border-top: 1px dashed var(--color-border, #e2e8f0) !important;
+                font-size: 0.72rem !important;
+            }
+
+            /* Team Carousel Nav Buttons no Mobile */
+            .team-carousel-nav-wrapper {
+                gap: 6px !important;
+                margin-bottom: 0.65rem !important;
+            }
+            .team-nav-arrow-btn {
+                width: 34px !important;
+                height: 34px !important;
+                min-width: 34px !important;
+                font-size: 0.82rem !important;
+                border-radius: 10px !important;
             }
         }
 
@@ -3396,9 +3500,17 @@
             </div>
         </div>
 
-        <!-- TAB EQUIPE (CARROSSEL CÍCLICO 3 ITENS) -->
+        <!-- TAB EQUIPE (CARROSSEL CÍCLICO E NAVEGAÇÃO SUAVE) -->
         <div id="tab-equipe" class="tab-content">
-            <div class="team-carousel-container" id="equipeSubTabs"></div>
+            <div class="team-carousel-nav-wrapper">
+                <button type="button" class="team-nav-arrow-btn prev-arrow" onclick="scrollTeamCarousel(-1)" aria-label="Equipe anterior" title="Equipe anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="team-carousel-container" id="equipeSubTabs"></div>
+                <button type="button" class="team-nav-arrow-btn next-arrow" onclick="scrollTeamCarousel(1)" aria-label="Próxima equipe" title="Próxima equipe">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
 
             <!-- Barra de Pesquisa Rápida em Tempo Real (Frota, Descrição, Status, Operação) -->
             <div class="team-search-container" style="margin: 0.6rem 0 1rem 0; position: relative;">
@@ -15263,18 +15375,17 @@
             const userInp = user.toLowerCase().trim();
             const passInp = pass.trim();
 
-            // Mapeamento oficial de contas de usuário do banco de dados
+            // Mapeamento oficial estrito de contas cadastradas no banco de dados (SQLite simplefarm.db)
             const allowedAccountsMap = {
                 'julianotimoteo': { name: 'Juliano Timóteo', role: 'admin', passHash: '10e44f2665de5d27f0a1c193621f57da09564d7aecf9a14dba53b5bbbc330e61', salt: '3b55dfdc2eed2626cebd5b0cdd1ada24997aadd4b8f030a50fac983209b6a1dc' },
                 'julianotimoteo@usinapitangueiras.com.br': { name: 'Juliano Timóteo', role: 'admin', passHash: '10e44f2665de5d27f0a1c193621f57da09564d7aecf9a14dba53b5bbbc330e61', salt: '3b55dfdc2eed2626cebd5b0cdd1ada24997aadd4b8f030a50fac983209b6a1dc' },
                 'logistica': { name: 'Logística Usina Pitangueiras', role: 'admin', passHash: '8343b9f26b9db3054bc4bd2574f1f7dd0ef3b689bb54eb26709ab269f0519915', salt: '072afbaebef26177ce4abe9cdf6b1a7ade30f87c07f856a31dd260226c29e96d' },
                 'logistica@usinapitangueiras.com.br': { name: 'Logística Usina Pitangueiras', role: 'admin', passHash: '8343b9f26b9db3054bc4bd2574f1f7dd0ef3b689bb54eb26709ab269f0519915', salt: '072afbaebef26177ce4abe9cdf6b1a7ade30f87c07f856a31dd260226c29e96d' },
-                'admin': { name: 'Administrador Geral', role: 'admin' },
                 'rafaelfarra': { name: 'Rafael Aparecido Farra', role: 'visualizador', passHash: '1bcdab16d77b475a9a30ad0b8f8bd2c86c70785288bfade8da9620848364825e', salt: '85fa3df4f7cf80fa1da286655a878624d0dbdaafbd35230762142b8c66e4f22b' },
                 'rafaelfarra@usinapitangueiras.com.br': { name: 'Rafael Aparecido Farra', role: 'visualizador', passHash: '1bcdab16d77b475a9a30ad0b8f8bd2c86c70785288bfade8da9620848364825e', salt: '85fa3df4f7cf80fa1da286655a878624d0dbdaafbd35230762142b8c66e4f22b' },
                 'reginaldomantovani': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador', passHash: 'bdab8038ccaa024045a3dabf20d622e1e1f15de0a531f5c29b2925a08daa8fea', salt: 'c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a' },
-                'reginaldomantovani@usinapitanguerias.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador' },
-                'reginaldomantovani@usinapitangueiras.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador' }
+                'reginaldomantovani@usinapitanguerias.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador', passHash: 'bdab8038ccaa024045a3dabf20d622e1e1f15de0a531f5c29b2925a08daa8fea', salt: 'c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a' },
+                'reginaldomantovani@usinapitangueiras.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador', passHash: 'bdab8038ccaa024045a3dabf20d622e1e1f15de0a531f5c29b2925a08daa8fea', salt: 'c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a' }
             };
 
             // Carrega usuários atualizados do dados.json / cache do banco
@@ -15299,7 +15410,7 @@
             const isHttpApi   = typeof API_BASE !== 'undefined' && API_BASE && API_BASE.startsWith('http:');
             const canCallApi  = !isHttpsPage || !isHttpApi;
 
-            // 1. TENTA PRIMEIRO VIA BACKEND API (SE NÃƒO FOR BLOQUEADO POR MIXED CONTENT HTTPS->HTTP)
+            // 1. TENTA PRIMEIRO VIA BACKEND API (SE NÃO FOR BLOQUEADO POR MIXED CONTENT HTTPS->HTTP)
             if (canCallApi) {
                 try {
                     const res  = await fetch(`${API_BASE}/api/auth/login`, {
@@ -15314,7 +15425,7 @@
                     const data = await res.json().catch(() => null);
 
                     if (res.ok && data && data.success && data.token) {
-                        const isMaster = (userInp === 'julianotimoteo' || userInp === 'logistica' || userInp === 'admin' || userInp.includes('logistica'));
+                        const isMaster = (userInp === 'julianotimoteo' || userInp === 'logistica' || userInp.includes('logistica'));
                         const role = isMaster ? 'admin' : (data.role || (data.admin ? 'admin' : 'visualizador'));
                         const storage = keep ? localStorage : sessionStorage;
                         const displayName = data.nome || data.usuario || (allowedAccountsMap[userInp]?.name) || user;
@@ -15324,7 +15435,7 @@
                         storage.setItem('sf_auth_role',  role);
                         authToken = data.token;
                         userRole  = role;
-                        statusEl.textContent = '✅ Login efetuado!';
+                        statusEl.innerHTML = '<i class="fas fa-check-circle" style="margin-right:6px;color:#22c55e;"></i> Login efetuado com sucesso!';
                         statusEl.className   = 'login-status success';
 
                         if (cardWrapper) {
@@ -15347,7 +15458,7 @@
                     } else if (!res.ok || (data && !data.success)) {
                         // Se o servidor respondeu ativamente (ex: 401 Unauthorized / Credenciais Inválidas), Bloqueia imediatamente!
                         const errMsg = (data && data.error) ? data.error : 'Usuário ou senha incorretos.';
-                        statusEl.textContent = 'âŒ ' + errMsg;
+                        statusEl.innerHTML = `<i class="fas fa-times-circle" style="margin-right:6px;color:#ef4444;"></i> ${errMsg}`;
                         statusEl.className   = 'login-status error';
                         if (cardWrapper) {
                             cardWrapper.classList.remove('state-default', 'state-success');
@@ -15364,12 +15475,12 @@
                 console.warn('Servidor HTTP não pode ser chamado diretamente de página HTTPS (Mixed Content). Validando credenciais via PBKDF2 local.');
             }
 
-            // 2. VALIDAÃ‡ÃƒO RÍGIDA CRIPTOGRÁFICA NO CADASTRO DO BANCO (QUANDO API OFFLINE OU MIXED CONTENT)
+            // 2. VALIDAÇÃO RÍGIDA CRIPTOGRÁFICA NO CADASTRO DO BANCO (QUANDO API OFFLINE OU MIXED CONTENT)
             const foundAccount = allowedAccountsMap[userInp];
 
             // PASSO A: Verificar se o usuário existe no banco de dados
             if (!foundAccount) {
-                statusEl.textContent = `âŒ Usuário '${user}' não cadastrado no banco de dados. Acesso negado.`;
+                statusEl.innerHTML = `<i class="fas fa-times-circle" style="margin-right:6px;color:#ef4444;"></i> Usuário '<strong>${user}</strong>' não cadastrado no banco de dados. Acesso negado.`;
                 statusEl.className   = 'login-status error';
                 if (cardWrapper) {
                     cardWrapper.classList.remove('state-default', 'state-success');
@@ -15409,7 +15520,7 @@
             }
 
             if (!isPasswordValid) {
-                statusEl.textContent = `âŒ Senha incorreta para o usuário '${user}'. Acesso negado.`;
+                statusEl.innerHTML = `<i class="fas fa-exclamation-triangle" style="margin-right:6px;color:#ef4444;"></i> Senha incorreta para o usuário '<strong>${user}</strong>'. Acesso negado.`;
                 statusEl.className   = 'login-status error';
                 if (cardWrapper) {
                     cardWrapper.classList.remove('state-default', 'state-success');
@@ -16181,9 +16292,9 @@
             }
 
             if (!authToken) {
-                authToken = 'sf_standalone_session_token';
-                localStorage.setItem('sf_auth_token', authToken);
                 updateAuthUI();
+                if (!isBackground) hideGlobalLoader();
+                return;
             }
 
             await carregarAdminConfigDoServidor();
@@ -17210,17 +17321,23 @@
             tbody.innerHTML = paginatedUsers.map(u => {
                 const roleKey = (u.usuario === 'julianotimoteo' || u.usuario === 'logistica' || u.admin == 1) ? 'admin' : (u.nivel_chave || 'visualizador');
                 const roleInfo = rolesMap[roleKey] || { label: roleKey, badge: 'os-fechada' };
-                const isProtectedMaster = (u.usuario === 'julianotimoteo' || u.id == 1 || u.id == 2);
+                const isMasterJuliano = (u.usuario === 'julianotimoteo' || u.id == 1);
                 const userEmail = u.email || `${u.usuario}@usinapitangueiras.com.br`;
                 const lastLogin = u.ultimo_login ? u.ultimo_login : 'Hoje';
                 const statusBadge = (u.ativo !== 0 && u.ativo !== false) ? '<span class="badge-equip os-fechada"><i class="fas fa-check-circle"></i> Ativo</span>' : '<span class="badge-equip os-aberta">Inativo</span>';
 
-                const actionButtons = isProtectedMaster
-                    ? `<span style="font-size:0.78rem;font-weight:700;color:var(--color-primary);"><i class="fas fa-shield-alt"></i> Master Protegido</span>`
-                    : `<div style="display:flex;gap:4px;">
+                let actionButtons = '';
+                if (isMasterJuliano) {
+                    actionButtons = `<div style="display:flex;gap:4px;align-items:center;">
+                        <button type="button" onclick="openUserCrudModal(${u.id})" class="btn-sm" style="padding:0.25rem 0.5rem;font-size:0.75rem;font-weight:600;border-radius:6px;background:var(--color-primary);color:#fff;border:none;cursor:pointer;"><i class="fas fa-edit"></i> Editar</button>
+                        <span style="font-size:0.75rem;font-weight:700;color:var(--color-primary);" title="Usuário Principal Master (Não pode ser excluído)"><i class="fas fa-shield-alt"></i> Master</span>
+                    </div>`;
+                } else {
+                    actionButtons = `<div style="display:flex;gap:4px;">
                         <button type="button" onclick="openUserCrudModal(${u.id})" class="btn-sm" style="padding:0.25rem 0.5rem;font-size:0.75rem;font-weight:600;border-radius:6px;background:var(--color-primary);color:#fff;border:none;cursor:pointer;"><i class="fas fa-edit"></i> Editar</button>
                         <button type="button" onclick="excluirUsuarioCrud(${u.id}, '${u.usuario}')" class="btn-sm" style="padding:0.25rem 0.5rem;font-size:0.75rem;font-weight:600;border-radius:6px;background:#ef4444;color:#fff;border:none;cursor:pointer;"><i class="fas fa-trash-alt"></i> Excluir</button>
-                       </div>`;
+                    </div>`;
+                }
 
                 return `<tr>
                     <td><strong>#${u.id || '-'}</strong></td>
@@ -18069,6 +18186,10 @@
         // ================================================================
         // ABA EQUIPES - CARROSSEL CÍCLICO 3 ITENS (ESQUERDA - CENTRO ATIVO - DIREITA)
         // ================================================================
+        window.scrollTeamCarousel = function(dir) {
+            navigateTeamTab(dir);
+        };
+
         function navigateTeamTab(dir) {
             const baseTeams = getEquipesDisponiveis();
             const teams = [...baseTeams, '24h⚠️'];
@@ -18082,6 +18203,17 @@
             localStorage.setItem('sf_active_team', activeTeam);
 
             renderTeamTabs(false);
+
+            // Suaviza rolagem no desktop e mobile
+            const container = document.getElementById('equipeSubTabs');
+            if (container) {
+                setTimeout(() => {
+                    const activeBtn = container.querySelector('.sub-tab-btn.active, .team-carousel-btn.center-active');
+                    if (activeBtn) {
+                        activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    }
+                }, 40);
+            }
         }
 
         function renderTeamTabs(resetTeam = false) {
@@ -18574,7 +18706,11 @@
         }
 
         function showPwaInstallPrompt() {
-            if (isAppInstalled()) return;
+            if (isAppInstalled()) {
+                const headerBtn = document.getElementById('btnHeaderInstallPwa');
+                if (headerBtn) headerBtn.style.display = 'none';
+                return;
+            }
             const dismissed = localStorage.getItem('sf_pwa_dismissed');
             if (dismissed && (Date.now() - parseInt(dismissed, 10)) < 24 * 3600 * 1000) {
                 const headerBtn = document.getElementById('btnHeaderInstallPwa');
@@ -18583,14 +18719,21 @@
             }
 
             setTimeout(() => {
+                if (isAppInstalled()) return;
                 const banner = document.getElementById('pwaInstallBanner');
                 if (banner) banner.classList.remove('hidden');
                 const headerBtn = document.getElementById('btnHeaderInstallPwa');
                 if (headerBtn) headerBtn.style.display = 'inline-flex';
-            }, 1800);
+            }, 1200);
         }
 
         async function triggerPwaInstall() {
+            if (isAppInstalled()) {
+                const headerBtn = document.getElementById('btnHeaderInstallPwa');
+                if (headerBtn) headerBtn.style.display = 'none';
+                return;
+            }
+
             const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
             if (isIOS) {
                 const modal = document.getElementById('iosInstallModal');
@@ -18598,16 +18741,82 @@
                 return;
             }
 
-            if (deferredPwaPrompt) {
-                deferredPwaPrompt.prompt();
-                const choiceResult = await deferredPwaPrompt.userChoice;
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('Usuário aceitou a instalação do aplicativo!');
-                    dismissPwaBanner();
+            const promptToUse = window.deferredPwaPrompt || deferredPwaPrompt;
+            if (promptToUse) {
+                try {
+                    promptToUse.prompt();
+                    const choiceResult = await promptToUse.userChoice;
+                    if (choiceResult && choiceResult.outcome === 'accepted') {
+                        console.log('[PWA] Usuário aceitou a instalação do aplicativo!');
+                        dismissPwaBanner();
+                        const headerBtn = document.getElementById('btnHeaderInstallPwa');
+                        if (headerBtn) headerBtn.style.display = 'none';
+                    }
+                } catch (e) {
+                    console.warn('[PWA] Erro ao disparar prompt nativo:', e);
                 }
+                window.deferredPwaPrompt = null;
                 deferredPwaPrompt = null;
             } else {
-                alert('ðŸ“± Para instalar como App no seu celular:\n\n1. No menu do seu navegador (três pontos no topo ou rodapé)\n2. Selecione "Instalar aplicativo" ou "Adicionar à Tela Inicial".');
+                // Aguarda 400ms para ver se o evento do browser engatilha
+                let checked = false;
+                for (let i = 0; i < 4; i++) {
+                    await new Promise(r => setTimeout(r, 150));
+                    const p = window.deferredPwaPrompt || deferredPwaPrompt;
+                    if (p) {
+                        checked = true;
+                        p.prompt();
+                        await p.userChoice;
+                        window.deferredPwaPrompt = null;
+                        deferredPwaPrompt = null;
+                        dismissPwaBanner();
+                        break;
+                    }
+                }
+                if (!checked) {
+                    // Abre modal de instalação elegante ilustrado, sem exigir menus ou três pontos
+                    abrirModalInstalacaoDireta();
+                }
+            }
+        }
+
+        function abrirModalInstalacaoDireta() {
+            let modal = document.getElementById('fastPwaInstallModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'fastPwaInstallModal';
+                modal.className = 'action-modal-overlay active';
+                modal.style.zIndex = '999999';
+                modal.innerHTML = `
+                    <div class="action-modal" style="max-width:390px;text-align:center;padding:1.8rem 1.4rem;border-radius:22px;background:var(--color-bg,#ffffff);border:1.5px solid var(--color-primary,#2563eb);box-shadow:0 20px 60px rgba(0,0,0,0.35);">
+                        <img src="icon-192x192.png?v=2026_blue" alt="Gestão de Frota" style="width:76px;height:76px;border-radius:18px;margin:0 auto 1rem auto;box-shadow:0 6px 18px rgba(37,99,235,0.35);display:block;">
+                        <h3 style="margin:0 0 0.5rem 0;font-size:1.15rem;font-weight:700;color:var(--color-text,#1e293b);">Instalar Gestão de Frota</h3>
+                        <p style="font-size:0.86rem;color:var(--color-gray-600,#64748b);line-height:1.45;margin-bottom:1.4rem;">
+                            Tenha acesso direto e instantâneo na tela inicial do seu celular, com ícone oficial azul e notificações em tempo real.
+                        </p>
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <button type="button" id="btnAutoInstallConfirm" class="btn-primary" style="width:100%;padding:0.75rem;font-size:0.92rem;font-weight:700;border-radius:12px;background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);color:#fff;border:none;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,0.3);">
+                                <i class="fas fa-arrow-down"></i> Adicionar à Tela Inicial
+                            </button>
+                            <button type="button" onclick="document.getElementById('fastPwaInstallModal').classList.remove('active')" style="width:100%;padding:0.55rem;font-size:0.82rem;font-weight:600;border-radius:10px;background:transparent;color:var(--color-gray-500,#94a3b8);border:none;cursor:pointer;">
+                                Fechar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                modal.querySelector('#btnAutoInstallConfirm')?.addEventListener('click', async () => {
+                    modal.classList.remove('active');
+                    const p = window.deferredPwaPrompt || deferredPwaPrompt;
+                    if (p) {
+                        p.prompt();
+                        await p.userChoice;
+                        window.deferredPwaPrompt = null;
+                        deferredPwaPrompt = null;
+                    }
+                });
+            } else {
+                modal.classList.add('active');
             }
         }
 
@@ -18680,6 +18889,13 @@
 
             // Lê token antes de qualquer chamada para evitar flicker
             authToken = localStorage.getItem('sf_auth_token') || sessionStorage.getItem('sf_auth_token') || '';
+            const authUser = localStorage.getItem('sf_auth_user') || sessionStorage.getItem('sf_auth_user');
+            // Se o token for fantasma legado ou não houver usuário registrado salvo, bloqueia e força tela de login
+            if (authToken === 'sf_standalone_session_token' || !authUser) {
+                authToken = '';
+                localStorage.removeItem('sf_auth_token');
+                sessionStorage.removeItem('sf_auth_token');
+            }
             userRole  = localStorage.getItem('sf_auth_role')  || 'visualizador';
             activeMainTab  = localStorage.getItem('sf_active_tab')          || (ADMIN_ROLES.includes(userRole) ? 'tab-admin' : 'tab-equipe');
             activeAdminSub = localStorage.getItem('sf_active_admin_subtab') || 'tab-equipamentos';
