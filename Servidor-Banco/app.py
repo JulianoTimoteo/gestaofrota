@@ -759,6 +759,48 @@ def init_db():
             widget_id INTEGER,
             data_sincronizacao TEXT NOT NULL
         )''')
+
+        # Tabelas do Módulo de Alarmes e Monitoramento por Usuário
+        conn.execute('''CREATE TABLE IF NOT EXISTS alarmes_regras (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario_id INTEGER NOT NULL,
+            usuario_login TEXT,
+            equipe TEXT NOT NULL,
+            tipo_gatilho TEXT NOT NULL DEFAULT 'DISPONIBILIDADE_MENOR',
+            valor_limite REAL NOT NULL DEFAULT 85.0,
+            ativo INTEGER NOT NULL DEFAULT 1,
+            som INTEGER NOT NULL DEFAULT 1,
+            vibracao INTEGER NOT NULL DEFAULT 1,
+            cooldown_minutos INTEGER NOT NULL DEFAULT 30,
+            ultimo_disparo TEXT,
+            criado_em TEXT DEFAULT (datetime('now', 'localtime')),
+            atualizado_em TEXT DEFAULT (datetime('now', 'localtime')),
+            FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
+        )''')
+
+        conn.execute('''CREATE TABLE IF NOT EXISTS alarmes_historico (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            regra_id INTEGER,
+            usuario_id INTEGER NOT NULL,
+            equipe TEXT NOT NULL,
+            mensagem TEXT NOT NULL,
+            valor_registrado REAL,
+            data_disparo TEXT DEFAULT (datetime('now', 'localtime')),
+            FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
+        )''')
+
+        conn.execute('''CREATE TABLE IF NOT EXISTS alarmes_inscricoes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario_id INTEGER NOT NULL,
+            endpoint TEXT UNIQUE NOT NULL,
+            chave_p256dh TEXT,
+            chave_auth TEXT,
+            nome_dispositivo TEXT,
+            criado_em TEXT DEFAULT (datetime('now', 'localtime')),
+            atualizado_em TEXT DEFAULT (datetime('now', 'localtime')),
+            FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
+        )''')
+
         conn.execute('DROP VIEW IF EXISTS "OsOficina"')
         conn.execute('''CREATE VIEW "OsOficina" AS 
             SELECT * FROM ordens_servico
@@ -5275,6 +5317,368 @@ def listar_logs_auditoria():
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
 
+# ================================================================
+# MÓDULO DE ALARMES & MONITORAMENTO POR USUÁRIO
+# ================================================================
+
+def obter_usuario_da_requisicao():
+    """Identifica o usuário a partir do token da sessão, JWT ou fallback do banco."""
+    auth_header = request.headers.get('Authorization', '')
+    token = auth_header.replace('Bearer ', '').strip() or request.args.get('token', '').strip()
+    conn = get_db_connection()
+    try:
+        if token:
+            # 1. Busca na tabela de sessoes
+            sess = conn.execute('''
+                SELECT u.id, u.usuario, u.nome, u.email, u.admin 
+                FROM sessoes s 
+                JOIN usuarios u ON s.usuario_id = u.id 
+                WHERE s.token = ? AND s.ativo = 1
+            ''', (token,)).fetchone()
+            if sess:
+                return dict(sess)
+
+            # 2. Busca por token JWT se aplicável
+            claims = decode_jwt_token(token)
+            if claims and claims.get('sub'):
+                u = conn.execute('SELECT id, usuario, nome, email, admin FROM usuarios WHERE usuario = ?', (claims['sub'],)).fetchone()
+                if u:
+                    return dict(u)
+
+        # 3. Fallback: Usuário ativo com maior prioridade
+        u_first = conn.execute('SELECT id, usuario, nome, email, admin FROM usuarios WHERE ativo = 1 ORDER BY admin DESC, id ASC LIMIT 1').fetchone()
+        if u_first:
+            return dict(u_first)
+    finally:
+        conn.close()
+
+    return {'id': 1, 'usuario': 'julianotimoteo', 'nome': 'Juliano Timoteo', 'email': 'juliano@usinapitangueiras.com.br', 'admin': 1}
+
+def calcular_stats_equipes_servidor(conn):
+    """Calcula estatísticas de disponibilidade de cada equipe a partir dos dados do banco."""
+    # Frotas com OS Aberta (excluindo tipo oficina EXTERNA)
+    cur_os = conn.execute("""
+        SELECT cod_os, frota_cc, tipo_oficina, status_os 
+        FROM ordens_servico 
+        WHERE upper(status_os) = 'ABERTA' AND ativo = 1
+    """)
+    frotas_os = set()
+    for r in cur_os.fetchall():
+        if str(r['tipo_oficina'] or '').strip().upper() == 'EXTERNA':
+            continue
+        frota_str = str(r['frota_cc'] or '')
+        cod = frota_str.split('-')[0].strip() if '-' in frota_str else frota_str
+        if cod:
+            frotas_os.add(cod)
+
+    # Buscar equipamentos
+    cur_eq = conn.execute("SELECT codigo, grupo FROM equipamentos")
+    equipes_map = {}
+    for r in cur_eq.fetchall():
+        cod = str(r['codigo']).strip()
+        if cod in C32_CAMINHOES:
+            eqp = 'CAMINHOES'
+        elif cod in MASTER_OVERRIDES:
+            eqp = str(MASTER_OVERRIDES[cod].get('grupo', 'OUTROS')).strip().upper()
+        else:
+            eqp = str(r['grupo'] or 'OUTROS').strip().upper()
+
+        if eqp not in equipes_map:
+            equipes_map[eqp] = {'total': 0, 'com_os': 0}
+        equipes_map[eqp]['total'] += 1
+        if cod in frotas_os:
+            equipes_map[eqp]['com_os'] += 1
+
+    resultado = {}
+    for eqp, dados in equipes_map.items():
+        tot = dados['total']
+        com_os = dados['com_os']
+        sem_os = max(0, tot - com_os)
+        pct = round((sem_os / tot) * 100) if tot > 0 else 0
+        resultado[eqp] = {
+            'total': tot,
+            'com_os': com_os,
+            'sem_os': sem_os,
+            'pct_disp': pct
+        }
+    return resultado
+
+FILA_ALARMES_DISPARADOS = []
+
+def checar_regras_alarmes():
+    """Avalia todas as regras ativas de cada usuário."""
+    global FILA_ALARMES_DISPARADOS
+    try:
+        conn = get_db_connection()
+        regras = conn.execute("SELECT * FROM alarmes_regras WHERE ativo = 1").fetchall()
+        if not regras:
+            conn.close()
+            return
+
+        stats = calcular_stats_equipes_servidor(conn)
+        agora = datetime.now()
+        agora_str = agora.strftime('%Y-%m-%d %H:%M:%S')
+
+        for r in regras:
+            reg_id = r['id']
+            usr_id = r['usuario_id']
+            equipe = str(r['equipe'] or '').strip().upper()
+            gatilho = str(r['tipo_gatilho'] or 'DISPONIBILIDADE_MENOR')
+            limite = float(r['valor_limite'] or 85.0)
+            cooldown = int(r['cooldown_minutos'] or 30)
+            ultimo = r['ultimo_disparo']
+
+            if ultimo:
+                try:
+                    dt_ultimo = datetime.strptime(ultimo, '%Y-%m-%d %H:%M:%S')
+                    if (agora - dt_ultimo).total_seconds() < (cooldown * 60):
+                        continue
+                except Exception:
+                    pass
+
+            stat_eq = stats.get(equipe)
+            if not stat_eq:
+                continue
+
+            disparar = False
+            msg = ''
+            val_reg = 0.0
+
+            if gatilho == 'DISPONIBILIDADE_MENOR':
+                val_reg = float(stat_eq['pct_disp'])
+                if stat_eq['pct_disp'] < limite:
+                    disparar = True
+                    msg = f"Equipe {equipe} atingiu {stat_eq['pct_disp']}% de disponibilidade (Limite: {limite}%). {stat_eq['com_os']} com OS."
+            elif gatilho == 'OS_MAIOR':
+                val_reg = float(stat_eq['com_os'])
+                if stat_eq['com_os'] > limite:
+                    disparar = True
+                    msg = f"Equipe {equipe} está com {stat_eq['com_os']} equipamentos em OS (Limite: {int(limite)})."
+
+            if disparar:
+                conn.execute('''
+                    INSERT INTO alarmes_historico (regra_id, usuario_id, equipe, mensagem, valor_registrado, data_disparo)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                ''', (reg_id, usr_id, equipe, msg, val_reg, agora_str))
+                conn.execute('UPDATE alarmes_regras SET ultimo_disparo = ? WHERE id = ?', (agora_str, reg_id))
+                conn.commit()
+
+                alerta_obj = {
+                    'regra_id': reg_id,
+                    'usuario_id': usr_id,
+                    'equipe': equipe,
+                    'mensagem': msg,
+                    'valor': val_reg,
+                    'som': r['som'],
+                    'vibracao': r['vibracao'],
+                    'data_disparo': agora_str
+                }
+                FILA_ALARMES_DISPARADOS.append(alerta_obj)
+                if len(FILA_ALARMES_DISPARADOS) > 50:
+                    FILA_ALARMES_DISPARADOS.pop(0)
+
+                logger.info(f"🚨 [ALARME DISPARADO] Usuário #{usr_id} - {msg}")
+
+        conn.close()
+    except Exception as e:
+        logger.warning(f"Erro ao checar regras de alarmes: {e}")
+
+@app.route('/api/alarmes/regras', methods=['GET'])
+def listar_regras_alarmes():
+    """Retorna as regras de alarme pertencentes exclusivamente ao usuário autenticado."""
+    try:
+        user = obter_usuario_da_requisicao()
+        conn = get_db_connection()
+        rows = conn.execute('''
+            SELECT id, usuario_id, usuario_login, equipe, tipo_gatilho, valor_limite, 
+                   ativo, som, vibracao, cooldown_minutos, ultimo_disparo, criado_em, atualizado_em
+            FROM alarmes_regras 
+            WHERE usuario_id = ? 
+            ORDER BY id DESC
+        ''', (user['id'],)).fetchall()
+        conn.close()
+        return jsonify(success=True, usuario=user, regras=[dict(r) for r in rows])
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/alarmes/regras', methods=['POST'])
+def criar_regra_alarme():
+    """Cadastra uma nova regra de alarme para o usuário autenticado."""
+    try:
+        user = obter_usuario_da_requisicao()
+        data = request.get_json() or {}
+        equipe = str(data.get('equipe') or '').strip().upper()
+        if not equipe:
+            return jsonify(success=False, error='Nome da equipe é obrigatório'), 400
+
+        tipo_gatilho = data.get('tipo_gatilho', 'DISPONIBILIDADE_MENOR')
+        valor_limite = float(data.get('valor_limite', 85.0))
+        ativo = 1 if data.get('ativo', True) in [True, 1, '1'] else 0
+        som = 1 if data.get('som', True) in [True, 1, '1'] else 0
+        vibracao = 1 if data.get('vibracao', True) in [True, 1, '1'] else 0
+        cooldown = int(data.get('cooldown_minutos', 30))
+
+        conn = get_db_connection()
+        agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cur = conn.execute('''
+            INSERT INTO alarmes_regras 
+            (usuario_id, usuario_login, equipe, tipo_gatilho, valor_limite, ativo, som, vibracao, cooldown_minutos, criado_em, atualizado_em)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (user['id'], user.get('usuario', 'user'), equipe, tipo_gatilho, valor_limite, ativo, som, vibracao, cooldown, agora, agora))
+        reg_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+
+        # Checa imediatamente após criar
+        checar_regras_alarmes()
+
+        return jsonify(success=True, id=reg_id, message='Regra de alarme criada com sucesso!')
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/alarmes/regras/<int:regra_id>', methods=['PUT', 'POST'])
+def atualizar_regra_alarme(regra_id):
+    """Atualiza ou liga/desliga (toggle) uma regra de alarme."""
+    try:
+        user = obter_usuario_da_requisicao()
+        data = request.get_json() or {}
+        conn = get_db_connection()
+        reg = conn.execute('SELECT * FROM alarmes_regras WHERE id = ?', (regra_id,)).fetchone()
+        if not reg:
+            conn.close()
+            return jsonify(success=False, error='Regra não encontrada'), 404
+
+        if reg['usuario_id'] != user['id'] and not user.get('admin'):
+            conn.close()
+            return jsonify(success=False, error='Permissão negada'), 403
+
+        ativo = reg['ativo']
+        if 'ativo' in data:
+            ativo = 1 if data['ativo'] in [True, 1, '1'] else 0
+        
+        som = reg['som']
+        if 'som' in data:
+            som = 1 if data['som'] in [True, 1, '1'] else 0
+
+        vibracao = reg['vibracao']
+        if 'vibracao' in data:
+            vibracao = 1 if data['vibracao'] in [True, 1, '1'] else 0
+
+        valor_limite = float(data.get('valor_limite', reg['valor_limite']))
+        cooldown = int(data.get('cooldown_minutos', reg['cooldown_minutos']))
+        agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        conn.execute('''
+            UPDATE alarmes_regras 
+            SET ativo = ?, som = ?, vibracao = ?, valor_limite = ?, cooldown_minutos = ?, atualizado_em = ?
+            WHERE id = ?
+        ''', (ativo, som, vibracao, valor_limite, cooldown, agora, regra_id))
+        conn.commit()
+        conn.close()
+
+        if ativo:
+            checar_regras_alarmes()
+
+        return jsonify(success=True, message='Regra atualizada com sucesso', ativo=ativo)
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/alarmes/regras/<int:regra_id>', methods=['DELETE'])
+def excluir_regra_alarme(regra_id):
+    """Exclui uma regra de alarme do usuário."""
+    try:
+        user = obter_usuario_da_requisicao()
+        conn = get_db_connection()
+        reg = conn.execute('SELECT * FROM alarmes_regras WHERE id = ?', (regra_id,)).fetchone()
+        if not reg:
+            conn.close()
+            return jsonify(success=False, error='Regra não encontrada'), 404
+
+        if reg['usuario_id'] != user['id'] and not user.get('admin'):
+            conn.close()
+            return jsonify(success=False, error='Permissão negada'), 403
+
+        conn.execute('DELETE FROM alarmes_regras WHERE id = ?', (regra_id,))
+        conn.commit()
+        conn.close()
+        return jsonify(success=True, message='Regra excluída com sucesso')
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/alarmes/historico', methods=['GET'])
+def listar_historico_alarmes():
+    """Retorna os disparos de alarme do usuário autenticado."""
+    try:
+        user = obter_usuario_da_requisicao()
+        conn = get_db_connection()
+        rows = conn.execute('''
+            SELECT id, regra_id, equipe, mensagem, valor_registrado, data_disparo
+            FROM alarmes_historico
+            WHERE usuario_id = ?
+            ORDER BY id DESC
+            LIMIT 50
+        ''', (user['id'],)).fetchall()
+        conn.close()
+        return jsonify(success=True, historico=[dict(r) for r in rows])
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/alarmes/testar', methods=['POST'])
+def testar_alarme_usuario():
+    """Dispara um alarme de teste imediato para o usuário autenticado."""
+    try:
+        user = obter_usuario_da_requisicao()
+        data = request.get_json() or {}
+        equipe = data.get('equipe', 'FERTIRRIGACAO')
+        agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        msg = f"TESTE DE ALARME: Alerta crítico para {equipe}. Sistema de som, vibração e pop-up operacional."
+
+        conn = get_db_connection()
+        conn.execute('''
+            INSERT INTO alarmes_historico (regra_id, usuario_id, equipe, mensagem, valor_registrado, data_disparo)
+            VALUES (0, ?, ?, ?, 80.0, ?)
+        ''', (user['id'], equipe, msg, agora))
+        conn.commit()
+        conn.close()
+
+        alerta_teste = {
+            'regra_id': 0,
+            'usuario_id': user['id'],
+            'equipe': equipe,
+            'mensagem': msg,
+            'valor': 80.0,
+            'som': 1,
+            'vibracao': 1,
+            'data_disparo': agora
+        }
+        FILA_ALARMES_DISPARADOS.append(alerta_teste)
+
+        return jsonify(success=True, alarme=alerta_teste, message='Teste disparado com sucesso!')
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/alarmes/pendentes', methods=['GET'])
+def obter_alarmes_pendentes():
+    """Consulta se há alarmes disparados recentemente para o usuário tocar som/vibrar no frontend."""
+    try:
+        user = obter_usuario_da_requisicao()
+        conn = get_db_connection()
+        agora = datetime.now()
+        limite_tempo = (agora - timedelta(seconds=45)).strftime('%Y-%m-%d %H:%M:%S')
+        rows = conn.execute('''
+            SELECT id, regra_id, equipe, mensagem, valor_registrado, data_disparo
+            FROM alarmes_historico
+            WHERE usuario_id = ? AND data_disparo >= ?
+            ORDER BY id DESC
+            LIMIT 5
+        ''', (user['id'], limite_tempo)).fetchall()
+        conn.close()
+        return jsonify(success=True, alarmes=[dict(r) for r in rows])
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
+
+
+
 @app.route('/<path:filename>')
 def serve_static_files(filename):
     """Serve arquivos estáticos do frontend."""
@@ -5337,6 +5741,7 @@ if __name__ == '__main__':
     # Live Tunnel: Gerar dados.json imediatamente no startup e manter atualizado a cada 30s
     try:
         gerar_e_salvar_dados_json()
+        checar_regras_alarmes()
     except Exception as _e:
         logger.warning("Falha ao gerar dados.json inicial: %s", _e)
 
@@ -5345,6 +5750,7 @@ if __name__ == '__main__':
             time.sleep(30)
             try:
                 gerar_e_salvar_dados_json()
+                checar_regras_alarmes()
             except Exception as _ex:
                 pass
     

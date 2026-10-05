@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v41_search_bar_exclui_outros_24h';
+            var APP_VER = '2026_v42_modulo_alarmes_ativo';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
@@ -3192,10 +3192,11 @@
             </div>
         </div>
 
-        <!-- TABS PRINCIPAIS (Ocultas para perfil Visualizador) -->
+        <!-- TABS PRINCIPAIS -->
         <div class="tabs" id="mainTabs">
             <button class="tab-btn active" data-tab="tab-admin"><i class="fas fa-cog"></i> Admin</button>
             <button class="tab-btn" data-tab="tab-equipe"><i class="fas fa-users"></i> Equipes</button>
+            <button class="tab-btn" data-tab="tab-alarmes"><i class="fas fa-bell"></i> Alarmes</button>
         </div>
 
         <!-- TAB ADMIN -->
@@ -3405,6 +3406,129 @@
             </div>
 
             <div id="equipeSubContents"></div>
+        </div>
+
+        <!-- TAB ALARMES (Monitoramento, Alertas Sonoros, Vibração e Push por Usuário) -->
+        <div id="tab-alarmes" class="tab-content">
+            <div class="card">
+                <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+                    <div>
+                        <h2><i class="fas fa-bell" style="color: #f59e0b;"></i> Central de Alarmes & Monitoramento</h2>
+                        <p style="font-size: 0.8rem; color: var(--color-gray-500); margin-top: 2px;">
+                            Configure alertas sonoros, vibração e notificações para as frotas e equipes no seu celular ou computador. As regras são individuais e válidas apenas para o seu usuário.
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="testarAlarmeAparelho()" style="display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-volume-up" style="color: #f59e0b;"></i> Testar Alarme no Aparelho
+                        </button>
+                        <button type="button" class="btn-primary" onclick="abrirModalNovoAlarme()" style="display: inline-flex; align-items: center; gap: 6px; padding: 0.45rem 1rem; font-size: 0.84rem; font-weight: 600; border-radius: 8px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #fff; border: none; cursor: pointer; box-shadow: 0 2px 8px rgba(245,158,11,0.35);">
+                            <i class="fas fa-plus"></i> +Nova Regra de Alarme
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Painel de Notificações Push do Celular -->
+                <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 10px; padding: 0.85rem 1.15rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 38px; height: 38px; border-radius: 8px; background: #fef3c7; display: flex; align-items: center; justify-content: center; color: #d97706; font-size: 1.2rem;">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.85rem; font-weight: 700; color: #92400e;">Notificações e Alertas no Celular</div>
+                            <div style="font-size: 0.78rem; color: #b45309;" id="pushStatusText">Permissão de notificações: Verificando...</div>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" id="btnAtivarPush" onclick="solicitarPermissaoNotificacoes()" class="btn btn-outline btn-sm" style="background: #ffffff; border-color: #d97706; color: #92400e; font-weight: 600;">
+                            <i class="fas fa-bell"></i> Ativar Notificações no Aparelho
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lista de Regras Cadastradas -->
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <h3 style="font-size: 1rem; font-weight: 700; color: var(--color-text);"><i class="fas fa-sliders-h" style="color: var(--color-primary); margin-right: 6px;"></i> Suas Regras Ativas</h3>
+                        <span class="count-badge" id="totalRegrasBadge">0 regras</span>
+                    </div>
+                    <div id="listaRegrasAlarmesContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem;">
+                        <div class="empty-message" style="grid-column: 1/-1; padding: 2rem; text-align: center;">Carregando regras...</div>
+                    </div>
+                </div>
+
+                <!-- Histórico de Disparos -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <h3 style="font-size: 1rem; font-weight: 700; color: var(--color-text);"><i class="fas fa-history" style="color: var(--color-primary); margin-right: 6px;"></i> Histórico de Disparos Recentes</h3>
+                        <span class="count-badge" id="totalHistoricoBadge">0</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="table-24h">
+                            <thead>
+                                <tr>
+                                    <th>Data / Hora</th>
+                                    <th>Equipe</th>
+                                    <th>Mensagem do Alarme</th>
+                                    <th>Valor Registrado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historicoAlarmesBody">
+                                <tr><td colspan="4" class="empty-message">Nenhum alarme disparado recentemente.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NOVA REGRA DE ALARME -->
+    <div class="action-modal-overlay" id="alarmeModalOverlay">
+        <div class="action-modal" style="max-width: 500px;">
+            <h3><i class="fas fa-bell" style="color: #f59e0b;"></i> Nova Regra de Alarme</h3>
+            <form id="formNovoAlarme" onsubmit="salvarRegraAlarme(event)" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                <div>
+                    <label style="display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--color-text);">Equipe a Monitorar *</label>
+                    <select id="alarmeInputEquipe" required style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1.5px solid var(--color-gray-300); font-size: 0.9rem; background: var(--color-surface, #fff); color: var(--color-text);">
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--color-text);">Tipo de Gatilho / Condição *</label>
+                    <select id="alarmeInputGatilho" required onchange="aoMudarGatilhoAlarme(this.value)" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1.5px solid var(--color-gray-300); font-size: 0.9rem; background: var(--color-surface, #fff); color: var(--color-text);">
+                        <option value="DISPONIBILIDADE_MENOR">Disponibilidade cair abaixo de (%)</option>
+                        <option value="OS_MAIOR">Quantidade de OS Abertas ultrapassar (Qtd)</option>
+                    </select>
+                </div>
+                <div>
+                    <label id="alarmeValorLimiteLabel" style="display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--color-text);">Percentual Mínimo de Disponibilidade (%) *</label>
+                    <input type="number" id="alarmeInputValor" required min="1" max="100" step="1" value="85" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1.5px solid var(--color-gray-300); font-size: 0.95rem; font-weight: 700; color: var(--color-text);">
+                    <small style="color: var(--color-gray-500); font-size: 0.75rem; display: block; margin-top: 4px;">Exemplo: Se colocar 85%, o alarme dispara se a disponibilidade ficar menor que 85%.</small>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--color-text);">Intervalo de Repetição (Cooldown)</label>
+                    <select id="alarmeInputCooldown" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1.5px solid var(--color-gray-300); font-size: 0.9rem; background: var(--color-surface, #fff); color: var(--color-text);">
+                        <option value="15">A cada 15 minutos enquanto violado</option>
+                        <option value="30" selected>A cada 30 minutos enquanto violado</option>
+                        <option value="60">A cada 1 hora enquanto violado</option>
+                        <option value="120">A cada 2 horas enquanto violado</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 1.5rem; align-items: center; padding: 0.5rem 0;">
+                    <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+                        <input type="checkbox" id="alarmeInputSom" checked style="width: 18px; height: 18px; accent-color: #f59e0b;">
+                        <i class="fas fa-volume-up" style="color: #f59e0b;"></i> Alarme Sonoro
+                    </label>
+                    <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+                        <input type="checkbox" id="alarmeInputVibracao" checked style="width: 18px; height: 18px; accent-color: #f59e0b;">
+                        <i class="fas fa-mobile-alt" style="color: #f59e0b;"></i> Vibrar Celular
+                    </label>
+                </div>
+                <div class="action-modal-actions" style="margin-top: 1rem;">
+                    <button type="button" class="btn btn-outline" onclick="fecharModalNovoAlarme()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border: none;">Salvar Regra de Alarme</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -16321,6 +16445,9 @@
                     syncElapsedSeconds++;
                     updateSyncEnergyBarUI();
                     atualizarDataHoraSyncUI();
+                    if (syncElapsedSeconds % 5 === 0) {
+                        checarAlarmesPendentesPeriodico();
+                    }
                     if (syncElapsedSeconds >= SYNC_TOTAL_SECONDS) {
                         await triggerSyncExecution();
                     }
@@ -16407,10 +16534,15 @@
             document.querySelectorAll('#mainTabs > .tab-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.tab === tabId);
             });
-            document.querySelectorAll('#tab-admin, #tab-equipe').forEach(el => {
+            document.querySelectorAll('#tab-admin, #tab-equipe, #tab-alarmes').forEach(el => {
                 el.classList.toggle('active', el.id === tabId);
             });
             atualizarStatusGeral(tabId === 'tab-equipe' ? (activeTeam === '24h⚠️' ? null : activeTeam) : null);
+            if (tabId === 'tab-alarmes') {
+                carregarRegrasAlarmes();
+                carregarHistoricoAlarmes();
+                verificarStatusNotificacoesNavegador();
+            }
         }
 
         function switchAdminSubTab(subId, persist = true) {
@@ -16441,6 +16573,8 @@
             const mainTabs        = document.getElementById('mainTabs');
             const adminTabBtn     = document.querySelector('.tab-btn[data-tab="tab-admin"]');
             const adminTabContent = document.getElementById('tab-admin');
+            const alarmeTabBtn    = document.querySelector('.tab-btn[data-tab="tab-alarmes"]');
+            const equipeTabBtn    = document.querySelector('.tab-btn[data-tab="tab-equipe"]');
 
             const isMasterAdmin = isUserAdmin();
 
@@ -16448,6 +16582,8 @@
                 if (mainTabs)        mainTabs.style.display       = 'inline-flex';
                 if (adminTabBtn)     adminTabBtn.style.display    = '';
                 if (adminTabContent) adminTabContent.style.display = '';
+                if (alarmeTabBtn)    alarmeTabBtn.style.display   = '';
+                if (equipeTabBtn)    equipeTabBtn.style.display   = '';
                 document.querySelectorAll('#adminSubTabs > .tab-btn').forEach(btn => btn.style.display = '');
 
                 switchMainTab(activeMainTab || 'tab-admin', false);
@@ -16455,13 +16591,418 @@
             } else {
                 if (adminTabBtn)     adminTabBtn.style.display    = 'none';
                 if (adminTabContent) adminTabContent.style.display = 'none';
-                if (mainTabs)        mainTabs.style.display        = 'none';
-                switchMainTab('tab-equipe', false);
+                // Usuários supervisores/gerentes têm acesso a Equipes e Alarmes
+                if (mainTabs)        mainTabs.style.display       = 'inline-flex';
+                if (alarmeTabBtn)    alarmeTabBtn.style.display   = '';
+                if (equipeTabBtn)    equipeTabBtn.style.display   = '';
+                switchMainTab(activeMainTab === 'tab-alarmes' ? 'tab-alarmes' : 'tab-equipe', false);
             }
         }
 
         // ================================================================
-        // GESTÃƒO DE USUÁRIOS DO BANCO DE DADOS (CRUD)
+        // MÓDULO DE ALARMES & MONITORAMENTO POR USUÁRIO (SOM, VIBRAÇÃO E NOTIFICAÇÕES)
+        // ================================================================
+        let regrasAlarmesCache = [];
+        let historicoAlarmesCache = [];
+        let ultimoAlarmeNotificadoId = 0;
+
+        function verificarStatusNotificacoesNavegador() {
+            const statusEl = document.getElementById('pushStatusText');
+            const btnEl = document.getElementById('btnAtivarPush');
+            if (!('Notification' in window)) {
+                if (statusEl) statusEl.textContent = 'Este navegador não suporta notificações de sistema.';
+                if (btnEl) btnEl.style.display = 'none';
+                return;
+            }
+            if (Notification.permission === 'granted') {
+                if (statusEl) statusEl.innerHTML = '<span style="color:#16a34a;font-weight:700;"><i class="fas fa-check-circle"></i> Notificações Ativadas e Autorizadas neste aparelho!</span>';
+                if (btnEl) {
+                    btnEl.innerHTML = '<i class="fas fa-check"></i> Notificações Ativas';
+                    btnEl.disabled = true;
+                    btnEl.style.opacity = '0.7';
+                }
+            } else if (Notification.permission === 'denied') {
+                if (statusEl) statusEl.innerHTML = '<span style="color:#dc2626;font-weight:700;"><i class="fas fa-times-circle"></i> Notificações bloqueadas nas permissões do navegador do celular.</span>';
+                if (btnEl) btnEl.style.display = 'none';
+            } else {
+                if (statusEl) statusEl.textContent = 'Permissão pendente. Clique no botão ao lado para autorizar alertas no seu celular.';
+                if (btnEl) btnEl.style.display = 'inline-block';
+            }
+        }
+
+        async function solicitarPermissaoNotificacoes() {
+            if (!('Notification' in window)) {
+                alert('Seu navegador não possui suporte a notificações.');
+                return;
+            }
+            const perm = await Notification.requestPermission();
+            verificarStatusNotificacoesNavegador();
+            if (perm === 'granted') {
+                tocarSomSireneAlarme(1);
+                vibrarCelular();
+                dispararNotificacaoPopUp('🚨 Notificações Ativadas!', 'Agora este aparelho receberá os alarmes configurados para a sua conta.');
+            }
+        }
+
+        // Sintetizador Web Audio API: Sirene Industrial de Emergência Pulsada
+        function tocarSomSireneAlarme(duracaoSegundos = 3) {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                if (ctx.state === 'suspended') {
+                    ctx.resume();
+                }
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sawtooth';
+
+                const now = ctx.currentTime;
+                // Modulação em dois tons industriais (960Hz e 770Hz)
+                for (let i = 0; i < duracaoSegundos; i += 0.4) {
+                    osc.frequency.setValueAtTime(960, now + i);
+                    osc.frequency.setValueAtTime(770, now + i + 0.2);
+                }
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + duracaoSegundos);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + duracaoSegundos);
+            } catch (err) {
+                console.warn('Erro ao reproduzir som de alarme:', err);
+            }
+        }
+
+        function vibrarCelular() {
+            try {
+                if ('vibrate' in navigator) {
+                    navigator.vibrate([500, 200, 500, 200, 1000]);
+                }
+            } catch (err) {
+                console.warn('Vibração indisponível:', err);
+            }
+        }
+
+        function dispararNotificacaoPopUp(titulo, corpo) {
+            try {
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification(titulo, {
+                        body: corpo,
+                        icon: 'img/logo_pitangueiras.png',
+                        badge: 'img/logo_pitangueiras.png',
+                        tag: 'alarme-gestao-frota',
+                        renotify: true,
+                        requireInteraction: true
+                    });
+                }
+            } catch (e) {
+                console.warn('Erro na notificação push:', e);
+            }
+        }
+
+        async function carregarRegrasAlarmes() {
+            const container = document.getElementById('listaRegrasAlarmesContainer');
+            const badgeEl = document.getElementById('totalRegrasBadge');
+            if (!container) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/alarmes/regras`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                }).catch(() => null);
+
+                if (res && res.ok) {
+                    const result = await res.json().catch(() => null);
+                    if (result && result.success) {
+                        regrasAlarmesCache = result.regras || [];
+                        if (badgeEl) badgeEl.textContent = `${regrasAlarmesCache.length} regras`;
+
+                        if (regrasAlarmesCache.length === 0) {
+                            container.innerHTML = `
+                                <div class="card" style="grid-column: 1/-1; padding: 2.5rem 1.5rem; text-align: center; border-radius: 12px; background: var(--color-gray-50);">
+                                    <i class="fas fa-bell-slash" style="font-size: 2.4rem; color: var(--color-gray-400); margin-bottom: 0.75rem; display: block;"></i>
+                                    <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--color-text);">Nenhuma regra de alarme cadastrada para seu usuário</h3>
+                                    <p style="font-size: 0.85rem; color: var(--color-gray-500); margin-top: 0.3rem;">
+                                        Clique no botão "<strong>+Nova Regra de Alarme</strong>" acima para monitorar a disponibilidade de uma equipe (ex: Fertirrigação &lt; 85%).
+                                    </p>
+                                </div>
+                            `;
+                            return;
+                        }
+
+                        container.innerHTML = regrasAlarmesCache.map(r => {
+                            const isAtivo = r.ativo === 1;
+                            const isDisp = r.tipo_gatilho === 'DISPONIBILIDADE_MENOR';
+                            const regraTexto = isDisp
+                                ? `Disparar alarme se disponibilidade ficar <strong style="color:#ef4444;">menor que ${r.valor_limite}%</strong>`
+                                : `Disparar alarme se total de OS aberta for <strong style="color:#ef4444;">maior que ${parseInt(r.valor_limite)} frotas</strong>`;
+                            const ultimoDisp = r.ultimo_disparo ? formatarDataHoraBR(r.ultimo_disparo) : 'Nenhum disparo ainda';
+
+                            return `
+                                <div class="card" style="border-radius: 12px; border: 1.5px solid ${isAtivo ? 'var(--color-gray-200)' : 'var(--color-gray-300)'}; opacity: ${isAtivo ? '1' : '0.65'}; padding: 1.15rem; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+                                        <div>
+                                            <span class="badge-equip team-badge" style="font-size: 0.85rem; font-weight: 800; letter-spacing: 0.5px;">${r.equipe}</span>
+                                            <span style="font-size: 0.75rem; color: var(--color-gray-500); margin-left: 6px;">#Regra ${r.id}</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <!-- Switch Toggle Estilizado iOS -->
+                                            <label style="position: relative; display: inline-block; width: 44px; height: 24px; cursor: pointer;">
+                                                <input type="checkbox" ${isAtivo ? 'checked' : ''} onchange="toggleRegraAlarme(${r.id}, ${isAtivo})" style="opacity: 0; width: 0; height: 0;">
+                                                <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: ${isAtivo ? '#10b981' : '#cbd5e1'}; transition: 0.3s; border-radius: 24px;"></span>
+                                                <span style="position: absolute; height: 18px; width: 18px; left: ${isAtivo ? '22px' : '3px'}; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.3);"></span>
+                                            </label>
+                                            <button type="button" onclick="excluirRegraAlarme(${r.id})" title="Excluir Regra" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 4px; font-size: 0.95rem;">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 0.9rem; color: var(--color-text); margin-bottom: 0.65rem; line-height: 1.4;">
+                                        ${regraTexto}
+                                    </div>
+                                    <div style="display: flex; gap: 12px; font-size: 0.76rem; color: var(--color-gray-500); margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                        <span><i class="fas fa-volume-up" style="color: ${r.som ? '#10b981' : '#94a3b8'};"></i> Som: ${r.som ? 'Ativo' : 'Mudo'}</span>
+                                        <span><i class="fas fa-mobile-alt" style="color: ${r.vibracao ? '#10b981' : '#94a3b8'};"></i> Vibração: ${r.vibracao ? 'Ativa' : 'Desligada'}</span>
+                                        <span><i class="fas fa-clock"></i> Cooldown: ${r.cooldown_minutos || 30} min</span>
+                                    </div>
+                                    <div style="font-size: 0.73rem; color: var(--color-gray-400); border-top: 1px dashed var(--color-gray-200); padding-top: 0.4rem;">
+                                        <i class="fas fa-history"></i> Último disparo: ${ultimoDisp}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                        return;
+                    }
+                }
+                container.innerHTML = `<div class="empty-message" style="grid-column:1/-1;">Modo Standalone: conecte ao servidor para sincronizar regras de alarme.</div>`;
+            } catch (err) {
+                container.innerHTML = `<div class="empty-message" style="grid-column:1/-1;">Erro ao carregar regras: ${err.message}</div>`;
+            }
+        }
+
+        async function carregarHistoricoAlarmes() {
+            const tbody = document.getElementById('historicoAlarmesBody');
+            const badgeEl = document.getElementById('totalHistoricoBadge');
+            if (!tbody) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/alarmes/historico`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                }).catch(() => null);
+
+                if (res && res.ok) {
+                    const result = await res.json().catch(() => null);
+                    if (result && result.success && Array.isArray(result.historico)) {
+                        historicoAlarmesCache = result.historico;
+                        if (badgeEl) badgeEl.textContent = `${historicoAlarmesCache.length}`;
+
+                        if (historicoAlarmesCache.length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="4" class="empty-message" style="padding:2rem;">Nenhum alarme disparado recentemente. Suas frotas estão dentro das metas!</td></tr>';
+                            return;
+                        }
+
+                        tbody.innerHTML = historicoAlarmesCache.map(h => {
+                            return `
+                                <tr>
+                                    <td style="font-weight:600;font-size:0.8rem;white-space:nowrap;">
+                                        <i class="fas fa-clock" style="color:#f59e0b;margin-right:4px;"></i> ${formatarDataHoraBR(h.data_disparo)}
+                                    </td>
+                                    <td><span class="badge-equip team-badge">${h.equipe || '-'}</span></td>
+                                    <td style="font-size:0.83rem;">${h.mensagem}</td>
+                                    <td><span class="badge-equip os-aberta" style="font-weight:700;">${h.valor_registrado ? `${h.valor_registrado}%` : '-'}</span></td>
+                                </tr>
+                            `;
+                        }).join('');
+                    }
+                }
+            } catch (e) {
+                console.warn('Erro ao carregar histórico de alarmes:', e);
+            }
+        }
+
+        function abrirModalNovoAlarme() {
+            const overlay = document.getElementById('alarmeModalOverlay');
+            const selEquipe = document.getElementById('alarmeInputEquipe');
+            if (!overlay || !selEquipe) return;
+
+            const teams = getEquipesDisponiveis().filter(t => t !== '24h⚠️' && t !== '24H ⚠️');
+            selEquipe.innerHTML = teams.map(t => `<option value="${t}">${t}</option>`).join('');
+
+            document.getElementById('alarmeInputGatilho').value = 'DISPONIBILIDADE_MENOR';
+            aoMudarGatilhoAlarme('DISPONIBILIDADE_MENOR');
+            document.getElementById('alarmeInputValor').value = '85';
+            document.getElementById('alarmeInputCooldown').value = '30';
+            document.getElementById('alarmeInputSom').checked = true;
+            document.getElementById('alarmeInputVibracao').checked = true;
+
+            overlay.classList.add('active');
+        }
+
+        function fecharModalNovoAlarme() {
+            const overlay = document.getElementById('alarmeModalOverlay');
+            if (overlay) overlay.classList.remove('active');
+        }
+
+        function aoMudarGatilhoAlarme(tipo) {
+            const label = document.getElementById('alarmeValorLimiteLabel');
+            const input = document.getElementById('alarmeInputValor');
+            if (!label || !input) return;
+
+            if (tipo === 'DISPONIBILIDADE_MENOR') {
+                label.textContent = 'Percentual Mínimo de Disponibilidade (%) *';
+                input.min = '1';
+                input.max = '100';
+                input.value = '85';
+            } else {
+                label.textContent = 'Quantidade Máxima de OS Abertas (Qtd) *';
+                input.min = '1';
+                input.max = '999';
+                input.value = '5';
+            }
+        }
+
+        async function salvarRegraAlarme(e) {
+            if (e) e.preventDefault();
+            const equipe = document.getElementById('alarmeInputEquipe').value;
+            const tipo_gatilho = document.getElementById('alarmeInputGatilho').value;
+            const valor_limite = parseFloat(document.getElementById('alarmeInputValor').value);
+            const cooldown_minutos = parseInt(document.getElementById('alarmeInputCooldown').value);
+            const som = document.getElementById('alarmeInputSom').checked ? 1 : 0;
+            const vibracao = document.getElementById('alarmeInputVibracao').checked ? 1 : 0;
+
+            if (!equipe || isNaN(valor_limite)) {
+                alert('Preencha os campos obrigatórios corretamente.');
+                return;
+            }
+
+            try {
+                showGlobalLoader();
+                const res = await fetch(`${API_BASE}/api/alarmes/regras`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        equipe,
+                        tipo_gatilho,
+                        valor_limite,
+                        cooldown_minutos,
+                        som,
+                        vibracao,
+                        ativo: 1
+                    })
+                });
+                const result = await res.json().catch(() => null);
+                hideGlobalLoader();
+
+                if (res.ok && result && result.success) {
+                    fecharModalNovoAlarme();
+                    carregarRegrasAlarmes();
+                    carregarHistoricoAlarmes();
+                    alert(`✅ Regra de alarme para ${equipe} criada com sucesso!`);
+                } else {
+                    alert('Erro ao salvar alarme: ' + ((result && result.error) || 'Erro no servidor'));
+                }
+            } catch (err) {
+                hideGlobalLoader();
+                alert('Erro de conexão ao salvar regra: ' + err.message);
+            }
+        }
+
+        async function toggleRegraAlarme(regraId, ativoAtual) {
+            try {
+                const novoAtivo = ativoAtual ? 0 : 1;
+                const res = await fetch(`${API_BASE}/api/alarmes/regras/${regraId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ ativo: novoAtivo })
+                });
+                if (res.ok) {
+                    carregarRegrasAlarmes();
+                }
+            } catch (err) {
+                console.warn('Erro ao alternar alarme:', err);
+            }
+        }
+
+        async function excluirRegraAlarme(regraId) {
+            if (!confirm('Deseja realmente excluir esta regra de alarme?')) return;
+            try {
+                showGlobalLoader();
+                const res = await fetch(`${API_BASE}/api/alarmes/regras/${regraId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                hideGlobalLoader();
+                if (res.ok) {
+                    carregarRegrasAlarmes();
+                    carregarHistoricoAlarmes();
+                } else {
+                    alert('Falha ao excluir regra.');
+                }
+            } catch (err) {
+                hideGlobalLoader();
+                alert('Erro: ' + err.message);
+            }
+        }
+
+        async function testarAlarmeAparelho() {
+            // 1. Toca som e vibra imediatamente
+            tocarSomSireneAlarme(3);
+            vibrarCelular();
+
+            // 2. Dispara notificação de sistema
+            dispararNotificacaoPopUp('🚨 TESTE DE ALARME GESTÃO DE FROTA', 'Alerta sonoro, vibração e pop-up funcionando perfeitamente no seu dispositivo!');
+
+            // 3. Registra no servidor
+            try {
+                await fetch(`${API_BASE}/api/alarmes/testar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ equipe: 'FERTIRRIGACAO' })
+                });
+                carregarHistoricoAlarmes();
+            } catch (e) {}
+
+            alert('🔔 Teste de alarme executado! Verifique o som, vibração do celular e o pop-up de notificação.');
+        }
+
+        async function checarAlarmesPendentesPeriodico() {
+            if (!authToken) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/alarmes/pendentes`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                }).catch(() => null);
+
+                if (res && res.ok) {
+                    const d = await res.json().catch(() => null);
+                    if (d && d.success && Array.isArray(d.alarmes) && d.alarmes.length > 0) {
+                        const ultimo = d.alarmes[0];
+                        if (ultimo.id > ultimoAlarmeNotificadoId) {
+                            ultimoAlarmeNotificadoId = ultimo.id;
+                            tocarSomSireneAlarme(4);
+                            vibrarCelular();
+                            dispararNotificacaoPopUp(`🚨 ALERTA CRÍTICO: ${ultimo.equipe}`, ultimo.mensagem);
+                            carregarHistoricoAlarmes();
+                        }
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // ================================================================
+        // GESTÃO DE USUÁRIOS DO BANCO DE DADOS (CRUD)
         // ================================================================
         let currentUsersCache = [];
 
