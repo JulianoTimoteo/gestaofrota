@@ -21,7 +21,7 @@ O sistema é composto por:
   - `monitor.html`: página de monitoramento.
 
 - **Banco de Dados**
-  - SQLite (`meus_banco.db`), com prioridade para `D:\meus_banco.db` quando disponível.
+  - SQLite (`meus_banco.db`), sincronizado diretamente com o cartão SD do tablet (`/sdcard/meus_banco.db`).
   - Tabelas operacionais, identidade e auditoria.
 
 - **Integração Externa**
@@ -92,8 +92,7 @@ O sistema é composto por:
 
 ### 4.1 Arquivo
 
-- Padrão: `meus_banco.db` na raiz.
-- Fallback: `D:\meus_banco.db` se existir.
+- Padrão: `meus_banco.db` na raiz e `/sdcard/meus_banco.db` no cartão SD do tablet.
 
 ### 4.2 Tabelas
 

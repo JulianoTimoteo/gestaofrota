@@ -37,3 +37,13 @@ backups/
 # IDEs
 .vscode/
 .idea/
+
+# Builds e Versão Pendrive
+GestaoFrota_Servidor_Pendrive/
+dist_temp/
+build_temp/
+spec_temp/
+*.spec
+
+# Credenciais Cloud / Firebase Service Account
+*firebase-adminsdk*.json

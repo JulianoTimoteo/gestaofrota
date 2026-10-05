@@ -82,15 +82,38 @@ try:
 except ImportError:
     pass
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-if os.path.basename(BASE_DIR) == 'backend':
-    PROJECT_DIR = os.path.dirname(BASE_DIR)
-else:
+if getattr(sys, 'frozen', False):
+    BASE_DIR = os.path.dirname(os.path.abspath(sys.executable))
+    FRONTEND_DIR = os.path.join(BASE_DIR, 'Appweb')
+    if not os.path.exists(FRONTEND_DIR) and hasattr(sys, '_MEIPASS'):
+        _internal_fe = os.path.join(sys._MEIPASS, 'Appweb')
+        if os.path.exists(_internal_fe):
+            FRONTEND_DIR = _internal_fe
     PROJECT_DIR = BASE_DIR
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    if os.path.basename(BASE_DIR) == 'backend':
+        PROJECT_DIR = os.path.dirname(BASE_DIR)
+    else:
+        PROJECT_DIR = BASE_DIR
+    FRONTEND_DIR = os.path.join(os.path.dirname(PROJECT_DIR), 'Appweb')
 
-FRONTEND_DIR = os.path.join(os.path.dirname(PROJECT_DIR), 'Appweb')
-_db_candidate = os.path.join(PROJECT_DIR, 'simplefarm.db')
+_db_candidate = os.path.join(BASE_DIR, 'simplefarm.db')
 DB_PATH = os.environ.get('SF_DB_PATH', _db_candidate)
+
+# ==================== BANDEJA DO SISTEMA (TRAY) ====================
+TRAY_CALLBACK = None
+
+def set_tray_callback(cb):
+    global TRAY_CALLBACK
+    TRAY_CALLBACK = cb
+
+def notificar_tray(cor, mensagem):
+    if TRAY_CALLBACK:
+        try:
+            TRAY_CALLBACK(cor, mensagem)
+        except Exception:
+            pass
 
 # Tablet SD card database path (primary storage)
 TABLET_DB_PATH = '/sdcard/meus_banco.db'
@@ -3979,6 +4002,7 @@ class SyncService:
     def run_sync_cycle(self):
         self.is_extracting = True
         self.last_heartbeat = time.time()
+        notificar_tray("verde", "Sincronizando com SimpleFarm & Nuvem...")
         conn = get_db_connection()
         try:
             self.session = self.login()
@@ -3986,6 +4010,7 @@ class SyncService:
                 self.error_count += 1
                 self.consecutive_failures += 1
                 self._registrar_erro('Falha no login apos todas as tentativas')
+                notificar_tray("vermelho", "Falha no login do SimpleFarm")
                 conn.execute('''INSERT INTO sincronizacao_log (painel_id, painel_nome, status, registros_extraidos, erro, data_sincronizacao)
                     VALUES (NULL, 'Sincronizacao Continua', 'erro', 0, ?, ?)''',
                     (self.last_error, datetime.now().isoformat()))
@@ -4022,14 +4047,27 @@ class SyncService:
             else:
                 logger.warning(f'Sync #{self.sync_count}: 0 registros extraidos (login ok, mas sem dados retornados)')
             
+            # Dispara envio para o Firebase Cloud Firestore em segundo plano
+            def _sync_firebase_bg():
+                try:
+                    import firebase_sync
+                    _c = get_db_connection()
+                    firebase_sync.sincronizar_banco_local_com_firebase(_c)
+                    _c.close()
+                except Exception as _f_err:
+                    logger.warning("Aviso sincronizacao Firebase: %s", _f_err)
+            threading.Thread(target=_sync_firebase_bg, daemon=True).start()
+
             # Sincroniza o arquivo SQLite assincronamente para o tablet SD Card sem bloquear HTTP requests
             sd_mirror_queue.enqueue_push()
 
+            notificar_tray("amarelo", f"Em repouso. Próximo ciclo em 5 min (Último: {agora})")
             return total
         except Exception as e:
             self.error_count += 1
             self.consecutive_failures += 1
             self._registrar_erro(str(e))
+            notificar_tray("vermelho", f"Erro de sync: {str(e)[:40]}")
             logger.error(f'Erro no ciclo de sync: {e}')
             try:
                 conn.execute('''INSERT INTO sincronizacao_log (painel_id, painel_nome, status, registros_extraidos, erro, data_sincronizacao)
@@ -5678,6 +5716,18 @@ def obter_alarmes_pendentes():
         return jsonify(success=False, error=str(e)), 500
 
 
+
+@app.route('/api/sync/firebase', methods=['GET', 'POST'])
+def sync_firebase_manual():
+    """Força sincronização imediata com o Cloud Firestore do Firebase."""
+    try:
+        import firebase_sync
+        conn = get_db_connection()
+        ok, msg = firebase_sync.sincronizar_banco_local_com_firebase(conn)
+        conn.close()
+        return jsonify(success=ok, message=msg, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    except Exception as e:
+        return jsonify(success=False, error=str(e)), 500
 
 @app.route('/<path:filename>')
 def serve_static_files(filename):
