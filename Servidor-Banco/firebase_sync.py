@@ -176,3 +176,4 @@ def sincronizar_banco_local_com_firebase(conn):
     except Exception as err:
         print(f"[Firebase Nuvem] Falha na sincronizacao do banco local: {err}", flush=True)
         return False, str(err)
+

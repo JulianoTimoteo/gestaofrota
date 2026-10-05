@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fleet-cache-v33';
+const CACHE_NAME = 'fleet-cache-v34';
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();
@@ -29,8 +29,8 @@ self.addEventListener('push', (event) => {
     const title = data.title || '🚨 ALERTA CRÍTICO DE FROTA';
     const options = {
         body: data.body || 'Uma equipe atingiu o limite de disponibilidade configurado.',
-        icon: 'img/logo_pitangueiras.png',
-        badge: 'img/logo_pitangueiras.png',
+        icon: 'icon-192x192.png',
+        badge: 'icon-192x192.png',
         vibrate: [500, 250, 500, 250, 1000],
         tag: 'alarme-frota-critico',
         renotify: true,
