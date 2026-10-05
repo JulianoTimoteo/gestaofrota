@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v40_menu_order_sync_datetime';
+            var APP_VER = '2026_v41_search_bar_exclui_outros_24h';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
@@ -3392,6 +3392,18 @@
         <!-- TAB EQUIPE (CARROSSEL CÍCLICO 3 ITENS) -->
         <div id="tab-equipe" class="tab-content">
             <div class="team-carousel-container" id="equipeSubTabs"></div>
+
+            <!-- Barra de Pesquisa Rápida em Tempo Real (Frota, Descrição, Status, Operação) -->
+            <div class="team-search-container" style="margin: 0.6rem 0 1rem 0; position: relative;">
+                <div style="position: relative; display: flex; align-items: center; width: 100%;">
+                    <i class="fas fa-search" style="position: absolute; left: 1rem; color: var(--color-gray-400); font-size: 0.95rem; pointer-events: none;"></i>
+                    <input type="text" id="teamSearchInput" placeholder="Pesquisar frota, descrição, status, operação..." oninput="onTeamSearchInput(this.value)" autocomplete="off" style="width: 100%; padding: 0.75rem 2.8rem 0.75rem 2.7rem; border-radius: 12px; border: 1.5px solid var(--color-gray-300); background: var(--color-surface, #ffffff); font-size: 0.92rem; color: var(--color-text, #1e293b); box-shadow: 0 2px 6px rgba(0,0,0,0.04); outline: none; transition: border-color 0.2s, box-shadow 0.2s;">
+                    <button type="button" id="clearTeamSearchBtn" onclick="clearTeamSearch()" style="position: absolute; right: 0.85rem; background: none; border: none; color: var(--color-gray-400); font-size: 1rem; cursor: pointer; display: none; padding: 4px;" title="Limpar pesquisa">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                </div>
+            </div>
+
             <div id="equipeSubContents"></div>
         </div>
     </div>
@@ -17422,7 +17434,89 @@
         }
 
         function isEquip24h(eq) {
+            if (!eq) return false;
+            const grp = (eq.grupo || '').trim().toUpperCase();
+            // Equipamentos considerados da equipe OUTROS não devem aparecer na aba 24h
+            if (grp === 'OUTROS') return false;
             return getEquipPermanenciaDias(eq) >= 1.0;
+        }
+
+        // ================================================================
+        // PESQUISA RÁPIDA DE EQUIPAMENTOS (FROTA, DESCRIÇÃO, STATUS, OPERAÇÃO, TIPO, OS)
+        // ================================================================
+        let currentTeamSearchTerm = '';
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function matchesEquipSearch(eq, term) {
+            if (!term) return true;
+            if (!eq) return false;
+            const t = term.toLowerCase();
+
+            // 1. Frota / Código
+            if (String(eq.codigo || '').toLowerCase().includes(t)) return true;
+
+            // 2. Descrição
+            if (String(eq.descricao || '').toLowerCase().includes(t)) return true;
+
+            // 3. Status da OS / Disponibilidade
+            if (String(eq.statusOS || '').toLowerCase().includes(t)) return true;
+            const hasOS = equipamentosComOS && equipamentosComOS.has(String(eq.codigo));
+            if (hasOS && 'com os'.includes(t)) return true;
+            if (!hasOS && 'ok'.includes(t)) return true;
+
+            // 4. Operação
+            if (String(eq.operacao || '').toLowerCase().includes(t)) return true;
+
+            // 5. Tipo / Modelo / Grupo
+            if (String(eq.tipo || '').toLowerCase().includes(t)) return true;
+            if (String(eq.modelo || '').toLowerCase().includes(t)) return true;
+            if (String(eq.grupo || '').toLowerCase().includes(t)) return true;
+
+            // 6. Código da OS
+            if (String(eq.codOS || '').toLowerCase().includes(t)) return true;
+
+            // 7. Detalhes das Ordens de Serviço vinculadas
+            if (Array.isArray(ordensServico)) {
+                for (let i = 0; i < ordensServico.length; i++) {
+                    const os = ordensServico[i];
+                    const raw = os.codigoEquip || os.frota || os.frotaCC || '';
+                    const cod = String(raw).split(' - ')[0].trim();
+                    if (cod === String(eq.codigo)) {
+                        if (String(os.descricao || '').toLowerCase().includes(t)) return true;
+                        if (String(os.oficina || '').toLowerCase().includes(t)) return true;
+                        if (String(os.tipoOficina || '').toLowerCase().includes(t)) return true;
+                        if (String(os.subClasse || '').toLowerCase().includes(t)) return true;
+                        if (String(os.codOS || '').toLowerCase().includes(t)) return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        function onTeamSearchInput(val) {
+            currentTeamSearchTerm = (val || '').trim().toLowerCase();
+            const clearBtn = document.getElementById('clearTeamSearchBtn');
+            if (clearBtn) clearBtn.style.display = currentTeamSearchTerm ? 'block' : 'none';
+            renderTeamTabContent(activeTeam);
+        }
+
+        function clearTeamSearch() {
+            const input = document.getElementById('teamSearchInput');
+            if (input) input.value = '';
+            currentTeamSearchTerm = '';
+            const clearBtn = document.getElementById('clearTeamSearchBtn');
+            if (clearBtn) clearBtn.style.display = 'none';
+            renderTeamTabContent(activeTeam);
         }
 
         // ================================================================
@@ -17549,7 +17643,7 @@
             const is24hTab = (team === '24h⚠️' || team === '24H ⚠️');
 
             if (is24hTab) {
-                // Filtrar apenas equipamentos com >= 1.0 dia (>= 24h)
+                // Filtrar apenas equipamentos com >= 1.0 dia (>= 24h) - Equipe OUTROS já excluída em isEquip24h
                 let eqs24h = equipments.filter(eq => isEquip24h(eq));
 
                 // ORDENAR DO COM MAIS DIAS PARA O COM MENOS DIAS (Decrescente)
@@ -17559,15 +17653,33 @@
                     content.innerHTML = `<div class="card" style="padding:3rem 1.5rem;text-align:center;border-radius:12px;">
                         <i class="fas fa-check-circle" style="font-size:2.8rem;color:#22c55e;margin-bottom:0.75rem;display:block;"></i>
                         <h3 style="font-size:1.15rem;font-weight:700;">Nenhum equipamento em OS a mais de 24h!</h3>
-                        <p style="font-size:0.85rem;color:var(--color-gray-500);margin-top:0.3rem;">Todos os equipamentos da frota estão operacionais ou com menos de 24h na oficina.</p>
+                        <p style="font-size:0.85rem;color:var(--color-gray-500);margin-top:0.3rem;">Todos os equipamentos operacionais ou com menos de 24h na oficina.</p>
                     </div>`;
                     return;
                 }
 
+                let finalEqs24h = currentTeamSearchTerm 
+                    ? eqs24h.filter(eq => matchesEquipSearch(eq, currentTeamSearchTerm))
+                    : eqs24h;
+
+                if (finalEqs24h.length === 0 && currentTeamSearchTerm) {
+                    content.innerHTML = `<div class="card" style="padding:3rem 1.5rem;text-align:center;border-radius:12px;">
+                        <i class="fas fa-search" style="font-size:2.5rem;color:var(--color-gray-400);margin-bottom:0.75rem;display:block;"></i>
+                        <h3 style="font-size:1.15rem;font-weight:700;">Nenhum equipamento encontrado na busca</h3>
+                        <p style="font-size:0.85rem;color:var(--color-gray-500);margin-top:0.3rem;">Nenhum resultado na aba 24h para "<strong>${escapeHtml(currentTeamSearchTerm)}</strong>" (Total de 24h críticas: ${eqs24h.length}).</p>
+                        <button class="btn btn-outline btn-sm" onclick="clearTeamSearch()" style="margin-top:1rem;"><i class="fas fa-times"></i> Limpar Pesquisa</button>
+                    </div>`;
+                    return;
+                }
+
+                const badgeText = currentTeamSearchTerm 
+                    ? `${finalEqs24h.length} de ${eqs24h.length} em OS crítica (Filtrado)`
+                    : `${eqs24h.length} em OS crítica`;
+
                 let html = `<div class="card">
                     <div class="card-header">
                         <h2><i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i> Equipamentos a mais de 24h em OS Oficina (Ordenado por Maior Tempo)</h2>
-                        <span class="count-badge os-aberta">${eqs24h.length} em OS crítica</span>
+                        <span class="count-badge os-aberta">${badgeText}</span>
                     </div>
                     <div class="table-wrap">
                         <table class="table-24h">
@@ -17576,11 +17688,11 @@
                                     <th>Frota</th>
                                     <th>Equipe</th>
                                     <th>Operação</th>
-                                    <th>Detalhes da OS â¬‡️</th>
+                                    <th>Detalhes da OS ⬇️</th>
                                 </tr>
                             </thead>
                             <tbody>` +
-                            eqs24h.map(eq => {
+                            finalEqs24h.map(eq => {
                                 const osBtn = `<button class="os-info-btn" data-frota="${eq.codigo}" title="Ver detalhes da OS">📋</button>`;
                                 const diasVal = getEquipPermanenciaDias(eq);
                                 const diasPermText = diasVal > 0 ? `${diasVal.toFixed(1).replace('.', ',')} dias` : '> 24h';
@@ -17597,7 +17709,7 @@
                 </div>`;
 
                 content.innerHTML = html;
-                if (eqs24h.length > ITEMS_PER_PAGE) content.innerHTML += generatePaginationHTML(currentPageEquipes, eqs24h.length, ITEMS_PER_PAGE, "renderTeamTabContent", team);
+                if (finalEqs24h.length > ITEMS_PER_PAGE) content.innerHTML += generatePaginationHTML(currentPageEquipes, finalEqs24h.length, ITEMS_PER_PAGE, "renderTeamTabContent", team);
 
                 content.querySelectorAll('.os-info-btn').forEach(btn => {
                     btn.addEventListener('click', () => openOsReportModal(btn.dataset.frota));
@@ -17605,8 +17717,22 @@
                 return;
             }
 
-            const teamEqs   = equipments.filter(eq => eq.grupo === team);
-            const teamOps   = operacoes.filter(op => (op.equipe || '') === team);
+            const allTeamEqs = equipments.filter(eq => eq.grupo === team);
+            const teamOps    = operacoes.filter(op => (op.equipe || '') === team);
+            const teamEqs    = currentTeamSearchTerm 
+                ? allTeamEqs.filter(eq => matchesEquipSearch(eq, currentTeamSearchTerm))
+                : allTeamEqs;
+
+            if (teamEqs.length === 0 && currentTeamSearchTerm) {
+                content.innerHTML = `<div class="card" style="padding:3rem 1.5rem;text-align:center;border-radius:12px;">
+                    <i class="fas fa-search" style="font-size:2.5rem;color:var(--color-gray-400);margin-bottom:0.75rem;display:block;"></i>
+                    <h3 style="font-size:1.15rem;font-weight:700;">Nenhum equipamento encontrado</h3>
+                    <p style="font-size:0.85rem;color:var(--color-gray-500);margin-top:0.3rem;">Nenhum resultado para "<strong>${escapeHtml(currentTeamSearchTerm)}</strong>" na equipe ${team} (Total na equipe: ${allTeamEqs.length}).</p>
+                    <button class="btn btn-outline btn-sm" onclick="clearTeamSearch()" style="margin-top:1rem;"><i class="fas fa-times"></i> Limpar Pesquisa</button>
+                </div>`;
+                return;
+            }
+
             const comOS     = teamEqs.filter(eq => equipamentosComOS.has(String(eq.codigo)));
             const semOS     = teamEqs.length - comOS.length;
             const pctDisp   = teamEqs.length > 0 ? Math.round((semOS / teamEqs.length) * 100) : 0;
@@ -17624,13 +17750,17 @@
                 segmentsGeral.push({ color: '#2563eb', label: 'Operações',  value: `${teamOps.length} ativas`, pct: '', percent: 0 });
             }
 
+            const titleGeral = currentTeamSearchTerm 
+                ? `GERAL · ${team} · ${teamEqs.length} de ${allTeamEqs.length} EQUIP.` 
+                : `GERAL · ${team} · ${teamEqs.length} EQUIP.`;
+
             html += buildDonutCardHTML({
                 id:           `frota-${team}`,
-                title:        `GERAL · ${team} · ${teamEqs.length} EQUIP.`,
+                title:        titleGeral,
                 centerValue:  pctDisp,
                 centerSuffix: '%',
                 centerLabel:  'disp.',
-                totalLabel:   'Total registrado',
+                totalLabel:   currentTeamSearchTerm ? 'Filtrado' : 'Total registrado',
                 totalValue:   `${teamEqs.length} equip.`,
                 segments:     segmentsGeral
             });
