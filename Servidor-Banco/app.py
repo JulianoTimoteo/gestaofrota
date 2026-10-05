@@ -1915,7 +1915,7 @@ def gerar_e_salvar_dados_json():
             
         row_u = conn.execute("SELECT MAX(atualizado_em) FROM ordens_servico").fetchone()
         raw_ultima = row_u[0] if row_u and row_u[0] else None
-        ultima = str(raw_ultima) if raw_ultima else datetime.now().isoformat()
+        ultima = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
         conn.close()
         admin_config = get_admin_config_data()
@@ -4693,7 +4693,7 @@ def get_api_status():
 
         row_u = conn.execute("SELECT MAX(atualizado_em) FROM ordens_servico").fetchone()
         raw_ultima = row_u[0] if row_u and row_u[0] else None
-        ultima = str(raw_ultima) if raw_ultima else 'Nunca'
+        ultima = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         total_usuarios = conn.execute("SELECT COUNT(*) FROM usuarios WHERE ativo = 1").fetchone()[0]
         

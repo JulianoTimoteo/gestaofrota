@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script>
         (function() {
-            var APP_VER = '2026_v39_caminhoes_32_fixed';
+            var APP_VER = '2026_v40_menu_order_sync_datetime';
             var saved = localStorage.getItem('sf_app_version');
             if (saved !== APP_VER) {
                 localStorage.setItem('sf_app_version', APP_VER);
@@ -3182,6 +3182,9 @@
                 <!-- Counters Removidos a pedido do usuario -->
             </div>
             <div class="global-os-filters" style="display: flex; gap: 4px; margin-left: auto; align-items: center; padding-left: 10px;">
+                <span id="headerLastSyncBadge" style="display:inline-flex;align-items:center;gap:5px;font-size:0.75rem;font-weight:600;color:#94a3b8;background:rgba(255,255,255,0.06);padding:3px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);margin-right:6px;white-space:nowrap;" title="Data e Hora da Última Atualização dos Dados">
+                    <i class="fas fa-clock" style="color:#10b981;font-size:0.72rem;"></i> <span id="headerLastSyncText">--:--:--</span>
+                </span>
                 <button class="btn-filter-os active" data-osfilter="ABERTA" title="Ordens de Serviço Abertas (Sem Lote, Reforma, Reparo de Peças ou Comunicada)" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #3b82f6; background:#3b82f6; color:#fff; cursor:pointer; box-shadow: 0 0 8px rgba(59, 130, 246, 0.5); transition: all 0.3s;"><i class="fas fa-wrench"></i> Aberta</button>
                 <button class="btn-filter-os" data-osfilter="REPARO" title="Tipo OS = REPARO DE PEÇAS" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer; transition: all 0.3s;"><i class="fas fa-tools"></i> Reparo</button>
                 <button class="btn-filter-os" data-osfilter="COMUNICADA" title="Status OS = COMUNICADA" style="font-size:0.75rem; padding:2px 6px; border-radius:4px; border:1px solid #475569; background:#1e293b; color:#cbd5e1; cursor:pointer; transition: all 0.3s;"><i class="fas fa-bullhorn"></i> Comunicada</button>
@@ -3302,8 +3305,26 @@
                                 <div style="font-size:1.5rem;font-weight:800;color:#8b5cf6;" id="syncUsersConnectedCount">1</div>
                             </div>
                         </div>
+                        <!-- Card Destaque: Data e Hora da Última Atualização -->
+                        <div style="background:var(--color-gray-50);border:1px solid var(--color-gray-200);border-radius:10px;padding:0.9rem 1.15rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <div style="width:40px;height:40px;border-radius:8px;background:#ecfdf5;border:1px solid #a7f3d0;display:flex;align-items:center;justify-content:center;color:#059669;font-size:1.2rem;">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.72rem;font-weight:700;color:var(--color-gray-500);text-transform:uppercase;letter-spacing:0.5px;">Data e Hora da Última Atualização</div>
+                                    <div style="font-size:1.15rem;font-weight:800;color:var(--color-text);" id="syncLastUpdateFullText">Carregando dados...</div>
+                                </div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <span id="syncLastTimeAgoBadge" style="font-size:0.8rem;font-weight:600;padding:5px 12px;border-radius:20px;background:#e2e8f0;color:#334155;display:inline-flex;align-items:center;gap:5px;">
+                                    <i class="fas fa-history" style="color:#059669;"></i> <span id="syncLastTimeAgoText">--</span>
+                                </span>
+                            </div>
+                        </div>
+
                         <!-- Widget Barra de Energia Dinâmica -->
-                        <div class="sync-energy-card" style="margin-top:1rem;margin-bottom:0.75rem;background:var(--color-gray-50);border:1px solid var(--color-gray-200);border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                        <div class="sync-energy-card" style="margin-top:0.5rem;margin-bottom:0.75rem;background:var(--color-gray-50);border:1px solid var(--color-gray-200);border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.03);">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
                                 <span style="font-weight:700;font-size:0.9rem;display:flex;align-items:center;gap:8px;color:var(--color-text);">
                                     <i class="fas fa-bolt" id="syncEnergyIcon" style="color:#10b981;font-size:1.15rem;transition:all 0.4s ease;"></i>
@@ -3322,8 +3343,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="syncLastDetails" style="font-size:0.75rem;color:var(--color-gray-500);text-align:right;padding-right:4px;">
-                            <span id="syncLastInfo">Aguardando primeiro ciclo...</span>
+                        <div id="syncLastDetails" style="font-size:0.78rem;color:var(--color-gray-600);text-align:right;padding-right:4px;display:flex;justify-content:flex-end;align-items:center;gap:6px;">
+                            <i class="fas fa-check-circle" style="color:#10b981;"></i>
+                            <span id="syncLastInfo">Última atualização: Carregando...</span>
                         </div>
                     </div>
                 </div>
@@ -15961,14 +15983,6 @@
                 setConnectionStatus('success');
             }
 
-            // Atualizar footer
-            const footerStatus = document.getElementById('footerStatus');
-            if (footerStatus) {
-                footerStatus.textContent = isOfflineFallback 
-                    ? `Modo Cloud (GitHub Pages) · ${equipments.length} frotas ativas`
-                    : `Conectado · Ãšltima sync: ${syncTime}`;
-            }
-
             // Atualizar contadores da aba Sync
             const syncEquip = document.getElementById('syncEquipCount');
             const syncOs    = document.getElementById('syncOsCount');
@@ -15978,6 +15992,7 @@
             if (syncOp)    syncOp.textContent    = operacoes.length;
 
             atualizarStatusGeral();
+            atualizarDataHoraSyncUI(syncTime);
 
             if (!isBackground || !isUserInteracting()) {
                 renderEquipamentos();
@@ -16102,8 +16117,96 @@
         // SYNC TIMER (15 segundos - silencioso em todos os dispositivos)
         // ================================================================
         // ================================================================
-        // BARRA DE ENERGIA & CICLO DE SINCRONIZAÇÃO (5 MINUTOS)
         // ================================================================
+        // DATA / HORA DA ÚLTIMA SINCRONIZAÇÃO & CICLO DE SINCRONIZAÇÃO (5 MIN)
+        // ================================================================
+        let ultimaSincronizacaoGlobal = null;
+
+        function formatarDataHoraBR(dataInput) {
+            if (!dataInput) return '--/--/---- às --:--:--';
+            let d = null;
+            if (dataInput instanceof Date) {
+                d = dataInput;
+            } else if (typeof dataInput === 'string') {
+                let str = dataInput.trim();
+                if (str.includes(' ') && !str.includes('T')) {
+                    str = str.replace(' ', 'T');
+                }
+                d = new Date(str);
+                if (isNaN(d.getTime())) {
+                    d = new Date(dataInput);
+                }
+            }
+            if (!d || isNaN(d.getTime())) {
+                return String(dataInput);
+            }
+            const dia  = String(d.getDate()).padStart(2, '0');
+            const mes  = String(d.getMonth() + 1).padStart(2, '0');
+            const ano  = d.getFullYear();
+            const hora = String(d.getHours()).padStart(2, '0');
+            const min  = String(d.getMinutes()).padStart(2, '0');
+            const seg  = String(d.getSeconds()).padStart(2, '0');
+            return `${dia}/${mes}/${ano} às ${hora}:${min}:${seg}`;
+        }
+
+        function formatarTempoDecorrido(dataInput) {
+            if (!dataInput) return 'aguardando...';
+            let d = null;
+            if (dataInput instanceof Date) {
+                d = dataInput;
+            } else if (typeof dataInput === 'string') {
+                let str = dataInput.trim();
+                if (str.includes(' ') && !str.includes('T')) {
+                    str = str.replace(' ', 'T');
+                }
+                d = new Date(str);
+                if (isNaN(d.getTime())) {
+                    d = new Date(dataInput);
+                }
+            }
+            if (!d || isNaN(d.getTime())) return '';
+            const diffMs = Math.max(0, Date.now() - d.getTime());
+            const diffSec = Math.floor(diffMs / 1000);
+            if (diffSec < 15) return 'agora mesmo';
+            if (diffSec < 60) return `há ${diffSec}s`;
+            const diffMin = Math.floor(diffSec / 60);
+            if (diffMin < 60) return `há ${diffMin} min`;
+            const diffHoras = Math.floor(diffMin / 60);
+            if (diffHoras < 24) return `há ${diffHoras}h`;
+            const diffDias = Math.floor(diffHoras / 24);
+            return `há ${diffDias}d`;
+        }
+
+        function atualizarDataHoraSyncUI(syncTime) {
+            if (syncTime) {
+                ultimaSincronizacaoGlobal = syncTime;
+            }
+            if (!ultimaSincronizacaoGlobal) return;
+
+            const textoFormatado = formatarDataHoraBR(ultimaSincronizacaoGlobal);
+            const tempoDecorrido = formatarTempoDecorrido(ultimaSincronizacaoGlobal);
+
+            // Card principal na aba Sincronização
+            const elFull = document.getElementById('syncLastUpdateFullText');
+            if (elFull) elFull.textContent = textoFormatado;
+
+            const elAgo = document.getElementById('syncLastTimeAgoText');
+            if (elAgo) elAgo.textContent = tempoDecorrido;
+
+            // Detalhes abaixo da barra de energia
+            const elDetails = document.getElementById('syncLastInfo');
+            if (elDetails) {
+                elDetails.innerHTML = `Última sincronização concluída com sucesso: <strong>${textoFormatado}</strong> (${tempoDecorrido})`;
+            }
+
+            // Badge no topo superior do app (ao lado dos botões de OS)
+            const elHeader = document.getElementById('headerLastSyncBadge');
+            if (elHeader) {
+                let horaCompacta = textoFormatado.includes('às ') ? textoFormatado.split('às ')[1] : textoFormatado;
+                elHeader.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;font-size:0.7rem;"></i> Sync: ${horaCompacta} <span style="opacity:0.75;font-weight:400;margin-left:2px;">(${tempoDecorrido})</span>`;
+            }
+        }
+
         const SYNC_TOTAL_SECONDS = 300; // 5 minutos = 300 segundos
         let syncElapsedSeconds   = 0;
         let syncState            = 'COUNTDOWN'; // 'COUNTDOWN' | 'FETCHING' | 'SUCCESS'
@@ -16114,7 +16217,6 @@
             const fill    = document.getElementById('syncEnergyFill');
             const text    = document.getElementById('syncEnergyText');
             const icon    = document.getElementById('syncEnergyIcon');
-            const details = document.getElementById('syncLastInfo');
             if (!fill || !text) return;
 
             if (syncState === 'COUNTDOWN') {
@@ -16163,11 +16265,7 @@
 
                 text.style.color = '#ffffff';
                 text.style.textShadow = '0 1px 3px rgba(0,0,0,0.7)';
-                text.innerHTML = `<i class="fas fa-check-circle" style="margin-right:6px;"></i> Dados atualizados às ${window.syncLastUpdateTime || new Date().toLocaleTimeString('pt-BR')}`;
-                
-                if (details) {
-                    details.textContent = `Última sincronização com sucesso às ${window.syncLastUpdateTime || new Date().toLocaleTimeString('pt-BR')}`;
-                }
+                text.innerHTML = `<i class="fas fa-check-circle" style="margin-right:6px;"></i> Dados sincronizados com sucesso!`;
             }
         }
 
@@ -16187,10 +16285,10 @@
             } catch (err) {
                 console.warn('Erro ao atualizar dados:', err);
             } finally {
-                window.syncLastUpdateTime = new Date().toLocaleTimeString('pt-BR');
                 syncState = 'SUCCESS';
-                syncSuccessCountdown = 10; // Permanece por 10 segundos!
+                syncSuccessCountdown = 10; // Permanece por 10 segundos no status de sucesso
                 updateSyncEnergyBarUI();
+                atualizarDataHoraSyncUI(new Date().toISOString());
 
                 if (syncBtn) {
                     syncBtn.disabled = false;
@@ -16204,16 +16302,19 @@
             syncElapsedSeconds = 0;
             syncState = 'COUNTDOWN';
             updateSyncEnergyBarUI();
+            atualizarDataHoraSyncUI();
 
             syncMasterTimer = setInterval(async () => {
                 if (syncState === 'COUNTDOWN') {
                     syncElapsedSeconds++;
                     updateSyncEnergyBarUI();
+                    atualizarDataHoraSyncUI();
                     if (syncElapsedSeconds >= SYNC_TOTAL_SECONDS) {
                         await triggerSyncExecution();
                     }
                 } else if (syncState === 'SUCCESS') {
                     syncSuccessCountdown--;
+                    atualizarDataHoraSyncUI();
                     if (syncSuccessCountdown <= 0) {
                         // Reseta e recomeça a contagem de 5 minutos
                         syncElapsedSeconds = 0;
@@ -16675,12 +16776,58 @@
         // FILTROS E RENDER DE EQUIPAMENTOS
         // ================================================================
         function getEquipesDisponiveis() {
-            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'CARRETAS', 'COLHEDORAS', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'ONIBUS', 'PREPARO', 'TRATOS CULTURAIS', 'VEICULOS LEVES', 'OUTROS'];
-            const extraTeams = equipments.map(eq => eq.grupo).filter(g => g && !standardTeams.includes(g));
-            const all = [...new Set([...standardTeams, ...extraTeams])];
-            
-            // Coloca OUTROS sempre no final
-            return all.filter(t => t !== 'OUTROS').concat(['OUTROS']);
+            // Sequência prioritária estrita solicitada pelo usuário:
+            // 1. Caminhoes | 2. Colhedoras | 3. FERTIRRIGACAO | 4. HERBICIDA | 5. TRATOS | 6. PREPARO | 7. BIOMASSA | 8. LINHA AMARELA
+            // Restante das equipes em ordem alfabética (com OUTROS no final)
+            const priorityTeams = [
+                'CAMINHOES',
+                'COLHEDORAS',
+                'FERTIRRIGACAO',
+                'HERBICIDA',
+                'TRATOS CULTURAIS',
+                'PREPARO',
+                'BIOMASSA',
+                'LINHA AMARELA'
+            ];
+
+            const standardTeams = [
+                ...priorityTeams,
+                'CARRETAS',
+                'ONIBUS',
+                'VEICULOS LEVES',
+                'OUTROS'
+            ];
+
+            const extraTeams = equipments
+                .map(eq => (eq.grupo || '').trim())
+                .filter(g => g && !standardTeams.includes(g) && g !== '24h⚠️' && g !== '24H ⚠️' && g !== 'COLHEDORA' && g !== 'TRATOS');
+
+            const allUnique = [...new Set([...standardTeams, ...extraTeams])];
+
+            // 1. Equipes da sequência prioritária presentes
+            const resultPriority = [];
+            priorityTeams.forEach(p => {
+                if (allUnique.includes(p)) {
+                    resultPriority.push(p);
+                } else if (p === 'TRATOS CULTURAIS' && allUnique.includes('TRATOS')) {
+                    resultPriority.push('TRATOS');
+                }
+            });
+
+            // 2. Restante das equipes em ordem alfabética
+            const remaining = allUnique.filter(t => 
+                !resultPriority.includes(t) && 
+                t !== 'OUTROS' &&
+                t !== 'COLHEDORA' &&
+                t !== 'TRATOS'
+            ).sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
+
+            const finalTeams = [...resultPriority, ...remaining];
+            if (allUnique.includes('OUTROS')) {
+                finalTeams.push('OUTROS');
+            }
+
+            return finalTeams;
         }
 
         function renderEquipTeamFilter() {
@@ -16721,8 +16868,7 @@
                 return;
             }
 
-            const standardTeams = ['BIOMASSA', 'CAMINHOES', 'CARRETAS', 'COLHEDORAS', 'FERTIRRIGACAO', 'HERBICIDA', 'LINHA AMARELA', 'ONIBUS', 'PREPARO', 'TRATOS CULTURAIS', 'VEICULOS LEVES'];
-            const allTeams = [...new Set([...standardTeams, ...getEquipesDisponiveis()])];
+            const allTeams = getEquipesDisponiveis().filter(t => t !== '24h⚠️' && t !== '24H ⚠️');
 
             // Tipos para a lista suspensa
             const allTipos = [...new Set([...LISTA_TIPOS_PADRAO, ...equipments.map(e => e.tipo)])].sort();

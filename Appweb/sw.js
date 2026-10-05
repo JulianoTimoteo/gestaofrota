@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fleet-cache-v30';
+const CACHE_NAME = 'fleet-cache-v31';
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();
