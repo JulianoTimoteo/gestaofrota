@@ -16306,13 +16306,21 @@
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-                // Tenta carregar dados.json pré-gerado em tempo de execução pelo Live Tunnel (resposta em <20ms)
-                let res = await fetch(`dados.json?_t=${Date.now()}`, { 
+                const fetchOptions = {
                     signal: controller.signal,
                     cache: 'no-store',
                     headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache' }
-                }).catch(() => null);
+                };
 
+                // 1. Tenta carregar dados.json relativo local ou do GitHub Pages com cache busting
+                let res = await fetch(`dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
+
+                // 2. Se falhar ou se for GitHub Pages e o CDN do GitHub Pages estiver defasado, tenta raw.githubusercontent.com
+                if ((!res || !res.ok) && isStaticGitHubPages()) {
+                    res = await fetch(`https://raw.githubusercontent.com/julianotimoteo/gestaofrota/master/Appweb/dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
+                }
+
+                // 3. Se ainda não obteve e não for GitHub estático, tenta a API local do servidor
                 if (!res || !res.ok) {
                     res = await fetch(`${API_BASE}/api/dados?_t=${Date.now()}`, {
                         signal: controller.signal,
