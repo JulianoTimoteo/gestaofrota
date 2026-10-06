@@ -101,6 +101,21 @@ else:
 _db_candidate = os.path.join(BASE_DIR, 'simplefarm.db')
 DB_PATH = os.environ.get('SF_DB_PATH', _db_candidate)
 
+# ==================== LOG FÍSICO DO SERVIDOR ====================
+LOG_FILE_PATH = os.path.join(BASE_DIR, 'servidor_sincronizacao.log')
+try:
+    file_handler = logging.FileHandler(LOG_FILE_PATH, encoding='utf-8', mode='a')
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(message)s'))
+    logging.getLogger().addHandler(file_handler)
+    logger.info("=" * 60)
+    logger.info("LOG DO SERVIDOR GESTAO DE FROTA INICIADO: %s", LOG_FILE_PATH)
+    logger.info("Diretório de Operação: %s", BASE_DIR)
+    logger.info("Banco de Dados: %s", DB_PATH)
+    logger.info("=" * 60)
+except Exception as log_init_err:
+    print(f"Aviso ao inicializar arquivo de log em {LOG_FILE_PATH}: {log_init_err}")
+
 # ==================== BANDEJA DO SISTEMA (TRAY) ====================
 TRAY_CALLBACK = None
 
@@ -2037,6 +2052,35 @@ def get_api_dados():
     resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
+
+@app.route('/api/logs', methods=['GET'])
+@app.route('/api/logs/sincronizacao', methods=['GET'])
+def get_api_logs():
+    """Retorna as últimas linhas do arquivo de log do servidor para conferência e auditoria."""
+    linhas_solicitadas = request.args.get('n', default=100, type=int)
+    if not os.path.exists(LOG_FILE_PATH):
+        return jsonify(success=True, log="Arquivo de log ainda não criado.", linhas=[]), 200
+    try:
+        with open(LOG_FILE_PATH, 'r', encoding='utf-8', errors='ignore') as f:
+            todas = f.readlines()
+            ultimas = todas[-linhas_solicitadas:] if len(todas) > linhas_solicitadas else todas
+        return jsonify(
+            success=True,
+            total_linhas=len(todas),
+            linhas_retornadas=len(ultimas),
+            caminho_arquivo=LOG_FILE_PATH,
+            tamanho_bytes=os.path.getsize(LOG_FILE_PATH),
+            log="".join(ultimas)
+        )
+    except Exception as err:
+        return jsonify(success=False, error=str(err)), 500
+
+@app.route('/api/logs/download', methods=['GET'])
+def download_api_logs():
+    """Download direto do arquivo de log."""
+    if os.path.exists(LOG_FILE_PATH):
+        return send_file(LOG_FILE_PATH, as_attachment=True, download_name="servidor_sincronizacao.log")
+    return jsonify(success=False, error="Arquivo de log não encontrado"), 404
 
 
 @app.route('/api/os')
@@ -4069,7 +4113,7 @@ class SyncService:
             # Sincroniza o arquivo SQLite assincronamente para o tablet SD Card sem bloquear HTTP requests
             sd_mirror_queue.enqueue_push()
 
-            notificar_tray("amarelo", f"Em repouso. Próximo ciclo em 5 min (Último: {agora})")
+            notificar_tray("verde", f"Sincronizado com Sucesso! Próximo ciclo em 5 min (Último: {agora})")
             return total
         except Exception as e:
             self.error_count += 1

@@ -119,6 +119,17 @@ def acao_abrir_pasta_servidor(icon, item):
     except Exception:
         pass
 
+def acao_abrir_arquivo_log(icon, item):
+    """Abre o arquivo de log servidor_sincronizacao.log no Bloco de Notas / editor padrão."""
+    try:
+        log_path = app.LOG_FILE_PATH
+        if os.path.exists(log_path):
+            os.startfile(log_path)
+        else:
+            webbrowser.open("http://localhost:8000/api/logs")
+    except Exception:
+        pass
+
 def acao_sair(icon, item):
     """Encerra graciosamente o servidor e remove o ícone da bandeja."""
     global RUNNING
@@ -139,6 +150,7 @@ def criar_menu_bandeja():
         pystray.MenuItem("🔄 Sincronizar Agora (SimpleFarm)", acao_sincronizar_agora),
         pystray.MenuItem("☁️ Sincronizar Nuvem (Firebase Firestore)", acao_sincronizar_firebase),
         pystray.Menu.SEPARATOR,
+        pystray.MenuItem("📋 Ver Log de Sincronização (.log)", acao_abrir_arquivo_log),
         pystray.MenuItem("📁 Abrir Pasta do Servidor", acao_abrir_pasta_servidor),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("❌ Encerrar Servidor", acao_sair)
@@ -186,8 +198,8 @@ def iniciar_servidor_flask():
         app.watchdog_service.start()
         app.start_sync_thread()
 
-        # Atualiza bandeja para estado amarelo (em espera/pronto)
-        atualizar_status_bandeja("amarelo", "Online — Servidor pronto na porta 8000")
+        # Atualiza bandeja para estado verde (Servidor Online e 100% Funcional)
+        atualizar_status_bandeja("verde", "Online — Servidor 100% Operacional na porta 8000")
 
         # Roda Flask
         app.app.run(host='0.0.0.0', port=8000, debug=False, threaded=True, use_reloader=False)
