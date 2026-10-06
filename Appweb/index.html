@@ -16307,13 +16307,21 @@
                 const timeoutId = setTimeout(() => controller.abort(), 10000);
 
                 // Tenta carregar dados.json pré-gerado em tempo de execução pelo Live Tunnel (resposta em <20ms)
-                let res = await fetch(`dados.json?_t=${Date.now()}`, { signal: controller.signal }).catch(() => null);
+                let res = await fetch(`dados.json?_t=${Date.now()}`, { 
+                    signal: controller.signal,
+                    cache: 'no-store',
+                    headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache' }
+                }).catch(() => null);
+
                 if (!res || !res.ok) {
                     res = await fetch(`${API_BASE}/api/dados?_t=${Date.now()}`, {
                         signal: controller.signal,
+                        cache: 'no-store',
                         headers: {
                             'Content-Type':  'application/json',
-                            'Authorization': `Bearer ${authToken}`
+                            'Authorization': `Bearer ${authToken}`,
+                            'Cache-Control': 'no-cache, no-store, must-revalidate',
+                            'Pragma': 'no-cache'
                         }
                     }).catch(() => null);
                 }
