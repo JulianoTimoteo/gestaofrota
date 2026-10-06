@@ -16541,7 +16541,7 @@
                 syncState = 'SUCCESS';
                 syncSuccessCountdown = 10; // Permanece por 10 segundos no status de sucesso
                 updateSyncEnergyBarUI();
-                atualizarDataHoraSyncUI(new Date().toISOString());
+                atualizarDataHoraSyncUI();
 
                 if (syncBtn) {
                     syncBtn.disabled = false;
