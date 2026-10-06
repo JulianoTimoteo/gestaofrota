@@ -4106,6 +4106,25 @@ class SyncService:
                     logger.warning("Aviso sincronizacao Firebase: %s", _f_err)
             threading.Thread(target=_sync_firebase_bg, daemon=True).start()
 
+            # Auto-Publicação para o GitHub Pages em segundo plano (mantém o site online 100% atualizado)
+            def _auto_push_github_bg():
+                try:
+                    repo_dir = None
+                    for d in [BASE_DIR, os.path.dirname(BASE_DIR)]:
+                        if os.path.isdir(os.path.join(d, '.git')):
+                            repo_dir = d
+                            break
+                    if repo_dir:
+                        import subprocess
+                        subprocess.run(['git', 'add', 'Appweb/dados.json'], cwd=repo_dir, capture_output=True, timeout=15)
+                        c_res = subprocess.run(['git', 'commit', '-m', f'chore(auto-sync): dados atualizados {agora}'], cwd=repo_dir, capture_output=True, timeout=15)
+                        if c_res.returncode == 0:
+                            subprocess.run(['git', 'push', 'origin', 'master'], cwd=repo_dir, capture_output=True, timeout=30)
+                            logger.info(f'[Auto-Sync GitHub] dados.json publicado automaticamente no GitHub Pages ({agora})')
+                except Exception as _git_err:
+                    logger.debug(f'Auto-push GitHub ignorado ou indisponível: {_git_err}')
+            threading.Thread(target=_auto_push_github_bg, daemon=True).start()
+
             # Sincroniza o arquivo SQLite assincronamente para o tablet SD Card sem bloquear HTTP requests
             sd_mirror_queue.enqueue_push()
 
