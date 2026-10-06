@@ -18691,12 +18691,14 @@
         }
 
         // ================================================================
-        // INSTALAÃ‡ÃƒO DO APLICATIVO CELULAR (PWA)
+        // INSTALAÇÃO DO APLICATIVO CELULAR (PWA)
         // ================================================================
         let deferredPwaPrompt = null;
 
         window.addEventListener('beforeinstallprompt', (e) => {
+            // Guarda o evento nativo para disparo ao clicar no botão "Instalar App"
             e.preventDefault();
+            window.deferredPwaPrompt = e;
             deferredPwaPrompt = e;
             showPwaInstallPrompt();
         });
@@ -18758,25 +18760,8 @@
                 window.deferredPwaPrompt = null;
                 deferredPwaPrompt = null;
             } else {
-                // Aguarda 400ms para ver se o evento do browser engatilha
-                let checked = false;
-                for (let i = 0; i < 4; i++) {
-                    await new Promise(r => setTimeout(r, 150));
-                    const p = window.deferredPwaPrompt || deferredPwaPrompt;
-                    if (p) {
-                        checked = true;
-                        p.prompt();
-                        await p.userChoice;
-                        window.deferredPwaPrompt = null;
-                        deferredPwaPrompt = null;
-                        dismissPwaBanner();
-                        break;
-                    }
-                }
-                if (!checked) {
-                    // Abre modal de instalação elegante ilustrado, sem exigir menus ou três pontos
-                    abrirModalInstalacaoDireta();
-                }
+                // Abre modal de instalação com instruções claras
+                abrirModalInstalacaoDireta();
             }
         }
 
@@ -18831,22 +18816,13 @@
             document.getElementById('btnHeaderInstallPwa')?.addEventListener('click', triggerPwaInstall);
             document.getElementById('btnPwaDismiss')?.addEventListener('click', dismissPwaBanner);
 
-            
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                    for(let registration of registrations) {
-                        if (registration.scope.includes('/gestaofrota/') && !registration.scope.endsWith('Appweb/')) {
-                            console.log('Unregistering old root SW:', registration.scope);
-                            registration.unregister();
-                        }
-                    }
-                });
-                navigator.serviceWorker.register('./sw.js?v=28').then(reg => {
-
-                    reg.update();
-                    console.log('Service Worker PWA registrado:', reg.scope);
+                // Registra o Service Worker com URL canônica sem query params para suporte pleno do navegador
+                const swUrl = new URL('sw.js', window.location.href).href;
+                navigator.serviceWorker.register(swUrl).then(reg => {
+                    console.log('Service Worker PWA registrado com sucesso:', reg.scope);
                 }).catch(err => {
-                    console.warn('Alerta SW PWA:', err);
+                    console.warn('Aviso ao registrar Service Worker PWA:', err);
                 });
             }
 
