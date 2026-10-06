@@ -15376,17 +15376,17 @@
             const userInp = user.toLowerCase().trim();
             const passInp = pass.trim();
 
-            // Mapeamento oficial estrito de contas cadastradas no banco de dados (SQLite simplefarm.db)
+            // Mapeamento estrito por Hash PBKDF2 (Nenhuma senha em texto puro é armazenada ou exposta)
             const allowedAccountsMap = {
-                'julianotimoteo': { name: 'Juliano Timóteo', role: 'admin', passHash: 'fd03d009d067b1c70e30d7bfa5ea5ef43f6693b67eb01d1c8f62f8373b50cfa8', salt: '3b55dfdc2eed2626cebd5b0cdd1ada24997aadd4b8f030a50fac983209b6a1dc', legacyHash: '10e44f2665de5d27f0a1c193621f57da09564d7aecf9a14dba53b5bbbc330e61' },
-                'julianotimoteo@usinapitangueiras.com.br': { name: 'Juliano Timóteo', role: 'admin', passHash: 'fd03d009d067b1c70e30d7bfa5ea5ef43f6693b67eb01d1c8f62f8373b50cfa8', salt: '3b55dfdc2eed2626cebd5b0cdd1ada24997aadd4b8f030a50fac983209b6a1dc', legacyHash: '10e44f2665de5d27f0a1c193621f57da09564d7aecf9a14dba53b5bbbc330e61' },
-                'logistica': { name: 'Logística Usina Pitangueiras', role: 'admin', passHash: 'e2bba8fada92a1458e2ee5fe68ec63fa5e9ea29831f26f633c5e8c1ba1454556', salt: '072afbaebef26177ce4abe9cdf6b1a7ade30f87c07f856a31dd260226c29e96d', legacyHash: '8343b9f26b9db3054bc4bd2574f1f7dd0ef3b689bb54eb26709ab269f0519915' },
-                'logistica@usinapitangueiras.com.br': { name: 'Logística Usina Pitangueiras', role: 'admin', passHash: 'e2bba8fada92a1458e2ee5fe68ec63fa5e9ea29831f26f633c5e8c1ba1454556', salt: '072afbaebef26177ce4abe9cdf6b1a7ade30f87c07f856a31dd260226c29e96d', legacyHash: '8343b9f26b9db3054bc4bd2574f1f7dd0ef3b689bb54eb26709ab269f0519915' },
-                'rafaelfarra': { name: 'Rafael Aparecido Farra', role: 'visualizador', passHash: '8bbec906bd2f6fcdde1bb96e4da45892534a6d45e75ef59998818f0cbfe359a6', salt: '85fa3df4f7cf80fa1da286655a878624d0dbdaafbd35230762142b8c66e4f22b' },
-                'rafaelfarra@usinapitangueiras.com.br': { name: 'Rafael Aparecido Farra', role: 'visualizador', passHash: '8bbec906bd2f6fcdde1bb96e4da45892534a6d45e75ef59998818f0cbfe359a6', salt: '85fa3df4f7cf80fa1da286655a878624d0dbdaafbd35230762142b8c66e4f22b' },
-                'reginaldomantovani': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador', passHash: 'daa6a37e4a00c28e8334812a209fa9fc2330a382d610313f84f09d22080a2b97', salt: 'c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a' },
-                'reginaldomantovani@usinapitanguerias.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador', passHash: 'daa6a37e4a00c28e8334812a209fa9fc2330a382d610313f84f09d22080a2b97', salt: 'c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a' },
-                'reginaldomantovani@usinapitangueiras.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador', passHash: 'daa6a37e4a00c28e8334812a209fa9fc2330a382d610313f84f09d22080a2b97', salt: 'c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a' }
+                'julianotimoteo': { name: 'Juliano Timóteo', role: 'admin', passHash: '10e44f2665de5d27f0a1c193621f57da09564d7aecf9a14dba53b5bbbc330e61', salt: '3b55dfdc2eed2626cebd5b0cdd1ada24997aadd4b8f030a50fac983209b6a1dc' },
+                'julianotimoteo@usinapitangueiras.com.br': { name: 'Juliano Timóteo', role: 'admin', passHash: '10e44f2665de5d27f0a1c193621f57da09564d7aecf9a14dba53b5bbbc330e61', salt: '3b55dfdc2eed2626cebd5b0cdd1ada24997aadd4b8f030a50fac983209b6a1dc' },
+                'logistica': { name: 'Logística Usina Pitangueiras', role: 'admin', passHash: '8343b9f26b9db3054bc4bd2574f1f7dd0ef3b689bb54eb26709ab269f0519915', salt: '072afbaebef26177ce4abe9cdf6b1a7ade30f87c07f856a31dd260226c29e96d' },
+                'logistica@usinapitangueiras.com.br': { name: 'Logística Usina Pitangueiras', role: 'admin', passHash: '8343b9f26b9db3054bc4bd2574f1f7dd0ef3b689bb54eb26709ab269f0519915', salt: '072afbaebef26177ce4abe9cdf6b1a7ade30f87c07f856a31dd260226c29e96d' },
+                'rafaelfarra': { name: 'Rafael Aparecido Farra', role: 'visualizador', passHash: '1bcdab16d77b475a9a30ad0b8f8bd2c86c70785288bfade8da9620848364825e', salt: '85fa3df4f7cf80fa1da286655a878624d0dbdaafbd35230762142b8c66e4f22b' },
+                'rafaelfarra@usinapitangueiras.com.br': { name: 'Rafael Aparecido Farra', role: 'visualizador', passHash: '1bcdab16d77b475a9a30ad0b8f8bd2c86c70785288bfade8da9620848364825e', salt: '85fa3df4f7cf80fa1da286655a878624d0dbdaafbd35230762142b8c66e4f22b' },
+                'reginaldomantovani': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador', passHash: 'bdab8038ccaa024045a3dabf20d622e1e1f15de0a531f5c29b2925a08daa8fea', salt: 'c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a' },
+                'reginaldomantovani@usinapitanguerias.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador', passHash: 'bdab8038ccaa024045a3dabf20d622e1e1f15de0a531f5c29b2925a08daa8fea', salt: 'c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a' },
+                'reginaldomantovani@usinapitangueiras.com.br': { name: 'Reginaldo Fernando Mantovani', role: 'visualizador', passHash: 'bdab8038ccaa024045a3dabf20d622e1e1f15de0a531f5c29b2925a08daa8fea', salt: 'c8cea115f6e0cae961413e538c57006f61d7da2b72798c9cbc88497b26aaa17a' }
             };
 
             // Carrega usuários atualizados do dados.json / cache do banco
@@ -15457,7 +15457,6 @@
                         hideGlobalLoader();
                         return;
                     } else if (!res.ok || (data && !data.success)) {
-                        // Se o servidor respondeu ativamente (ex: 401 Unauthorized / Credenciais Inválidas), Bloqueia imediatamente!
                         const errMsg = (data && data.error) ? data.error : 'Usuário ou senha incorretos.';
                         statusEl.innerHTML = `<i class="fas fa-times-circle" style="margin-right:6px;color:#ef4444;"></i> ${errMsg}`;
                         statusEl.className   = 'login-status error';
@@ -15492,16 +15491,10 @@
                 return;
             }
 
-            // PASSO B: Validação de senha via PBKDF2/SHA-256 e senhas mestras de contingência
+            // PASSO B: Validação estrita de senha via PBKDF2/SHA-256 (Nenhuma senha exposta)
             let isPasswordValid = false;
 
-            // Suporte a senhas mestras autorizadas
-            const allowedMasterPasswords = ['a123456@', 'tmotvini1986@#', 'Ttmotvini1986@#'];
-            if (allowedMasterPasswords.includes(passInp)) {
-                isPasswordValid = true;
-            }
-
-            if (!isPasswordValid && foundAccount.salt) {
+            if (foundAccount.passHash && foundAccount.salt) {
                 try {
                     const enc = new TextEncoder();
                     const keyMaterial = await crypto.subtle.importKey(
@@ -15518,7 +15511,7 @@
                         256
                     );
                     const derivedHash = Array.from(new Uint8Array(derivedBits)).map(b => b.toString(16).padStart(2, '0')).join('');
-                    if (derivedHash === foundAccount.passHash || (foundAccount.legacyHash && derivedHash === foundAccount.legacyHash)) {
+                    if (derivedHash === foundAccount.passHash) {
                         isPasswordValid = true;
                     }
                 } catch (hashErr) {

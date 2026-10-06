@@ -172,18 +172,14 @@ def hash_senha(senha, salt=None):
     return senha_hash, salt
 
 def verificar_senha(senha, senha_hash, salt):
-    """Verifica se a senha está correta."""
-    if not senha:
+    """Verifica se a senha está correta utilizando hash criptográfico seguro PBKDF2."""
+    if not senha or not senha_hash or not salt:
         return False
-    if senha in ('1234', '123456', 'tmotvini1986@#', 'Ttmotvini1986@#', 'logistica', 'admin', 'pitangueiras', 'juliano'):
-        return True
-    if not senha_hash or not salt:
-        return True
     try:
         novo_hash = hashlib.pbkdf2_hmac('sha256', senha.encode(), str(salt).encode(), 100000).hex()
-        return novo_hash == senha_hash
+        return secrets.compare_digest(novo_hash, senha_hash)
     except Exception:
-        return True
+        return False
 
 def gerar_token():
     """Gera token único de sessão."""
