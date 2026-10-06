@@ -85,11 +85,14 @@ if os.path.exists(origem_dist):
         s = os.path.join(origem_dist, item)
         d = os.path.join(DIST_DIR, item)
         if os.path.isdir(s):
-            if os.path.exists(d):
-                shutil.rmtree(d)
-            shutil.copytree(s, d)
+            shutil.copytree(s, d, dirs_exist_ok=True)
         else:
-            shutil.copy2(s, d)
+            try:
+                if os.path.exists(d):
+                    os.chmod(d, 0o777)
+                shutil.copy2(s, d)
+            except Exception as _ce:
+                print(f"  [Aviso] Falha ao sobregravar {item}: {_ce}")
 
 # 4. Copiar arquivos de suporte e dados essenciais
 print("\n[4/5] Copiando banco de dados, credenciais do Firebase e Frontend...")
@@ -115,9 +118,7 @@ else:
 fe_origem = os.path.join(ROOT_DIR, "Appweb")
 fe_destino = os.path.join(DIST_DIR, "Appweb")
 if os.path.exists(fe_origem):
-    if os.path.exists(fe_destino):
-        shutil.rmtree(fe_destino)
-    shutil.copytree(fe_origem, fe_destino)
+    shutil.copytree(fe_origem, fe_destino, dirs_exist_ok=True)
     print("  [OK] Pasta Appweb copiada com sucesso!")
 else:
     print(f"  [AVISO] Pasta Appweb nao encontrada em {fe_origem}")

@@ -1999,10 +1999,12 @@ def gerar_e_salvar_dados_json():
 
         LATEST_DADOS_PAYLOAD = payload
 
-        # Grava em dados.json na raiz e em todas as pastas do projeto
-        paths_to_save = [
+        # Grava em dados.json na pasta do Frontend e caminhos adjacentes (compatível com Pendrive e Dev)
+        paths_to_save = list({
+            os.path.join(FRONTEND_DIR, 'dados.json'),
+            os.path.join(BASE_DIR, 'Appweb', 'dados.json'),
             os.path.join(os.path.dirname(BASE_DIR), 'Appweb', 'dados.json')
-        ]
+        })
         
         json_str = json.dumps(payload, ensure_ascii=False, indent=2)
         for p in paths_to_save:
@@ -4047,6 +4049,12 @@ class SyncService:
             else:
                 logger.warning(f'Sync #{self.sync_count}: 0 registros extraidos (login ok, mas sem dados retornados)')
             
+            # Atualiza imediatamente o dados.json local no disco e payload de memória em tempo real
+            try:
+                gerar_e_salvar_dados_json()
+            except Exception as _ge_err:
+                logger.warning("Aviso ao regenerar dados.json apos sync: %s", _ge_err)
+
             # Dispara envio para o Firebase Cloud Firestore em segundo plano
             def _sync_firebase_bg():
                 try:

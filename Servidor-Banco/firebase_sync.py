@@ -28,16 +28,24 @@ def inicializar_firebase_admin():
     if ADMIN_SDK_INITIALIZED and _db_admin:
         return _db_admin
 
+    import sys
     pasta = os.path.dirname(os.path.abspath(__file__))
+    exe_dir = os.path.dirname(os.path.abspath(sys.executable)) if getattr(sys, 'frozen', False) else pasta
     key_candidates = [
+        os.path.join(exe_dir, "osoficina-firebase-adminsdk-fbsvc-e1d1ef7a32.json"),
         os.path.join(pasta, "osoficina-firebase-adminsdk-fbsvc-e1d1ef7a32.json"),
         os.path.join(os.path.dirname(pasta), "VersaoDesktop", "osoficina-firebase-adminsdk-fbsvc-e1d1ef7a32.json"),
+        os.path.join(os.path.dirname(exe_dir), "VersaoDesktop", "osoficina-firebase-adminsdk-fbsvc-e1d1ef7a32.json"),
+        os.path.join(exe_dir, "firebase_key.json"),
         os.path.join(pasta, "firebase_key.json"),
+        os.path.join(exe_dir, "osoficina-key.json"),
         os.path.join(pasta, "osoficina-key.json")
     ]
-    for f in os.listdir(pasta):
-        if "adminsdk" in f.lower() and f.endswith(".json"):
-            key_candidates.insert(0, os.path.join(pasta, f))
+    for d in (pasta, exe_dir):
+        if os.path.exists(d):
+            for f in os.listdir(d):
+                if "adminsdk" in f.lower() and f.endswith(".json"):
+                    key_candidates.insert(0, os.path.join(d, f))
 
     key_path = next((p for p in key_candidates if os.path.exists(p)), None)
 

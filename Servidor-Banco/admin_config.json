@@ -137,7 +137,7 @@
     "5743": "CARRETAS",
     "82112": "CARRETAS",
     "81195": "CARRETAS",
-    "5715": "OUT",
+    "5715": "OUTROS",
     "5716": "OUTROS",
     "82522": "CARRETAS",
     "17119": "ONIBUS",
@@ -561,5 +561,5 @@
     "3019": "PREPARO",
     "9999": "PREPARO"
   },
-  "ultimaAlteracao": "2026-10-05T10:06:27.596850"
+  "ultimaAlteracao": "2026-10-05T10:25:39.889662"
 }
