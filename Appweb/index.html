@@ -187,7 +187,7 @@
             color: #ffffff !important;
         }
 
-        /* EXCEÃ‡ÃƒO DE SEGURANÃ‡A: ELEMENTOS COM FUNDO VERDE/CLARO DEVEM TER TEXTO PRETO NO MODO ESCURO */
+        /* EXCEÇÃO DE SEGURANÇA: ELEMENTOS COM FUNDO VERDE/CLARO DEVEM TER TEXTO PRETO NO MODO ESCURO */
         body.dark-theme .sd-trigger,
         body.dark-theme .sd-trigger *,
         body.dark-theme .sd-label,
@@ -210,6 +210,25 @@
         body:not(.dark-theme) .pill-blue {
             color: #000000 !important;
             font-weight: 500 !important;
+        }
+
+        /* CARD DE NOTIFICAÇÕES E ALERTAS NO MODO ESCURO (TEXTO PRETO NO FUNDO AMARELO) */
+        body.dark-theme .push-permission-card,
+        body.dark-theme .push-permission-card div,
+        body.dark-theme .push-permission-card span,
+        body.dark-theme #pushStatusText {
+            color: #1e293b !important;
+        }
+        body.dark-theme .push-permission-card .push-card-title {
+            color: #78350f !important;
+            font-weight: 800 !important;
+        }
+
+        /* BADGE DA VERSÃO NO MODO ESCURO (ALTO CONTRASTE E VISIBILIDADE) */
+        body.dark-theme .badge-version {
+            background: #334155 !important;
+            color: #38bdf8 !important;
+            border: 1px solid #475569 !important;
         }
 
         body.dark-theme table th {
