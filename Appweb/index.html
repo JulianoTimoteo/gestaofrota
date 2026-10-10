@@ -16312,11 +16312,12 @@
                     headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache' }
                 };
 
-                let res = null;
-
-                // 1. Se estiver no GitHub Pages (online), busca PRIMEIRO em raw.githubusercontent.com (sem cache de CDN do Pages)
+                // 1. Se estiver no GitHub Pages (online), busca com cache-busting imediato no jsDelivr ou raw.github
                 if (isStaticGitHubPages()) {
-                    res = await fetch(`https://raw.githubusercontent.com/julianotimoteo/gestaofrota/master/Appweb/dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
+                    res = await fetch(`https://cdn.jsdelivr.net/gh/julianotimoteo/gestaofrota@master/Appweb/dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
+                    if (!res || !res.ok) {
+                        res = await fetch(`https://raw.githubusercontent.com/julianotimoteo/gestaofrota/master/Appweb/dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
+                    }
                 }
 
                 // 2. Se não estiver no Pages ou falhar, tenta carregar o dados.json relativo local
