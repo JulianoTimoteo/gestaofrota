@@ -16312,11 +16312,11 @@
                     headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache' }
                 };
 
-                // 1. Se estiver no GitHub Pages (online), busca com cache-busting imediato no jsDelivr ou raw.github
+                // 1. Se estiver no GitHub Pages (online), busca com cache-busting imediato no raw.github ou jsDelivr
                 if (isStaticGitHubPages()) {
-                    res = await fetch(`https://cdn.jsdelivr.net/gh/julianotimoteo/gestaofrota@master/Appweb/dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
+                    res = await fetch(`https://raw.githubusercontent.com/julianotimoteo/gestaofrota/master/Appweb/dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
                     if (!res || !res.ok) {
-                        res = await fetch(`https://raw.githubusercontent.com/julianotimoteo/gestaofrota/master/Appweb/dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
+                        res = await fetch(`https://cdn.jsdelivr.net/gh/julianotimoteo/gestaofrota@master/Appweb/dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
                     }
                 }
 
