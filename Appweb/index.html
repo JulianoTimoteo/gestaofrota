@@ -16636,6 +16636,8 @@
             const icon    = document.getElementById('syncEnergyIcon');
             if (!fill || !text) return;
 
+            const isDark = document.body.classList.contains('dark-theme');
+
             if (syncState === 'COUNTDOWN') {
                 const remaining = Math.max(0, SYNC_TOTAL_SECONDS - syncElapsedSeconds);
                 const percent   = Math.min(100, (syncElapsedSeconds / SYNC_TOTAL_SECONDS) * 100);
@@ -16645,29 +16647,40 @@
 
                 fill.style.transition = 'width 1s linear, background 0.5s ease';
                 fill.style.width      = `${percent}%`;
-                fill.style.background = 'linear-gradient(90deg, #10b981 0%, #34d399 100%)';
-                fill.style.boxShadow  = '0 0 12px rgba(16, 185, 129, 0.4)';
+                fill.style.background = isDark 
+                    ? 'linear-gradient(90deg, #059669 0%, #10b981 100%)' 
+                    : 'linear-gradient(90deg, #10b981 0%, #34d399 100%)';
+                fill.style.boxShadow  = isDark 
+                    ? '0 0 16px rgba(16, 185, 129, 0.45)' 
+                    : '0 0 12px rgba(16, 185, 129, 0.4)';
                 if (icon) {
-                    icon.style.color = '#10b981';
+                    icon.style.color = isDark ? '#34d399' : '#10b981';
                     icon.className = 'fas fa-bolt';
                 }
 
-                text.style.color = percent > 50 ? '#ffffff' : '#0f172a';
-                text.style.textShadow = percent > 50 ? '0 1px 3px rgba(0,0,0,0.6)' : '0 1px 2px rgba(255,255,255,0.9)';
+                if (isDark) {
+                    text.style.color = '#ffffff';
+                    text.style.textShadow = '0 1px 3px rgba(0,0,0,0.95), 0 0 5px rgba(0,0,0,0.9)';
+                } else {
+                    text.style.color = percent > 50 ? '#ffffff' : '#0f172a';
+                    text.style.textShadow = percent > 50 ? '0 1px 3px rgba(0,0,0,0.6)' : '0 1px 2px rgba(255,255,255,0.9)';
+                }
                 text.innerHTML = `<i class="fas fa-clock" style="margin-right:6px;"></i> Próxima atualização em ${timeStr}`;
 
             } else if (syncState === 'FETCHING') {
                 fill.style.transition = 'width 0.4s ease, background 0.4s ease';
                 fill.style.width      = '100%';
-                fill.style.background = 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)';
+                fill.style.background = isDark 
+                    ? 'linear-gradient(90deg, #1d4ed8 0%, #3b82f6 100%)' 
+                    : 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)';
                 fill.style.boxShadow  = '0 0 16px rgba(37, 99, 235, 0.6)';
                 if (icon) {
-                    icon.style.color = '#2563eb';
+                    icon.style.color = isDark ? '#60a5fa' : '#2563eb';
                     icon.className = 'fas fa-spinner fa-spin';
                 }
 
                 text.style.color = '#ffffff';
-                text.style.textShadow = '0 1px 3px rgba(0,0,0,0.7)';
+                text.style.textShadow = '0 1px 3px rgba(0,0,0,0.9)';
                 text.innerHTML = `<i class="fas fa-sync-alt fa-spin" style="margin-right:6px;"></i> Buscando novos dados...`;
 
             } else if (syncState === 'SUCCESS') {
@@ -16676,7 +16689,7 @@
                 fill.style.background = 'linear-gradient(90deg, #059669 0%, #10b981 100%)';
                 fill.style.boxShadow  = '0 0 18px rgba(16, 185, 129, 0.7)';
                 if (icon) {
-                    icon.style.color = '#10b981';
+                    icon.style.color = isDark ? '#34d399' : '#10b981';
                     icon.className = 'fas fa-check-circle';
                 }
 
