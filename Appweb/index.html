@@ -231,6 +231,127 @@
             border: 1px solid #475569 !important;
         }
 
+        /* ===== BARRA DE ENERGIA DE SINCRONIZAÇÃO & CRONÔMETRO ===== */
+        .energy-bar-track {
+            position: relative;
+            width: 100%;
+            height: 42px;
+            background: #e2e8f0;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.12);
+            border: 1px solid rgba(0,0,0,0.08);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        body.dark-theme .energy-bar-track {
+            background: #090d16 !important;
+            border: 1px solid #334155 !important;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        #syncEnergyText {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            pointer-events: none;
+            padding: 0 1.2rem;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        body:not(.dark-theme) #syncEnergyText {
+            color: #0f172a;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+        }
+
+        body.dark-theme #syncEnergyText {
+            color: #ffffff !important;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 5px rgba(0, 0, 0, 0.9) !important;
+            font-weight: 700 !important;
+        }
+
+        /* ===== BADGE DE TEMPO DECORRIDO ("há X min") ===== */
+        .sync-time-ago-badge,
+        #syncLastTimeAgoBadge {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: #e2e8f0;
+            color: #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-theme .sync-time-ago-badge,
+        body.dark-theme #syncLastTimeAgoBadge {
+            background: #0f172a !important;
+            border: 1px solid #059669 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        body.dark-theme .sync-time-ago-badge i,
+        body.dark-theme #syncLastTimeAgoBadge i {
+            color: #10b981 !important;
+        }
+
+        body.dark-theme .sync-time-ago-badge span,
+        body.dark-theme #syncLastTimeAgoBadge span,
+        body.dark-theme #syncLastTimeAgoText {
+            color: #34d399 !important;
+            font-weight: 700 !important;
+        }
+
+        /* BOX DO ÍCONE DE CALENDÁRIO */
+        .sync-calendar-icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #059669;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-theme .sync-calendar-icon-box {
+            background: rgba(16, 185, 129, 0.15) !important;
+            border: 1px solid rgba(16, 185, 129, 0.4) !important;
+            color: #34d399 !important;
+        }
+
+        /* HEADER LAST SYNC BADGE */
+        body.dark-theme #headerLastSyncBadge {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #f1f5f9 !important;
+        }
+
+        body.dark-theme #headerLastSyncBadge span {
+            color: #f1f5f9 !important;
+        }
+
+        /* DETALHES DE SINCRONIZAÇÃO */
+        body.dark-theme #syncLastDetails,
+        body.dark-theme #syncLastInfo {
+            color: #cbd5e1 !important;
+        }
+        body.dark-theme #syncLastInfo strong {
+            color: #34d399 !important;
+        }
+
+
         body.dark-theme table th {
             background: #0f172a !important;
             color: #ffffff !important;
@@ -3439,7 +3560,7 @@
                         <!-- Card Destaque: Data e Hora da Última Atualização -->
                         <div style="background:var(--color-gray-50);border:1px solid var(--color-gray-200);border-radius:10px;padding:0.9rem 1.15rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
                             <div style="display:flex;align-items:center;gap:12px;">
-                                <div style="width:40px;height:40px;border-radius:8px;background:#ecfdf5;border:1px solid #a7f3d0;display:flex;align-items:center;justify-content:center;color:#059669;font-size:1.2rem;">
+                                <div class="sync-calendar-icon-box">
                                     <i class="fas fa-calendar-check"></i>
                                 </div>
                                 <div>
@@ -3448,8 +3569,8 @@
                                 </div>
                             </div>
                             <div style="display:flex;align-items:center;gap:8px;">
-                                <span id="syncLastTimeAgoBadge" style="font-size:0.8rem;font-weight:600;padding:5px 12px;border-radius:20px;background:#e2e8f0;color:#334155;display:inline-flex;align-items:center;gap:5px;">
-                                    <i class="fas fa-history" style="color:#059669;"></i> <span id="syncLastTimeAgoText">--</span>
+                                <span id="syncLastTimeAgoBadge" class="sync-time-ago-badge">
+                                    <i class="fas fa-history"></i> <span id="syncLastTimeAgoText">--</span>
                                 </span>
                             </div>
                         </div>
@@ -3465,11 +3586,11 @@
                             </div>
                             
                             <!-- Barra de Energia (Track) -->
-                            <div class="energy-bar-track" style="position:relative;width:100%;height:42px;background:#e2e8f0;border-radius:24px;overflow:hidden;box-shadow:inset 0 2px 5px rgba(0,0,0,0.12);border:1px solid rgba(0,0,0,0.08);">
+                            <div class="energy-bar-track">
                                 <!-- Barra Interna Animada -->
                                 <div id="syncEnergyFill" style="position:absolute;top:0;left:0;height:100%;width:0%;border-radius:24px;background:linear-gradient(90deg, #10b981 0%, #34d399 100%);box-shadow:0 0 14px rgba(16,185,129,0.5);transition:width 1s linear, background 0.5s ease;"></div>
                                 <!-- Texto Centralizado -->
-                                <div id="syncEnergyText" style="position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;color:#0f172a;text-shadow:0 1px 2px rgba(255,255,255,0.85);letter-spacing:0.3px;pointer-events:none;padding:0 1.2rem;">
+                                <div id="syncEnergyText">
                                     Próxima atualização em 5m 00s
                                 </div>
                             </div>
@@ -15311,6 +15432,9 @@
                 checkbox.addEventListener('change', function () {
                     document.body.classList.toggle('dark-theme', this.checked);
                     localStorage.setItem('sf_theme', this.checked ? 'dark' : 'light');
+                    if (typeof updateSyncEnergyBarUI === 'function') {
+                        updateSyncEnergyBarUI();
+                    }
                 });
             }
         }
