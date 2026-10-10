@@ -16312,12 +16312,16 @@
                     headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache' }
                 };
 
-                // 1. Tenta carregar dados.json relativo local ou do GitHub Pages com cache busting
-                let res = await fetch(`dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
+                let res = null;
 
-                // 2. Se falhar ou se for GitHub Pages e o CDN do GitHub Pages estiver defasado, tenta raw.githubusercontent.com
-                if ((!res || !res.ok) && isStaticGitHubPages()) {
+                // 1. Se estiver no GitHub Pages (online), busca PRIMEIRO em raw.githubusercontent.com (sem cache de CDN do Pages)
+                if (isStaticGitHubPages()) {
                     res = await fetch(`https://raw.githubusercontent.com/julianotimoteo/gestaofrota/master/Appweb/dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
+                }
+
+                // 2. Se não estiver no Pages ou falhar, tenta carregar o dados.json relativo local
+                if (!res || !res.ok) {
+                    res = await fetch(`dados.json?_t=${Date.now()}`, fetchOptions).catch(() => null);
                 }
 
                 // 3. Se ainda não obteve e não for GitHub estático, tenta a API local do servidor
