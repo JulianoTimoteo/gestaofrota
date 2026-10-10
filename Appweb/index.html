@@ -3199,19 +3199,19 @@
         </div>
     </div>
 
-    <!-- BANNER FLUTUANTE PARA INSTALAR COMO APLICATIVO CELULAR (PWA) -->
+    <!-- POPUP TOAST MODERNO PARA INSTALAR APLICATIVO (SOME EM 5 SEGUNDOS) -->
     <div id="pwaInstallBanner" class="pwa-install-banner hidden">
         <div class="pwa-banner-content">
             <div class="pwa-banner-icon">
-                <img src="android-chrome-192x192.png" alt="Gestão Frota App" onerror="this.src='apple-touch-icon.png'">
+                <img src="favicon_2.png?v=2026_blue" alt="Gestão Frota App" onerror="this.src='apple-touch-icon.png'">
             </div>
             <div class="pwa-banner-text">
-                <h4>ðŸ“² Instalar Aplicativo Gestão de Frota</h4>
-                <p>Instale no seu celular para um uso mais rápido, prático e em tela cheia sem abrir o navegador!</p>
+                <h4>Instalar Gestão de Frota</h4>
+                <p>Toque para instalar o aplicativo na tela inicial</p>
             </div>
             <div class="pwa-banner-actions">
-                <button id="btnPwaInstallNow" class="pwa-btn-primary"><i class="fas fa-download"></i> Instalar App</button>
-                <button id="btnPwaDismiss" class="pwa-btn-close" title="Agora Não"><i class="fas fa-times"></i></button>
+                <button id="btnPwaInstallNow" class="pwa-btn-primary"><i class="fas fa-download"></i> Instalar</button>
+                <button id="btnPwaDismiss" class="pwa-btn-close" title="Fechar"><i class="fas fa-times"></i></button>
             </div>
         </div>
     </div>
@@ -18728,39 +18728,38 @@
             return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
         }
 
+        var pwaAutoDismissTimer = null;
+
         function showPwaInstallPrompt() {
             if (isAppInstalled()) {
                 const headerBtn = document.getElementById('btnHeaderInstallPwa');
                 if (headerBtn) headerBtn.style.display = 'none';
                 return;
             }
-            const dismissed = localStorage.getItem('sf_pwa_dismissed');
-            if (dismissed && (Date.now() - parseInt(dismissed, 10)) < 24 * 3600 * 1000) {
-                const headerBtn = document.getElementById('btnHeaderInstallPwa');
-                if (headerBtn) headerBtn.style.display = 'inline-flex';
-                return;
-            }
 
             setTimeout(() => {
                 if (isAppInstalled()) return;
                 const banner = document.getElementById('pwaInstallBanner');
-                if (banner) banner.classList.remove('hidden');
+                if (banner) {
+                    banner.classList.remove('hidden');
+                    // Fecha automaticamente apos exatamente 5 segundos
+                    if (pwaAutoDismissTimer) clearTimeout(pwaAutoDismissTimer);
+                    pwaAutoDismissTimer = setTimeout(() => {
+                        dismissPwaBanner();
+                    }, 5000);
+                }
                 const headerBtn = document.getElementById('btnHeaderInstallPwa');
                 if (headerBtn) headerBtn.style.display = 'inline-flex';
-            }, 1200);
+            }, 1000);
         }
 
         async function triggerPwaInstall() {
+            if (pwaAutoDismissTimer) clearTimeout(pwaAutoDismissTimer);
+            dismissPwaBanner();
+
             if (isAppInstalled()) {
                 const headerBtn = document.getElementById('btnHeaderInstallPwa');
                 if (headerBtn) headerBtn.style.display = 'none';
-                return;
-            }
-
-            const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-            if (isIOS) {
-                const modal = document.getElementById('iosInstallModal');
-                if (modal) modal.classList.add('active');
                 return;
             }
 
@@ -18771,7 +18770,6 @@
                     const choiceResult = await promptToUse.userChoice;
                     if (choiceResult && choiceResult.outcome === 'accepted') {
                         console.log('[PWA] Usuário aceitou a instalação do aplicativo!');
-                        dismissPwaBanner();
                         const headerBtn = document.getElementById('btnHeaderInstallPwa');
                         if (headerBtn) headerBtn.style.display = 'none';
                     }
@@ -18780,56 +18778,13 @@
                 }
                 window.deferredPwaPrompt = null;
                 deferredPwaPrompt = null;
-            } else {
-                // Abre modal de instalação com instruções claras
-                abrirModalInstalacaoDireta();
-            }
-        }
-
-        function abrirModalInstalacaoDireta() {
-            let modal = document.getElementById('fastPwaInstallModal');
-            if (!modal) {
-                modal = document.createElement('div');
-                modal.id = 'fastPwaInstallModal';
-                modal.className = 'action-modal-overlay active';
-                modal.style.zIndex = '999999';
-                modal.innerHTML = `
-                    <div class="action-modal" style="max-width:390px;text-align:center;padding:1.8rem 1.4rem;border-radius:22px;background:var(--color-bg,#ffffff);border:1.5px solid var(--color-primary,#2563eb);box-shadow:0 20px 60px rgba(0,0,0,0.35);">
-                        <img src="icon-192x192.png?v=2026_blue" alt="Gestão de Frota" style="width:76px;height:76px;border-radius:18px;margin:0 auto 1rem auto;box-shadow:0 6px 18px rgba(37,99,235,0.35);display:block;">
-                        <h3 style="margin:0 0 0.5rem 0;font-size:1.15rem;font-weight:700;color:var(--color-text,#1e293b);">Instalar Gestão de Frota</h3>
-                        <p style="font-size:0.86rem;color:var(--color-gray-600,#64748b);line-height:1.45;margin-bottom:1.4rem;">
-                            Tenha acesso direto e instantâneo na tela inicial do seu celular, com ícone oficial azul e notificações em tempo real.
-                        </p>
-                        <div style="display:flex;flex-direction:column;gap:8px;">
-                            <button type="button" id="btnAutoInstallConfirm" class="btn-primary" style="width:100%;padding:0.75rem;font-size:0.92rem;font-weight:700;border-radius:12px;background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);color:#fff;border:none;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,0.3);">
-                                <i class="fas fa-arrow-down"></i> Adicionar à Tela Inicial
-                            </button>
-                            <button type="button" onclick="document.getElementById('fastPwaInstallModal').classList.remove('active')" style="width:100%;padding:0.55rem;font-size:0.82rem;font-weight:600;border-radius:10px;background:transparent;color:var(--color-gray-500,#94a3b8);border:none;cursor:pointer;">
-                                Fechar
-                            </button>
-                        </div>
-                    </div>
-                `;
-                document.body.appendChild(modal);
-                modal.querySelector('#btnAutoInstallConfirm')?.addEventListener('click', async () => {
-                    modal.classList.remove('active');
-                    const p = window.deferredPwaPrompt || deferredPwaPrompt;
-                    if (p) {
-                        p.prompt();
-                        await p.userChoice;
-                        window.deferredPwaPrompt = null;
-                        deferredPwaPrompt = null;
-                    }
-                });
-            } else {
-                modal.classList.add('active');
             }
         }
 
         function dismissPwaBanner() {
+            if (pwaAutoDismissTimer) clearTimeout(pwaAutoDismissTimer);
             const banner = document.getElementById('pwaInstallBanner');
             if (banner) banner.classList.add('hidden');
-            localStorage.setItem('sf_pwa_dismissed', Date.now().toString());
         }
 
         function initPwaInstall() {
