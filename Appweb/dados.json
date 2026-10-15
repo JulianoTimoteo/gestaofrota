@@ -19602,7 +19602,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 142.9,
         "descricao": "CHECK LIST",
-        "dataSincronizacao": "2026-10-15 07:49:05"
+        "dataSincronizacao": "2026-10-15 07:58:11"
       },
       {
         "tipoOS": "NORMAL",
@@ -19617,7 +19617,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 142.9,
         "descricao": "Oficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nOficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nCHECK LIST",
-        "dataSincronizacao": "2026-10-15 07:49:05"
+        "dataSincronizacao": "2026-10-15 07:58:11"
       },
       {
         "tipoOS": "NORMAL",
@@ -19632,7 +19632,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 142.9,
         "descricao": "Oficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nCHECK LIST",
-        "dataSincronizacao": "2026-10-15 07:49:05"
+        "dataSincronizacao": "2026-10-15 07:58:11"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -20337,7 +20337,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 13.9,
         "descricao": "QUEBROU CABEÇALHO",
-        "dataSincronizacao": "2026-10-15 07:49:05"
+        "dataSincronizacao": "2026-10-15 07:58:11"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -20757,7 +20757,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 4.4,
         "descricao": "MOLA QUEBRADA",
-        "dataSincronizacao": "2026-10-15 07:49:05"
+        "dataSincronizacao": "2026-10-15 07:58:11"
       },
       {
         "tipoOS": "NORMAL",
@@ -20892,7 +20892,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 1.4,
         "descricao": "VERIFICAR CUICA - PENULTIMO EIXO L/E",
-        "dataSincronizacao": "2026-10-15 07:49:05"
+        "dataSincronizacao": "2026-10-15 07:58:11"
       },
       {
         "tipoOS": "NORMAL",
@@ -20907,7 +20907,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 1.4,
         "descricao": "REGULAR FREIOS",
-        "dataSincronizacao": "2026-10-15 07:49:05"
+        "dataSincronizacao": "2026-10-15 07:58:11"
       },
       {
         "tipoOS": "NORMAL",
@@ -20922,7 +20922,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 1.4,
         "descricao": "MOLA QUEBRADA - L/D",
-        "dataSincronizacao": "2026-10-15 07:49:05"
+        "dataSincronizacao": "2026-10-15 07:58:11"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -20967,7 +20967,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 1.0,
         "descricao": "SOCORRO - PATIO DO POSTO \r\n\r\nTROCAR ROLAMENTO VFS\r\n\r\nTROCAR BRAÇO DO SOQUETE",
-        "dataSincronizacao": "2026-10-15 07:49:05"
+        "dataSincronizacao": "2026-10-15 07:58:11"
       },
       {
         "tipoOS": "NORMAL",
@@ -21892,6 +21892,6 @@
       },
       "ultimaAlteracao": "2026-10-05T10:25:39.889662"
     },
-    "ultimaSincronizacao": "2026-10-15 07:57:52"
+    "ultimaSincronizacao": "2026-10-15 08:04:08"
   }
 }
