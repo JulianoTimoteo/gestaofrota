@@ -18183,7 +18183,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 143.8,
         "descricao": "CHECK LIST",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "NORMAL",
@@ -18198,7 +18198,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 143.8,
         "descricao": "Oficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nOficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nCHECK LIST",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "NORMAL",
@@ -18213,7 +18213,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 143.8,
         "descricao": "Oficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nCHECK LIST",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -18888,7 +18888,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 14.8,
         "descricao": "QUEBROU CABEÇALHO",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -19233,7 +19233,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 5.3,
         "descricao": "MOLA QUEBRADA",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -19308,7 +19308,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 2.3,
         "descricao": "VERIFICAR CUICA - PENULTIMO EIXO L/E",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "NORMAL",
@@ -19323,7 +19323,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 2.3,
         "descricao": "REGULAR FREIOS",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "NORMAL",
@@ -19338,7 +19338,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 2.3,
         "descricao": "MOLA QUEBRADA - L/D",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -19368,7 +19368,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 1.9,
         "descricao": "SOCORRO - PATIO DO POSTO \r\n\r\nTROCAR ROLAMENTO VFS\r\n\r\nTROCAR BRAÇO DO SOQUETE",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "NORMAL",
@@ -19642,21 +19642,6 @@
       },
       {
         "tipoOS": "NORMAL",
-        "subClasse": "16/3 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES CANAVIEIROS",
-        "codigoEquip": "811922",
-        "frotaCC": "811922 - SEMI RANDON 2EX",
-        "codOS": "777156",
-        "statusOS": "ABERTA",
-        "tipoOficina": "CAMPO",
-        "oficina": "12 - PIT-STOP",
-        "dataEntrada": "15/10/2026 10:35:00",
-        "dataPrevisao": "",
-        "diasPermanencia": 0.8,
-        "descricao": "TROCAR IGREJINHA",
-        "dataSincronizacao": "2026-10-16 06:11:47"
-      },
-      {
-        "tipoOS": "NORMAL",
         "subClasse": "10/6 - CAMINHOES - TRANSPORTE DE CANA",
         "codigoEquip": "31115",
         "frotaCC": "31115 - VOLVO FM 540",
@@ -19669,6 +19654,21 @@
         "diasPermanencia": 0.8,
         "descricao": "VERIFICAR ARREFECIMENTO ( ESQUENTANDO )\r\n\r\nVERIFICAR LANTERNA TRASEIRA ( L / E )\r\n\r\nVERIFICAR FREIO \r\n\r\nVERIFICAR VIDRO L / D ( NÃO SOBE E NEM DESCE )",
         "dataSincronizacao": "2026-10-16 06:11:47"
+      },
+      {
+        "tipoOS": "NORMAL",
+        "subClasse": "16/3 - IMPLEMENTO RODOVIARIO - SEMI-REBOQUES CANAVIEIROS",
+        "codigoEquip": "811922",
+        "frotaCC": "811922 - SEMI RANDON 2EX",
+        "codOS": "777156",
+        "statusOS": "ABERTA",
+        "tipoOficina": "CAMPO",
+        "oficina": "12 - PIT-STOP",
+        "dataEntrada": "15/10/2026 10:35:00",
+        "dataPrevisao": "",
+        "diasPermanencia": 0.8,
+        "descricao": "TROCAR IGREJINHA",
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "NORMAL",
@@ -19801,9 +19801,9 @@
         "oficina": "178 - MANUT. CAMPO",
         "dataEntrada": "15/10/2026 19:35:00",
         "dataPrevisao": "",
-        "diasPermanencia": 0.4,
+        "diasPermanencia": 0.5,
         "descricao": "FALHA NO PAINEL - VERIFICAR EMBREAGEM\r\n\nQUANDO ENGATA NAO DA ACELERAÇÃO\r\n\r\nLOCAL: PATIO CARRETA",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -19848,7 +19848,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.4,
         "descricao": "VERIFICAR PARTE ELETRICA -\r\nSETA L/D\r\nVERIFICAR LANTERNAS",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -19923,7 +19923,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.2,
         "descricao": "VERIFICAR VAZAMENTO DO LÍQUIDO DE ARREFECIMENTO (ADITIVO)\r\n\r\nLOCAL : SEDE DO SITTA AO LADO DO BARRACÃO",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "NORMAL",
@@ -19938,7 +19938,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.0,
         "descricao": "SEM PARTIDA",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       },
       {
         "tipoOS": "NORMAL",
@@ -19953,7 +19953,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.0,
         "descricao": "TROCAR JUNTA DA TURBINA",
-        "dataSincronizacao": "2026-10-16 06:11:47"
+        "dataSincronizacao": "2026-10-16 06:20:20"
       }
     ],
     "authUsuarios": [
@@ -20563,6 +20563,6 @@
       },
       "ultimaAlteracao": "2026-10-05T10:25:39.889662"
     },
-    "ultimaSincronizacao": "2026-10-16 06:18:51"
+    "ultimaSincronizacao": "2026-10-16 06:20:21"
   }
 }
