@@ -414,7 +414,7 @@
         "tipo": "Colhedora",
         "grupo": "COLHEDORAS",
         "statusOS": "Com OS",
-        "codOS": "779133"
+        "codOS": "779162"
       },
       {
         "codigo": "80119",
@@ -2780,8 +2780,8 @@
         "modelo": "10/10 - CAMINHOES - CARGA SECA",
         "tipo": "Caminhão",
         "grupo": "OUTROS",
-        "statusOS": "OK",
-        "codOS": "-"
+        "statusOS": "Com OS",
+        "codOS": "779165"
       },
       {
         "codigo": "42105",
@@ -5130,7 +5130,7 @@
         "tipo": "Colhedora",
         "grupo": "COLHEDORAS",
         "statusOS": "Com OS",
-        "codOS": "779133"
+        "codOS": "779162"
       },
       {
         "codigo": "80119",
@@ -6192,7 +6192,7 @@
         "tipo": "Colhedora",
         "grupo": "COLHEDORAS",
         "statusOS": "Com OS",
-        "codOS": "779133"
+        "codOS": "779162"
       },
       {
         "codigo": "80119",
@@ -7254,7 +7254,7 @@
         "tipo": "Colhedora",
         "grupo": "COLHEDORAS",
         "statusOS": "Com OS",
-        "codOS": "779133"
+        "codOS": "779162"
       },
       {
         "codigo": "80119",
@@ -8316,7 +8316,7 @@
         "tipo": "Colhedora",
         "grupo": "COLHEDORAS",
         "statusOS": "Com OS",
-        "codOS": "779133"
+        "codOS": "779162"
       },
       {
         "codigo": "80119",
@@ -21159,7 +21159,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 150.8,
         "descricao": "CHECK LIST",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -21174,7 +21174,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 150.8,
         "descricao": "Oficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nOficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nCHECK LIST",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -21189,7 +21189,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 150.8,
         "descricao": "Oficina: 6 - OF. VOLANTE 41709- F12 - CA5\r\nCHECK LIST",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -22284,7 +22284,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 2.8,
         "descricao": "*SOCORRO - FAZENDA ALPES*\r\n\r\n*VERIFICAR VAZAMENTO*",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22404,7 +22404,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 1.7,
         "descricao": "TROCRA MOLA ( QUEBRADA )",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22417,9 +22417,9 @@
         "oficina": "12 - PIT-STOP",
         "dataEntrada": "21/10/2026 16:40:00",
         "dataPrevisao": "",
-        "diasPermanencia": 1.5,
+        "diasPermanencia": 1.6,
         "descricao": "COLOCAR PINO QUE SEGURA UMA CARRETA NA OUTRA",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22479,7 +22479,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 1.3,
         "descricao": "ALINHAR",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22494,7 +22494,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 1.2,
         "descricao": "PERCA DE POTENCIA \r\nVERIFICAR ILUMINAÇÃO TRASEIRA \r\n\r\nLOCAL : ENTRADA DA SANTA ROSA ( PROX DE ANDES )",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22509,7 +22509,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 1.1,
         "descricao": "ESTOUROU CUICA  ULTIMO EIXO \r\nTROCAR DISCO DE FREIO \r\nREGULAR FREIO",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22524,7 +22524,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 1.0,
         "descricao": "* VERIFICAR MOTOR DE PARTIDA \n\r\nLOCAL : CARREGAMENTO DE VINHAÇA",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22537,9 +22537,9 @@
         "oficina": "178 - MANUT. CAMPO",
         "dataEntrada": "22/10/2026 07:20:00",
         "dataPrevisao": "",
-        "diasPermanencia": 0.9,
+        "diasPermanencia": 1.0,
         "descricao": "FECHAR PARALELISMO DO SULCADOR\r\n\r\nLOCAL :  ARIZONA",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22554,7 +22554,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.9,
         "descricao": "SOCORRO -SEDE DA  ARIZONA\r\n\r\nDESMONTAR LÁ NA SEDE DA ARIZONA E MONTAR LÁ NA SEDE DA JARAGUÁ \n\nTIRAR O APARELHO DELE DO TRATOR E 11421 QUE ESTÁ NA SEDE DA ALPES E LEVAR COM ELE PRA JARAGUÁ",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22614,7 +22614,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.8,
         "descricao": "VERIFICAR TOMADA EM CURTO",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -22794,7 +22794,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.3,
         "descricao": "ESTOUROU  MOTOR DO ROLO TRES TALISCA",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "REPARO DE PEÇAS",
@@ -22852,9 +22852,9 @@
         "oficina": "11 - CAMPO.BORRACHARIA",
         "dataEntrada": "23/10/2026 00:11:00",
         "dataPrevisao": "",
-        "diasPermanencia": 0.2,
+        "diasPermanencia": 0.3,
         "descricao": "PNEU FURADO TERCEIRO EIXO LADO DIREITO INTERNO \r\n\r\nLOCAL : COMEÇO DA LEITE CAÇU",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22869,7 +22869,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.2,
         "descricao": "PNEU SEGUNDO EIXO FURADO\r\n\r\nLOCAL : SUBINDO PIT STOP",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22884,7 +22884,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.2,
         "descricao": "VERIFICAR PARTE ELÉTRICA\r\n\r\nLOCAL : DESCENDO CARREGAMENTO DE VINHAÇA ATRÁS DA BORRACHARIA",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22899,7 +22899,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.2,
         "descricao": "VERIFICAR PARTE ELÉTRICA\r\n\r\n\n\nLOCAL : DESCENDO CARREGAMENTO DE VINHAÇA ATRÁS DA BORRACHARIA",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22914,7 +22914,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.2,
         "descricao": "VERIFICAR CUICA LADO ESQUERDO \r\n\r\nLOCAL : FRENTE 15",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22927,9 +22927,9 @@
         "oficina": "2 - OF. VOL. 41104 - F08",
         "dataEntrada": "23/10/2026 02:07:00",
         "dataPrevisao": "",
-        "diasPermanencia": 0.1,
+        "diasPermanencia": 0.2,
         "descricao": "TROCAR MOTOR DE PARTIDA",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22944,7 +22944,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.1,
         "descricao": "VERIFICAR VAZAMENTO NO MOTORZINHO",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22959,7 +22959,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.1,
         "descricao": "VERIFICAR VAZAMENTO DE AR\r\n\r\nLOCAL : PÁTIO DAS CARRETAS",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22974,7 +22974,7 @@
         "dataPrevisao": "",
         "diasPermanencia": 0.1,
         "descricao": "* SERVIÇO DE SOLDA NO CARRINHO \n(QUADRO DO CARRINHO DO CANHÃO QUEBROU)\r\n\r\nLOCAL : EM FRENTE AO SÍTIO DO ÁLVARO BENTO",
-        "dataSincronizacao": "2026-10-23 05:35:10"
+        "dataSincronizacao": "2026-10-23 06:10:31"
       },
       {
         "tipoOS": "NORMAL",
@@ -22990,6 +22990,36 @@
         "diasPermanencia": 0.0,
         "descricao": "VERIFICAR CHICOTE \r\nVERIFICAR FREIO ESTACIONARIO",
         "dataSincronizacao": "2026-10-23 05:35:10"
+      },
+      {
+        "tipoOS": "NORMAL",
+        "subClasse": "14/1 - COLHEDORA - COLHEDORA DE CANA PICADA",
+        "codigoEquip": "80118",
+        "frotaCC": "80118 - CASE A 8810",
+        "codOS": "779162",
+        "statusOS": "ABERTA",
+        "tipoOficina": "CAMPO",
+        "oficina": "2 - OF. VOL. 41104 - F08",
+        "dataEntrada": "23/10/2026 05:45:00",
+        "dataPrevisao": "",
+        "diasPermanencia": 0.0,
+        "descricao": "QUEBROU PISTAO DA SUSPENSÃO",
+        "dataSincronizacao": "2026-10-23 06:10:31"
+      },
+      {
+        "tipoOS": "NORMAL",
+        "subClasse": "10/10 - CAMINHOES - CARGA SECA",
+        "codigoEquip": "670",
+        "frotaCC": "670 - CARGO 2626",
+        "codOS": "779165",
+        "statusOS": "ABERTA",
+        "tipoOficina": "CAMPO",
+        "oficina": "178 - MANUT. CAMPO",
+        "dataEntrada": "23/10/2026 06:04:00",
+        "dataPrevisao": "",
+        "diasPermanencia": 0.0,
+        "descricao": "FALHA NA BATERIA\r\n\r\nLOCAL : PRIMEIRA RUA DO ARMAZEM",
+        "dataSincronizacao": "2026-10-23 06:10:31"
       }
     ],
     "authUsuarios": [
@@ -23599,6 +23629,6 @@
       },
       "ultimaAlteracao": "2026-10-05T10:25:39.889662"
     },
-    "ultimaSincronizacao": "2026-10-23 06:10:28"
+    "ultimaSincronizacao": "2026-10-23 06:12:28"
   }
 }
